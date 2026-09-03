@@ -6,6 +6,10 @@ on:
       - design/manus-visual-master
   workflow_dispatch:
 
+concurrency:
+  group: kirthiverse-manus-preview-worker
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

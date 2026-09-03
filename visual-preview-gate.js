@@ -21,6 +21,8 @@
   add('Profile runtime isolated',window.KV_PROFILE_RUNTIME?.candidate===CANDIDATE&&window.KV_PROFILE_RUNTIME?.version==='v17',window.KV_PROFILE_RUNTIME?.version||'missing');
   add('Profile nav uses shared SPA contract',window.KV_VISUAL_PAGES?.profileNavUsesDataLink===true,String(window.KV_VISUAL_PAGES?.profileNavUsesDataLink));
   add('Visual master controller',window.KV_VISUAL_MASTER?.candidate===CANDIDATE,window.KV_VISUAL_MASTER?.candidate||'missing');
+  add('Visual-master shell identity',document.documentElement.dataset.shellIdentity==='visual-master'&&window.KV_VISUAL_MASTER?.shellIdentity==='visual-master',document.documentElement.dataset.shellIdentity||'missing');
+  add('Stale Build 02 labels absent',!document.body.textContent.includes('HITECH-2026-09-03-02')&&!document.body.textContent.includes('FUTURE CLASSROOM OS'),'visible DOM text');
   add('Manus runtime absent',!document.documentElement.innerHTML.match(/__manus__|manus-storage|vite-plugin-manus-runtime/i),'DOM scan');
   add('Local storage',(()=>{try{const k='kv.preview.test';localStorage.setItem(k,'1');const ok=localStorage.getItem(k)==='1';localStorage.removeItem(k);return ok}catch{return false}})(),'write/read/delete');
   add('History API',!!history?.pushState,'SPA navigation');add('Tamil corpus',L.some(x=>/[\u0B80-\u0BFF]/.test(JSON.stringify(x))),'Unicode sample');

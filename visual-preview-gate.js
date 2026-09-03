@@ -14,7 +14,9 @@
   add('Cockpit event lifecycle',window.KV_COCKPIT_LIFECYCLE==='kv:rendered',window.KV_COCKPIT_LIFECYCLE||'missing');
   add('Canonical lessons',L.length===135,`${L.length}/135`);add('Canonical assessments',A.length===72,`${A.length}/72`);
   add('Unique lesson IDs',uniq(L.map(x=>x.id)),`${new Set(L.map(x=>x.id)).size}/${L.length}`);add('Unique assessment IDs',uniq(A.map(x=>x.id)),`${new Set(A.map(x=>x.id)).size}/${A.length}`);
-  add('Profile route controller',window.KV_VISUAL_PAGES?.candidate===CANDIDATE,window.KV_VISUAL_PAGES?.candidate||'missing');add('Visual master controller',window.KV_VISUAL_MASTER?.candidate===CANDIDATE,window.KV_VISUAL_MASTER?.candidate||'missing');
+  add('Profile runtime isolated',window.KV_PROFILE_RUNTIME?.candidate===CANDIDATE&&window.KV_PROFILE_RUNTIME?.version==='v17',window.KV_PROFILE_RUNTIME?.version||'missing');
+  add('Profile nav uses shared SPA contract',window.KV_VISUAL_PAGES?.profileNavUsesDataLink===true,String(window.KV_VISUAL_PAGES?.profileNavUsesDataLink));
+  add('Visual master controller',window.KV_VISUAL_MASTER?.candidate===CANDIDATE,window.KV_VISUAL_MASTER?.candidate||'missing');
   add('Manus runtime absent',!document.documentElement.innerHTML.match(/__manus__|manus-storage|vite-plugin-manus-runtime/i),'DOM scan');
   add('Local storage',(()=>{try{const k='kv.preview.test';localStorage.setItem(k,'1');const ok=localStorage.getItem(k)==='1';localStorage.removeItem(k);return ok}catch{return false}})(),'write/read/delete');
   add('History API',!!history?.pushState,'SPA navigation');add('Tamil corpus',L.some(x=>/[\u0B80-\u0BFF]/.test(JSON.stringify(x))),'Unicode sample');

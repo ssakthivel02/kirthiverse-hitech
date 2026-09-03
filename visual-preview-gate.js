@@ -3,13 +3,15 @@
   const checks=[];
   const add=(name,pass,detail,critical=true)=>checks.push({name,pass:!!pass,detail,critical});
   const L=window.KV_LESSONS||[],A=window.KV_ASSESSMENTS||[],uniq=x=>new Set(x).size===x.length;
-  const life=window.KV_RUNTIME_LIFECYCLE,nav=window.KV_NAVIGATION;
+  const life=window.KV_RUNTIME_LIFECYCLE,nav=window.KV_NAVIGATION,app=window.KV_APP_RUNTIME,pwa=window.KV_PWA;
   add('Candidate marker',document.documentElement.dataset.visualCandidate===CANDIDATE,document.documentElement.dataset.visualCandidate||'missing');
+  add('App render lifecycle authoritative',app?.renderLifecycle==='authoritative-app-render'&&app?.legacyPerLinkHandlers===false,app?.renderLifecycle||'missing');
   add('Central SPA navigation',nav?.candidate===CANDIDATE&&nav?.mode==='delegated-capture',nav?.mode||'missing');
   add('Age-path navigation centralized',nav?.agePathCentralized===true,String(nav?.agePathCentralized));
   add('Shared runtime lifecycle',life?.candidate===CANDIDATE,life?.candidate||'missing');
-  add('Router lifecycle source',life?.source==='router-popstate-after-app-render',life?.source||'missing');
+  add('Lifecycle source',life?.source==='app-render-authoritative',life?.source||'missing');
   add('Lifecycle observer removed',life?.observerScope==='none'&&life?.observerActive===false,`${life?.observerScope||'missing'} / ${String(life?.observerActive)}`);
+  add('Lifecycle popstate emitter removed',life?.popstateEmitter===false,String(life?.popstateEmitter));
   add('Experience event lifecycle',window.KV_EXPERIENCE_LIFECYCLE==='kv:rendered',window.KV_EXPERIENCE_LIFECYCLE||'missing');
   add('Intelligence event lifecycle',window.KV_INTELLIGENCE_LIFECYCLE==='kv:rendered',window.KV_INTELLIGENCE_LIFECYCLE||'missing');
   add('Cockpit event lifecycle',window.KV_COCKPIT_LIFECYCLE==='kv:rendered',window.KV_COCKPIT_LIFECYCLE||'missing');
@@ -23,6 +25,8 @@
   add('Visual master controller',window.KV_VISUAL_MASTER?.candidate===CANDIDATE,window.KV_VISUAL_MASTER?.candidate||'missing');
   add('Visual-master shell identity',document.documentElement.dataset.shellIdentity==='visual-master'&&window.KV_VISUAL_MASTER?.shellIdentity==='visual-master',document.documentElement.dataset.shellIdentity||'missing');
   add('Stale Build 02 labels absent',!document.body.textContent.includes('HITECH-2026-09-03-02')&&!document.body.textContent.includes('FUTURE CLASSROOM OS'),'visible DOM text');
+  add('PWA bootstrap',pwa?.candidate===CANDIDATE&&pwa?.version==='v23',`${pwa?.version||'missing'} / supported=${String(pwa?.supported)}`,false);
+  add('Service worker capability',pwa?.supported===true,String(pwa?.supported),false);
   add('Manus runtime absent',!document.documentElement.innerHTML.match(/__manus__|manus-storage|vite-plugin-manus-runtime/i),'DOM scan');
   add('Local storage',(()=>{try{const k='kv.preview.test';localStorage.setItem(k,'1');const ok=localStorage.getItem(k)==='1';localStorage.removeItem(k);return ok}catch{return false}})(),'write/read/delete');
   add('History API',!!history?.pushState,'SPA navigation');add('Tamil corpus',L.some(x=>/[\u0B80-\u0BFF]/.test(JSON.stringify(x))),'Unicode sample');

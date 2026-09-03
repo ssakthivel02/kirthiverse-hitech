@@ -1,88 +1,12 @@
 {
-  "project": "kirthiverse-hitech",
-  "candidate": "MANUS-VISUAL-MASTER-05",
-  "mode": "lean-controlled-preview",
-  "baseBuild": "HITECH-2026-09-03-14",
-  "learnerRuntime": ["app.js","navigation-v18.js","runtime-lifecycle-v16.js","learning-foundation-v19.js","learning-tools-v20.js","visual-master-v15.js","profile-v17.js","visual-master-pages-v15.js","visual-preview-gate.js"],
-  "learnerStyles": ["styles.css","learning-foundation-v19.css","learning-tools-v20.css","visual-master-v15.css","visual-master-pages-v15.css","visual-master-features-v15.css"],
-  "bundles": {
-    "learnerFoundation": {
-      "javascript": "learning-foundation-v19.js",
-      "stylesheetSource": "learning-foundation-v19.css",
-      "stylesheetLoadedDirectly": true,
-      "modules": ["experience","intelligence","cockpit"],
-      "sharedHelpers": true,
-      "indexedLessonLookup": true,
-      "singleRenderProgressSnapshot": true,
-      "originalFilesPreservedForRollback": true
-    },
-    "learningTools": {
-      "javascript": "learning-tools-v20.js",
-      "stylesheetSource": "learning-tools-v20.css",
-      "stylesheetLoadedDirectly": true,
-      "modules": ["mastery","workspace","planner"],
-      "sharedHelpers": true,
-      "sharedRenderScheduler": true,
-      "indexedLessonLookup": true,
-      "indexedAssessmentLookup": true,
-      "storageKeysPreserved": ["kirthiverse.hitech.static.progress.v2","kirthiverse.hitech.workspace.v1","kirthiverse.hitech.planner.v8","kirthiverse.hitech.density"]
-    },
-    "visualSystem": {
-      "mode": "committed-css-recovery",
-      "sourceStylesheets": ["styles.css","learning-foundation-v19.css","learning-tools-v20.css","visual-master-v15.css","visual-master-pages-v15.css","visual-master-features-v15.css"],
-      "browserRequests": 6,
-      "allBrowserDependenciesCommitted": true,
-      "transientGeneratedStylesheetRequired": false,
-      "visualSystemV21GeneratedBundle": "temporarily-disabled-until-committed-and-browser-verified",
-      "sourceFilesPreservedForRollback": true,
-      "sourceFilesLoadedByIndex": true
-    }
-  },
-  "appRuntime": {
-    "module": "app.js",
-    "version": "v22",
-    "renderLifecycleAuthoritative": true,
-    "emits": "kv:rendered",
-    "legacyPerLinkNavigationHandlersRemoved": true,
-    "legacyAgeNavigationHandlersRemoved": true,
-    "searchResultPerLinkHandlersRemoved": true,
-    "sourceShellIdentity": "visual-master"
-  },
-  "eventDrivenModules": ["experience","intelligence","cockpit","mastery","workspace","planner","profile"],
-  "sharedLifecycle": "kv:rendered",
-  "lifecycleSource": "app render authoritative with initial/storage adapter",
-  "lifecycleObserver": false,
-  "lifecycleObserverScope": "none",
-  "lifecyclePopstateEmitter": false,
-  "navigation": {
-    "module": "navigation-v18.js",
-    "mode": "delegated-capture",
-    "sharedAnchorContract": "a[data-link]",
-    "sharedControlContracts": ["data-studio-nav","data-kv-nav","data-age"],
-    "agePathCentralized": true,
-    "ageStateKeys": ["kirthiverse.hitech.static.progress.v2","kirthiverse.hitech.experience.v1"],
-    "appLegacyBubbleBindingsRemoved": true,
-    "appAgeBindingsRemoved": true,
-    "appSearchResultBindingsRemoved": true,
-    "moduleSpecificNavigationHandlersRemoved": ["workspace","planner","intelligence","cockpit"],
-    "duplicatePopstateListenersRemoved": ["mastery","workspace","planner","runtime-lifecycle"]
-  },
-  "navigationGuessingRemoved": true,
-  "profileRuntime": {"module":"profile-v17.js","route":"/profile","localOnly":true,"sharedNavigationContract":"data-link","visualDecoratorOwnsProfileState":false},
-  "legacyLearnerRuntimeUnloaded": ["experience.js","intelligence-v4.js","cockpit-v5.js","mastery-v6.js","workspace-v7.js","planner-v8.js"],
-  "legacyQaRuntimeUnloaded": ["diagnostics-v9.js","release-v10.js","gate-v11.js","rc-v12.js","closure-v13.js","preprod-v14.js"],
-  "rejectedOptimizations": [
-    {"name":"same-context exact duplicate CSS rule deduplication","reason":"zero exact duplicate qualified rules found and parser increased generated payload","adopted":false},
-    {"name":"transient generated visual-system-v21.css as sole browser stylesheet","reason":"browser-visible unstyled failure exposed deployment fragility because generated CSS was not committed source","adopted":false}
-  ],
-  "renderingRecovery": {
-    "reason": "owner browser screenshot showed unstyled HTML on controlled preview",
-    "action": "restored six committed CSS files in original cascade order",
-    "liveSmokeRequiresCssMime": true,
-    "liveSmokeRejectsHtmlAtCssUrls": true
-  },
-  "rollbackEvidencePreserved": true,
-  "manusRuntime": false,
-  "productionDnsChanged": false,
-  "productionCutoverAllowed": false
+  "project":"kirthiverse-hitech","candidate":"MANUS-VISUAL-MASTER-05","mode":"lean-controlled-preview","baseBuild":"HITECH-2026-09-03-14",
+  "learnerRuntime":["app.js","navigation-v18.js","runtime-lifecycle-v16.js","learning-foundation-v19.js","learning-tools-v20.js","visual-master-v15.js","profile-v17.js","visual-master-pages-v15.js","pwa-v23.js","visual-preview-gate.js"],
+  "learnerStyles":["styles.css","learning-foundation-v19.css","learning-tools-v20.css","visual-master-v15.css","visual-master-pages-v15.css","visual-master-features-v15.css"],
+  "bundles":{"learnerFoundation":{"javascript":"learning-foundation-v19.js","modules":["experience","intelligence","cockpit"],"sharedHelpers":true,"indexedLessonLookup":true,"singleRenderProgressSnapshot":true},"learningTools":{"javascript":"learning-tools-v20.js","modules":["mastery","workspace","planner"],"sharedHelpers":true,"sharedRenderScheduler":true,"indexedLessonLookup":true,"indexedAssessmentLookup":true},"visualSystem":{"mode":"committed-css-recovery","sourceStylesheets":["styles.css","learning-foundation-v19.css","learning-tools-v20.css","visual-master-v15.css","visual-master-pages-v15.css","visual-master-features-v15.css"],"browserRequests":6,"allBrowserDependenciesCommitted":true,"transientGeneratedStylesheetRequired":false}},
+  "appRuntime":{"module":"app.js","version":"v22","renderLifecycleAuthoritative":true,"emits":"kv:rendered","legacyPerLinkNavigationHandlersRemoved":true,"legacyAgeNavigationHandlersRemoved":true,"searchResultPerLinkHandlersRemoved":true,"sourceShellIdentity":"visual-master"},
+  "pwa":{"bootstrap":"pwa-v23.js","serviceWorker":"sw-v23.js","manifest":"manifest.webmanifest","icon":"kirthiverse-mark.svg","scope":"/","networkStrategy":"network-first navigation/scripts/styles with cache fallback","offlineCanonicalData":true,"productionCutoverDependency":false},
+  "eventDrivenModules":["experience","intelligence","cockpit","mastery","workspace","planner","profile"],"sharedLifecycle":"kv:rendered","lifecycleSource":"app-render-authoritative with initial/storage adapter","lifecycleObserver":false,"lifecycleObserverScope":"none","lifecyclePopstateEmitter":false,
+  "navigation":{"module":"navigation-v18.js","mode":"delegated-capture","sharedAnchorContract":"a[data-link]","sharedControlContracts":["data-studio-nav","data-kv-nav","data-age"],"agePathCentralized":true,"appLegacyBubbleBindingsRemoved":true,"appAgeBindingsRemoved":true,"appSearchResultBindingsRemoved":true},
+  "legacyLearnerRuntimeUnloaded":["experience.js","intelligence-v4.js","cockpit-v5.js","mastery-v6.js","workspace-v7.js","planner-v8.js"],"legacyQaRuntimeUnloaded":["diagnostics-v9.js","release-v10.js","gate-v11.js","rc-v12.js","closure-v13.js","preprod-v14.js"],
+  "renderingRecovery":{"action":"six committed CSS files in original cascade order","liveSmokeRequiresCssMime":true,"liveSmokeRejectsHtmlAtCssUrls":true},"rollbackEvidencePreserved":true,"manusRuntime":false,"productionDnsChanged":false,"productionCutoverAllowed":false
 }

@@ -17,15 +17,12 @@
     if(String(e.key||'').startsWith('kirthiverse.'))emit('storage');
   });
 
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',()=>emit('initial-render-adapter'),{once:true});
-  }else{
-    emit('initial-render-adapter');
-  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>emit('initial-render-adapter'),{once:true});
+  else emit('initial-render-adapter');
 
   window.KV_RUNTIME_LIFECYCLE={
     candidate:CANDIDATE,
-    source:'router-popstate-after-app-render',
+    source:'app-render-authoritative',
     mode:'app-render-authoritative',
     observerScope:'none',
     navigationGuessing:false,

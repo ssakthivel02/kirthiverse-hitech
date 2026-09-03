@@ -27,6 +27,11 @@ jobs:
           set -euo pipefail
           grep -q 'MANUS-VISUAL-MASTER-05' index.html
           grep -q 'navigation-v18.js' index.html
+          grep -q 'learning-foundation-v19.js' index.html
+          grep -q 'learning-foundation-v19.css' index.html
+          ! grep -Eq 'experience\.js|intelligence-v4\.js|cockpit-v5\.js|experience\.css|intelligence-v4\.css|cockpit-v5\.css' index.html
+          grep -q "version:'v19'" learning-foundation-v19.js
+          grep -q "modules:\['experience','intelligence','cockpit'\]" learning-foundation-v19.js
           grep -q 'delegated-capture' navigation-v18.js
           grep -q 'agePathCentralized:true' navigation-v18.js
           grep -q "source:'router-popstate-after-app-render'" runtime-lifecycle-v16.js
@@ -39,7 +44,7 @@ jobs:
           grep -q '"productionCutoverAllowed": false' visual-preview.json
           grep -q '"mergeAllowed": false' visual-preview.json
           ! grep -Eq 'diagnostics-v9\.js|release-v10\.js|gate-v11\.js|rc-v12\.js|closure-v13\.js|preprod-v14\.js' index.html
-          ! grep -Eq '__manus__|manus-storage|vite-plugin-manus-runtime|BUILT_IN_FORGE|artifacts\.cloudflare\.net|ManusDialog' app.js navigation-v18.js runtime-lifecycle-v16.js experience.js intelligence-v4.js cockpit-v5.js mastery-v6.js workspace-v7.js planner-v8.js visual-master-v15.js profile-v17.js visual-master-pages-v15.js
+          ! grep -Eq '__manus__|manus-storage|vite-plugin-manus-runtime|BUILT_IN_FORGE|artifacts\.cloudflare\.net|ManusDialog' app.js navigation-v18.js runtime-lifecycle-v16.js learning-foundation-v19.js mastery-v6.js workspace-v7.js planner-v8.js visual-master-v15.js profile-v17.js visual-master-pages-v15.js
           ! grep -q "addEventListener('popstate'" mastery-v6.js workspace-v7.js planner-v8.js
           grep -q "KV_MASTERY_LIFECYCLE='kv:rendered'" mastery-v6.js
           grep -q "KV_WORKSPACE_LIFECYCLE='kv:rendered'" workspace-v7.js
@@ -108,6 +113,18 @@ jobs:
 
           fetch 'home' "$PREVIEW_URL/" /tmp/home.html
           expect_marker 'home candidate marker' /tmp/home.html 'MANUS-VISUAL-MASTER-05'
+          expect_marker 'home learner foundation js' /tmp/home.html 'learning-foundation-v19.js'
+          expect_marker 'home learner foundation css' /tmp/home.html 'learning-foundation-v19.css'
+          if grep -Eq 'experience\.js|intelligence-v4\.js|cockpit-v5\.js|experience\.css|intelligence-v4\.css|cockpit-v5\.css' /tmp/home.html; then
+            echo 'SMOKE_ASSERT_FAIL: legacy learner foundation assets still referenced'
+            exit 1
+          fi
+          echo 'SMOKE_ASSERT_PASS: legacy learner foundation assets not referenced'
+
+          fetch 'learner foundation js' "$PREVIEW_URL/learning-foundation-v19.js" /tmp/foundation.js
+          expect_marker 'learner foundation runtime marker' /tmp/foundation.js 'KV_LEARNING_FOUNDATION'
+          fetch 'learner foundation css' "$PREVIEW_URL/learning-foundation-v19.css" /tmp/foundation.css
+          expect_marker 'learner foundation style marker' /tmp/foundation.css 'learner foundation v19'
 
           fetch 'preview contract' "$PREVIEW_URL/visual-preview.json" /tmp/preview.json
           python - <<'PY'
@@ -135,6 +152,8 @@ jobs:
 
           echo '### Browser-entry smoke gate PASS' >> "$GITHUB_STEP_SUMMARY"
           echo '- Home candidate marker: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Learner foundation bundle: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Legacy learner foundation references: ABSENT' >> "$GITHUB_STEP_SUMMARY"
           echo '- Preview contract structure: PASS' >> "$GITHUB_STEP_SUMMARY"
           echo '- Profile deep link: PASS' >> "$GITHUB_STEP_SUMMARY"
           echo '- Lesson deep link: PASS' >> "$GITHUB_STEP_SUMMARY"
@@ -157,6 +176,7 @@ jobs:
           echo '- Candidate: MANUS-VISUAL-MASTER-05' >> "$GITHUB_STEP_SUMMARY"
           echo '- Navigation: centralized delegated SPA controller' >> "$GITHUB_STEP_SUMMARY"
           echo '- Render lifecycle: observer-free router events' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Learner foundation: Experience + Intelligence + Cockpit bundled' >> "$GITHUB_STEP_SUMMARY"
           echo '- Worker target: kirthiverse-hitech' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged by this workflow' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

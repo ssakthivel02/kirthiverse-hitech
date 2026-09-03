@@ -32,7 +32,8 @@
   function bind(){document.querySelectorAll('[data-goal-v8]').forEach(b=>b.onclick=()=>setGoal(Number(b.dataset.goalV8)));document.querySelectorAll('[data-pref-v8]').forEach(b=>b.onclick=()=>togglePref(b.dataset.prefV8));document.querySelectorAll('[data-v8] [data-link]').forEach(a=>{if(a.dataset.v8Bound)return;a.dataset.v8Bound='1';a.addEventListener('click',e=>{e.preventDefault();history.pushState({},'',a.getAttribute('href'));window.dispatchEvent(new PopStateEvent('popstate'));})});}
   function inject(force=false){if(injecting)return;const route=location.pathname;const existing=document.querySelector('[data-v8]');if(!force&&existing&&route===lastRoute){bind();return;}injecting=true;try{document.querySelectorAll('[data-v8]').forEach(n=>n.remove());const home=document.querySelector('.home-page');if(home){const anchor=home.querySelector('.metric-deck')||home.querySelector('.metrics');if(anchor)anchor.insertAdjacentHTML('afterend',buildPlanner()+buildChallenge()+buildA11y());}else{const page=document.querySelector('.page');if(page)page.insertAdjacentHTML('beforeend',buildA11y());}lastRoute=route;bind();}finally{injecting=false;}}
   function refresh(force=false){applyPrefs();requestAnimationFrame(()=>inject(force));}
-  let scheduled=false;const schedule=()=>{if(injecting||scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;inject(false)});};
-  const app=document.getElementById('app');if(app)new MutationObserver(schedule).observe(app,{childList:true,subtree:false});
-  addEventListener('popstate',()=>refresh(true));addEventListener('storage',()=>refresh(true));refresh(true);
+  addEventListener('kv:rendered',()=>refresh(true));
+  addEventListener('popstate',()=>refresh(true));
+  addEventListener('storage',e=>{if(e.key===prefsKey||e.key===progressKey)refresh(true)});
+  refresh(true);
 })();

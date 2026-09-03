@@ -1,10 +1,11 @@
 (()=>{
-  const CANDIDATE='MANUS-VISUAL-MASTER-03';
+  const CANDIDATE='MANUS-VISUAL-MASTER-04';
   const checks=[];
   const add=(name,pass,detail,critical=true)=>checks.push({name,pass:!!pass,detail,critical});
   const L=window.KV_LESSONS||[],A=window.KV_ASSESSMENTS||[];
   const uniq=x=>new Set(x).size===x.length;
   add('Candidate marker',document.documentElement.dataset.visualCandidate===CANDIDATE,document.documentElement.dataset.visualCandidate||'missing');
+  add('Shared runtime lifecycle',!!window.KV_RUNTIME_LIFECYCLE,window.KV_RUNTIME_LIFECYCLE?.candidate||'missing');
   add('Canonical lessons',L.length===135,`${L.length}/135`);
   add('Canonical assessments',A.length===72,`${A.length}/72`);
   add('Unique lesson IDs',uniq(L.map(x=>x.id)),`${new Set(L.map(x=>x.id)).size}/${L.length}`);

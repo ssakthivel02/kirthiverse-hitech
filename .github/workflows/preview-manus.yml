@@ -26,13 +26,19 @@ jobs:
         run: |
           set -euo pipefail
           grep -q 'MANUS-VISUAL-MASTER-05' index.html
+          grep -q 'navigation-v18.js' index.html
+          grep -q 'delegated-capture' navigation-v18.js
           grep -q '"lessons":135' visual-preview.json
           grep -q '"assessments":72' visual-preview.json
           grep -q '"worlds":11' visual-preview.json
           grep -q '"productionCutoverAllowed": false' visual-preview.json
           grep -q '"mergeAllowed": false' visual-preview.json
           ! grep -Eq 'diagnostics-v9\.js|release-v10\.js|gate-v11\.js|rc-v12\.js|closure-v13\.js|preprod-v14\.js' index.html
-          ! grep -Eq '__manus__|manus-storage|vite-plugin-manus-runtime|BUILT_IN_FORGE|artifacts\.cloudflare\.net|ManusDialog' app.js runtime-lifecycle-v16.js experience.js intelligence-v4.js cockpit-v5.js mastery-v6.js workspace-v7.js planner-v8.js visual-master-v15.js visual-master-pages-v15.js
+          ! grep -Eq '__manus__|manus-storage|vite-plugin-manus-runtime|BUILT_IN_FORGE|artifacts\.cloudflare\.net|ManusDialog' app.js navigation-v18.js runtime-lifecycle-v16.js experience.js intelligence-v4.js cockpit-v5.js mastery-v6.js workspace-v7.js planner-v8.js visual-master-v15.js profile-v17.js visual-master-pages-v15.js
+          ! grep -q "addEventListener('popstate'" mastery-v6.js workspace-v7.js planner-v8.js
+          grep -q "KV_MASTERY_LIFECYCLE='kv:rendered'" mastery-v6.js
+          grep -q "KV_WORKSPACE_LIFECYCLE='kv:rendered'" workspace-v7.js
+          grep -q "KV_PLANNER_LIFECYCLE='kv:rendered'" planner-v8.js
           echo 'Candidate contract validated.'
 
       - name: Confirm Worker target
@@ -110,6 +116,7 @@ jobs:
           echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
           echo '- Branch: design/manus-visual-master' >> "$GITHUB_STEP_SUMMARY"
           echo '- Candidate: MANUS-VISUAL-MASTER-05' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Navigation: centralized delegated SPA controller' >> "$GITHUB_STEP_SUMMARY"
           echo '- Worker target: kirthiverse-hitech' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged by this workflow' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

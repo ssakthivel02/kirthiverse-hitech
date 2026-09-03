@@ -1,5 +1,5 @@
 (()=>{
-  const CANDIDATE='MANUS-VISUAL-MASTER-01';
+  const CANDIDATE='MANUS-VISUAL-MASTER-04';
   const ROOT=document.documentElement;
   const reduce=matchMedia('(prefers-reduced-motion: reduce)');
   ROOT.dataset.visualMaster=CANDIDATE;
@@ -34,14 +34,13 @@
     requestAnimationFrame(()=>document.querySelector('main')?.focus?.({preventScroll:true}));
   });
 
-  // Keep visual-state markers small and deterministic. No MutationObserver is added here.
   const applyRoute=()=>{
     document.body.dataset.route=location.pathname==='/'?'home':location.pathname.split('/').filter(Boolean)[0]||'home';
   };
+  addEventListener('kv:rendered',applyRoute);
   addEventListener('popstate',applyRoute);
   applyRoute();
 
-  // Asset placeholders are deliberate until owner-approved originals arrive.
   window.KV_VISUAL_MASTER={
     candidate:CANDIDATE,
     source:'owner-provided Manus current-state handover',

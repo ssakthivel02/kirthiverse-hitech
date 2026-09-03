@@ -1,5 +1,5 @@
 (()=>{
-  const BUILD='MANUS-VISUAL-MASTER-04';
+  const BUILD='MANUS-VISUAL-MASTER-05';
   let seq=0;
   let scheduled=false;
   function emit(reason='render'){

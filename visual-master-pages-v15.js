@@ -1,8 +1,7 @@
 (()=>{
-  const CANDIDATE='MANUS-VISUAL-MASTER-02';
+  const CANDIDATE='MANUS-VISUAL-MASTER-04';
   const PROFILE_KEY='kirthiverse.hitech.profile.local.v1';
   const PROGRESS_KEY='kirthiverse.hitech.static.progress.v2';
-  const root=()=>document.querySelector('.app');
   const readJSON=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch{return f}};
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const profile=()=>readJSON(PROFILE_KEY,{displayName:'Learner',agePath:'all',language:'English + Tamil'});
@@ -28,6 +27,7 @@
     if(profileLink){e.preventDefault();history.pushState({},'','/profile');dispatchEvent(new PopStateEvent('popstate'));return}
     if(e.target.closest('a[data-link]'))setTimeout(enhance,0);
   },true);
+  addEventListener('kv:rendered',enhance);
   addEventListener('popstate',()=>setTimeout(enhance,0));
   addEventListener('storage',e=>{if(e.key===PROFILE_KEY||e.key===PROGRESS_KEY)setTimeout(enhance,0)});
   enhance();

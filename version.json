@@ -1,7 +1,7 @@
 {
   "project": "kirthiverse-hitech",
   "experience": "KirthiVerse Hi-Tech Future Classroom OS",
-  "build": "HITECH-2026-09-03-12",
+  "build": "HITECH-2026-09-03-13",
   "source": "owner-provided Next-Generation package only",
   "canonical": {
     "lessons": 135,
@@ -58,7 +58,14 @@
     "localStateMigrationSafety": true,
     "criticalAssetMatrix": true,
     "manualClosureRegister": true,
-    "releaseCandidateContract": true
+    "releaseCandidateContract": true,
+    "endToEndPreviewClosureCenter": true,
+    "localStateBackup": true,
+    "responsiveViewportSignal": true,
+    "accessibilityClosureSignals": true,
+    "productionCutoverRunbook": true,
+    "rollbackPlan": true,
+    "previewClosureContract": true
   },
   "qualityEvidence": {
     "repositoryLegacyStringSearch": "PASS",
@@ -66,12 +73,14 @@
     "paidCloudflareServicesEnabled": false,
     "gateScope": "preview-only",
     "releaseCandidateContract": "/release-candidate.json",
-    "manualChecklist": "/PREVIEW_RELEASE_CHECKLIST.md"
+    "previewClosureContract": "/preview-closure.json",
+    "manualChecklist": "/PREVIEW_RELEASE_CHECKLIST.md",
+    "productionCutoverRunbook": "/PRODUCTION_CUTOVER_RUNBOOK.md"
   },
   "releaseDecision": {
     "automatedPreviewVerdict": "CALCULATED_IN_BROWSER",
-    "productionVerdict": "HOLD_PENDING_MANUAL_CLOSURE",
+    "productionVerdict": "HOLD_PENDING_MANUAL_CLOSURE_AND_OWNER_APPROVAL",
     "productionCutoverPerformed": false
   },
-  "status": "PREVIEW_RELEASE_CANDIDATE"
+  "status": "END_TO_END_PREVIEW_CLOSURE"
 }

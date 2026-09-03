@@ -1,7 +1,7 @@
 {
   "project": "kirthiverse-hitech",
-  "experience": "KirthiVerse Hi-Tech Future Classroom",
-  "build": "HITECH-2026-09-03-01",
+  "experience": "KirthiVerse Hi-Tech Future Classroom OS",
+  "build": "HITECH-2026-09-03-02",
   "source": "owner-provided Next-Generation package only",
   "canonical": {
     "lessons": 135,
@@ -9,5 +9,7 @@
     "worlds": 11
   },
   "legacyRepoUsed": false,
-  "manusRuntime": false
+  "manusRuntimeUsed": false,
+  "deployment": "Cloudflare Workers Static Assets",
+  "status": "browser-preview-validation"
 }

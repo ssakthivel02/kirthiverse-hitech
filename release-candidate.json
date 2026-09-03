@@ -1,6 +1,6 @@
 {
   "project": "kirthiverse-hitech",
-  "candidate": "HITECH-2026-09-03-12",
+  "candidate": "HITECH-2026-09-03-13",
   "scope": "Cloudflare Workers preview only",
   "sourcePolicy": "owner-provided Next-Generation package only",
   "canonical": {
@@ -19,29 +19,41 @@
     "runtimeBuildIdentity": true,
     "canonicalCounts": true,
     "uniqueLessonIds": true,
+    "uniqueAssessmentIds": true,
     "tamilUnicodeSampling": true,
     "localStorageReadWrite": true,
     "localStateParseSafety": true,
+    "localStateBackup": true,
     "historyApi": true,
     "https": true,
     "routeSmokeTests": true,
     "assetReachability": true,
     "versionStalenessDetection": true,
     "runtimeContaminationScan": true,
-    "evidenceExport": true
+    "responsiveViewportSignal": true,
+    "accessibilitySignals": true,
+    "evidenceExport": true,
+    "productionRunbook": true,
+    "rollbackPlan": true
   },
   "manualReleaseClosure": [
     "owner visual approval",
-    "physical phone and tablet validation",
+    "physical phone validation",
+    "physical tablet validation",
     "formal screen-reader validation",
     "200 percent zoom and reflow validation",
     "professional Tamil language review"
   ],
+  "artifacts": {
+    "previewClosure": "/preview-closure.json",
+    "manualChecklist": "/PREVIEW_RELEASE_CHECKLIST.md",
+    "productionCutoverRunbook": "/PRODUCTION_CUTOVER_RUNBOOK.md"
+  },
   "rollback": {
     "sourceOfTruth": "GitHub main branch history",
     "productionCutoverPerformed": false,
     "currentProductionRollbackRequired": false
   },
-  "decisionRule": "Automated PREVIEW GO requires every critical browser-side automated check to pass. Production launch remains HOLD until manual closure and owner approval are completed.",
-  "status": "PREVIEW_RELEASE_CANDIDATE"
+  "decisionRule": "Automated PREVIEW GO requires every critical browser-side automated check to pass. Production launch remains HOLD until manual closure and explicit owner approval are completed.",
+  "status": "END_TO_END_PREVIEW_CLOSURE"
 }

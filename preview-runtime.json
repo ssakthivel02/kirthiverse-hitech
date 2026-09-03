@@ -13,14 +13,22 @@
     "workspace-v7.js",
     "planner-v8.js",
     "visual-master-v15.js",
+    "profile-v17.js",
     "visual-master-pages-v15.js",
     "visual-preview-gate.js"
   ],
-  "eventDrivenModules": ["experience","intelligence","cockpit","mastery","workspace","planner"],
+  "eventDrivenModules": ["experience","intelligence","cockpit","mastery","workspace","planner","profile"],
   "sharedLifecycle": "kv:rendered",
   "lifecycleSource": "#app direct childList render observation",
   "lifecycleSubtreeObservation": false,
   "navigationGuessingRemoved": true,
+  "profileRuntime": {
+    "module": "profile-v17.js",
+    "route": "/profile",
+    "localOnly": true,
+    "sharedNavigationContract": "data-link",
+    "visualDecoratorOwnsProfileState": false
+  },
   "legacyQaRuntimeUnloaded": [
     "diagnostics-v9.js",
     "release-v10.js",

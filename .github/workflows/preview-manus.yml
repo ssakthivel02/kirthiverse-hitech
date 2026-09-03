@@ -28,6 +28,11 @@ jobs:
           grep -q 'MANUS-VISUAL-MASTER-05' index.html
           grep -q 'navigation-v18.js' index.html
           grep -q 'delegated-capture' navigation-v18.js
+          grep -q 'agePathCentralized:true' navigation-v18.js
+          grep -q "source:'router-popstate-after-app-render'" runtime-lifecycle-v16.js
+          grep -q "observerScope:'none'" runtime-lifecycle-v16.js
+          ! grep -q 'new MutationObserver' runtime-lifecycle-v16.js
+          grep -q '"lifecycleObserver": false' preview-runtime.json
           grep -q '"lessons":135' visual-preview.json
           grep -q '"assessments":72' visual-preview.json
           grep -q '"worlds":11' visual-preview.json
@@ -151,6 +156,7 @@ jobs:
           echo '- Branch: design/manus-visual-master' >> "$GITHUB_STEP_SUMMARY"
           echo '- Candidate: MANUS-VISUAL-MASTER-05' >> "$GITHUB_STEP_SUMMARY"
           echo '- Navigation: centralized delegated SPA controller' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Render lifecycle: observer-free router events' >> "$GITHUB_STEP_SUMMARY"
           echo '- Worker target: kirthiverse-hitech' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged by this workflow' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

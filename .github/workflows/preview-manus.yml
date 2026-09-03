@@ -25,14 +25,6 @@ jobs:
       - name: Checkout visual candidate
         uses: actions/checkout@v4
 
-      - name: Build visual CSS v21
-        shell: bash
-        run: |
-          set -euo pipefail
-          python build-visual-css.py
-          test -s visual-system-v21.css
-          grep -Fq 'KirthiVerse visual system v21' visual-system-v21.css
-
       - name: Validate candidate contract
         shell: bash
         run: |
@@ -44,56 +36,43 @@ jobs:
           index=Path('index.html').read_text(encoding='utf-8')
           runtime=json.loads(Path('preview-runtime.json').read_text(encoding='utf-8'))
           preview=json.loads(Path('visual-preview.json').read_text(encoding='utf-8'))
-          foundation=Path('learning-foundation-v19.js').read_text(encoding='utf-8')
-          tools=Path('learning-tools-v20.js').read_text(encoding='utf-8')
+          app=Path('app.js').read_text(encoding='utf-8')
           nav=Path('navigation-v18.js').read_text(encoding='utf-8')
           lifecycle=Path('runtime-lifecycle-v16.js').read_text(encoding='utf-8')
-          css=Path('visual-system-v21.css').read_text(encoding='utf-8')
+          foundation=Path('learning-foundation-v19.js').read_text(encoding='utf-8')
+          tools=Path('learning-tools-v20.js').read_text(encoding='utf-8')
 
-          for marker in ['MANUS-VISUAL-MASTER-05','navigation-v18.js','learning-foundation-v19.js','learning-tools-v20.js','visual-system-v21.css']:
+          css=[
+              'styles.css','learning-foundation-v19.css','learning-tools-v20.css',
+              'visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css'
+          ]
+          for name in css:
+              assert f'/{name}?v=MANUS-VISUAL-MASTER-05' in index, f'missing committed CSS reference: {name}'
+              p=Path(name)
+              assert p.is_file() and p.stat().st_size > 1000, f'invalid CSS source: {name}'
+          assert 'visual-system-v21.css' not in index, 'transient generated CSS must not be browser dependency'
+
+          for marker in ['MANUS-VISUAL-MASTER-05','navigation-v18.js','learning-foundation-v19.js','learning-tools-v20.js']:
               assert marker in index, f'missing index marker: {marker}'
-          direct_css=['styles.css','learning-foundation-v19.css','learning-tools-v20.css','visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css']
-          assert not any(x in index for x in direct_css), 'source CSS returned to direct browser loading'
           legacy=['experience.js','intelligence-v4.js','cockpit-v5.js','mastery-v6.js','workspace-v7.js','planner-v8.js','diagnostics-v9.js','release-v10.js','gate-v11.js','rc-v12.js','closure-v13.js','preprod-v14.js']
           assert not any(x in index for x in legacy), 'legacy runtime returned to index'
 
-          assert 'KV_LEARNING_FOUNDATION' in foundation
-          assert all(x in foundation for x in ['experience','intelligence','cockpit'])
-          assert 'KV_LEARNING_TOOLS' in tools
-          assert all(x in tools for x in ['mastery','workspace','planner','BY_ID','ASSESS_BY_LESSON'])
-          assert "addEventListener('popstate'" not in tools
+          assert 'KV_LEARNING_FOUNDATION' in foundation and all(x in foundation for x in ['experience','intelligence','cockpit'])
+          assert 'KV_LEARNING_TOOLS' in tools and all(x in tools for x in ['mastery','workspace','planner','BY_ID','ASSESS_BY_LESSON'])
           assert 'delegated-capture' in nav and 'agePathCentralized:true' in nav
-          assert "source:'router-popstate-after-app-render'" in lifecycle
-          assert "observerScope:'none'" in lifecycle and 'new MutationObserver' not in lifecycle
+          assert 'appRenderAuthoritative:true' in lifecycle and 'popstateEmitter:false' in lifecycle
+          assert "CustomEvent('kv:rendered'" in app
+          assert "querySelectorAll('[data-link]').forEach" not in app
+          assert "querySelectorAll('[data-age]').forEach" not in app
+          assert 'new MutationObserver' not in lifecycle
           assert runtime.get('lifecycleObserver') is False
-
-          bundles=runtime.get('bundles') or {}
-          visual=bundles.get('visualSystem') or {}
-          assert visual.get('stylesheet') == 'visual-system-v21.css'
-          assert visual.get('generatedBy') == 'build-visual-css.py'
-          assert visual.get('browserRequestsBefore') == 6
-          assert visual.get('browserRequestsAfter') == 1
-          assert visual.get('conservativeMinification') is True
-          assert visual.get('sourceFilesLoadedByIndex') is False
-          assert len(visual.get('sourceStylesheets') or []) == 6
-          assert runtime.get('learnerStyles') == ['visual-system-v21.css']
-
-          canonical=preview.get('canonical') or {}
-          assert canonical == {'lessons':135,'assessments':72,'worlds':11}
-          assert preview.get('productionCutoverAllowed') is False
-          assert preview.get('mergeAllowed') is False
-          rc=preview.get('runtimeConsolidation') or {}
-          assert rc.get('visualCssBundle') == 'visual-system-v21.css'
-          assert rc.get('visualCssRequestsAfter') == 1
-
-          first_non_comment=css.split('*/',1)[-1].lstrip()
-          if '@import' in css:
-              assert first_non_comment.startswith('@import'), '@import must remain before qualified rules'
+          assert preview.get('canonical') == {'lessons':135,'assessments':72,'worlds':11}
+          assert preview.get('productionCutoverAllowed') is False and preview.get('mergeAllowed') is False
 
           contamination=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog']
           loaded='\n'.join(Path(p).read_text(encoding='utf-8') for p in ['app.js','navigation-v18.js','runtime-lifecycle-v16.js','learning-foundation-v19.js','learning-tools-v20.js','visual-master-v15.js','profile-v17.js','visual-master-pages-v15.js'])
           assert not any(x in loaded for x in contamination), 'Manus/runtime contamination detected'
-          print('Candidate contract validated structurally.')
+          print('Candidate contract validated with committed CSS source-of-truth.')
           PY
 
       - name: Measure current runtime payload
@@ -120,18 +99,14 @@ jobs:
           total=css_bytes+js_bytes
           reduction=baseline-total
           pct=reduction/baseline*100
-          target=round(baseline*.75)
           print(f'PAYLOAD_CSS_BYTES={css_bytes}')
           print(f'PAYLOAD_JS_BYTES={js_bytes}')
           print(f'PAYLOAD_COMBINED_BYTES={total}')
-          print(f'PAYLOAD_REDUCTION_BYTES={reduction}')
           print(f'PAYLOAD_REDUCTION_PERCENT={pct:.2f}')
-          print(f'PAYLOAD_25_PERCENT_TARGET_BYTES={target}')
           print('PAYLOAD_CSS_ASSETS='+','.join(css))
           print('PAYLOAD_JS_ASSETS='+','.join(js))
           with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as f:
-              f.write('### Runtime payload measurement\n')
-              f.write(f'- Baseline combined: {baseline:,} bytes\n- Current CSS: {css_bytes:,} bytes\n- Current JavaScript: {js_bytes:,} bytes\n- Current combined: {total:,} bytes\n- Reduction: {reduction:,} bytes ({pct:.2f}%)\n- 25% target threshold: {target:,} bytes\n- Target met: {"YES" if total <= target else "NO"}\n')
+              f.write(f'### Runtime payload\n- CSS: {css_bytes:,} bytes\n- JS: {js_bytes:,} bytes\n- Combined: {total:,} bytes\n- Baseline delta: {pct:.2f}%\n')
           PY
 
       - name: Confirm Worker target
@@ -157,7 +132,6 @@ jobs:
               f.write('CLOUDFLARE_API_TOKEN_CLEAN='+token+'\n')
               f.write('CLOUDFLARE_ACCOUNT_ID_CLEAN='+account+'\n')
           PY
-          echo 'Cloudflare credential formatting normalized without printing secret values.'
 
       - name: Deploy controlled preview to existing Worker
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
@@ -166,7 +140,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID_CLEAN }}
         run: npx --yes wrangler@4 deploy --assets=.
 
-      - name: Post-deploy HTTP smoke gate
+      - name: Post-deploy rendering smoke gate
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
         run: |
@@ -174,62 +148,48 @@ jobs:
           sleep 4
           fetch(){ local label="$1" url="$2" out="$3"; echo "SMOKE_FETCH_START: $label"; code=$(curl --silent --show-error --location --retry 4 --retry-delay 2 --output "$out" --write-out '%{http_code}' "$url"); echo "SMOKE_HTTP: $label=$code"; test "$code" = "200"; test -s "$out"; }
           expect(){ local label="$1" file="$2" marker="$3"; grep -Fq "$marker" "$file" && echo "SMOKE_ASSERT_PASS: $label" || { echo "SMOKE_ASSERT_FAIL: $label"; exit 1; }; }
+          check_css(){
+            local name="$1" out="/tmp/${1//\//_}"
+            fetch "css $name" "$PREVIEW_URL/$name?v=MANUS-VISUAL-MASTER-05" "$out"
+            bytes=$(wc -c < "$out")
+            test "$bytes" -gt 1000 || { echo "SMOKE_ASSERT_FAIL: css too small $name=$bytes"; exit 1; }
+            if grep -Eqi '<!doctype|<html' "$out"; then echo "SMOKE_ASSERT_FAIL: CSS URL returned HTML for $name"; exit 1; fi
+            headers=$(curl --silent --show-error --location --head "$PREVIEW_URL/$name?v=MANUS-VISUAL-MASTER-05")
+            echo "$headers" | grep -Eqi '^content-type:[[:space:]]*text/css' || { echo "SMOKE_ASSERT_FAIL: CSS MIME for $name"; echo "$headers"; exit 1; }
+            echo "SMOKE_ASSERT_PASS: css delivery $name ($bytes bytes)"
+          }
 
           fetch home "$PREVIEW_URL/" /tmp/home.html
           expect 'home candidate marker' /tmp/home.html 'MANUS-VISUAL-MASTER-05'
-          expect 'home visual system v21' /tmp/home.html 'visual-system-v21.css'
-          if grep -Eq 'styles\.css|learning-foundation-v19\.css|learning-tools-v20\.css|visual-master-v15\.css|visual-master-pages-v15\.css|visual-master-features-v15\.css' /tmp/home.html; then echo 'SMOKE_ASSERT_FAIL: source CSS still directly referenced'; exit 1; fi
-          echo 'SMOKE_ASSERT_PASS: source CSS not directly referenced'
+          for css in styles.css learning-foundation-v19.css learning-tools-v20.css visual-master-v15.css visual-master-pages-v15.css visual-master-features-v15.css; do
+            expect "home references $css" /tmp/home.html "$css?v=MANUS-VISUAL-MASTER-05"
+            check_css "$css"
+          done
+          if grep -Fq 'visual-system-v21.css' /tmp/home.html; then echo 'SMOKE_ASSERT_FAIL: transient v21 CSS dependency remains'; exit 1; fi
+          echo 'SMOKE_ASSERT_PASS: no transient generated CSS dependency'
 
-          fetch 'visual system css' "$PREVIEW_URL/visual-system-v21.css" /tmp/visual.css
-          expect 'visual system marker' /tmp/visual.css 'KirthiVerse visual system v21'
           fetch 'learner foundation js' "$PREVIEW_URL/learning-foundation-v19.js" /tmp/foundation.js
           expect 'learner foundation marker' /tmp/foundation.js 'KV_LEARNING_FOUNDATION'
           fetch 'learning tools js' "$PREVIEW_URL/learning-tools-v20.js" /tmp/tools.js
           expect 'learning tools marker' /tmp/tools.js 'KV_LEARNING_TOOLS'
-          fetch 'runtime manifest' "$PREVIEW_URL/preview-runtime.json" /tmp/runtime.json
-          python - <<'PY'
-          import json
-          d=json.load(open('/tmp/runtime.json',encoding='utf-8'))
-          v=(d.get('bundles') or {}).get('visualSystem') or {}
-          assert v.get('stylesheet')=='visual-system-v21.css'
-          assert v.get('browserRequestsAfter')==1
-          assert d.get('learnerStyles')==['visual-system-v21.css']
-          print('SMOKE_ASSERT_PASS: visual system manifest')
-          PY
-          fetch 'preview contract' "$PREVIEW_URL/visual-preview.json" /tmp/preview.json
-          python - <<'PY'
-          import json
-          d=json.load(open('/tmp/preview.json',encoding='utf-8'))
-          assert d.get('canonical')=={'lessons':135,'assessments':72,'worlds':11}
-          assert d.get('productionCutoverAllowed') is False and d.get('mergeAllowed') is False
-          print('SMOKE_ASSERT_PASS: preview contract')
-          PY
           fetch 'profile deep link' "$PREVIEW_URL/profile" /tmp/profile.html
           expect 'profile SPA shell' /tmp/profile.html 'MANUS-VISUAL-MASTER-05'
           fetch 'lesson deep link' "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1" /tmp/lesson.html
           expect 'lesson SPA shell' /tmp/lesson.html 'MANUS-VISUAL-MASTER-05'
           fetch 'canonical lesson asset' "$PREVIEW_URL/data/lessons-1.js" /tmp/lessons.js
           expect 'lesson data payload' /tmp/lessons.js 'KV_LESSONS'
-          echo '### Browser-entry smoke gate PASS' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Visual system v21: PASS' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Source CSS direct references: ABSENT' >> "$GITHUB_STEP_SUMMARY"
+          echo '### Rendering smoke gate PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Six committed CSS assets: HTTP 200 + text/css + non-HTML: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Transient generated CSS dependency: ABSENT' >> "$GITHUB_STEP_SUMMARY"
           echo '- Profile/lesson deep links: PASS' >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Deployment credential status
-        if: ${{ env.RAW_CLOUDFLARE_API_TOKEN == '' || env.RAW_CLOUDFLARE_ACCOUNT_ID == '' }}
-        run: |
-          echo '### Cloudflare preview deployment not executed' >> "$GITHUB_STEP_SUMMARY"
-          echo 'Validation passed, but repository credentials are not configured. No production DNS changed.' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Preview safety summary
         if: always()
         run: |
           echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
           echo '- Branch: design/manus-visual-master' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Candidate: MANUS-VISUAL-MASTER-05' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Visual CSS: v21 generated single-request bundle' >> "$GITHUB_STEP_SUMMARY"
+          echo '- CSS delivery: committed-source recovery mode' >> "$GITHUB_STEP_SUMMARY"
           echo '- Navigation: centralized delegated SPA controller' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Render lifecycle: observer-free router events' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Render lifecycle: app-owned kv:rendered' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

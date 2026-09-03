@@ -6,10 +6,10 @@
   const life=window.KV_RUNTIME_LIFECYCLE,nav=window.KV_NAVIGATION;
   add('Candidate marker',document.documentElement.dataset.visualCandidate===CANDIDATE,document.documentElement.dataset.visualCandidate||'missing');
   add('Central SPA navigation',nav?.candidate===CANDIDATE&&nav?.mode==='delegated-capture',nav?.mode||'missing');
+  add('Age-path navigation centralized',nav?.agePathCentralized===true,String(nav?.agePathCentralized));
   add('Shared runtime lifecycle',life?.candidate===CANDIDATE,life?.candidate||'missing');
-  add('Render-authoritative lifecycle',life?.source==='app-root-childlist',life?.source||'missing');
-  add('Lifecycle observer scope',life?.observerScope==='#app childList only',life?.observerScope||'missing');
-  add('Lifecycle observer active',life?.observerActive===true,String(life?.observerActive));
+  add('Router lifecycle source',life?.source==='router-popstate-after-app-render',life?.source||'missing');
+  add('Lifecycle observer removed',life?.observerScope==='none'&&life?.observerActive===false,`${life?.observerScope||'missing'} / ${String(life?.observerActive)}`);
   add('Experience event lifecycle',window.KV_EXPERIENCE_LIFECYCLE==='kv:rendered',window.KV_EXPERIENCE_LIFECYCLE||'missing');
   add('Intelligence event lifecycle',window.KV_INTELLIGENCE_LIFECYCLE==='kv:rendered',window.KV_INTELLIGENCE_LIFECYCLE||'missing');
   add('Cockpit event lifecycle',window.KV_COCKPIT_LIFECYCLE==='kv:rendered',window.KV_COCKPIT_LIFECYCLE||'missing');

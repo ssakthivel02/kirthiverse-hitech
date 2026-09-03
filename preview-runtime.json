@@ -18,6 +18,9 @@
   ],
   "eventDrivenModules": ["experience","intelligence","cockpit","mastery","workspace","planner"],
   "sharedLifecycle": "kv:rendered",
+  "lifecycleSource": "#app direct childList render observation",
+  "lifecycleSubtreeObservation": false,
+  "navigationGuessingRemoved": true,
   "legacyQaRuntimeUnloaded": [
     "diagnostics-v9.js",
     "release-v10.js",

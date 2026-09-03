@@ -18,7 +18,8 @@
     "plannerGlobalObserverRemoved": true,
     "workspaceGlobalObserverRemoved": true,
     "masteryGlobalObserverRemoved": true,
-    "remainingLegacyLayersPreservedForRollback": true
+    "profileRedundantPopstateHookRemoved": true,
+    "remainingLegacyEvidenceLayersPreservedForRollback": true
   },
   "pendingAssets": ["kirthiverse-mark_28bda5f0.png","kirthiverse-hero_15ccac10.png","kirthiverse-worlds_d4d17287.png"],
   "routes": ["/","/worlds","/world/:id","/lesson/:id","/search","/progress","/profile"],

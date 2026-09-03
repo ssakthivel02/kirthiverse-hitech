@@ -1,0 +1,48 @@
+{
+  "project": "kirthiverse-hitech",
+  "candidate": "MANUS-VISUAL-MASTER-03",
+  "branch": "design/manus-visual-master",
+  "baseBuild": "HITECH-2026-09-03-14",
+  "scope": "preview-only",
+  "designDonor": "owner-provided Manus current-state handover",
+  "canonical": {"lessons":135,"assessments":72,"worlds":11},
+  "manusRuntime": false,
+  "legacyRepo": false,
+  "productionDnsChanged": false,
+  "paidCloudflareServicesEnabled": false,
+  "pendingAssets": [
+    "kirthiverse-mark_28bda5f0.png",
+    "kirthiverse-hero_15ccac10.png",
+    "kirthiverse-worlds_d4d17287.png"
+  ],
+  "routes": ["/","/worlds","/world/:id","/lesson/:id","/search","/progress","/profile"],
+  "featuresPreserved": [
+    "local progress",
+    "age paths",
+    "bookmarks",
+    "Study Studio",
+    "weekly planner",
+    "canonical assessment deck",
+    "universe mastery",
+    "reading density",
+    "accessibility controls",
+    "local profile"
+  ],
+  "requiredPreviewChecks": [
+    "desktop 1440x900",
+    "laptop 1280x800",
+    "tablet 768x1024",
+    "mobile 390x844",
+    "direct lesson deep-link reload",
+    "route navigation",
+    "bookmark persistence",
+    "planner persistence",
+    "age-path persistence",
+    "Tamil rendering",
+    "keyboard navigation",
+    "reduced motion"
+  ],
+  "mergeAllowed": false,
+  "productionCutoverAllowed": false,
+  "status": "READY_FOR_CONTROLLED_VISUAL_PREVIEW"
+}

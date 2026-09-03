@@ -1,5 +1,11 @@
 .git/
+.github/
 .wrangler/
 wrangler.jsonc
 README.md
 _headers
+*.md
+RUNTIME_CONSOLIDATION_PLAN.md
+VISUAL_MASTER_MIGRATION.md
+PREVIEW_RELEASE_CHECKLIST.md
+PRODUCTION_CUTOVER_RUNBOOK.md

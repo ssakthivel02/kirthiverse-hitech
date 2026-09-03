@@ -10,6 +10,6 @@
   function markRoute(){document.body.dataset.route=location.pathname==='/'?'home':location.pathname.split('/').filter(Boolean)[0]||'home'}
   function enhance(){markRoute();addProfileNav();paintProfile();document.documentElement.dataset.visualCandidate=CANDIDATE}
   document.addEventListener('click',e=>{const profileLink=e.target.closest('[data-vm-profile]');if(profileLink){e.preventDefault();history.pushState({},'','/profile');dispatchEvent(new PopStateEvent('popstate'));return}},true);
-  addEventListener('kv:rendered',enhance);addEventListener('popstate',()=>setTimeout(enhance,0));addEventListener('storage',e=>{if(e.key===PROFILE_KEY||e.key===PROGRESS_KEY)setTimeout(enhance,0)});enhance();
+  addEventListener('kv:rendered',enhance);addEventListener('storage',e=>{if(e.key===PROFILE_KEY||e.key===PROGRESS_KEY)enhance()});enhance();
   window.KV_VISUAL_PAGES={candidate:CANDIDATE,profileRoute:true,localOnly:true,manusRuntime:false};
 })();

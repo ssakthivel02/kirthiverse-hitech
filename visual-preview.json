@@ -20,6 +20,9 @@
     "masteryGlobalObserverRemoved": true,
     "profileRedundantPopstateHookRemoved": true,
     "legacyQaDashboardsUnloadedFromLearnerRuntime": true,
+    "staleExperienceBuildStampRemoved": true,
+    "staleIntelligenceBuildFlareReplaced": true,
+    "staleCockpitBuildLabelRemoved": true,
     "legacyQaFilesDeleted": false,
     "runtimeManifest": "/preview-runtime.json"
   },

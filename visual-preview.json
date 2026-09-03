@@ -1,6 +1,6 @@
 {
   "project": "kirthiverse-hitech",
-  "candidate": "MANUS-VISUAL-MASTER-03",
+  "candidate": "MANUS-VISUAL-MASTER-04",
   "branch": "design/manus-visual-master",
   "baseBuild": "HITECH-2026-09-03-14",
   "scope": "preview-only",
@@ -10,6 +10,13 @@
   "legacyRepo": false,
   "productionDnsChanged": false,
   "paidCloudflareServicesEnabled": false,
+  "runtimeConsolidation": {
+    "sharedLifecycle": "kv:rendered",
+    "plannerGlobalObserverRemoved": true,
+    "workspaceGlobalObserverRemoved": true,
+    "masteryGlobalObserverRemoved": true,
+    "remainingLegacyLayersPreservedForRollback": true
+  },
   "pendingAssets": [
     "kirthiverse-mark_28bda5f0.png",
     "kirthiverse-hero_15ccac10.png",
@@ -40,7 +47,8 @@
     "age-path persistence",
     "Tamil rendering",
     "keyboard navigation",
-    "reduced motion"
+    "reduced motion",
+    "shared lifecycle present"
   ],
   "mergeAllowed": false,
   "productionCutoverAllowed": false,

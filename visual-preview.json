@@ -1,6 +1,6 @@
 {
   "project": "kirthiverse-hitech",
-  "candidate": "MANUS-VISUAL-MASTER-04",
+  "candidate": "MANUS-VISUAL-MASTER-05",
   "branch": "design/manus-visual-master",
   "baseBuild": "HITECH-2026-09-03-14",
   "scope": "preview-only",
@@ -12,44 +12,18 @@
   "paidCloudflareServicesEnabled": false,
   "runtimeConsolidation": {
     "sharedLifecycle": "kv:rendered",
+    "experienceGlobalObserverRemoved": true,
+    "intelligenceGlobalObserverRemoved": true,
+    "cockpitGlobalObserverRemoved": true,
     "plannerGlobalObserverRemoved": true,
     "workspaceGlobalObserverRemoved": true,
     "masteryGlobalObserverRemoved": true,
     "remainingLegacyLayersPreservedForRollback": true
   },
-  "pendingAssets": [
-    "kirthiverse-mark_28bda5f0.png",
-    "kirthiverse-hero_15ccac10.png",
-    "kirthiverse-worlds_d4d17287.png"
-  ],
+  "pendingAssets": ["kirthiverse-mark_28bda5f0.png","kirthiverse-hero_15ccac10.png","kirthiverse-worlds_d4d17287.png"],
   "routes": ["/","/worlds","/world/:id","/lesson/:id","/search","/progress","/profile"],
-  "featuresPreserved": [
-    "local progress",
-    "age paths",
-    "bookmarks",
-    "Study Studio",
-    "weekly planner",
-    "canonical assessment deck",
-    "universe mastery",
-    "reading density",
-    "accessibility controls",
-    "local profile"
-  ],
-  "requiredPreviewChecks": [
-    "desktop 1440x900",
-    "laptop 1280x800",
-    "tablet 768x1024",
-    "mobile 390x844",
-    "direct lesson deep-link reload",
-    "route navigation",
-    "bookmark persistence",
-    "planner persistence",
-    "age-path persistence",
-    "Tamil rendering",
-    "keyboard navigation",
-    "reduced motion",
-    "shared lifecycle present"
-  ],
+  "featuresPreserved": ["local progress","age paths","bookmarks","Study Studio","weekly planner","canonical assessment deck","universe mastery","reading density","accessibility controls","local profile"],
+  "requiredPreviewChecks": ["desktop 1440x900","laptop 1280x800","tablet 768x1024","mobile 390x844","direct lesson deep-link reload","route navigation","bookmark persistence","planner persistence","age-path persistence","Tamil rendering","keyboard navigation","reduced motion","shared lifecycle present","experience/intelligence/cockpit lifecycle checks"],
   "mergeAllowed": false,
   "productionCutoverAllowed": false,
   "status": "READY_FOR_CONTROLLED_VISUAL_PREVIEW"

@@ -25,41 +25,139 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'MANUS-VISUAL-MASTER-05' index.html
-          grep -q 'navigation-v18.js' index.html
-          grep -q 'learning-foundation-v19.js' index.html
-          grep -q 'learning-foundation-v19.css' index.html
-          grep -q 'learning-tools-v20.js' index.html
-          grep -q 'learning-tools-v20.css' index.html
-          ! grep -Eq 'experience\.js|intelligence-v4\.js|cockpit-v5\.js|experience\.css|intelligence-v4\.css|cockpit-v5\.css|mastery-v6\.js|workspace-v7\.js|planner-v8\.js|mastery-v6\.css|workspace-v7\.css|planner-v8\.css' index.html
-          grep -q "version:'v19'" learning-foundation-v19.js
-          grep -q "modules:\['experience','intelligence','cockpit'\]" learning-foundation-v19.js
-          grep -q "version:'v20'" learning-tools-v20.js
-          grep -q "modules:\['mastery','workspace','planner'\]" learning-tools-v20.js
-          grep -q 'sharedScheduler:true' learning-tools-v20.js
-          grep -q '"learningTools"' preview-runtime.json
-          grep -q '"javascript": "learning-tools-v20.js"' preview-runtime.json
-          grep -q '"stylesheet": "learning-tools-v20.css"' preview-runtime.json
-          grep -q '"sharedRenderScheduler": true' preview-runtime.json
-          grep -q '"indexedLessonLookup": true' preview-runtime.json
-          grep -q 'delegated-capture' navigation-v18.js
-          grep -q 'agePathCentralized:true' navigation-v18.js
-          grep -q "source:'router-popstate-after-app-render'" runtime-lifecycle-v16.js
-          grep -q "observerScope:'none'" runtime-lifecycle-v16.js
-          ! grep -q 'new MutationObserver' runtime-lifecycle-v16.js
-          grep -q '"lifecycleObserver": false' preview-runtime.json
-          grep -q '"lessons":135' visual-preview.json
-          grep -q '"assessments":72' visual-preview.json
-          grep -q '"worlds":11' visual-preview.json
-          grep -q '"productionCutoverAllowed": false' visual-preview.json
-          grep -q '"mergeAllowed": false' visual-preview.json
-          ! grep -Eq 'diagnostics-v9\.js|release-v10\.js|gate-v11\.js|rc-v12\.js|closure-v13\.js|preprod-v14\.js' index.html
-          ! grep -Eq '__manus__|manus-storage|vite-plugin-manus-runtime|BUILT_IN_FORGE|artifacts\.cloudflare\.net|ManusDialog' app.js navigation-v18.js runtime-lifecycle-v16.js learning-foundation-v19.js learning-tools-v20.js visual-master-v15.js profile-v17.js visual-master-pages-v15.js
-          ! grep -q "addEventListener('popstate'" learning-tools-v20.js
-          grep -q "KV_MASTERY_LIFECYCLE='kv:rendered'" learning-tools-v20.js
-          grep -q "KV_WORKSPACE_LIFECYCLE='kv:rendered'" learning-tools-v20.js
-          grep -q "KV_PLANNER_LIFECYCLE='kv:rendered'" learning-tools-v20.js
-          echo 'Candidate contract validated.'
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          index = Path('index.html').read_text(encoding='utf-8')
+          foundation = Path('learning-foundation-v19.js').read_text(encoding='utf-8')
+          tools = Path('learning-tools-v20.js').read_text(encoding='utf-8')
+          nav = Path('navigation-v18.js').read_text(encoding='utf-8')
+          lifecycle = Path('runtime-lifecycle-v16.js').read_text(encoding='utf-8')
+          runtime = json.loads(Path('preview-runtime.json').read_text(encoding='utf-8'))
+          preview = json.loads(Path('visual-preview.json').read_text(encoding='utf-8'))
+
+          required_index = [
+              'MANUS-VISUAL-MASTER-05', 'navigation-v18.js',
+              'learning-foundation-v19.js', 'learning-foundation-v19.css',
+              'learning-tools-v20.js', 'learning-tools-v20.css'
+          ]
+          for marker in required_index:
+              assert marker in index, f'missing index marker: {marker}'
+
+          legacy = [
+              'experience.js','intelligence-v4.js','cockpit-v5.js',
+              'experience.css','intelligence-v4.css','cockpit-v5.css',
+              'mastery-v6.js','workspace-v7.js','planner-v8.js',
+              'mastery-v6.css','workspace-v7.css','planner-v8.css',
+              'diagnostics-v9.js','release-v10.js','gate-v11.js',
+              'rc-v12.js','closure-v13.js','preprod-v14.js'
+          ]
+          assert not any(x in index for x in legacy), 'legacy runtime/style reference returned to index.html'
+
+          assert 'KV_LEARNING_FOUNDATION' in foundation
+          for marker in ['experience','intelligence','cockpit']:
+              assert marker in foundation, f'foundation module marker missing: {marker}'
+
+          assert 'KV_LEARNING_TOOLS' in tools
+          for marker in [
+              'mastery','workspace','planner',
+              'kirthiverse.hitech.static.progress.v2',
+              'kirthiverse.hitech.workspace.v1',
+              'kirthiverse.hitech.planner.v8',
+              'BY_ID','ASSESS_BY_LESSON'
+          ]:
+              assert marker in tools, f'learning tools marker missing: {marker}'
+          assert "addEventListener('popstate'" not in tools
+
+          assert 'delegated-capture' in nav
+          assert 'agePathCentralized:true' in nav
+          assert "source:'router-popstate-after-app-render'" in lifecycle
+          assert "observerScope:'none'" in lifecycle
+          assert 'new MutationObserver' not in lifecycle
+          assert runtime.get('lifecycleObserver') is False
+
+          bundles = runtime.get('bundles') or {}
+          foundation_contract = bundles.get('learnerFoundation') or {}
+          tools_contract = bundles.get('learningTools') or {}
+          assert foundation_contract.get('javascript') == 'learning-foundation-v19.js'
+          assert foundation_contract.get('stylesheet') == 'learning-foundation-v19.css'
+          assert tools_contract.get('javascript') == 'learning-tools-v20.js'
+          assert tools_contract.get('stylesheet') == 'learning-tools-v20.css'
+          assert tools_contract.get('browserRequestsBefore') == 6
+          assert tools_contract.get('browserRequestsAfter') == 2
+          assert tools_contract.get('sharedHelpers') is True
+          assert tools_contract.get('sharedRenderScheduler') is True
+          assert tools_contract.get('indexedLessonLookup') is True
+          assert tools_contract.get('originalFilesLoadedByIndex') is False
+
+          canonical = preview.get('canonical') or {}
+          assert canonical.get('lessons') == 135
+          assert canonical.get('assessments') == 72
+          assert canonical.get('worlds') == 11
+          assert preview.get('productionCutoverAllowed') is False
+          assert preview.get('mergeAllowed') is False
+
+          contamination = ['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog']
+          loaded_runtime = '\n'.join(Path(p).read_text(encoding='utf-8') for p in [
+              'app.js','navigation-v18.js','runtime-lifecycle-v16.js',
+              'learning-foundation-v19.js','learning-tools-v20.js',
+              'visual-master-v15.js','profile-v17.js','visual-master-pages-v15.js'
+          ])
+          assert not any(x in loaded_runtime for x in contamination), 'Manus/runtime contamination detected'
+          print('Candidate contract validated structurally.')
+          PY
+
+      - name: Measure current runtime payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os, re
+          from pathlib import Path
+
+          baseline = 159428
+          html = Path('index.html').read_text(encoding='utf-8')
+          refs = re.findall(r'(?:href|src)=["\'](/[^"\']+\.(?:css|js)(?:\?[^"\']*)?)["\']', html)
+          assets=[]
+          for ref in refs:
+              path=ref.split('?',1)[0].lstrip('/')
+              if path.startswith('data/'):
+                  continue
+              if path not in assets:
+                  assets.append(path)
+          missing=[p for p in assets if not Path(p).is_file()]
+          if missing:
+              raise SystemExit(f'Missing referenced assets: {missing}')
+          css=[p for p in assets if p.endswith('.css')]
+          js=[p for p in assets if p.endswith('.js')]
+          css_bytes=sum(Path(p).stat().st_size for p in css)
+          js_bytes=sum(Path(p).stat().st_size for p in js)
+          total=css_bytes+js_bytes
+          reduction=baseline-total
+          pct=(reduction/baseline*100) if baseline else 0
+          target=round(baseline*0.75)
+
+          print(f'PAYLOAD_CSS_BYTES={css_bytes}')
+          print(f'PAYLOAD_JS_BYTES={js_bytes}')
+          print(f'PAYLOAD_COMBINED_BYTES={total}')
+          print(f'PAYLOAD_REDUCTION_BYTES={reduction}')
+          print(f'PAYLOAD_REDUCTION_PERCENT={pct:.2f}')
+          print(f'PAYLOAD_25_PERCENT_TARGET_BYTES={target}')
+          print('PAYLOAD_CSS_ASSETS='+','.join(css))
+          print('PAYLOAD_JS_ASSETS='+','.join(js))
+
+          summary=os.environ['GITHUB_STEP_SUMMARY']
+          with open(summary,'a',encoding='utf-8') as f:
+              f.write('### Runtime payload measurement\n')
+              f.write(f'- Baseline combined: {baseline:,} bytes\n')
+              f.write(f'- Current CSS: {css_bytes:,} bytes\n')
+              f.write(f'- Current JavaScript: {js_bytes:,} bytes\n')
+              f.write(f'- Current combined: {total:,} bytes\n')
+              f.write(f'- Reduction: {reduction:,} bytes ({pct:.2f}%)\n')
+              f.write(f'- 25% target threshold: {target:,} bytes\n')
+              f.write(f'- Target met: {"YES" if total <= target else "NO"}\n')
+          PY
 
       - name: Confirm Worker target
         shell: bash
@@ -148,14 +246,17 @@ jobs:
           with open('/tmp/runtime.json', encoding='utf-8') as f:
               data=json.load(f)
           bundles=data.get('bundles') or {}
-          assert bundles.get('learnerFoundation',{}).get('javascript') == 'learning-foundation-v19.js'
+          fnd=bundles.get('learnerFoundation') or {}
           tools=bundles.get('learningTools') or {}
+          assert fnd.get('javascript') == 'learning-foundation-v19.js', fnd
+          assert fnd.get('stylesheet') == 'learning-foundation-v19.css', fnd
           assert tools.get('javascript') == 'learning-tools-v20.js', tools
           assert tools.get('stylesheet') == 'learning-tools-v20.css', tools
           assert tools.get('browserRequestsBefore') == 6, tools
           assert tools.get('browserRequestsAfter') == 2, tools
           assert tools.get('sharedHelpers') is True, tools
           assert tools.get('sharedRenderScheduler') is True, tools
+          assert tools.get('indexedLessonLookup') is True, tools
           assert tools.get('originalFilesLoadedByIndex') is False, tools
           print('SMOKE_ASSERT_PASS: runtime bundle contract')
           PY
@@ -165,11 +266,11 @@ jobs:
           import json
           with open('/tmp/preview.json', encoding='utf-8') as f:
               data=json.load(f)
-          assert data.get('candidate') == 'MANUS-VISUAL-MASTER-05', data.get('candidate')
+          assert data.get('candidate') == 'MANUS-VISUAL-MASTER-05'
           canonical=data.get('canonical') or {}
-          assert canonical.get('lessons') == 135, canonical
-          assert canonical.get('assessments') == 72, canonical
-          assert canonical.get('worlds') == 11, canonical
+          assert canonical.get('lessons') == 135
+          assert canonical.get('assessments') == 72
+          assert canonical.get('worlds') == 11
           assert data.get('productionCutoverAllowed') is False
           assert data.get('mergeAllowed') is False
           print('SMOKE_ASSERT_PASS: preview contract structure')

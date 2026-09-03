@@ -29,9 +29,19 @@ jobs:
           grep -q 'navigation-v18.js' index.html
           grep -q 'learning-foundation-v19.js' index.html
           grep -q 'learning-foundation-v19.css' index.html
-          ! grep -Eq 'experience\.js|intelligence-v4\.js|cockpit-v5\.js|experience\.css|intelligence-v4\.css|cockpit-v5\.css' index.html
+          grep -q 'learning-tools-v20.js' index.html
+          grep -q 'learning-tools-v20.css' index.html
+          ! grep -Eq 'experience\.js|intelligence-v4\.js|cockpit-v5\.js|experience\.css|intelligence-v4\.css|cockpit-v5\.css|mastery-v6\.js|workspace-v7\.js|planner-v8\.js|mastery-v6\.css|workspace-v7\.css|planner-v8\.css' index.html
           grep -q "version:'v19'" learning-foundation-v19.js
           grep -q "modules:\['experience','intelligence','cockpit'\]" learning-foundation-v19.js
+          grep -q "version:'v20'" learning-tools-v20.js
+          grep -q "modules:\['mastery','workspace','planner'\]" learning-tools-v20.js
+          grep -q 'sharedScheduler:true' learning-tools-v20.js
+          grep -q '"learningTools"' preview-runtime.json
+          grep -q '"javascript": "learning-tools-v20.js"' preview-runtime.json
+          grep -q '"stylesheet": "learning-tools-v20.css"' preview-runtime.json
+          grep -q '"sharedRenderScheduler": true' preview-runtime.json
+          grep -q '"indexedLessonLookup": true' preview-runtime.json
           grep -q 'delegated-capture' navigation-v18.js
           grep -q 'agePathCentralized:true' navigation-v18.js
           grep -q "source:'router-popstate-after-app-render'" runtime-lifecycle-v16.js
@@ -44,11 +54,11 @@ jobs:
           grep -q '"productionCutoverAllowed": false' visual-preview.json
           grep -q '"mergeAllowed": false' visual-preview.json
           ! grep -Eq 'diagnostics-v9\.js|release-v10\.js|gate-v11\.js|rc-v12\.js|closure-v13\.js|preprod-v14\.js' index.html
-          ! grep -Eq '__manus__|manus-storage|vite-plugin-manus-runtime|BUILT_IN_FORGE|artifacts\.cloudflare\.net|ManusDialog' app.js navigation-v18.js runtime-lifecycle-v16.js learning-foundation-v19.js mastery-v6.js workspace-v7.js planner-v8.js visual-master-v15.js profile-v17.js visual-master-pages-v15.js
-          ! grep -q "addEventListener('popstate'" mastery-v6.js workspace-v7.js planner-v8.js
-          grep -q "KV_MASTERY_LIFECYCLE='kv:rendered'" mastery-v6.js
-          grep -q "KV_WORKSPACE_LIFECYCLE='kv:rendered'" workspace-v7.js
-          grep -q "KV_PLANNER_LIFECYCLE='kv:rendered'" planner-v8.js
+          ! grep -Eq '__manus__|manus-storage|vite-plugin-manus-runtime|BUILT_IN_FORGE|artifacts\.cloudflare\.net|ManusDialog' app.js navigation-v18.js runtime-lifecycle-v16.js learning-foundation-v19.js learning-tools-v20.js visual-master-v15.js profile-v17.js visual-master-pages-v15.js
+          ! grep -q "addEventListener('popstate'" learning-tools-v20.js
+          grep -q "KV_MASTERY_LIFECYCLE='kv:rendered'" learning-tools-v20.js
+          grep -q "KV_WORKSPACE_LIFECYCLE='kv:rendered'" learning-tools-v20.js
+          grep -q "KV_PLANNER_LIFECYCLE='kv:rendered'" learning-tools-v20.js
           echo 'Candidate contract validated.'
 
       - name: Confirm Worker target
@@ -115,16 +125,40 @@ jobs:
           expect_marker 'home candidate marker' /tmp/home.html 'MANUS-VISUAL-MASTER-05'
           expect_marker 'home learner foundation js' /tmp/home.html 'learning-foundation-v19.js'
           expect_marker 'home learner foundation css' /tmp/home.html 'learning-foundation-v19.css'
-          if grep -Eq 'experience\.js|intelligence-v4\.js|cockpit-v5\.js|experience\.css|intelligence-v4\.css|cockpit-v5\.css' /tmp/home.html; then
-            echo 'SMOKE_ASSERT_FAIL: legacy learner foundation assets still referenced'
+          expect_marker 'home learning tools js' /tmp/home.html 'learning-tools-v20.js'
+          expect_marker 'home learning tools css' /tmp/home.html 'learning-tools-v20.css'
+          if grep -Eq 'experience\.js|intelligence-v4\.js|cockpit-v5\.js|experience\.css|intelligence-v4\.css|cockpit-v5\.css|mastery-v6\.js|workspace-v7\.js|planner-v8\.js|mastery-v6\.css|workspace-v7\.css|planner-v8\.css' /tmp/home.html; then
+            echo 'SMOKE_ASSERT_FAIL: legacy learner assets still referenced'
             exit 1
           fi
-          echo 'SMOKE_ASSERT_PASS: legacy learner foundation assets not referenced'
+          echo 'SMOKE_ASSERT_PASS: legacy learner assets not referenced'
 
           fetch 'learner foundation js' "$PREVIEW_URL/learning-foundation-v19.js" /tmp/foundation.js
           expect_marker 'learner foundation runtime marker' /tmp/foundation.js 'KV_LEARNING_FOUNDATION'
           fetch 'learner foundation css' "$PREVIEW_URL/learning-foundation-v19.css" /tmp/foundation.css
           expect_marker 'learner foundation style marker' /tmp/foundation.css 'learner foundation v19'
+          fetch 'learning tools js' "$PREVIEW_URL/learning-tools-v20.js" /tmp/tools.js
+          expect_marker 'learning tools runtime marker' /tmp/tools.js 'KV_LEARNING_TOOLS'
+          fetch 'learning tools css' "$PREVIEW_URL/learning-tools-v20.css" /tmp/tools.css
+          expect_marker 'learning tools style marker' /tmp/tools.css 'learning tools v20'
+
+          fetch 'preview runtime manifest' "$PREVIEW_URL/preview-runtime.json" /tmp/runtime.json
+          python - <<'PY'
+          import json
+          with open('/tmp/runtime.json', encoding='utf-8') as f:
+              data=json.load(f)
+          bundles=data.get('bundles') or {}
+          assert bundles.get('learnerFoundation',{}).get('javascript') == 'learning-foundation-v19.js'
+          tools=bundles.get('learningTools') or {}
+          assert tools.get('javascript') == 'learning-tools-v20.js', tools
+          assert tools.get('stylesheet') == 'learning-tools-v20.css', tools
+          assert tools.get('browserRequestsBefore') == 6, tools
+          assert tools.get('browserRequestsAfter') == 2, tools
+          assert tools.get('sharedHelpers') is True, tools
+          assert tools.get('sharedRenderScheduler') is True, tools
+          assert tools.get('originalFilesLoadedByIndex') is False, tools
+          print('SMOKE_ASSERT_PASS: runtime bundle contract')
+          PY
 
           fetch 'preview contract' "$PREVIEW_URL/visual-preview.json" /tmp/preview.json
           python - <<'PY'
@@ -152,8 +186,10 @@ jobs:
 
           echo '### Browser-entry smoke gate PASS' >> "$GITHUB_STEP_SUMMARY"
           echo '- Home candidate marker: PASS' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Learner foundation bundle: PASS' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Legacy learner foundation references: ABSENT' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Learner foundation v19 bundle: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Learning tools v20 bundle: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Legacy learner references: ABSENT' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Runtime bundle manifest: PASS' >> "$GITHUB_STEP_SUMMARY"
           echo '- Preview contract structure: PASS' >> "$GITHUB_STEP_SUMMARY"
           echo '- Profile deep link: PASS' >> "$GITHUB_STEP_SUMMARY"
           echo '- Lesson deep link: PASS' >> "$GITHUB_STEP_SUMMARY"
@@ -177,6 +213,7 @@ jobs:
           echo '- Navigation: centralized delegated SPA controller' >> "$GITHUB_STEP_SUMMARY"
           echo '- Render lifecycle: observer-free router events' >> "$GITHUB_STEP_SUMMARY"
           echo '- Learner foundation: Experience + Intelligence + Cockpit bundled' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Learning tools: Mastery + Workspace + Planner bundled and shared-runtime optimized' >> "$GITHUB_STEP_SUMMARY"
           echo '- Worker target: kirthiverse-hitech' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged by this workflow' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

@@ -1,7 +1,7 @@
 {
   "project": "kirthiverse-hitech",
   "experience": "KirthiVerse Hi-Tech Future Classroom OS",
-  "build": "HITECH-2026-09-03-08",
+  "build": "HITECH-2026-09-03-09",
   "source": "owner-provided Next-Generation package only",
   "canonical": {
     "lessons": 135,
@@ -35,7 +35,13 @@
     "localWeeklyPlanner": true,
     "canonicalChallengeDeck": true,
     "accessibilityControlDeck": true,
-    "returnUserContinuity": true
+    "returnUserContinuity": true,
+    "browserDiagnosticsCenter": true,
+    "assetReachabilityChecks": true,
+    "routeReadinessChecks": true,
+    "localStorageCapabilityCheck": true,
+    "tamilRenderingCheck": true,
+    "releaseReadinessPanel": true
   },
   "status": "browser-preview-validation"
 }

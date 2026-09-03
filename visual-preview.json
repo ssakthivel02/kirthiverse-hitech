@@ -19,7 +19,9 @@
     "workspaceGlobalObserverRemoved": true,
     "masteryGlobalObserverRemoved": true,
     "profileRedundantPopstateHookRemoved": true,
-    "remainingLegacyEvidenceLayersPreservedForRollback": true
+    "legacyQaDashboardsUnloadedFromLearnerRuntime": true,
+    "legacyQaFilesDeleted": false,
+    "runtimeManifest": "/preview-runtime.json"
   },
   "pendingAssets": ["kirthiverse-mark_28bda5f0.png","kirthiverse-hero_15ccac10.png","kirthiverse-worlds_d4d17287.png"],
   "routes": ["/","/worlds","/world/:id","/lesson/:id","/search","/progress","/profile"],

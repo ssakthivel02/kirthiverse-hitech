@@ -7,9 +7,7 @@
     "app.js",
     "navigation-v18.js",
     "runtime-lifecycle-v16.js",
-    "experience.js",
-    "intelligence-v4.js",
-    "cockpit-v5.js",
+    "learning-foundation-v19.js",
     "mastery-v6.js",
     "workspace-v7.js",
     "planner-v8.js",
@@ -18,6 +16,28 @@
     "visual-master-pages-v15.js",
     "visual-preview-gate.js"
   ],
+  "learnerStyles": [
+    "styles.css",
+    "learning-foundation-v19.css",
+    "mastery-v6.css",
+    "workspace-v7.css",
+    "planner-v8.css",
+    "visual-master-v15.css",
+    "visual-master-pages-v15.css",
+    "visual-master-features-v15.css"
+  ],
+  "bundles": {
+    "learnerFoundation": {
+      "javascript": "learning-foundation-v19.js",
+      "stylesheet": "learning-foundation-v19.css",
+      "modules": ["experience","intelligence","cockpit"],
+      "sourceOrderPreserved": true,
+      "browserRequestsBefore": 6,
+      "browserRequestsAfter": 2,
+      "originalFilesPreservedForRollback": true,
+      "originalFilesLoadedByIndex": false
+    }
+  },
   "eventDrivenModules": ["experience","intelligence","cockpit","mastery","workspace","planner","profile"],
   "sharedLifecycle": "kv:rendered",
   "lifecycleSource": "router popstate after app render",

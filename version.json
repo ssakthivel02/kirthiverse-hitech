@@ -1,7 +1,7 @@
 {
   "project": "kirthiverse-hitech",
   "experience": "KirthiVerse Hi-Tech Future Classroom OS",
-  "build": "HITECH-2026-09-03-02",
+  "build": "HITECH-2026-09-03-03",
   "source": "owner-provided Next-Generation package only",
   "canonical": {
     "lessons": 135,
@@ -11,5 +11,12 @@
   "legacyRepoUsed": false,
   "manusRuntimeUsed": false,
   "deployment": "Cloudflare Workers Static Assets",
+  "experienceLayer": {
+    "commandNavigator": true,
+    "agePathActivation": true,
+    "networkStatus": true,
+    "keyboardNavigation": true,
+    "scrollTelemetry": true
+  },
   "status": "browser-preview-validation"
 }

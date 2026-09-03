@@ -1,0 +1,47 @@
+{
+  "project": "kirthiverse-hitech",
+  "candidate": "HITECH-2026-09-03-12",
+  "scope": "Cloudflare Workers preview only",
+  "sourcePolicy": "owner-provided Next-Generation package only",
+  "canonical": {
+    "lessons": 135,
+    "assessments": 72,
+    "worlds": 11,
+    "changed": false
+  },
+  "isolation": {
+    "legacyRepositoryUsed": false,
+    "manusRuntimeUsed": false,
+    "productionDnsChanged": false,
+    "paidCloudflareServicesEnabled": false
+  },
+  "automatedPreviewGate": {
+    "runtimeBuildIdentity": true,
+    "canonicalCounts": true,
+    "uniqueLessonIds": true,
+    "tamilUnicodeSampling": true,
+    "localStorageReadWrite": true,
+    "localStateParseSafety": true,
+    "historyApi": true,
+    "https": true,
+    "routeSmokeTests": true,
+    "assetReachability": true,
+    "versionStalenessDetection": true,
+    "runtimeContaminationScan": true,
+    "evidenceExport": true
+  },
+  "manualReleaseClosure": [
+    "owner visual approval",
+    "physical phone and tablet validation",
+    "formal screen-reader validation",
+    "200 percent zoom and reflow validation",
+    "professional Tamil language review"
+  ],
+  "rollback": {
+    "sourceOfTruth": "GitHub main branch history",
+    "productionCutoverPerformed": false,
+    "currentProductionRollbackRequired": false
+  },
+  "decisionRule": "Automated PREVIEW GO requires every critical browser-side automated check to pass. Production launch remains HOLD until manual closure and owner approval are completed.",
+  "status": "PREVIEW_RELEASE_CANDIDATE"
+}

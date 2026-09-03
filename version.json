@@ -1,13 +1,9 @@
 {
   "project": "kirthiverse-hitech",
   "experience": "KirthiVerse Hi-Tech Future Classroom OS",
-  "build": "HITECH-2026-09-03-13",
+  "build": "HITECH-2026-09-03-14",
   "source": "owner-provided Next-Generation package only",
-  "canonical": {
-    "lessons": 135,
-    "assessments": 72,
-    "worlds": 11
-  },
+  "canonical": {"lessons": 135, "assessments": 72, "worlds": 11},
   "legacyRepoUsed": false,
   "manusRuntimeUsed": false,
   "deployment": "Cloudflare Workers Static Assets",
@@ -65,13 +61,20 @@
     "accessibilityClosureSignals": true,
     "productionCutoverRunbook": true,
     "rollbackPlan": true,
-    "previewClosureContract": true
+    "previewClosureContract": true,
+    "preProductionEngineeringGate": true,
+    "validatedLocalStateRestore": true,
+    "runtimeMutationWatchdog": true,
+    "plannerObserverLoopHardening": true,
+    "routeFlareMutationGuard": true,
+    "ownerManualClosureRegister": true
   },
   "qualityEvidence": {
     "repositoryLegacyStringSearch": "PASS",
     "productionDnsChanged": false,
     "paidCloudflareServicesEnabled": false,
     "gateScope": "preview-only",
+    "preProductionContract": "/preproduction.json",
     "releaseCandidateContract": "/release-candidate.json",
     "previewClosureContract": "/preview-closure.json",
     "manualChecklist": "/PREVIEW_RELEASE_CHECKLIST.md",
@@ -79,8 +82,9 @@
   },
   "releaseDecision": {
     "automatedPreviewVerdict": "CALCULATED_IN_BROWSER",
-    "productionVerdict": "HOLD_PENDING_MANUAL_CLOSURE_AND_OWNER_APPROVAL",
+    "manualClosureVerdict": "OWNER_ATTESTED_IN_BROWSER",
+    "productionVerdict": "HOLD_UNTIL_AUTOMATED_AND_MANUAL_GATES_PASS",
     "productionCutoverPerformed": false
   },
-  "status": "END_TO_END_PREVIEW_CLOSURE"
+  "status": "PREPRODUCTION_ENGINEERING_CLOSURE"
 }

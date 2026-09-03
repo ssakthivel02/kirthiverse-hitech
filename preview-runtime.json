@@ -3,57 +3,39 @@
   "candidate": "MANUS-VISUAL-MASTER-05",
   "mode": "lean-controlled-preview",
   "baseBuild": "HITECH-2026-09-03-14",
-  "learnerRuntime": [
-    "app.js",
-    "navigation-v18.js",
-    "runtime-lifecycle-v16.js",
-    "learning-foundation-v19.js",
-    "learning-tools-v20.js",
-    "visual-master-v15.js",
-    "profile-v17.js",
-    "visual-master-pages-v15.js",
-    "visual-preview-gate.js"
-  ],
-  "learnerStyles": ["visual-system-v21.css"],
+  "learnerRuntime": ["app.js","navigation-v18.js","runtime-lifecycle-v16.js","learning-foundation-v19.js","learning-tools-v20.js","visual-master-v15.js","profile-v17.js","visual-master-pages-v15.js","visual-preview-gate.js"],
+  "learnerStyles": ["styles.css","learning-foundation-v19.css","learning-tools-v20.css","visual-master-v15.css","visual-master-pages-v15.css","visual-master-features-v15.css"],
   "bundles": {
     "learnerFoundation": {
       "javascript": "learning-foundation-v19.js",
       "stylesheetSource": "learning-foundation-v19.css",
-      "stylesheetLoadedDirectly": false,
+      "stylesheetLoadedDirectly": true,
       "modules": ["experience","intelligence","cockpit"],
-      "browserRequestsBefore": 6,
-      "browserRequestsAfter": 2,
       "sharedHelpers": true,
       "indexedLessonLookup": true,
       "singleRenderProgressSnapshot": true,
-      "originalFilesPreservedForRollback": true,
-      "originalFilesLoadedByIndex": false
+      "originalFilesPreservedForRollback": true
     },
     "learningTools": {
       "javascript": "learning-tools-v20.js",
       "stylesheetSource": "learning-tools-v20.css",
-      "stylesheetLoadedDirectly": false,
+      "stylesheetLoadedDirectly": true,
       "modules": ["mastery","workspace","planner"],
-      "browserRequestsBefore": 6,
-      "browserRequestsAfter": 2,
       "sharedHelpers": true,
       "sharedRenderScheduler": true,
       "indexedLessonLookup": true,
       "indexedAssessmentLookup": true,
-      "storageKeysPreserved": ["kirthiverse.hitech.static.progress.v2","kirthiverse.hitech.workspace.v1","kirthiverse.hitech.planner.v8","kirthiverse.hitech.density"],
-      "originalFilesPreservedForRollback": true,
-      "originalFilesLoadedByIndex": false
+      "storageKeysPreserved": ["kirthiverse.hitech.static.progress.v2","kirthiverse.hitech.workspace.v1","kirthiverse.hitech.planner.v8","kirthiverse.hitech.density"]
     },
     "visualSystem": {
-      "stylesheet": "visual-system-v21.css",
-      "generatedBy": "build-visual-css.py",
+      "mode": "committed-css-recovery",
       "sourceStylesheets": ["styles.css","learning-foundation-v19.css","learning-tools-v20.css","visual-master-v15.css","visual-master-pages-v15.css","visual-master-features-v15.css"],
-      "browserRequestsBefore": 6,
-      "browserRequestsAfter": 1,
-      "conservativeMinification": true,
-      "importsLiftedToTop": true,
+      "browserRequests": 6,
+      "allBrowserDependenciesCommitted": true,
+      "transientGeneratedStylesheetRequired": false,
+      "visualSystemV21GeneratedBundle": "temporarily-disabled-until-committed-and-browser-verified",
       "sourceFilesPreservedForRollback": true,
-      "sourceFilesLoadedByIndex": false
+      "sourceFilesLoadedByIndex": true
     }
   },
   "appRuntime": {
@@ -79,7 +61,6 @@
     "sharedControlContracts": ["data-studio-nav","data-kv-nav","data-age"],
     "agePathCentralized": true,
     "ageStateKeys": ["kirthiverse.hitech.static.progress.v2","kirthiverse.hitech.experience.v1"],
-    "appLegacyBubbleBindingsIntercepted": false,
     "appLegacyBubbleBindingsRemoved": true,
     "appAgeBindingsRemoved": true,
     "appSearchResultBindingsRemoved": true,
@@ -89,17 +70,17 @@
   "navigationGuessingRemoved": true,
   "profileRuntime": {"module":"profile-v17.js","route":"/profile","localOnly":true,"sharedNavigationContract":"data-link","visualDecoratorOwnsProfileState":false},
   "legacyLearnerRuntimeUnloaded": ["experience.js","intelligence-v4.js","cockpit-v5.js","mastery-v6.js","workspace-v7.js","planner-v8.js"],
-  "legacyLearnerCssUnloaded": ["experience.css","intelligence-v4.css","cockpit-v5.css","mastery-v6.css","workspace-v7.css","planner-v8.css"],
   "legacyQaRuntimeUnloaded": ["diagnostics-v9.js","release-v10.js","gate-v11.js","rc-v12.js","closure-v13.js","preprod-v14.js"],
-  "legacyQaCssUnloaded": ["diagnostics-v9.css","release-v10.css","gate-v11.css","rc-v12.css","closure-v13.css","preprod-v14.css"],
   "rejectedOptimizations": [
-    {
-      "name": "same-context exact duplicate CSS rule deduplication",
-      "reason": "zero exact duplicate qualified rules found and parser increased generated payload",
-      "adopted": false
-    }
+    {"name":"same-context exact duplicate CSS rule deduplication","reason":"zero exact duplicate qualified rules found and parser increased generated payload","adopted":false},
+    {"name":"transient generated visual-system-v21.css as sole browser stylesheet","reason":"browser-visible unstyled failure exposed deployment fragility because generated CSS was not committed source","adopted":false}
   ],
-  "legacyQaFilesDeleted": false,
+  "renderingRecovery": {
+    "reason": "owner browser screenshot showed unstyled HTML on controlled preview",
+    "action": "restored six committed CSS files in original cascade order",
+    "liveSmokeRequiresCssMime": true,
+    "liveSmokeRejectsHtmlAtCssUrls": true
+  },
   "rollbackEvidencePreserved": true,
   "manusRuntime": false,
   "productionDnsChanged": false,

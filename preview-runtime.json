@@ -5,6 +5,7 @@
   "baseBuild": "HITECH-2026-09-03-14",
   "learnerRuntime": [
     "app.js",
+    "navigation-v18.js",
     "runtime-lifecycle-v16.js",
     "experience.js",
     "intelligence-v4.js",
@@ -21,6 +22,15 @@
   "sharedLifecycle": "kv:rendered",
   "lifecycleSource": "#app direct childList render observation",
   "lifecycleSubtreeObservation": false,
+  "navigation": {
+    "module": "navigation-v18.js",
+    "mode": "delegated-capture",
+    "sharedAnchorContract": "a[data-link]",
+    "sharedControlContracts": ["data-studio-nav","data-kv-nav"],
+    "appLegacyBubbleBindingsIntercepted": true,
+    "moduleSpecificNavigationHandlersRemoved": ["workspace","planner"],
+    "duplicatePopstateListenersRemoved": ["mastery","workspace","planner"]
+  },
   "navigationGuessingRemoved": true,
   "profileRuntime": {
     "module": "profile-v17.js",

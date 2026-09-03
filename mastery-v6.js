@@ -68,6 +68,8 @@
   }
 
   function mount(){applyDensity();mountLessonConsole();mountProgressMastery();mountDeviceRail()}
-  let t;const obs=new MutationObserver(()=>{clearTimeout(t);t=setTimeout(mount,35)});obs.observe(document.documentElement,{childList:true,subtree:true});
-  addEventListener('popstate',()=>setTimeout(mount,60));addEventListener('DOMContentLoaded',mount);setTimeout(mount,100);
+  addEventListener('kv:rendered',()=>requestAnimationFrame(mount));
+  addEventListener('popstate',()=>setTimeout(mount,0));
+  addEventListener('storage',e=>{if(e.key===progressKey)setTimeout(mount,0)});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();

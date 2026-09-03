@@ -81,22 +81,56 @@ jobs:
         run: |
           set -euo pipefail
           sleep 4
-          curl --fail --silent --show-error --retry 4 --retry-delay 2 "$PREVIEW_URL/" -o /tmp/home.html
-          grep -q 'MANUS-VISUAL-MASTER-05' /tmp/home.html
-          curl --fail --silent --show-error --retry 4 --retry-delay 2 "$PREVIEW_URL/visual-preview.json" -o /tmp/preview.json
-          grep -q '"candidate": "MANUS-VISUAL-MASTER-05"' /tmp/preview.json
-          grep -q '"lessons":135' /tmp/preview.json
-          grep -q '"assessments":72' /tmp/preview.json
-          grep -q '"worlds":11' /tmp/preview.json
-          curl --fail --silent --show-error --retry 4 --retry-delay 2 "$PREVIEW_URL/profile" -o /tmp/profile.html
-          grep -q 'MANUS-VISUAL-MASTER-05' /tmp/profile.html
-          curl --fail --silent --show-error --retry 4 --retry-delay 2 "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1" -o /tmp/lesson.html
-          grep -q 'MANUS-VISUAL-MASTER-05' /tmp/lesson.html
-          curl --fail --silent --show-error --retry 4 --retry-delay 2 "$PREVIEW_URL/data/lessons-1.js" -o /tmp/lessons.js
-          test -s /tmp/lessons.js
+
+          fetch() {
+            local label="$1" url="$2" out="$3"
+            echo "SMOKE_FETCH_START: $label"
+            code=$(curl --silent --show-error --location --retry 4 --retry-delay 2 --output "$out" --write-out '%{http_code}' "$url")
+            echo "SMOKE_HTTP: $label=$code"
+            test "$code" = "200"
+            test -s "$out"
+          }
+
+          expect_marker() {
+            local label="$1" file="$2" marker="$3"
+            if grep -Fq "$marker" "$file"; then
+              echo "SMOKE_ASSERT_PASS: $label"
+            else
+              echo "SMOKE_ASSERT_FAIL: $label"
+              exit 1
+            fi
+          }
+
+          fetch 'home' "$PREVIEW_URL/" /tmp/home.html
+          expect_marker 'home candidate marker' /tmp/home.html 'MANUS-VISUAL-MASTER-05'
+
+          fetch 'preview contract' "$PREVIEW_URL/visual-preview.json" /tmp/preview.json
+          python - <<'PY'
+          import json
+          with open('/tmp/preview.json', encoding='utf-8') as f:
+              data=json.load(f)
+          assert data.get('candidate') == 'MANUS-VISUAL-MASTER-05', data.get('candidate')
+          canonical=data.get('canonical') or {}
+          assert canonical.get('lessons') == 135, canonical
+          assert canonical.get('assessments') == 72, canonical
+          assert canonical.get('worlds') == 11, canonical
+          assert data.get('productionCutoverAllowed') is False
+          assert data.get('mergeAllowed') is False
+          print('SMOKE_ASSERT_PASS: preview contract structure')
+          PY
+
+          fetch 'profile deep link' "$PREVIEW_URL/profile" /tmp/profile.html
+          expect_marker 'profile SPA shell' /tmp/profile.html 'MANUS-VISUAL-MASTER-05'
+
+          fetch 'lesson deep link' "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1" /tmp/lesson.html
+          expect_marker 'lesson SPA shell' /tmp/lesson.html 'MANUS-VISUAL-MASTER-05'
+
+          fetch 'canonical lesson asset' "$PREVIEW_URL/data/lessons-1.js" /tmp/lessons.js
+          expect_marker 'lesson data payload' /tmp/lessons.js 'KV_LESSONS'
+
           echo '### Browser-entry smoke gate PASS' >> "$GITHUB_STEP_SUMMARY"
           echo '- Home candidate marker: PASS' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Preview contract: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Preview contract structure: PASS' >> "$GITHUB_STEP_SUMMARY"
           echo '- Profile deep link: PASS' >> "$GITHUB_STEP_SUMMARY"
           echo '- Lesson deep link: PASS' >> "$GITHUB_STEP_SUMMARY"
           echo '- Canonical lesson asset: PASS' >> "$GITHUB_STEP_SUMMARY"

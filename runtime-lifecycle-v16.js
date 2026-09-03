@@ -25,7 +25,8 @@
 
   window.KV_RUNTIME_LIFECYCLE={
     candidate:CANDIDATE,
-    source:'app-render-authoritative',
+    source:'router-popstate-after-app-render',
+    mode:'app-render-authoritative',
     observerScope:'none',
     navigationGuessing:false,
     appRenderAuthoritative:true,

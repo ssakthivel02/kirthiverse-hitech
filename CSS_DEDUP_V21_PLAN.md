@@ -1,15 +1,20 @@
-# KirthiVerse Visual CSS v21 semantic deduplication
+# KirthiVerse Visual CSS v21 semantic deduplication — rejected experiment
 
-This preview-only optimization extends `build-visual-css.py` without changing the preserved source stylesheets.
+This preview-only experiment tested whether `build-visual-css.py` could safely remove byte-identical qualified CSS rules inside the same cascade container without changing the preserved source stylesheets.
 
-Safety boundary:
-- keep the six source stylesheets unchanged for rollback/review;
+Safety boundary tested:
+- keep all six source stylesheets unchanged for rollback/review;
 - preserve source cascade order;
 - preserve declaration order and fallback declarations;
 - never deduplicate across CSS container boundaries;
 - recurse only into rule-container at-rules (`@media`, `@supports`, `@container`, `@layer`, `@scope`);
 - leave keyframes, font-face and other declaration-bearing at-rules untouched;
-- remove only byte-identical qualified rule blocks when an identical later rule exists in the same container;
-- keep the generated `visual-system-v21.css` as the only stylesheet loaded by the preview entry point.
+- consider removal only for byte-identical qualified rule blocks.
 
-The GitHub Actions preview workflow rebuilds the stylesheet and measures the loaded non-data payload on every candidate push. Production DNS and the `main` branch remain outside this preview change.
+Result:
+- exact duplicate qualified rules found: **0**;
+- exact duplicate rule bytes removable: **0**;
+- generated stylesheet increased from the proven v21 size of **93,877 bytes** to **95,459 bytes** because the semantic parser preserved additional structure;
+- therefore the experiment was **not adopted** and the canonical `build-visual-css.py` was reverted to the proven conservative v21 generator.
+
+This document is retained only as engineering evidence to prevent repeating the same no-gain experiment. The browser continues to load only `visual-system-v21.css`. Production DNS and the `main` branch remain outside this preview work.

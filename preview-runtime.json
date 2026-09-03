@@ -1,0 +1,42 @@
+{
+  "project": "kirthiverse-hitech",
+  "candidate": "MANUS-VISUAL-MASTER-05",
+  "mode": "lean-controlled-preview",
+  "baseBuild": "HITECH-2026-09-03-14",
+  "learnerRuntime": [
+    "app.js",
+    "runtime-lifecycle-v16.js",
+    "experience.js",
+    "intelligence-v4.js",
+    "cockpit-v5.js",
+    "mastery-v6.js",
+    "workspace-v7.js",
+    "planner-v8.js",
+    "visual-master-v15.js",
+    "visual-master-pages-v15.js",
+    "visual-preview-gate.js"
+  ],
+  "eventDrivenModules": ["experience","intelligence","cockpit","mastery","workspace","planner"],
+  "sharedLifecycle": "kv:rendered",
+  "legacyQaRuntimeUnloaded": [
+    "diagnostics-v9.js",
+    "release-v10.js",
+    "gate-v11.js",
+    "rc-v12.js",
+    "closure-v13.js",
+    "preprod-v14.js"
+  ],
+  "legacyQaCssUnloaded": [
+    "diagnostics-v9.css",
+    "release-v10.css",
+    "gate-v11.css",
+    "rc-v12.css",
+    "closure-v13.css",
+    "preprod-v14.css"
+  ],
+  "legacyQaFilesDeleted": false,
+  "rollbackEvidencePreserved": true,
+  "manusRuntime": false,
+  "productionDnsChanged": false,
+  "productionCutoverAllowed": false
+}

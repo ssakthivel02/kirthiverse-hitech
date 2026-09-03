@@ -42,13 +42,20 @@
     "staleMasteryBuildLabelRemoved": true,
     "staleWorkspaceBuildLabelRemoved": true,
     "stalePlannerBuildLabelRemoved": true,
+    "staleBuild02ShellIdentityNormalized": true,
+    "visibleShellIdentity": "visual-master",
     "legacyQaFilesDeleted": false,
-    "runtimeManifest": "/preview-runtime.json"
+    "runtimeManifest": "/preview-runtime.json",
+    "payloadBaseline": "/RUNTIME_PAYLOAD_BASELINE.md",
+    "nonDataCssBytes": 95431,
+    "nonDataJavaScriptBytes": 63997,
+    "nonDataCombinedBytes": 159428,
+    "initialReductionTargetPercent": 25
   },
   "pendingAssets": ["kirthiverse-mark_28bda5f0.png","kirthiverse-hero_15ccac10.png","kirthiverse-worlds_d4d17287.png"],
   "routes": ["/","/worlds","/world/:id","/lesson/:id","/search","/progress","/profile"],
   "featuresPreserved": ["local progress","age paths","bookmarks","Study Studio","weekly planner","canonical assessment deck","universe mastery","reading density","accessibility controls","local profile"],
-  "requiredPreviewChecks": ["desktop 1440x900","laptop 1280x800","tablet 768x1024","mobile 390x844","direct lesson deep-link reload","profile direct deep-link reload","profile local save/reset","central delegated navigation","observer-free lifecycle","age-path persistence","route navigation","bookmark persistence","planner persistence","Tamil rendering","keyboard navigation","reduced motion","shared lifecycle present","experience/intelligence/cockpit/mastery/workspace/planner/profile lifecycle checks"],
+  "requiredPreviewChecks": ["desktop 1440x900","laptop 1280x800","tablet 768x1024","mobile 390x844","direct lesson deep-link reload","profile direct deep-link reload","profile local save/reset","central delegated navigation","observer-free lifecycle","age-path persistence","route navigation","bookmark persistence","planner persistence","Tamil rendering","keyboard navigation","reduced motion","shared lifecycle present","visual-master shell identity","experience/intelligence/cockpit/mastery/workspace/planner/profile lifecycle checks"],
   "mergeAllowed": false,
   "productionCutoverAllowed": false,
   "status": "READY_FOR_CONTROLLED_VISUAL_PREVIEW"

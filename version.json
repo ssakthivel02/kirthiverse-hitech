@@ -1,7 +1,7 @@
 {
   "project": "kirthiverse-hitech",
   "experience": "KirthiVerse Hi-Tech Future Classroom OS",
-  "build": "HITECH-2026-09-03-04",
+  "build": "HITECH-2026-09-03-05",
   "source": "owner-provided Next-Generation package only",
   "canonical": {
     "lessons": 135,
@@ -19,7 +19,10 @@
     "scrollTelemetry": true,
     "localLearningPulse": true,
     "smartMissionRail": true,
-    "activeNavigation": true
+    "activeNavigation": true,
+    "learningCockpit": true,
+    "smartMissionQueue": true,
+    "universeQuickStrip": true
   },
   "status": "browser-preview-validation"
 }

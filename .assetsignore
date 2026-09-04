@@ -3,7 +3,6 @@
 .wrangler/
 wrangler.jsonc
 README.md
-_headers
 *.md
 RUNTIME_CONSOLIDATION_PLAN.md
 VISUAL_MASTER_MIGRATION.md
@@ -34,3 +33,7 @@ visual-master-v15.js
 visual-master-pages-v15.js
 pwa-v26.js
 sw-v26.js
+navigation-v18.js
+runtime-lifecycle-v16.js
+pwa-v27.js
+sw-v27.js

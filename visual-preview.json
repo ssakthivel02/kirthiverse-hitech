@@ -1,13 +1,12 @@
 {
   "project":"kirthiverse-hitech","candidate":"MANUS-VISUAL-MASTER-05","branch":"design/manus-visual-master","baseBuild":"HITECH-2026-09-03-14","scope":"preview-only",
   "canonical":{"lessons":135,"assessments":72,"worlds":11},"manusRuntime":false,"legacyRepo":false,"productionDnsChanged":false,"paidCloudflareServicesEnabled":false,
-  "runtimeConsolidation":{"coreRuntime":"core-runtime-v30.js","coreVersion":"v30","navigationLifecyclePwaAndFocusCombined":true,"visualController":"visual-controller-v27.js","browserJsRequestCeiling":7,"measuredCombinedBytesCeiling":170455,"payloadTargetDirection":"reduce-without-feature-loss"},
-  "learnerPersonalization":{"runtime":"learner-adaptive-v26.js","version":"v26","localOnly":true,"homePersonalization":true,"studyStudioPersonalization":true,"dailyPlan":true,"recommendationPolicy":"local-age-preference-progress"},
+  "runtimeConsolidation":{"coreRuntime":"core-runtime-v30.js","coreVersion":"v30","visualController":"visual-controller-v27.js","browserJsRequestCeiling":6,"measuredCombinedBytesCeiling":168000,"previousMeasuredCombinedBytes":170455,"diagnosticRequestRemoved":true,"payloadTargetDirection":"reduce-without-feature-loss"},
+  "learnerPersonalization":{"runtime":"learner-adaptive-v26.js","version":"v26","localOnly":true,"homePersonalization":true,"dailyPlan":true},
   "focusSession":{"runtime":"core-runtime-v30.js","version":"v30","localOnly":true,"usesProfileSessionGoal":true,"dailyHistory":true,"streak":true,"homeAndProgress":true},
-  "offlineFoundation":{"enabledForControlledPreview":true,"bootstrap":"integrated-core-runtime-v30","serviceWorker":"sw-v30.js","cache":"kirthiverse-preview-v30","canonicalDataPrecached":true,"navigationFallback":"cached index shell","freshNavigationFetch":true,"productionCutoverDependency":false},
-  "deploymentCoherence":{"indexGenerationMarker":"CORE-RUNTIME-V30","rootAndIndexNoStore":true,"serviceWorkerNoStore":true,"browserDomSmoke":true},
+  "diagnosticExtraction":{"module":"visual-preview-gate.js","browserLoaded":false,"ciOnly":true,"learnerFacingBehaviorRemoved":false},
   "routeCoherence":{"independentFreshnessWaits":true,"routes":["/","/worlds","/world/mathematics","/search","/progress","/profile","/lesson/math.number.place-value.base10.age6-8.l1"],"browserRoutes":["/","/progress"],"cssMimeValidation":true},
-  "assetCoherence":{"independentRuntimeFreshnessWaits":true,"runtimeAssets":["/core-runtime-v30.js","/sw-v30.js"],"rejectHtmlFallback":true,"markerValidation":true,"reason":"v30 routes converged before the core runtime asset in run 33888955871"},
-  "requiredPreviewChecks":["fresh key SPA route generations","fresh core runtime marker","fresh service worker marker","core runtime is JavaScript not SPA fallback","JS requests <= 7","payload <= 170455 bytes","six CSS files text/css","visual controller v27","adaptive learner v26","local focus session v30","browser Home focus panel","browser Progress focus panel","Tamil rendering","keyboard navigation","reduced motion","visual-master shell identity"],
-  "mergeAllowed":false,"productionCutoverAllowed":false,"status":"V30_RUNTIME_ASSET_COHERENCE_BROWSER_QA_CONTROLLED_PREVIEW"
+  "assetCoherence":{"independentRuntimeFreshnessWaits":true,"runtimeAssets":["/core-runtime-v30.js","/sw-v30.js"],"rejectHtmlFallback":true,"markerValidation":true},
+  "requiredPreviewChecks":["6 learner JS requests maximum","payload <= 168000 bytes","fresh SPA routes","fresh runtime assets","six CSS files text/css","browser Home focus panel","browser Progress focus panel","visual-master shell identity"],
+  "mergeAllowed":false,"productionCutoverAllowed":false,"status":"V30_LEAN_RUNTIME_DIAGNOSTICS_EXTRACTED_CONTROLLED_PREVIEW"
 }

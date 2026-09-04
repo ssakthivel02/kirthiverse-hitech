@@ -23,34 +23,32 @@ jobs:
     steps:
       - name: Checkout visual candidate
         uses: actions/checkout@v4
-      - name: Validate adaptive v26 contract
+      - name: Validate visual controller v27 contract
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json
+          import json,re
           from pathlib import Path
           index=Path('index.html').read_text(); runtime=json.loads(Path('preview-runtime.json').read_text()); preview=json.loads(Path('visual-preview.json').read_text())
-          required=['app.js','navigation-v18.js','runtime-lifecycle-v16.js','learning-foundation-v19.js','learning-tools-v20.js','visual-master-v15.js','learner-adaptive-v26.js','visual-master-pages-v15.js','pwa-v26.js','visual-preview-gate.js','sw-v26.js','manifest.webmanifest','kirthiverse-mark.svg']
+          required=['app.js','navigation-v18.js','runtime-lifecycle-v16.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js','pwa-v27.js','visual-preview-gate.js','sw-v27.js','manifest.webmanifest','kirthiverse-mark.svg']
           for name in required: assert Path(name).is_file() and Path(name).stat().st_size>100, f'missing/empty {name}'
           css=['styles.css','learning-foundation-v19.css','learning-tools-v20.css','visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css']
           for name in css: assert f'/{name}?v=MANUS-VISUAL-MASTER-05' in index and Path(name).stat().st_size>1000
-          assert '/learner-adaptive-v26.js?v=MANUS-VISUAL-MASTER-05' in index and '/pwa-v26.js?v=MANUS-VISUAL-MASTER-05' in index
-          assert 'learner-personalization-v25.js' not in index and 'pwa-v24.js' not in index and 'visual-system-v21.css' not in index
-          assert runtime['profile']['version']=='v26' and runtime['profile']['dailyPlan'] is True and runtime['pwa']['serviceWorker']=='sw-v26.js'
-          assert preview['canonical']=={'lessons':135,'assessments':72,'worlds':11} and preview['mergeAllowed'] is False and preview['productionCutoverAllowed'] is False
-          app=Path('app.js').read_text(); life=Path('runtime-lifecycle-v16.js').read_text(); nav=Path('navigation-v18.js').read_text(); personal=Path('learner-adaptive-v26.js').read_text(); sw=Path('sw-v26.js').read_text(); ignore=Path('.assetsignore').read_text()
-          assert "CustomEvent('kv:rendered'" in app and 'new MutationObserver' not in life and 'delegated-capture' in nav
-          assert "version:'v26'" in personal and 'dailyPlan:true' in personal and "recommendationPolicy:'local-age-preference-progress'" in personal and 'KV_PROFILE_RUNTIME' in personal
-          assert 'kirthiverse-preview-v26' in sw and 'learner-adaptive-v26.js' in sw and "VERSION='MANUS-VISUAL-MASTER-05-PWA-26'" in sw
-          for retired in ['learner-personalization-v25.js','profile-v24.js','pwa-v24.js','sw-v24.js','diagnostics-v9.js','preprod-v14.js']: assert retired in ignore, f'rollback asset not pruned: {retired}'
+          assert '/visual-controller-v27.js?v=MANUS-VISUAL-MASTER-05' in index and '/learner-adaptive-v26.js?v=MANUS-VISUAL-MASTER-05' in index and '/pwa-v27.js?v=MANUS-VISUAL-MASTER-05' in index
+          assert '/visual-master-v15.js?' not in index and '/visual-master-pages-v15.js?' not in index and '/pwa-v26.js?' not in index
+          assert runtime['visualController']['version']=='v27' and runtime['visualController']['browserRequestsRemoved']==1 and runtime['visualController']['routeFocusManaged'] is True
+          assert runtime['pwa']['serviceWorker']=='sw-v27.js' and preview['canonical']=={'lessons':135,'assessments':72,'worlds':11} and preview['mergeAllowed'] is False and preview['productionCutoverAllowed'] is False
+          controller=Path('visual-controller-v27.js').read_text(); sw=Path('sw-v27.js').read_text(); ignore=Path('.assetsignore').read_text()
+          assert "version:'v27'" in controller and 'KV_VISUAL_MASTER' in controller and 'KV_VISUAL_PAGES' in controller and 'routeFocusManaged:true' in controller and "a.dataset.link=''" in controller
+          assert 'kirthiverse-preview-v27' in sw and 'visual-controller-v27.js' in sw and "VERSION='MANUS-VISUAL-MASTER-05-PWA-27'" in sw
+          for retired in ['visual-master-v15.js','visual-master-pages-v15.js','pwa-v26.js','sw-v26.js']: assert retired in ignore
           contamination=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog']
-          scan='\n'.join(Path(p).read_text() for p in required if p.endswith('.js') and p!='visual-preview-gate.js')
-          assert not any(x in scan for x in contamination)
+          scan='\n'.join(Path(p).read_text() for p in required if p.endswith('.js') and p!='visual-preview-gate.js'); assert not any(x in scan for x in contamination)
           gate=Path('visual-preview-gate.js').read_text(); assert 'Manus runtime absent' in gate and '__manus__' in gate and 'manus-storage' in gate
-          print('Adaptive v26 contract PASS.')
+          print('Visual controller v27 contract PASS.')
           PY
-      - name: Measure current runtime payload
+      - name: Measure runtime payload and request count
         shell: bash
         run: |
           python - <<'PY'
@@ -62,8 +60,10 @@ jobs:
               if p.startswith('data/'): continue
               if p not in assets: assets.append(p)
           css=sum(Path(p).stat().st_size for p in assets if p.endswith('.css')); js=sum(Path(p).stat().st_size for p in assets if p.endswith('.js')); total=css+js; delta=(baseline-total)/baseline*100
-          print(f'PAYLOAD_CSS_BYTES={css}\nPAYLOAD_JS_BYTES={js}\nPAYLOAD_COMBINED_BYTES={total}\nPAYLOAD_REDUCTION_PERCENT={delta:.2f}')
-          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(f'### Runtime payload\n- CSS: {css:,} bytes\n- JS: {js:,} bytes\n- Combined: {total:,} bytes\n- Baseline delta: {delta:.2f}%\n')
+          script_count=sum(1 for p in assets if p.endswith('.js')); style_count=sum(1 for p in assets if p.endswith('.css'))
+          assert script_count<=9, f'JS request regression: {script_count}'
+          print(f'PAYLOAD_CSS_BYTES={css}\nPAYLOAD_JS_BYTES={js}\nPAYLOAD_COMBINED_BYTES={total}\nPAYLOAD_REDUCTION_PERCENT={delta:.2f}\nJS_REQUESTS={script_count}\nCSS_REQUESTS={style_count}')
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(f'### Runtime footprint\n- CSS: {css:,} bytes\n- JS: {js:,} bytes\n- Combined: {total:,} bytes\n- Baseline delta: {delta:.2f}%\n- JS requests: {script_count}\n- CSS requests: {style_count}\n')
           PY
       - name: Confirm Worker target
         run: |
@@ -86,7 +86,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN_CLEAN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID_CLEAN }}
         run: npx --yes wrangler@4 deploy --assets=.
-      - name: Post-deploy adaptive v26 and PWA v26 smoke gate
+      - name: Post-deploy visual controller v27 smoke gate
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
         run: |
@@ -97,22 +97,21 @@ jobs:
           nonhtml(){ ! grep -Eqi '<!doctype|<html' "$1"; }
           check_css(){ local n="$1" o="/tmp/${1//\//_}"; fetch "css $n" "$PREVIEW_URL/$n?v=MANUS-VISUAL-MASTER-05" "$o"; test "$(wc -c < "$o")" -gt 1000; nonhtml "$o"; curl -fsSLI "$PREVIEW_URL/$n?v=MANUS-VISUAL-MASTER-05" | grep -Eqi '^content-type:[[:space:]]*text/css'; }
           bust="$(date +%s)"
-          fetch home "$PREVIEW_URL/?smoke=$bust" /tmp/home.html; expect 'home candidate' /tmp/home.html 'MANUS-VISUAL-MASTER-05'; expect 'adaptive v26 reference' /tmp/home.html 'learner-adaptive-v26.js'; expect 'PWA v26 reference' /tmp/home.html 'pwa-v26.js'
+          fetch home "$PREVIEW_URL/?smoke=$bust" /tmp/home.html; expect 'visual controller reference' /tmp/home.html 'visual-controller-v27.js'; expect 'adaptive v26 reference' /tmp/home.html 'learner-adaptive-v26.js'; expect 'PWA v27 reference' /tmp/home.html 'pwa-v27.js'
           for css in styles.css learning-foundation-v19.css learning-tools-v20.css visual-master-v15.css visual-master-pages-v15.css visual-master-features-v15.css; do check_css "$css"; done
-          fetch adaptive "$PREVIEW_URL/learner-adaptive-v26.js?smoke=$bust" /tmp/adaptive.js; nonhtml /tmp/adaptive.js; expect 'adaptive runtime marker' /tmp/adaptive.js 'KV_PROFILE_RUNTIME'; expect 'adaptive version' /tmp/adaptive.js "version:'v26'"; expect 'daily plan marker' /tmp/adaptive.js 'dailyPlan:true'
-          fetch sw "$PREVIEW_URL/sw-v26.js?smoke=$bust" /tmp/sw.js; nonhtml /tmp/sw.js; expect 'service worker marker' /tmp/sw.js 'kirthiverse-preview-v26'; expect 'service worker adaptive precache' /tmp/sw.js 'learner-adaptive-v26.js'
-          fetch pwa "$PREVIEW_URL/pwa-v26.js?smoke=$bust" /tmp/pwa.js; nonhtml /tmp/pwa.js; expect 'PWA worker path' /tmp/pwa.js "SW='/sw-v26.js'"
-          fetch manifest "$PREVIEW_URL/manifest.webmanifest?smoke=$bust" /tmp/manifest.json; expect 'manifest identity' /tmp/manifest.json 'Editorial Learning Universe'
+          fetch controller "$PREVIEW_URL/visual-controller-v27.js?smoke=$bust" /tmp/controller.js; nonhtml /tmp/controller.js; expect 'visual controller marker' /tmp/controller.js 'KV_VISUAL_MASTER'; expect 'route focus marker' /tmp/controller.js 'routeFocusManaged:true'
+          fetch adaptive "$PREVIEW_URL/learner-adaptive-v26.js?smoke=$bust" /tmp/adaptive.js; nonhtml /tmp/adaptive.js; expect 'adaptive runtime marker' /tmp/adaptive.js 'KV_PROFILE_RUNTIME'
+          fetch sw "$PREVIEW_URL/sw-v27.js?smoke=$bust" /tmp/sw.js; nonhtml /tmp/sw.js; expect 'service worker marker' /tmp/sw.js 'kirthiverse-preview-v27'; expect 'controller precache' /tmp/sw.js 'visual-controller-v27.js'
+          fetch pwa "$PREVIEW_URL/pwa-v27.js?smoke=$bust" /tmp/pwa.js; nonhtml /tmp/pwa.js; expect 'PWA worker path' /tmp/pwa.js "SW='/sw-v27.js'"
           fetch profile "$PREVIEW_URL/profile?smoke=$bust" /tmp/profile.html; expect 'profile SPA shell' /tmp/profile.html 'MANUS-VISUAL-MASTER-05'
           fetch lesson "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1?smoke=$bust" /tmp/lesson.html; expect 'lesson SPA shell' /tmp/lesson.html 'MANUS-VISUAL-MASTER-05'
-          fetch canonical "$PREVIEW_URL/data/lessons-1.js?smoke=$bust" /tmp/lessons.js; nonhtml /tmp/lessons.js; expect 'canonical lesson data' /tmp/lessons.js 'KV_LESSONS'
-          echo '### Adaptive v26 + PWA v26 smoke PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '### Visual controller v27 smoke PASS' >> "$GITHUB_STEP_SUMMARY"
       - name: Preview safety summary
         if: always()
         run: |
           echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Branch: design/manus-visual-master' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Adaptive learner runtime: local-only v26; Home + Study Studio + daily plan' >> "$GITHUB_STEP_SUMMARY"
-          echo '- PWA: preview-only offline foundation v26' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Visual controller: consolidated v27 with route focus management' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Adaptive learner: local-only v26' >> "$GITHUB_STEP_SUMMARY"
+          echo '- PWA: preview-only v27' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

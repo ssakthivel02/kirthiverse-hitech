@@ -73,5 +73,5 @@
   addEventListener('kv:rendered',render);
   addEventListener('storage',e=>{if([PROFILE_KEY,LEGACY_PROFILE_KEY,PROGRESS_KEY,EXPERIENCE_KEY].includes(e.key))render()});
   render();
-  window.KV_PROFILE_RUNTIME={candidate:C,version:VERSION,route:'/profile',localOnly:true,profileKey:PROFILE_KEY,progressKey:PROGRESS_KEY,experienceKey:EXPERIENCE_KEY,maxPreferredWorlds:3,backupExport:true,agePathSynchronized:true};
+  window.KV_PROFILE_RUNTIME={candidate:C,version:'v24',route:'/profile',localOnly:true,profileKey:PROFILE_KEY,progressKey:PROGRESS_KEY,experienceKey:EXPERIENCE_KEY,maxPreferredWorlds:3,backupExport:true,agePathSynchronized:true};
 })();

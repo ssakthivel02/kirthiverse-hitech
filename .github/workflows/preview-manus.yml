@@ -49,8 +49,11 @@ jobs:
           assert "version:VERSION" in Path('pwa-v24.js').read_text()
           for retired in ['profile-v24.js','profile-v17.js','pwa-v23.js','sw-v23.js','diagnostics-v9.js','preprod-v14.js']: assert retired in ignore, f'rollback asset not pruned: {retired}'
           contamination=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog']
-          loaded='\n'.join(Path(p).read_text() for p in required if p.endswith('.js'))
-          assert not any(x in loaded for x in contamination)
+          runtime_scan=[p for p in required if p.endswith('.js') and p!='visual-preview-gate.js']
+          loaded='\n'.join(Path(p).read_text() for p in runtime_scan)
+          assert not any(x in loaded for x in contamination), 'forbidden runtime contamination outside explicit preview detector'
+          gate=Path('visual-preview-gate.js').read_text()
+          assert 'Manus runtime absent' in gate and '__manus__' in gate and 'manus-storage' in gate, 'preview detector must retain contamination probes'
           print('Candidate contract PASS: personalization v25 + PWA v24 + pruned Worker asset set.')
           PY
 

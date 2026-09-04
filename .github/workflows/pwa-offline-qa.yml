@@ -44,7 +44,8 @@ jobs:
           set -euo pipefail
           chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
           test -n "$chrome"
-          curl -fsS "$PREVIEW_URL/index.html?pwa=$(date +%s)" | grep -Fq 'CORE-RUNTIME-V30'
+          curl -fsS "$PREVIEW_URL/index.html?pwa=$(date +%s)" -o /tmp/kv-pwa-index.html
+          grep -Fq 'CORE-RUNTIME-V30' /tmp/kv-pwa-index.html
           rm -rf /tmp/kv-pwa
           "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9333 --user-data-dir=/tmp/kv-pwa "$PREVIEW_URL/?pwa=$(date +%s)" >/tmp/kv-pwa.log 2>&1 &
           cpid=$!

@@ -155,12 +155,72 @@ jobs:
           echo '- Mobile: 390x844' >> "$GITHUB_STEP_SUMMARY"
           echo '- Routes: Home, Worlds, Mathematics world, Search, Progress, Profile, canonical lesson' >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Browser functional interaction QA
+        if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          rm -rf /tmp/kv-cdp
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9222 --user-data-dir=/tmp/kv-cdp "$PREVIEW_URL/?interaction=$(date +%s)" >/tmp/kv-cdp.log 2>&1 &
+          cpid=$!
+          trap 'kill "$cpid" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 20); do if curl -fsS http://127.0.0.1:9222/json/list >/tmp/kv-pages.json; then ready=1; break; fi; sleep 1; done
+          test "$ready" = 1
+          node <<'NODE'
+          const base=process.env.PREVIEW_URL, lesson='math.number.place-value.base10.age6-8.l1';
+          const pages=await fetch('http://127.0.0.1:9222/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');
+          if(!page)throw Error('No Chromium page target');
+          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const {ok,bad}=pending.get(m.id);pending.delete(m.id);m.error?bad(Error(m.error.message)):ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
+          await send('Runtime.enable');
+          const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'Runtime evaluation failed');return r.result?.value};
+          const wait=async(expression,label,timeout=15000)=>{const end=Date.now()+timeout;while(Date.now()<end){try{if(await ev(expression))return true}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout: '+label)};
+          await ev(`localStorage.clear();location.href=${JSON.stringify(base+'/lesson/'+lesson+'?iq='+Date.now())};true`);
+          await wait(`location.pathname.startsWith('/lesson/')&&!!document.querySelector('[data-confidence="v1"]')`,'lesson confidence render');
+          if(await ev(`document.querySelectorAll('[data-confidence="v1"]').length`)!==1)throw Error('Duplicate confidence panel');
+          await ev(`document.querySelector('[data-c="practice"]').click();true`);
+          await wait(`JSON.parse(localStorage.getItem('kirthiverse.hitech.confidence.v1')||'{}')[${JSON.stringify(lesson)}]?.value==='practice'`,'confidence persistence');
+          if(!(await ev(`document.querySelector('[data-c="practice"]').getAttribute('aria-pressed')==='true'`)))throw Error('Confidence aria state failed');
+          await ev(`window.KV_NAVIGATION.navigate('/');true`);
+          await wait(`location.pathname==='/'&&!!document.querySelector('[data-daily-plan="v26"]')&&window.KV_PERSONALIZATION_CONTEXT?.confidenceAware===true`,'confidence-aware home');
+          if(await ev(`window.KV_PERSONALIZATION_CONTEXT.dailyPlanIds[0]`)!==lesson)throw Error('Need-more-practice lesson was not prioritised');
+          await ev(`document.querySelector('[data-focus-action="start"]').click();true`);
+          await wait(`JSON.parse(localStorage.getItem('kirthiverse.hitech.focus.v1')||'{}').activeUntil> Date.now()`,'focus start');
+          await ev(`document.querySelector('[data-focus-action="pause"]').click();true`);
+          await wait(`JSON.parse(localStorage.getItem('kirthiverse.hitech.focus.v1')||'{}').activeUntil===null`,'focus pause');
+          await ev(`document.querySelector('[data-focus-action="reset"]').click();true`);
+          if(!(await ev(`(()=>{const s=JSON.parse(localStorage.getItem('kirthiverse.hitech.focus.v1')||'{}'),g=Number(JSON.parse(localStorage.getItem('kirthiverse.hitech.profile.local.v2')||'{"sessionGoal":20}').sessionGoal)||20;return s.activeUntil===null&&s.remainingSeconds===g*60})()`)))throw Error('Focus reset failed');
+          await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);
+          await wait(`location.pathname.startsWith('/lesson/')&&!!document.getElementById('complete')`,'lesson revisit');
+          if(await ev(`document.querySelectorAll('[data-confidence="v1"]').length`)!==1)throw Error('Confidence panel duplicated after SPA navigation');
+          await ev(`document.getElementById('complete').click();true`);
+          await wait(`JSON.parse(localStorage.getItem('kirthiverse.hitech.static.progress.v2')||'{"completed":[]}').completed.includes(${JSON.stringify(lesson)})`,'mission completion persistence');
+          await ev(`window.KV_NAVIGATION.navigate('/');true`);
+          await wait(`location.pathname==='/'&&window.KV_PERSONALIZATION_CONTEXT?.dailyPlanIds`,'home after completion');
+          if(await ev(`window.KV_PERSONALIZATION_CONTEXT.dailyPlanIds.includes(${JSON.stringify(lesson)})`))throw Error('Completed lesson remained in daily plan');
+          console.log('INTERACTION_PASS: confidence persistence + adaptive priority');
+          console.log('INTERACTION_PASS: Focus Start/Pause/Reset persistence');
+          console.log('INTERACTION_PASS: lesson completion + daily-plan exclusion');
+          console.log('INTERACTION_PASS: no duplicate confidence panel after SPA navigation');
+          ws.close();
+          NODE
+          echo '### Functional interaction QA PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Confidence: persist + prioritise Need more practice' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Focus: Start / Pause / Reset' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Lesson completion: local persistence + recommendation exclusion' >> "$GITHUB_STEP_SUMMARY"
+          echo '- SPA revisit: no duplicate confidence panel' >> "$GITHUB_STEP_SUMMARY"
+
       - name: Preview safety summary
         if: always()
         run: |
           echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
           echo '- Lean browser runtime: 6 JS requests maximum' >> "$GITHUB_STEP_SUMMARY"
           echo '- Browser QA: desktop + mobile critical route matrix' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Functional QA: confidence + focus + completion + SPA persistence' >> "$GITHUB_STEP_SUMMARY"
           echo '- Manus visual PNG package: rights not verified; asset bytes not introduced' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

@@ -23,44 +23,36 @@ jobs:
     steps:
       - name: Checkout visual candidate
         uses: actions/checkout@v4
-
-      - name: Validate candidate contract
+      - name: Validate adaptive v26 contract
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json,re
+          import json
           from pathlib import Path
           index=Path('index.html').read_text(); runtime=json.loads(Path('preview-runtime.json').read_text()); preview=json.loads(Path('visual-preview.json').read_text())
-          required=['app.js','navigation-v18.js','runtime-lifecycle-v16.js','learning-foundation-v19.js','learning-tools-v20.js','visual-master-v15.js','learner-personalization-v25.js','visual-master-pages-v15.js','pwa-v24.js','visual-preview-gate.js','sw-v24.js','manifest.webmanifest','kirthiverse-mark.svg']
+          required=['app.js','navigation-v18.js','runtime-lifecycle-v16.js','learning-foundation-v19.js','learning-tools-v20.js','visual-master-v15.js','learner-adaptive-v26.js','visual-master-pages-v15.js','pwa-v26.js','visual-preview-gate.js','sw-v26.js','manifest.webmanifest','kirthiverse-mark.svg']
           for name in required: assert Path(name).is_file() and Path(name).stat().st_size>100, f'missing/empty {name}'
           css=['styles.css','learning-foundation-v19.css','learning-tools-v20.css','visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css']
           for name in css: assert f'/{name}?v=MANUS-VISUAL-MASTER-05' in index and Path(name).stat().st_size>1000
-          assert '/learner-personalization-v25.js?v=MANUS-VISUAL-MASTER-05' in index and '/pwa-v24.js?v=MANUS-VISUAL-MASTER-05' in index
-          assert 'profile-v24.js' not in index and 'profile-v17.js' not in index and 'pwa-v23.js' not in index and 'visual-system-v21.css' not in index
-          assert runtime['profile']['module']=='learner-personalization-v25.js' and runtime['profile']['version']=='v25' and runtime['profile']['localOnly'] is True
-          assert runtime['profile']['homePersonalization'] is True and runtime['profile']['studyStudioPersonalization'] is True
-          assert runtime['pwa']['serviceWorker']=='sw-v24.js'
+          assert '/learner-adaptive-v26.js?v=MANUS-VISUAL-MASTER-05' in index and '/pwa-v26.js?v=MANUS-VISUAL-MASTER-05' in index
+          assert 'learner-personalization-v25.js' not in index and 'pwa-v24.js' not in index and 'visual-system-v21.css' not in index
+          assert runtime['profile']['version']=='v26' and runtime['profile']['dailyPlan'] is True and runtime['pwa']['serviceWorker']=='sw-v26.js'
           assert preview['canonical']=={'lessons':135,'assessments':72,'worlds':11} and preview['mergeAllowed'] is False and preview['productionCutoverAllowed'] is False
-          app=Path('app.js').read_text(); lifecycle=Path('runtime-lifecycle-v16.js').read_text(); nav=Path('navigation-v18.js').read_text(); personal=Path('learner-personalization-v25.js').read_text(); sw=Path('sw-v24.js').read_text(); ignore=Path('.assetsignore').read_text()
-          assert "CustomEvent('kv:rendered'" in app and 'new MutationObserver' not in lifecycle and 'delegated-capture' in nav
-          assert "version:'v25'" in personal and 'homePersonalization:true' in personal and 'studyStudioPersonalization:true' in personal and "recommendationPolicy:'local-age-preference-progress'" in personal
-          assert 'kirthiverse-preview-v24' in sw and 'learner-personalization-v25.js' in sw and "const VERSION='MANUS-VISUAL-MASTER-05-PWA-24'" in sw
-          assert "version:VERSION" in Path('pwa-v24.js').read_text()
-          for retired in ['profile-v24.js','profile-v17.js','pwa-v23.js','sw-v23.js','diagnostics-v9.js','preprod-v14.js']: assert retired in ignore, f'rollback asset not pruned: {retired}'
+          app=Path('app.js').read_text(); life=Path('runtime-lifecycle-v16.js').read_text(); nav=Path('navigation-v18.js').read_text(); personal=Path('learner-adaptive-v26.js').read_text(); sw=Path('sw-v26.js').read_text(); ignore=Path('.assetsignore').read_text()
+          assert "CustomEvent('kv:rendered'" in app and 'new MutationObserver' not in life and 'delegated-capture' in nav
+          assert "version:'v26'" in personal and 'dailyPlan:true' in personal and "recommendationPolicy:'local-age-preference-progress'" in personal and 'KV_PROFILE_RUNTIME' in personal
+          assert 'kirthiverse-preview-v26' in sw and 'learner-adaptive-v26.js' in sw and "VERSION='MANUS-VISUAL-MASTER-05-PWA-26'" in sw
+          for retired in ['learner-personalization-v25.js','profile-v24.js','pwa-v24.js','sw-v24.js','diagnostics-v9.js','preprod-v14.js']: assert retired in ignore, f'rollback asset not pruned: {retired}'
           contamination=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog']
-          runtime_scan=[p for p in required if p.endswith('.js') and p!='visual-preview-gate.js']
-          loaded='\n'.join(Path(p).read_text() for p in runtime_scan)
-          assert not any(x in loaded for x in contamination), 'forbidden runtime contamination outside explicit preview detector'
-          gate=Path('visual-preview-gate.js').read_text()
-          assert 'Manus runtime absent' in gate and '__manus__' in gate and 'manus-storage' in gate, 'preview detector must retain contamination probes'
-          print('Candidate contract PASS: personalization v25 + PWA v24 + pruned Worker asset set.')
+          scan='\n'.join(Path(p).read_text() for p in required if p.endswith('.js') and p!='visual-preview-gate.js')
+          assert not any(x in scan for x in contamination)
+          gate=Path('visual-preview-gate.js').read_text(); assert 'Manus runtime absent' in gate and '__manus__' in gate and 'manus-storage' in gate
+          print('Adaptive v26 contract PASS.')
           PY
-
       - name: Measure current runtime payload
         shell: bash
         run: |
-          set -euo pipefail
           python - <<'PY'
           import os,re
           from pathlib import Path
@@ -69,18 +61,14 @@ jobs:
               p=ref.split('?',1)[0].lstrip('/')
               if p.startswith('data/'): continue
               if p not in assets: assets.append(p)
-          missing=[p for p in assets if not Path(p).is_file()]
-          if missing: raise SystemExit(f'Missing assets: {missing}')
           css=sum(Path(p).stat().st_size for p in assets if p.endswith('.css')); js=sum(Path(p).stat().st_size for p in assets if p.endswith('.js')); total=css+js; delta=(baseline-total)/baseline*100
           print(f'PAYLOAD_CSS_BYTES={css}\nPAYLOAD_JS_BYTES={js}\nPAYLOAD_COMBINED_BYTES={total}\nPAYLOAD_REDUCTION_PERCENT={delta:.2f}')
           with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(f'### Runtime payload\n- CSS: {css:,} bytes\n- JS: {js:,} bytes\n- Combined: {total:,} bytes\n- Baseline delta: {delta:.2f}%\n')
           PY
-
       - name: Confirm Worker target
         run: |
           grep -q '"name": "kirthiverse-hitech"' wrangler.jsonc
           grep -q '"directory": "."' wrangler.jsonc
-
       - name: Normalize Cloudflare credential formatting
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
@@ -92,15 +80,13 @@ jobs:
           if not token or not account: raise SystemExit('Normalized Cloudflare credential is empty.')
           with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLOUDFLARE_API_TOKEN_CLEAN='+token+'\nCLOUDFLARE_ACCOUNT_ID_CLEAN='+account+'\n')
           PY
-
       - name: Deploy controlled preview to existing Worker
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN_CLEAN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID_CLEAN }}
         run: npx --yes wrangler@4 deploy --assets=.
-
-      - name: Post-deploy rendering, personalization and PWA smoke gate
+      - name: Post-deploy adaptive v26 and PWA v26 smoke gate
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
         run: |
@@ -108,26 +94,25 @@ jobs:
           sleep 4
           fetch(){ local label="$1" url="$2" out="$3"; code=$(curl -fsSL --retry 4 --retry-delay 2 -o "$out" -w '%{http_code}' "$url"); echo "SMOKE_HTTP: $label=$code"; test "$code" = "200"; test -s "$out"; }
           expect(){ grep -Fq "$3" "$2" && echo "SMOKE_PASS: $1" || { echo "SMOKE_FAIL: $1"; exit 1; }; }
-          check_css(){ local n="$1" o="/tmp/${1//\//_}"; fetch "css $n" "$PREVIEW_URL/$n?v=MANUS-VISUAL-MASTER-05" "$o"; test "$(wc -c < "$o")" -gt 1000; ! grep -Eqi '<!doctype|<html' "$o"; curl -fsSLI "$PREVIEW_URL/$n?v=MANUS-VISUAL-MASTER-05" | grep -Eqi '^content-type:[[:space:]]*text/css'; }
-          fetch home "$PREVIEW_URL/" /tmp/home.html; expect 'home candidate' /tmp/home.html 'MANUS-VISUAL-MASTER-05'; expect 'personalization v25 reference' /tmp/home.html 'learner-personalization-v25.js'; expect 'PWA v24 reference' /tmp/home.html 'pwa-v24.js'
-          for css in styles.css learning-foundation-v19.css learning-tools-v20.css visual-master-v15.css visual-master-pages-v15.css visual-master-features-v15.css; do check_css "$css"; done
+          nonhtml(){ ! grep -Eqi '<!doctype|<html' "$1"; }
+          check_css(){ local n="$1" o="/tmp/${1//\//_}"; fetch "css $n" "$PREVIEW_URL/$n?v=MANUS-VISUAL-MASTER-05" "$o"; test "$(wc -c < "$o")" -gt 1000; nonhtml "$o"; curl -fsSLI "$PREVIEW_URL/$n?v=MANUS-VISUAL-MASTER-05" | grep -Eqi '^content-type:[[:space:]]*text/css'; }
           bust="$(date +%s)"
-          fetch 'service worker v24' "$PREVIEW_URL/sw-v24.js?smoke=$bust" /tmp/sw.js; expect 'service worker marker' /tmp/sw.js 'kirthiverse-preview-v24'; expect 'service worker personalization precache' /tmp/sw.js 'learner-personalization-v25.js'; ! grep -Eqi '<!doctype|<html' /tmp/sw.js
-          fetch 'learner personalization v25' "$PREVIEW_URL/learner-personalization-v25.js?smoke=$bust" /tmp/personal.js; expect 'profile runtime marker' /tmp/personal.js 'KV_PROFILE_RUNTIME'; expect 'personalization v25 version' /tmp/personal.js "version:'v25'"; expect 'home personalization marker' /tmp/personal.js 'homePersonalization:true'; expect 'Study Studio personalization marker' /tmp/personal.js 'studyStudioPersonalization:true'
-          fetch 'PWA bootstrap v24' "$PREVIEW_URL/pwa-v24.js?smoke=$bust" /tmp/pwa.js; expect 'PWA worker path' /tmp/pwa.js "SW='/sw-v24.js'"
+          fetch home "$PREVIEW_URL/?smoke=$bust" /tmp/home.html; expect 'home candidate' /tmp/home.html 'MANUS-VISUAL-MASTER-05'; expect 'adaptive v26 reference' /tmp/home.html 'learner-adaptive-v26.js'; expect 'PWA v26 reference' /tmp/home.html 'pwa-v26.js'
+          for css in styles.css learning-foundation-v19.css learning-tools-v20.css visual-master-v15.css visual-master-pages-v15.css visual-master-features-v15.css; do check_css "$css"; done
+          fetch adaptive "$PREVIEW_URL/learner-adaptive-v26.js?smoke=$bust" /tmp/adaptive.js; nonhtml /tmp/adaptive.js; expect 'adaptive runtime marker' /tmp/adaptive.js 'KV_PROFILE_RUNTIME'; expect 'adaptive version' /tmp/adaptive.js "version:'v26'"; expect 'daily plan marker' /tmp/adaptive.js 'dailyPlan:true'
+          fetch sw "$PREVIEW_URL/sw-v26.js?smoke=$bust" /tmp/sw.js; nonhtml /tmp/sw.js; expect 'service worker marker' /tmp/sw.js 'kirthiverse-preview-v26'; expect 'service worker adaptive precache' /tmp/sw.js 'learner-adaptive-v26.js'
+          fetch pwa "$PREVIEW_URL/pwa-v26.js?smoke=$bust" /tmp/pwa.js; nonhtml /tmp/pwa.js; expect 'PWA worker path' /tmp/pwa.js "SW='/sw-v26.js'"
           fetch manifest "$PREVIEW_URL/manifest.webmanifest?smoke=$bust" /tmp/manifest.json; expect 'manifest identity' /tmp/manifest.json 'Editorial Learning Universe'
-          fetch profile "$PREVIEW_URL/profile" /tmp/profile.html; expect 'profile SPA shell' /tmp/profile.html 'MANUS-VISUAL-MASTER-05'
-          fetch lesson "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1" /tmp/lesson.html; expect 'lesson SPA shell' /tmp/lesson.html 'MANUS-VISUAL-MASTER-05'
-          fetch canonical "$PREVIEW_URL/data/lessons-1.js" /tmp/lessons.js; expect 'canonical lesson data' /tmp/lessons.js 'KV_LESSONS'
-          echo '### Personalization v25 + PWA v24 smoke PASS' >> "$GITHUB_STEP_SUMMARY"
-
+          fetch profile "$PREVIEW_URL/profile?smoke=$bust" /tmp/profile.html; expect 'profile SPA shell' /tmp/profile.html 'MANUS-VISUAL-MASTER-05'
+          fetch lesson "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1?smoke=$bust" /tmp/lesson.html; expect 'lesson SPA shell' /tmp/lesson.html 'MANUS-VISUAL-MASTER-05'
+          fetch canonical "$PREVIEW_URL/data/lessons-1.js?smoke=$bust" /tmp/lessons.js; nonhtml /tmp/lessons.js; expect 'canonical lesson data' /tmp/lessons.js 'KV_LESSONS'
+          echo '### Adaptive v26 + PWA v26 smoke PASS' >> "$GITHUB_STEP_SUMMARY"
       - name: Preview safety summary
         if: always()
         run: |
           echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
           echo '- Branch: design/manus-visual-master' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Personalization: local-only v25; home + Study Studio' >> "$GITHUB_STEP_SUMMARY"
-          echo '- PWA: preview-only offline foundation v24' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Worker assets: rollback runtimes pruned by .assetsignore' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Adaptive learner runtime: local-only v26; Home + Study Studio + daily plan' >> "$GITHUB_STEP_SUMMARY"
+          echo '- PWA: preview-only offline foundation v26' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

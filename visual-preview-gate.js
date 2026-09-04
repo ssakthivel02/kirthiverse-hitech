@@ -9,7 +9,11 @@
   add('Lifecycle observer removed',life?.observerScope==='none'&&life?.observerActive===false,`${life?.observerScope||'missing'} / ${String(life?.observerActive)}`);
   for(const [label,key] of [['Experience','KV_EXPERIENCE_LIFECYCLE'],['Intelligence','KV_INTELLIGENCE_LIFECYCLE'],['Cockpit','KV_COCKPIT_LIFECYCLE'],['Mastery','KV_MASTERY_LIFECYCLE'],['Workspace','KV_WORKSPACE_LIFECYCLE'],['Planner','KV_PLANNER_LIFECYCLE']])add(label+' event lifecycle',window[key]==='kv:rendered',window[key]||'missing');
   add('Canonical lessons',L.length===135,`${L.length}/135`);add('Canonical assessments',A.length===72,`${A.length}/72`);add('Unique lesson IDs',uniq(L.map(x=>x.id)),`${new Set(L.map(x=>x.id)).size}/${L.length}`);add('Unique assessment IDs',uniq(A.map(x=>x.id)),`${new Set(A.map(x=>x.id)).size}/${A.length}`);
-  add('Profile runtime v24',profile?.candidate===CANDIDATE&&profile?.version==='v24'&&profile?.localOnly===true,profile?.version||'missing');add('Profile age-path synchronization',profile?.agePathSynchronized===true,String(profile?.agePathSynchronized));
+  add('Learner personalization v25',profile?.candidate===CANDIDATE&&profile?.version==='v25'&&profile?.localOnly===true,profile?.version||'missing');
+  add('Profile age-path synchronization',profile?.agePathSynchronized===true,String(profile?.agePathSynchronized));
+  add('Personalised home capability',profile?.homePersonalization===true,String(profile?.homePersonalization));
+  add('Personalised Study Studio capability',profile?.studyStudioPersonalization===true,String(profile?.studyStudioPersonalization));
+  add('Local recommendation policy',profile?.recommendationPolicy==='local-age-preference-progress',profile?.recommendationPolicy||'missing');
   add('Profile nav uses shared SPA contract',window.KV_VISUAL_PAGES?.profileNavUsesDataLink===true,String(window.KV_VISUAL_PAGES?.profileNavUsesDataLink));
   add('Visual master controller',window.KV_VISUAL_MASTER?.candidate===CANDIDATE,window.KV_VISUAL_MASTER?.candidate||'missing');add('Visual-master shell identity',document.documentElement.dataset.shellIdentity==='visual-master'&&window.KV_VISUAL_MASTER?.shellIdentity==='visual-master',document.documentElement.dataset.shellIdentity||'missing');
   add('Stale Build 02 labels absent',!document.body.textContent.includes('HITECH-2026-09-03-02')&&!document.body.textContent.includes('FUTURE CLASSROOM OS'),'visible DOM text');

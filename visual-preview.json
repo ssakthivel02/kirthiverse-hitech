@@ -1,9 +1,81 @@
 {
-  "project":"kirthiverse-hitech","candidate":"MANUS-VISUAL-MASTER-05","branch":"design/manus-visual-master","baseBuild":"HITECH-2026-09-03-14","scope":"preview-only","canonical":{"lessons":135,"assessments":72,"worlds":11},"manusRuntime":false,"legacyRepo":false,"productionDnsChanged":false,"paidCloudflareServicesEnabled":false,
-  "runtimeConsolidation":{"coreRuntime":"core-runtime-v29.js","coreVersion":"v29","navigationLifecycleAndPwaBootstrapCombined":true,"visualController":"visual-controller-v27.js","browserJsRequestCeiling":7,"previousMeasuredCombinedBytes":163063,"payloadTargetDirection":"reduce-without-feature-loss"},
-  "learnerPersonalization":{"runtime":"learner-adaptive-v26.js","version":"v26","localOnly":true,"homePersonalization":true,"studyStudioPersonalization":true,"dailyPlan":true,"recommendationPolicy":"local-age-preference-progress"},
-  "offlineFoundation":{"enabledForControlledPreview":true,"bootstrap":"integrated-core-runtime-v29","serviceWorker":"sw-v29.js","cache":"kirthiverse-preview-v29","canonicalDataPrecached":true,"navigationFallback":"cached index shell","freshNavigationFetch":true,"productionCutoverDependency":false},
-  "deploymentCoherence":{"indexGenerationMarker":"CORE-RUNTIME-V29","rootAndIndexNoStore":true,"serviceWorkerNoStore":true,"smokeWaitsForFreshIndexAndRootIndependently":true},
-  "requiredPreviewChecks":["fresh index generation marker","fresh root generation marker","core runtime delivered as JavaScript not SPA fallback","JS request count <= 7","all six committed CSS assets delivered as text/css","visual controller v27","adaptive learner v26","service worker v29 and manifest delivery","direct lesson deep-link reload","profile direct deep-link reload","Tamil rendering","keyboard navigation","reduced motion","visual-master shell identity"],
-  "mergeAllowed":false,"productionCutoverAllowed":false,"status":"CORE_RUNTIME_V29_PWA_V29_CONTROLLED_PREVIEW"
+  "project": "kirthiverse-hitech",
+  "candidate": "MANUS-VISUAL-MASTER-05",
+  "branch": "design/manus-visual-master",
+  "baseBuild": "HITECH-2026-09-03-14",
+  "scope": "preview-only",
+  "canonical": {
+    "lessons": 135,
+    "assessments": 72,
+    "worlds": 11
+  },
+  "manusRuntime": false,
+  "legacyRepo": false,
+  "productionDnsChanged": false,
+  "paidCloudflareServicesEnabled": false,
+  "runtimeConsolidation": {
+    "coreRuntime": "core-runtime-v30.js",
+    "coreVersion": "v30",
+    "navigationLifecyclePwaAndFocusCombined": true,
+    "visualController": "visual-controller-v27.js",
+    "browserJsRequestCeiling": 7,
+    "previousMeasuredCombinedBytes": 162964,
+    "payloadTargetDirection": "reduce-without-feature-loss"
+  },
+  "learnerPersonalization": {
+    "runtime": "learner-adaptive-v26.js",
+    "version": "v26",
+    "localOnly": true,
+    "homePersonalization": true,
+    "studyStudioPersonalization": true,
+    "dailyPlan": true,
+    "recommendationPolicy": "local-age-preference-progress"
+  },
+  "focusSession": {
+    "runtime": "core-runtime-v30.js",
+    "version": "v30",
+    "localOnly": true,
+    "usesProfileSessionGoal": true,
+    "dailyHistory": true,
+    "streak": true,
+    "homeAndProgress": true
+  },
+  "offlineFoundation": {
+    "enabledForControlledPreview": true,
+    "bootstrap": "integrated-core-runtime-v30",
+    "serviceWorker": "sw-v30.js",
+    "cache": "kirthiverse-preview-v30",
+    "canonicalDataPrecached": true,
+    "navigationFallback": "cached index shell",
+    "freshNavigationFetch": true,
+    "productionCutoverDependency": false
+  },
+  "deploymentCoherence": {
+    "indexGenerationMarker": "CORE-RUNTIME-V30",
+    "rootAndIndexNoStore": true,
+    "serviceWorkerNoStore": true,
+    "smokeWaitsForFreshIndexAndRootIndependently": true,
+    "browserDomSmoke": true
+  },
+  "requiredPreviewChecks": [
+    "fresh index generation marker",
+    "fresh root generation marker",
+    "core runtime delivered as JavaScript not SPA fallback",
+    "JS request count <= 7",
+    "all six committed CSS assets delivered as text/css",
+    "visual controller v27",
+    "adaptive learner v26",
+    "local focus session v30",
+    "browser DOM focus panel",
+    "service worker v30 and manifest delivery",
+    "direct lesson deep-link reload",
+    "profile direct deep-link reload",
+    "Tamil rendering",
+    "keyboard navigation",
+    "reduced motion",
+    "visual-master shell identity"
+  ],
+  "mergeAllowed": false,
+  "productionCutoverAllowed": false,
+  "status": "FOCUS_SESSION_V30_PWA_V30_CONTROLLED_PREVIEW"
 }

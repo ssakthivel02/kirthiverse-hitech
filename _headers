@@ -11,7 +11,7 @@
 /index.html
   Cache-Control: no-cache, no-store, must-revalidate
 
-/sw-v29.js
+/sw-v30.js
   Cache-Control: no-cache, no-store, must-revalidate
   Service-Worker-Allowed: /
 

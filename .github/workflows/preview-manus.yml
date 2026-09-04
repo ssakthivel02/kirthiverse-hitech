@@ -23,69 +23,104 @@ jobs:
     steps:
       - name: Checkout visual candidate
         uses: actions/checkout@v4
-      - name: Validate core runtime v29 contract
+
+      - name: Validate core runtime v30 focus-session contract
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           import json
           from pathlib import Path
-          index=Path('index.html').read_text(); runtime=json.loads(Path('preview-runtime.json').read_text()); preview=json.loads(Path('visual-preview.json').read_text())
-          required=['app.js','core-runtime-v29.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js','visual-preview-gate.js','sw-v29.js','manifest.webmanifest','kirthiverse-mark.svg']
-          for name in required: assert Path(name).is_file() and Path(name).stat().st_size>100, f'missing/empty {name}'
-          assert 'CORE-RUNTIME-V29' in index and '/core-runtime-v29.js?v=CORE-RUNTIME-V29' in index and '/pwa-v28.js?' not in index
-          assert '/navigation-v18.js?' not in index and '/runtime-lifecycle-v16.js?' not in index and '/core-runtime-v28.js?' not in index
-          assert runtime['coreRuntime']['version']=='v29' and runtime['coreRuntime']['browserRequestsRemoved']==2 and runtime['coreRuntime']['pwaBootstrapIntegrated'] is True and runtime['pwa']['serviceWorker']=='sw-v29.js'
-          assert preview['runtimeConsolidation']['browserJsRequestCeiling']==7 and preview['canonical']=={'lessons':135,'assessments':72,'worlds':11} and preview['mergeAllowed'] is False and preview['productionCutoverAllowed'] is False
-          core=Path('core-runtime-v29.js').read_text(); sw=Path('sw-v29.js').read_text(); ignore=Path('.assetsignore').read_text(); headers=Path('_headers').read_text()
-          assert 'KV_NAVIGATION' in core and 'KV_RUNTIME_LIFECYCLE' in core and 'KV_CORE_RUNTIME' in core and 'KV_PWA' in core and "version:V" in core and 'delegated-capture' in core and 'new MutationObserver' not in core
-          assert 'kirthiverse-preview-v29' in sw and 'core-runtime-v29.js' in sw and "VERSION='MANUS-VISUAL-MASTER-05-PWA-29'" in sw and 'pwa-v28.js' not in sw
-          for retired in ['navigation-v18.js','runtime-lifecycle-v16.js','core-runtime-v28.js','pwa-v28.js','sw-v28.js']: assert retired in ignore
-          assert '/index.html' in headers and '/sw-v29.js' in headers and 'no-store' in headers
+          index=Path('index.html').read_text()
+          runtime=json.loads(Path('preview-runtime.json').read_text())
+          preview=json.loads(Path('visual-preview.json').read_text())
+          required=['app.js','core-runtime-v30.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js','visual-preview-gate.js','sw-v30.js','manifest.webmanifest','kirthiverse-mark.svg']
+          for name in required:
+              assert Path(name).is_file() and Path(name).stat().st_size>100, f'missing/empty {name}'
+          assert 'CORE-RUNTIME-V30' in index
+          assert '/core-runtime-v30.js?v=CORE-RUNTIME-V30' in index
+          assert '/core-runtime-v29.js?' not in index
+          assert runtime['coreRuntime']['version']=='v30'
+          assert runtime['coreRuntime']['focusSessionIntegrated'] is True
+          assert runtime['focusSession']['localOnly'] is True
+          assert runtime['pwa']['serviceWorker']=='sw-v30.js'
+          assert preview['runtimeConsolidation']['browserJsRequestCeiling']==7
+          assert preview['focusSession']['version']=='v30' and preview['focusSession']['localOnly'] is True
+          assert preview['canonical']=={'lessons':135,'assessments':72,'worlds':11}
+          assert preview['mergeAllowed'] is False and preview['productionCutoverAllowed'] is False
+          core=Path('core-runtime-v30.js').read_text()
+          sw=Path('sw-v30.js').read_text()
+          ignore=Path('.assetsignore').read_text()
+          headers=Path('_headers').read_text()
+          for marker in ['KV_NAVIGATION','KV_RUNTIME_LIFECYCLE','KV_CORE_RUNTIME','KV_PWA','KV_FOCUS_RUNTIME','focusSession:true','profileGoalAware:true','data-focus-session']:
+              assert marker in core, f'missing core marker {marker}'
+          assert 'new MutationObserver' not in core
+          assert 'kirthiverse-preview-v30' in sw and 'core-runtime-v30.js' in sw and "VERSION='MANUS-VISUAL-MASTER-05-PWA-30'" in sw
+          for retired in ['core-runtime-v29.js','sw-v29.js']:
+              assert retired in ignore, f'rollback asset not pruned: {retired}'
+          assert '/index.html' in headers and '/sw-v30.js' in headers and 'no-store' in headers
           contamination=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog']
-          scan='\n'.join(Path(p).read_text() for p in required if p.endswith('.js') and p!='visual-preview-gate.js'); assert not any(x in scan for x in contamination)
-          gate=Path('visual-preview-gate.js').read_text(); assert 'Manus runtime absent' in gate and '__manus__' in gate and 'manus-storage' in gate
-          print('Core runtime v29 contract PASS.')
+          scan='\n'.join(Path(p).read_text() for p in required if p.endswith('.js') and p!='visual-preview-gate.js')
+          assert not any(x in scan for x in contamination)
+          gate=Path('visual-preview-gate.js').read_text()
+          assert 'Manus runtime absent' in gate and '__manus__' in gate and 'manus-storage' in gate
+          assert 'Local focus session v30' in gate
+          print('Core runtime v30 + local focus session contract PASS.')
           PY
+
       - name: Measure runtime payload and request count
         shell: bash
         run: |
           python - <<'PY'
           import os,re
           from pathlib import Path
-          baseline=159428; html=Path('index.html').read_text(); refs=re.findall(r'(?:href|src)=["\'](/[^"\']+\.(?:css|js)(?:\?[^"\']*)?)["\']',html); assets=[]
+          baseline=159428
+          html=Path('index.html').read_text()
+          refs=re.findall(r'(?:href|src)=["\'](/[^"\']+\.(?:css|js)(?:\?[^"\']*)?)["\']',html)
+          assets=[]
           for ref in refs:
               p=ref.split('?',1)[0].lstrip('/')
               if p.startswith('data/'): continue
               if p not in assets: assets.append(p)
-          css=sum(Path(p).stat().st_size for p in assets if p.endswith('.css')); js=sum(Path(p).stat().st_size for p in assets if p.endswith('.js')); total=css+js; delta=(baseline-total)/baseline*100
-          script_count=sum(1 for p in assets if p.endswith('.js')); style_count=sum(1 for p in assets if p.endswith('.css'))
+          css=sum(Path(p).stat().st_size for p in assets if p.endswith('.css'))
+          js=sum(Path(p).stat().st_size for p in assets if p.endswith('.js'))
+          total=css+js
+          delta=(baseline-total)/baseline*100
+          script_count=sum(1 for p in assets if p.endswith('.js'))
+          style_count=sum(1 for p in assets if p.endswith('.css'))
           assert script_count<=7, f'JS request regression: {script_count}'
           print(f'PAYLOAD_CSS_BYTES={css}\nPAYLOAD_JS_BYTES={js}\nPAYLOAD_COMBINED_BYTES={total}\nPAYLOAD_REDUCTION_PERCENT={delta:.2f}\nJS_REQUESTS={script_count}\nCSS_REQUESTS={style_count}')
-          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(f'### Runtime footprint\n- CSS: {css:,} bytes\n- JS: {js:,} bytes\n- Combined: {total:,} bytes\n- Baseline delta: {delta:.2f}%\n- JS requests: {script_count}\n- CSS requests: {style_count}\n')
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:
+              f.write(f'### Runtime footprint\n- CSS: {css:,} bytes\n- JS: {js:,} bytes\n- Combined: {total:,} bytes\n- Baseline delta: {delta:.2f}%\n- JS requests: {script_count}\n- CSS requests: {style_count}\n')
           PY
+
       - name: Confirm Worker target
         run: |
           grep -q '"name": "kirthiverse-hitech"' wrangler.jsonc
           grep -q '"directory": "."' wrangler.jsonc
+
       - name: Normalize Cloudflare credential formatting
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
         run: |
           python - <<'PY'
           import os
-          token=os.environ.get('RAW_CLOUDFLARE_API_TOKEN','').strip().strip('"').strip("'"); account=os.environ.get('RAW_CLOUDFLARE_ACCOUNT_ID','').strip().strip('"').strip("'")
+          token=os.environ.get('RAW_CLOUDFLARE_API_TOKEN','').strip().strip('"').strip("'")
+          account=os.environ.get('RAW_CLOUDFLARE_ACCOUNT_ID','').strip().strip('"').strip("'")
           if token.lower().startswith('bearer '): token=token[7:].strip()
           if not token or not account: raise SystemExit('Normalized Cloudflare credential is empty.')
-          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLOUDFLARE_API_TOKEN_CLEAN='+token+'\nCLOUDFLARE_ACCOUNT_ID_CLEAN='+account+'\n')
+          with open(os.environ['GITHUB_ENV'],'a') as f:
+              f.write('CLOUDFLARE_API_TOKEN_CLEAN='+token+'\nCLOUDFLARE_ACCOUNT_ID_CLEAN='+account+'\n')
           PY
+
       - name: Deploy controlled preview to existing Worker
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN_CLEAN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID_CLEAN }}
         run: npx --yes wrangler@4 deploy --assets=.
-      - name: Post-deploy core runtime v29 smoke gate
+
+      - name: Post-deploy core runtime v30 smoke gate
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
         run: |
@@ -93,23 +128,50 @@ jobs:
           fetch(){ local label="$1" url="$2" out="$3"; code=$(curl -fsSL --retry 4 --retry-delay 2 -o "$out" -w '%{http_code}' "$url"); echo "SMOKE_HTTP: $label=$code"; test "$code" = "200"; test -s "$out"; }
           nonhtml(){ ! grep -Eqi '<!doctype|<html' "$1"; }
           wait_marker(){ local label="$1" url="$2" marker="$3" out="$4"; local ok=0; for i in $(seq 1 15); do fetch "$label" "$url?smoke=$(date +%s)-$i" "$out"; if grep -Fq "$marker" "$out"; then ok=1; break; fi; echo "WAIT_FRESH_${label^^}: attempt=$i"; sleep 2; done; test "$ok" = "1"; echo "SMOKE_PASS: fresh $label generation"; }
-          wait_marker index "$PREVIEW_URL/index.html" 'CORE-RUNTIME-V29' /tmp/index.html
-          wait_marker root "$PREVIEW_URL/" 'CORE-RUNTIME-V29' /tmp/home.html
+          wait_marker index "$PREVIEW_URL/index.html" 'CORE-RUNTIME-V30' /tmp/index.html
+          wait_marker root "$PREVIEW_URL/" 'CORE-RUNTIME-V30' /tmp/home.html
           bust="$(date +%s)"
-          fetch core "$PREVIEW_URL/core-runtime-v29.js?smoke=$bust" /tmp/core.js; nonhtml /tmp/core.js; grep -Fq 'KV_CORE_RUNTIME' /tmp/core.js; grep -Fq 'KV_PWA' /tmp/core.js; grep -Fq "SW='/sw-v29.js'" /tmp/core.js
-          fetch controller "$PREVIEW_URL/visual-controller-v27.js?smoke=$bust" /tmp/controller.js; nonhtml /tmp/controller.js; grep -Fq 'KV_VISUAL_MASTER' /tmp/controller.js
-          fetch adaptive "$PREVIEW_URL/learner-adaptive-v26.js?smoke=$bust" /tmp/adaptive.js; nonhtml /tmp/adaptive.js; grep -Fq 'KV_PROFILE_RUNTIME' /tmp/adaptive.js
-          fetch sw "$PREVIEW_URL/sw-v29.js?smoke=$bust" /tmp/sw.js; nonhtml /tmp/sw.js; grep -Fq 'kirthiverse-preview-v29' /tmp/sw.js; grep -Fq 'core-runtime-v29.js' /tmp/sw.js
-          fetch profile "$PREVIEW_URL/profile?smoke=$bust" /tmp/profile.html; grep -Fq 'CORE-RUNTIME-V29' /tmp/profile.html
-          fetch lesson "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1?smoke=$bust" /tmp/lesson.html; grep -Fq 'CORE-RUNTIME-V29' /tmp/lesson.html
-          echo '### Core runtime v29 + integrated PWA bootstrap smoke PASS' >> "$GITHUB_STEP_SUMMARY"
+          fetch core "$PREVIEW_URL/core-runtime-v30.js?smoke=$bust" /tmp/core.js
+          nonhtml /tmp/core.js
+          grep -Fq 'KV_CORE_RUNTIME' /tmp/core.js
+          grep -Fq 'KV_FOCUS_RUNTIME' /tmp/core.js
+          grep -Fq 'focusSession:true' /tmp/core.js
+          grep -Fq "SW='/sw-v30.js'" /tmp/core.js
+          fetch controller "$PREVIEW_URL/visual-controller-v27.js?smoke=$bust" /tmp/controller.js
+          nonhtml /tmp/controller.js
+          grep -Fq 'KV_VISUAL_MASTER' /tmp/controller.js
+          fetch adaptive "$PREVIEW_URL/learner-adaptive-v26.js?smoke=$bust" /tmp/adaptive.js
+          nonhtml /tmp/adaptive.js
+          grep -Fq 'KV_PROFILE_RUNTIME' /tmp/adaptive.js
+          fetch sw "$PREVIEW_URL/sw-v30.js?smoke=$bust" /tmp/sw.js
+          nonhtml /tmp/sw.js
+          grep -Fq 'kirthiverse-preview-v30' /tmp/sw.js
+          grep -Fq 'core-runtime-v30.js' /tmp/sw.js
+          fetch profile "$PREVIEW_URL/profile?smoke=$bust" /tmp/profile.html
+          grep -Fq 'CORE-RUNTIME-V30' /tmp/profile.html
+          fetch lesson "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1?smoke=$bust" /tmp/lesson.html
+          grep -Fq 'CORE-RUNTIME-V30' /tmp/lesson.html
+
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          if [ -n "$chrome" ]; then
+            "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=8000 --dump-dom "$PREVIEW_URL/?browser=$bust" > /tmp/browser-dom.html
+            grep -Fq 'data-focus-session="v30"' /tmp/browser-dom.html
+            grep -Fq 'FOCUS SESSION // LOCAL ONLY' /tmp/browser-dom.html
+            grep -Fq 'data-personal-home="v26"' /tmp/browser-dom.html
+            echo 'SMOKE_PASS: browser DOM focus session + personalised home'
+          else
+            echo 'BROWSER_DOM_SMOKE_SKIPPED: no Chromium binary on runner'
+          fi
+
+          echo '### Core runtime v30 + focus session smoke PASS' >> "$GITHUB_STEP_SUMMARY"
+
       - name: Preview safety summary
         if: always()
         run: |
           echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Core runtime: v29 combines navigation + lifecycle + PWA bootstrap' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Core runtime: v30 combines navigation + lifecycle + PWA bootstrap + local focus session' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Focus session: profile-goal-aware timer, local history and streak; no remote tracking' >> "$GITHUB_STEP_SUMMARY"
           echo '- Visual controller: v27' >> "$GITHUB_STEP_SUMMARY"
           echo '- Adaptive learner: local-only v26' >> "$GITHUB_STEP_SUMMARY"
-          echo '- PWA: preview-only v29 service worker; bootstrap integrated into core' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

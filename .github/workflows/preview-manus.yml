@@ -138,9 +138,9 @@ jobs:
           run_dom mobile_progress 390,844 /progress
           grep -Fq 'data-focus-session="v30"' /tmp/mobile_progress.html
           run_dom desktop_profile 1440,900 /profile
-          grep -Fq 'data-profile-page="v26"' /tmp/desktop_profile.html
+          grep -Fq 'data-profile-runtime="v26"' /tmp/desktop_profile.html
           run_dom mobile_profile 390,844 /profile
-          grep -Fq 'data-profile-page="v26"' /tmp/mobile_profile.html
+          grep -Fq 'data-profile-runtime="v26"' /tmp/mobile_profile.html
           run_dom desktop_lesson 1440,900 /lesson/math.number.place-value.base10.age6-8.l1
           run_dom mobile_lesson 390,844 /lesson/math.number.place-value.base10.age6-8.l1
           python - <<'PY'
@@ -161,5 +161,6 @@ jobs:
           echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
           echo '- Lean browser runtime: 6 JS requests maximum' >> "$GITHUB_STEP_SUMMARY"
           echo '- Browser QA: desktop + mobile critical route matrix' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Manus visual PNG package: rights not verified; asset bytes not introduced' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

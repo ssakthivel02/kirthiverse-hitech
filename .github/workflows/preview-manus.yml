@@ -24,7 +24,7 @@ jobs:
       - name: Checkout visual candidate
         uses: actions/checkout@v4
 
-      - name: Validate v30 route-coherence contract
+      - name: Validate v30 runtime-integrity contract
         shell: bash
         run: |
           set -euo pipefail
@@ -36,7 +36,7 @@ jobs:
           for name in required: assert Path(name).is_file() and Path(name).stat().st_size>100, f'missing/empty {name}'
           assert 'CORE-RUNTIME-V30' in index and '/core-runtime-v30.js?v=CORE-RUNTIME-V30' in index
           assert preview['routeCoherence']['independentFreshnessWaits'] is True
-          assert preview['routeCoherence']['routes']==['/','/worlds','/world/mathematics','/search','/progress','/profile','/lesson/math.number.place-value.base10.age6-8.l1']
+          assert preview['assetCoherence']['independentRuntimeFreshnessWaits'] is True
           core=Path('core-runtime-v30.js').read_text(); sw=Path('sw-v30.js').read_text()
           for marker in ['KV_CORE_RUNTIME','KV_FOCUS_RUNTIME','focusSession:true','profileGoalAware:true']: assert marker in core
           assert 'kirthiverse-preview-v30' in sw and 'core-runtime-v30.js' in sw
@@ -45,7 +45,7 @@ jobs:
           contamination=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog']
           scan='\n'.join(Path(p).read_text() for p in required if p.endswith('.js') and p!='visual-preview-gate.js')
           assert not any(x in scan for x in contamination)
-          print('v30 route-coherence contract PASS.')
+          print('v30 runtime-integrity contract PASS.')
           PY
 
       - name: Measure runtime payload and request count
@@ -91,44 +91,46 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID_CLEAN }}
         run: npx --yes wrangler@4 deploy --assets=.
 
-      - name: Post-deploy route-coherence + browser smoke
+      - name: Post-deploy route + asset + browser integrity smoke
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
         run: |
           set -euo pipefail
           fetch(){ local label="$1" url="$2" out="$3"; code=$(curl -fsSL --retry 4 --retry-delay 2 -o "$out" -w '%{http_code}' "$url"); echo "SMOKE_HTTP: $label=$code"; test "$code" = 200; test -s "$out"; }
           nonhtml(){ ! grep -Eqi '<!doctype|<html' "$1"; }
-          wait_marker(){ local label="$1" url="$2" out="$3" ok=0; for i in $(seq 1 18); do fetch "$label" "$url?smoke=$(date +%s)-$i" "$out"; if grep -Fq 'CORE-RUNTIME-V30' "$out"; then ok=1; break; fi; echo "WAIT_FRESH_${label^^}: attempt=$i"; sleep 2; done; test "$ok" = 1; echo "SMOKE_PASS: fresh $label generation"; }
-          wait_marker index "$PREVIEW_URL/index.html" /tmp/index.html
-          wait_marker root "$PREVIEW_URL/" /tmp/root.html
-          wait_marker worlds "$PREVIEW_URL/worlds" /tmp/worlds.html
-          wait_marker world_math "$PREVIEW_URL/world/mathematics" /tmp/world-math.html
-          wait_marker search "$PREVIEW_URL/search" /tmp/search.html
-          wait_marker progress "$PREVIEW_URL/progress" /tmp/progress.html
-          wait_marker profile "$PREVIEW_URL/profile" /tmp/profile.html
-          wait_marker lesson "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1" /tmp/lesson.html
+          wait_html(){ local label="$1" url="$2" out="$3" ok=0; for i in $(seq 1 18); do fetch "$label" "$url?smoke=$(date +%s)-$i" "$out"; if grep -Fq 'CORE-RUNTIME-V30' "$out"; then ok=1; break; fi; echo "WAIT_FRESH_${label^^}: attempt=$i"; sleep 2; done; test "$ok" = 1; echo "SMOKE_PASS: fresh $label generation"; }
+          wait_asset(){ local label="$1" url="$2" marker="$3" out="$4" ok=0; for i in $(seq 1 18); do fetch "$label" "$url?smoke=$(date +%s)-$i" "$out"; if nonhtml "$out" && grep -Fq "$marker" "$out"; then ok=1; break; fi; echo "WAIT_FRESH_${label^^}: attempt=$i"; sleep 2; done; test "$ok" = 1; echo "SMOKE_PASS: fresh $label asset"; }
+          wait_html index "$PREVIEW_URL/index.html" /tmp/index.html
+          wait_html root "$PREVIEW_URL/" /tmp/root.html
+          wait_html worlds "$PREVIEW_URL/worlds" /tmp/worlds.html
+          wait_html world_math "$PREVIEW_URL/world/mathematics" /tmp/world-math.html
+          wait_html search "$PREVIEW_URL/search" /tmp/search.html
+          wait_html progress "$PREVIEW_URL/progress" /tmp/progress.html
+          wait_html profile "$PREVIEW_URL/profile" /tmp/profile.html
+          wait_html lesson "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1" /tmp/lesson.html
+          wait_asset core "$PREVIEW_URL/core-runtime-v30.js" 'KV_FOCUS_RUNTIME' /tmp/core.js
+          wait_asset sw "$PREVIEW_URL/sw-v30.js" 'kirthiverse-preview-v30' /tmp/sw.js
           bust=$(date +%s)
-          fetch core "$PREVIEW_URL/core-runtime-v30.js?smoke=$bust" /tmp/core.js; nonhtml /tmp/core.js; grep -Fq 'KV_FOCUS_RUNTIME' /tmp/core.js
-          fetch sw "$PREVIEW_URL/sw-v30.js?smoke=$bust" /tmp/sw.js; nonhtml /tmp/sw.js; grep -Fq 'kirthiverse-preview-v30' /tmp/sw.js
           for css in styles.css learning-foundation-v19.css learning-tools-v20.css visual-master-v15.css visual-master-pages-v15.css visual-master-features-v15.css; do fetch "css_$css" "$PREVIEW_URL/$css?smoke=$bust" "/tmp/$css"; nonhtml "/tmp/$css"; curl -fsSLI "$PREVIEW_URL/$css?smoke=$bust" | grep -Eqi '^content-type:[[:space:]]*text/css'; done
           chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
           if [ -n "$chrome" ]; then
-            "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=10000 --dump-dom "$PREVIEW_URL/?browser=$bust" > /tmp/browser-home.html
+            "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=12000 --dump-dom "$PREVIEW_URL/?browser=$bust" > /tmp/browser-home.html
             grep -Fq 'data-focus-session="v30"' /tmp/browser-home.html
             grep -Fq 'data-personal-home="v26"' /tmp/browser-home.html
-            "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=8000 --dump-dom "$PREVIEW_URL/progress?browser=$bust" > /tmp/browser-progress.html
+            grep -Fq 'FOCUS SESSION // LOCAL ONLY' /tmp/browser-home.html
+            "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=10000 --dump-dom "$PREVIEW_URL/progress?browser=$bust" > /tmp/browser-progress.html
             grep -Fq 'data-focus-session="v30"' /tmp/browser-progress.html
-            echo 'SMOKE_PASS: browser Home + Progress focus-session DOM'
+            echo 'SMOKE_PASS: browser-visible Home + Progress focus session'
           else
             echo 'BROWSER_DOM_SMOKE_SKIPPED: no Chromium binary on runner'
           fi
-          echo '### v30 route-coherence matrix PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '### v30 route + asset + browser integrity PASS' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Preview safety summary
         if: always()
         run: |
           echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Route coherence: independent freshness waits across 7 SPA routes' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Independent freshness waits: 8 HTML routes + core JS + service worker' >> "$GITHUB_STEP_SUMMARY"
           echo '- Browser DOM: Home + Progress focus-session checks when Chromium is available' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

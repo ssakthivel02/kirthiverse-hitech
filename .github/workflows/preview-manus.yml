@@ -24,7 +24,7 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json,re
+          import json
           from pathlib import Path
           h=Path('index.html').read_text(); p=json.loads(Path('visual-preview.json').read_text()); r=json.loads(Path('preview-runtime.json').read_text())
           assert 'CORE-RUNTIME-V30' in h and '/core-runtime-v30.js?v=CORE-RUNTIME-V30' in h
@@ -112,7 +112,17 @@ jobs:
           chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
           test -n "$chrome"
           bust=$(date +%s)
-          run_dom(){ local label="$1" size="$2" path="$3" out="/tmp/${label}.html"; "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --window-size="$size" --virtual-time-budget=12000 --dump-dom "$PREVIEW_URL$path?browser=$bust" >"$out" 2>/tmp/${label}.stderr; test -s "$out"; grep -Fq '<main' "$out"; ! grep -Fq 'visual-preview-gate.js' "$out"; echo "BROWSER_PASS: $label $size $path"; }
+          run_dom(){
+            local label="$1"
+            local size="$2"
+            local path="$3"
+            local out="/tmp/${label}.html"
+            "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --window-size="$size" --virtual-time-budget=12000 --dump-dom "$PREVIEW_URL$path?browser=$bust" >"$out" 2>"/tmp/${label}.stderr"
+            test -s "$out"
+            grep -Fq '<main' "$out"
+            ! grep -Fq 'visual-preview-gate.js' "$out"
+            echo "BROWSER_PASS: $label $size $path"
+          }
           run_dom desktop_home 1440,900 /
           grep -Fq 'data-focus-session="v30"' /tmp/desktop_home.html
           grep -Fq 'data-personal-home="v26"' /tmp/desktop_home.html

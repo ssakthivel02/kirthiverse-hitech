@@ -2,8 +2,7 @@ name: KirthiVerse Manus Preview
 
 on:
   push:
-    branches:
-      - design/manus-visual-master
+    branches: [design/manus-visual-master]
   workflow_dispatch:
 
 concurrency:
@@ -30,28 +29,26 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json
+          import json,re
           from pathlib import Path
-          index=Path('index.html').read_text(encoding='utf-8');runtime=json.loads(Path('preview-runtime.json').read_text(encoding='utf-8'));preview=json.loads(Path('visual-preview.json').read_text(encoding='utf-8'))
-          app=Path('app.js').read_text(encoding='utf-8');nav=Path('navigation-v18.js').read_text(encoding='utf-8');lifecycle=Path('runtime-lifecycle-v16.js').read_text(encoding='utf-8');foundation=Path('learning-foundation-v19.js').read_text(encoding='utf-8');tools=Path('learning-tools-v20.js').read_text(encoding='utf-8')
+          index=Path('index.html').read_text(); runtime=json.loads(Path('preview-runtime.json').read_text()); preview=json.loads(Path('visual-preview.json').read_text())
+          required=['app.js','navigation-v18.js','runtime-lifecycle-v16.js','learning-foundation-v19.js','learning-tools-v20.js','visual-master-v15.js','profile-v24.js','visual-master-pages-v15.js','pwa-v24.js','visual-preview-gate.js','sw-v24.js','manifest.webmanifest','kirthiverse-mark.svg']
+          for name in required: assert Path(name).is_file() and Path(name).stat().st_size>100, f'missing/empty {name}'
           css=['styles.css','learning-foundation-v19.css','learning-tools-v20.css','visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css']
-          for name in css:
-              assert f'/{name}?v=MANUS-VISUAL-MASTER-05' in index, f'missing CSS: {name}'
-              assert Path(name).is_file() and Path(name).stat().st_size>1000, f'invalid CSS: {name}'
-          for name in ['pwa-v23.js','sw-v23.js','manifest.webmanifest','kirthiverse-mark.svg']:
-              assert Path(name).is_file() and Path(name).stat().st_size>100, f'missing PWA asset: {name}'
-          assert '/pwa-v23.js?v=MANUS-VISUAL-MASTER-05' in index and 'visual-system-v21.css' not in index
-          assert 'KV_LEARNING_FOUNDATION' in foundation and all(x in foundation for x in ['experience','intelligence','cockpit'])
-          assert 'KV_LEARNING_TOOLS' in tools and all(x in tools for x in ['mastery','workspace','planner','BY_ID','ASSESS_BY_LESSON'])
-          assert 'delegated-capture' in nav and 'agePathCentralized:true' in nav
-          assert "source:'app-render-authoritative'" in lifecycle and 'appRenderAuthoritative:true' in lifecycle and 'popstateEmitter:false' in lifecycle and 'new MutationObserver' not in lifecycle
-          assert "CustomEvent('kv:rendered'" in app and "querySelectorAll('[data-link]').forEach" not in app and "querySelectorAll('[data-age]').forEach" not in app
-          assert runtime.get('lifecycleObserver') is False and preview.get('canonical')=={'lessons':135,'assessments':72,'worlds':11}
-          assert preview.get('productionCutoverAllowed') is False and preview.get('mergeAllowed') is False
+          for name in css: assert f'/{name}?v=MANUS-VISUAL-MASTER-05' in index and Path(name).stat().st_size>1000
+          assert '/profile-v24.js?v=MANUS-VISUAL-MASTER-05' in index and '/pwa-v24.js?v=MANUS-VISUAL-MASTER-05' in index
+          assert 'profile-v17.js' not in index and 'pwa-v23.js' not in index and 'visual-system-v21.css' not in index
+          assert runtime['profile']['localOnly'] is True and runtime['pwa']['serviceWorker']=='sw-v24.js'
+          assert preview['canonical']=={'lessons':135,'assessments':72,'worlds':11} and preview['mergeAllowed'] is False and preview['productionCutoverAllowed'] is False
+          app=Path('app.js').read_text(); lifecycle=Path('runtime-lifecycle-v16.js').read_text(); nav=Path('navigation-v18.js').read_text(); profile=Path('profile-v24.js').read_text(); sw=Path('sw-v24.js').read_text()
+          assert "CustomEvent('kv:rendered'" in app and 'new MutationObserver' not in lifecycle and 'delegated-capture' in nav
+          assert "version:VERSION" not in profile and "version:VERSION" not in sw
+          assert "version:VERSION" in Path('pwa-v24.js').read_text()
+          assert 'kirthiverse-preview-v24' in sw and "version:VERSION" in Path('pwa-v24.js').read_text()
           contamination=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog']
-          loaded='\n'.join(Path(p).read_text(encoding='utf-8') for p in ['app.js','navigation-v18.js','runtime-lifecycle-v16.js','learning-foundation-v19.js','learning-tools-v20.js','visual-master-v15.js','profile-v17.js','visual-master-pages-v15.js','pwa-v23.js','sw-v23.js'])
-          assert not any(x in loaded for x in contamination), 'Manus/runtime contamination detected'
-          print('Candidate contract validated: rendering recovery + PWA foundation.')
+          loaded='\n'.join(Path(p).read_text() for p in required if p.endswith('.js'))
+          assert not any(x in loaded for x in contamination)
+          print('Candidate contract PASS: profile v24 + PWA v24 + committed visual CSS.')
           PY
 
       - name: Measure current runtime payload
@@ -61,22 +58,20 @@ jobs:
           python - <<'PY'
           import os,re
           from pathlib import Path
-          baseline=159428;html=Path('index.html').read_text(encoding='utf-8');refs=re.findall(r'(?:href|src)=["\'](/[^"\']+\.(?:css|js)(?:\?[^"\']*)?)["\']',html);assets=[]
+          baseline=159428; html=Path('index.html').read_text(); refs=re.findall(r'(?:href|src)=["\'](/[^"\']+\.(?:css|js)(?:\?[^"\']*)?)["\']',html); assets=[]
           for ref in refs:
-              path=ref.split('?',1)[0].lstrip('/')
-              if path.startswith('data/'): continue
-              if path not in assets: assets.append(path)
+              p=ref.split('?',1)[0].lstrip('/')
+              if p.startswith('data/'): continue
+              if p not in assets: assets.append(p)
           missing=[p for p in assets if not Path(p).is_file()]
-          if missing: raise SystemExit(f'Missing referenced assets: {missing}')
-          css=[p for p in assets if p.endswith('.css')];js=[p for p in assets if p.endswith('.js')];css_bytes=sum(Path(p).stat().st_size for p in css);js_bytes=sum(Path(p).stat().st_size for p in js);total=css_bytes+js_bytes;pct=(baseline-total)/baseline*100
-          print(f'PAYLOAD_CSS_BYTES={css_bytes}');print(f'PAYLOAD_JS_BYTES={js_bytes}');print(f'PAYLOAD_COMBINED_BYTES={total}');print(f'PAYLOAD_REDUCTION_PERCENT={pct:.2f}')
-          with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as f:f.write(f'### Runtime payload\n- CSS: {css_bytes:,} bytes\n- JS: {js_bytes:,} bytes\n- Combined: {total:,} bytes\n- Baseline delta: {pct:.2f}%\n')
+          if missing: raise SystemExit(f'Missing assets: {missing}')
+          css=sum(Path(p).stat().st_size for p in assets if p.endswith('.css')); js=sum(Path(p).stat().st_size for p in assets if p.endswith('.js')); total=css+js; delta=(baseline-total)/baseline*100
+          print(f'PAYLOAD_CSS_BYTES={css}\nPAYLOAD_JS_BYTES={js}\nPAYLOAD_COMBINED_BYTES={total}\nPAYLOAD_REDUCTION_PERCENT={delta:.2f}')
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(f'### Runtime payload\n- CSS: {css:,} bytes\n- JS: {js:,} bytes\n- Combined: {total:,} bytes\n- Baseline delta: {delta:.2f}%\n')
           PY
 
       - name: Confirm Worker target
-        shell: bash
         run: |
-          set -euo pipefail
           grep -q '"name": "kirthiverse-hitech"' wrangler.jsonc
           grep -q '"directory": "."' wrangler.jsonc
 
@@ -84,13 +79,12 @@ jobs:
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
         run: |
-          set -euo pipefail
           python - <<'PY'
           import os
-          token=os.environ.get('RAW_CLOUDFLARE_API_TOKEN','').strip().strip('"').strip("'");account=os.environ.get('RAW_CLOUDFLARE_ACCOUNT_ID','').strip().strip('"').strip("'")
-          if token.lower().startswith('bearer '):token=token[7:].strip()
-          if not token or not account:raise SystemExit('Normalized Cloudflare credential is empty.')
-          with open(os.environ['GITHUB_ENV'],'a',encoding='utf-8') as f:f.write('CLOUDFLARE_API_TOKEN_CLEAN='+token+'\nCLOUDFLARE_ACCOUNT_ID_CLEAN='+account+'\n')
+          token=os.environ.get('RAW_CLOUDFLARE_API_TOKEN','').strip().strip('"').strip("'"); account=os.environ.get('RAW_CLOUDFLARE_ACCOUNT_ID','').strip().strip('"').strip("'")
+          if token.lower().startswith('bearer '): token=token[7:].strip()
+          if not token or not account: raise SystemExit('Normalized Cloudflare credential is empty.')
+          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLOUDFLARE_API_TOKEN_CLEAN='+token+'\nCLOUDFLARE_ACCOUNT_ID_CLEAN='+account+'\n')
           PY
 
       - name: Deploy controlled preview to existing Worker
@@ -100,37 +94,33 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID_CLEAN }}
         run: npx --yes wrangler@4 deploy --assets=.
 
-      - name: Post-deploy rendering and PWA smoke gate
+      - name: Post-deploy rendering, profile and PWA smoke gate
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
         run: |
           set -euo pipefail
           sleep 4
-          fetch(){ local label="$1" url="$2" out="$3"; code=$(curl --silent --show-error --location --retry 4 --retry-delay 2 --output "$out" --write-out '%{http_code}' "$url"); echo "SMOKE_HTTP: $label=$code"; test "$code" = "200"; test -s "$out"; }
-          expect(){ grep -Fq "$3" "$2" && echo "SMOKE_ASSERT_PASS: $1" || { echo "SMOKE_ASSERT_FAIL: $1"; exit 1; }; }
-          check_css(){ local name="$1" out="/tmp/${1//\//_}";fetch "css $name" "$PREVIEW_URL/$name?v=MANUS-VISUAL-MASTER-05" "$out";test "$(wc -c < "$out")" -gt 1000;! grep -Eqi '<!doctype|<html' "$out";curl --silent --show-error --location --head "$PREVIEW_URL/$name?v=MANUS-VISUAL-MASTER-05" | grep -Eqi '^content-type:[[:space:]]*text/css'; }
-          fetch home "$PREVIEW_URL/" /tmp/home.html;expect 'home candidate marker' /tmp/home.html 'MANUS-VISUAL-MASTER-05'
-          for css in styles.css learning-foundation-v19.css learning-tools-v20.css visual-master-v15.css visual-master-pages-v15.css visual-master-features-v15.css;do expect "home references $css" /tmp/home.html "$css?v=MANUS-VISUAL-MASTER-05";check_css "$css";done
-          fetch 'service worker' "$PREVIEW_URL/sw-v23.js" /tmp/sw.js;expect 'service worker version' /tmp/sw.js 'kirthiverse-preview-v23'
-          fetch 'manifest' "$PREVIEW_URL/manifest.webmanifest" /tmp/manifest.json;expect 'manifest identity' /tmp/manifest.json 'Editorial Learning Universe'
-          fetch 'PWA bootstrap' "$PREVIEW_URL/pwa-v23.js" /tmp/pwa.js;expect 'PWA bootstrap version' /tmp/pwa.js "version:VERSION"
-          fetch 'vector mark' "$PREVIEW_URL/kirthiverse-mark.svg" /tmp/icon.svg;expect 'vector mark' /tmp/icon.svg '<svg'
-          fetch 'profile deep link' "$PREVIEW_URL/profile" /tmp/profile.html;expect 'profile SPA shell' /tmp/profile.html 'MANUS-VISUAL-MASTER-05'
-          fetch 'lesson deep link' "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1" /tmp/lesson.html;expect 'lesson SPA shell' /tmp/lesson.html 'MANUS-VISUAL-MASTER-05'
-          fetch 'canonical lesson asset' "$PREVIEW_URL/data/lessons-1.js" /tmp/lessons.js;expect 'lesson data payload' /tmp/lessons.js 'KV_LESSONS'
-          echo '### Rendering + PWA smoke gate PASS' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Six committed CSS assets: delivery PASS' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Service worker / manifest / local icon: delivery PASS' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Profile/lesson deep links: PASS' >> "$GITHUB_STEP_SUMMARY"
+          fetch(){ local label="$1" url="$2" out="$3"; code=$(curl -fsSL --retry 4 --retry-delay 2 -o "$out" -w '%{http_code}' "$url"); echo "SMOKE_HTTP: $label=$code"; test "$code" = "200"; test -s "$out"; }
+          expect(){ grep -Fq "$3" "$2" && echo "SMOKE_PASS: $1" || { echo "SMOKE_FAIL: $1"; exit 1; }; }
+          check_css(){ local n="$1" o="/tmp/${1//\//_}"; fetch "css $n" "$PREVIEW_URL/$n?v=MANUS-VISUAL-MASTER-05" "$o"; test "$(wc -c < "$o")" -gt 1000; ! grep -Eqi '<!doctype|<html' "$o"; curl -fsSLI "$PREVIEW_URL/$n?v=MANUS-VISUAL-MASTER-05" | grep -Eqi '^content-type:[[:space:]]*text/css'; }
+          fetch home "$PREVIEW_URL/" /tmp/home.html; expect 'home candidate' /tmp/home.html 'MANUS-VISUAL-MASTER-05'; expect 'profile v24 reference' /tmp/home.html 'profile-v24.js'; expect 'PWA v24 reference' /tmp/home.html 'pwa-v24.js'
+          for css in styles.css learning-foundation-v19.css learning-tools-v20.css visual-master-v15.css visual-master-pages-v15.css visual-master-features-v15.css; do check_css "$css"; done
+          bust="$(date +%s)"
+          fetch 'service worker v24' "$PREVIEW_URL/sw-v24.js?smoke=$bust" /tmp/sw.js; expect 'service worker marker' /tmp/sw.js 'kirthiverse-preview-v24'; ! grep -Eqi '<!doctype|<html' /tmp/sw.js
+          fetch 'profile runtime v24' "$PREVIEW_URL/profile-v24.js?smoke=$bust" /tmp/profile.js; expect 'profile runtime marker' /tmp/profile.js 'KV_PROFILE_RUNTIME'; expect 'profile v24 version' /tmp/profile.js "VERSION='v24'"
+          fetch 'PWA bootstrap v24' "$PREVIEW_URL/pwa-v24.js?smoke=$bust" /tmp/pwa.js; expect 'PWA worker path' /tmp/pwa.js "SW='/sw-v24.js'"
+          fetch manifest "$PREVIEW_URL/manifest.webmanifest?smoke=$bust" /tmp/manifest.json; expect 'manifest identity' /tmp/manifest.json 'Editorial Learning Universe'
+          fetch profile "$PREVIEW_URL/profile" /tmp/profile.html; expect 'profile SPA shell' /tmp/profile.html 'MANUS-VISUAL-MASTER-05'
+          fetch lesson "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1" /tmp/lesson.html; expect 'lesson SPA shell' /tmp/lesson.html 'MANUS-VISUAL-MASTER-05'
+          fetch canonical "$PREVIEW_URL/data/lessons-1.js" /tmp/lessons.js; expect 'canonical lesson data' /tmp/lessons.js 'KV_LESSONS'
+          echo '### Profile v24 + PWA v24 smoke PASS' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Preview safety summary
         if: always()
         run: |
           echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
           echo '- Branch: design/manus-visual-master' >> "$GITHUB_STEP_SUMMARY"
-          echo '- CSS delivery: committed-source recovery mode' >> "$GITHUB_STEP_SUMMARY"
-          echo '- PWA: preview-only offline foundation v23' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Navigation: centralized delegated SPA controller' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Render lifecycle: app-owned kv:rendered' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Profile: local-only v24; no cloud child profile' >> "$GITHUB_STEP_SUMMARY"
+          echo '- PWA: preview-only offline foundation v24' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

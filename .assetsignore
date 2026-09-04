@@ -37,3 +37,6 @@ navigation-v18.js
 runtime-lifecycle-v16.js
 pwa-v27.js
 sw-v27.js
+core-runtime-v28.js
+pwa-v28.js
+sw-v28.js

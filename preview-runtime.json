@@ -1,11 +1,11 @@
 {
   "project":"kirthiverse-hitech","candidate":"MANUS-VISUAL-MASTER-05","mode":"lean-controlled-preview","baseBuild":"HITECH-2026-09-03-14",
-  "learnerRuntime":["app.js","core-runtime-v28.js","learning-foundation-v19.js","learning-tools-v20.js","visual-controller-v27.js","learner-adaptive-v26.js","pwa-v28.js","visual-preview-gate.js"],
+  "learnerRuntime":["app.js","core-runtime-v29.js","learning-foundation-v19.js","learning-tools-v20.js","visual-controller-v27.js","learner-adaptive-v26.js","visual-preview-gate.js"],
   "learnerStyles":["styles.css","learning-foundation-v19.css","learning-tools-v20.css","visual-master-v15.css","visual-master-pages-v15.css","visual-master-features-v15.css"],
-  "coreRuntime":{"module":"core-runtime-v28.js","version":"v28","consolidates":["navigation-v18.js","runtime-lifecycle-v16.js"],"browserRequestsRemoved":1,"navigationMode":"delegated-capture","agePathCentralized":true,"lifecycleSource":"app-render-authoritative","lifecycleObserver":false},
+  "coreRuntime":{"module":"core-runtime-v29.js","version":"v29","consolidates":["navigation-v18.js","runtime-lifecycle-v16.js","pwa-v28.js"],"browserRequestsRemoved":2,"navigationMode":"delegated-capture","agePathCentralized":true,"lifecycleSource":"app-render-authoritative","lifecycleObserver":false,"pwaBootstrapIntegrated":true},
   "visualController":{"module":"visual-controller-v27.js","version":"v27","browserRequestsRemoved":1,"routeFocusManaged":true},
   "profile":{"module":"learner-adaptive-v26.js","version":"v26","route":"/profile","localOnly":true,"schema":"kirthiverse.hitech.profile.local.v2","preferredWorldsMax":3,"sessionGoalMinutes":true,"backupExport":true,"agePathSynchronizedAcrossProgressAndExperience":true,"homePersonalization":true,"studyStudioPersonalization":true,"dailyPlan":true,"recommendationPolicy":"local-age-preference-progress"},
-  "pwa":{"bootstrap":"pwa-v28.js","version":"v28","serviceWorker":"sw-v28.js","manifest":"manifest.webmanifest","icon":"kirthiverse-mark.svg","scope":"/","networkStrategy":"network-first navigation/scripts/styles with no-store refresh and cache fallback","offlineCanonicalData":true,"serviceWorkerNoCacheHeader":true,"productionCutoverDependency":false},
-  "legacyLearnerRuntimeUnloaded":["navigation-v18.js","runtime-lifecycle-v16.js","visual-master-v15.js","visual-master-pages-v15.js","pwa-v27.js","sw-v27.js"],
+  "pwa":{"bootstrap":"integrated-core-runtime-v29","version":"v29","serviceWorker":"sw-v29.js","manifest":"manifest.webmanifest","icon":"kirthiverse-mark.svg","scope":"/","networkStrategy":"network-first navigation/scripts/styles with no-store refresh and cache fallback","offlineCanonicalData":true,"serviceWorkerNoCacheHeader":true,"productionCutoverDependency":false},
+  "legacyLearnerRuntimeUnloaded":["navigation-v18.js","runtime-lifecycle-v16.js","visual-master-v15.js","visual-master-pages-v15.js","pwa-v27.js","sw-v27.js","core-runtime-v28.js","pwa-v28.js","sw-v28.js"],
   "rollbackEvidencePreserved":true,"manusRuntime":false,"productionDnsChanged":false,"productionCutoverAllowed":false
 }

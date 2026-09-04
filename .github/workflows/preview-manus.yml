@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Checkout visual candidate
         uses: actions/checkout@v4
-      - name: Validate core runtime v28 contract
+      - name: Validate core runtime v29 contract
         shell: bash
         run: |
           set -euo pipefail
@@ -31,21 +31,21 @@ jobs:
           import json
           from pathlib import Path
           index=Path('index.html').read_text(); runtime=json.loads(Path('preview-runtime.json').read_text()); preview=json.loads(Path('visual-preview.json').read_text())
-          required=['app.js','core-runtime-v28.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js','pwa-v28.js','visual-preview-gate.js','sw-v28.js','manifest.webmanifest','kirthiverse-mark.svg']
+          required=['app.js','core-runtime-v29.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js','visual-preview-gate.js','sw-v29.js','manifest.webmanifest','kirthiverse-mark.svg']
           for name in required: assert Path(name).is_file() and Path(name).stat().st_size>100, f'missing/empty {name}'
-          assert 'CORE-RUNTIME-V28' in index and '/core-runtime-v28.js?v=CORE-RUNTIME-V28' in index and '/pwa-v28.js?v=CORE-RUNTIME-V28' in index
-          assert '/navigation-v18.js?' not in index and '/runtime-lifecycle-v16.js?' not in index and '/pwa-v27.js?' not in index
-          assert runtime['coreRuntime']['version']=='v28' and runtime['coreRuntime']['browserRequestsRemoved']==1 and runtime['pwa']['serviceWorker']=='sw-v28.js'
-          assert preview['runtimeConsolidation']['browserJsRequestCeiling']==8 and preview['canonical']=={'lessons':135,'assessments':72,'worlds':11} and preview['mergeAllowed'] is False and preview['productionCutoverAllowed'] is False
-          core=Path('core-runtime-v28.js').read_text(); sw=Path('sw-v28.js').read_text(); ignore=Path('.assetsignore').read_text(); headers=Path('_headers').read_text()
-          assert 'KV_NAVIGATION' in core and 'KV_RUNTIME_LIFECYCLE' in core and 'KV_CORE_RUNTIME' in core and "version:'v28'" in core and 'delegated-capture' in core and 'new MutationObserver' not in core
-          assert 'kirthiverse-preview-v28' in sw and 'core-runtime-v28.js' in sw and "VERSION='MANUS-VISUAL-MASTER-05-PWA-28'" in sw
-          for retired in ['navigation-v18.js','runtime-lifecycle-v16.js','pwa-v27.js','sw-v27.js']: assert retired in ignore
-          assert '/index.html' in headers and '/sw-v28.js' in headers and 'no-store' in headers
+          assert 'CORE-RUNTIME-V29' in index and '/core-runtime-v29.js?v=CORE-RUNTIME-V29' in index and '/pwa-v28.js?' not in index
+          assert '/navigation-v18.js?' not in index and '/runtime-lifecycle-v16.js?' not in index and '/core-runtime-v28.js?' not in index
+          assert runtime['coreRuntime']['version']=='v29' and runtime['coreRuntime']['browserRequestsRemoved']==2 and runtime['coreRuntime']['pwaBootstrapIntegrated'] is True and runtime['pwa']['serviceWorker']=='sw-v29.js'
+          assert preview['runtimeConsolidation']['browserJsRequestCeiling']==7 and preview['canonical']=={'lessons':135,'assessments':72,'worlds':11} and preview['mergeAllowed'] is False and preview['productionCutoverAllowed'] is False
+          core=Path('core-runtime-v29.js').read_text(); sw=Path('sw-v29.js').read_text(); ignore=Path('.assetsignore').read_text(); headers=Path('_headers').read_text()
+          assert 'KV_NAVIGATION' in core and 'KV_RUNTIME_LIFECYCLE' in core and 'KV_CORE_RUNTIME' in core and 'KV_PWA' in core and "version:V" in core and 'delegated-capture' in core and 'new MutationObserver' not in core
+          assert 'kirthiverse-preview-v29' in sw and 'core-runtime-v29.js' in sw and "VERSION='MANUS-VISUAL-MASTER-05-PWA-29'" in sw and 'pwa-v28.js' not in sw
+          for retired in ['navigation-v18.js','runtime-lifecycle-v16.js','core-runtime-v28.js','pwa-v28.js','sw-v28.js']: assert retired in ignore
+          assert '/index.html' in headers and '/sw-v29.js' in headers and 'no-store' in headers
           contamination=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog']
           scan='\n'.join(Path(p).read_text() for p in required if p.endswith('.js') and p!='visual-preview-gate.js'); assert not any(x in scan for x in contamination)
           gate=Path('visual-preview-gate.js').read_text(); assert 'Manus runtime absent' in gate and '__manus__' in gate and 'manus-storage' in gate
-          print('Core runtime v28 contract PASS.')
+          print('Core runtime v29 contract PASS.')
           PY
       - name: Measure runtime payload and request count
         shell: bash
@@ -60,7 +60,7 @@ jobs:
               if p not in assets: assets.append(p)
           css=sum(Path(p).stat().st_size for p in assets if p.endswith('.css')); js=sum(Path(p).stat().st_size for p in assets if p.endswith('.js')); total=css+js; delta=(baseline-total)/baseline*100
           script_count=sum(1 for p in assets if p.endswith('.js')); style_count=sum(1 for p in assets if p.endswith('.css'))
-          assert script_count<=8, f'JS request regression: {script_count}'
+          assert script_count<=7, f'JS request regression: {script_count}'
           print(f'PAYLOAD_CSS_BYTES={css}\nPAYLOAD_JS_BYTES={js}\nPAYLOAD_COMBINED_BYTES={total}\nPAYLOAD_REDUCTION_PERCENT={delta:.2f}\nJS_REQUESTS={script_count}\nCSS_REQUESTS={style_count}')
           with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(f'### Runtime footprint\n- CSS: {css:,} bytes\n- JS: {js:,} bytes\n- Combined: {total:,} bytes\n- Baseline delta: {delta:.2f}%\n- JS requests: {script_count}\n- CSS requests: {style_count}\n')
           PY
@@ -85,34 +85,31 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN_CLEAN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID_CLEAN }}
         run: npx --yes wrangler@4 deploy --assets=.
-      - name: Post-deploy core runtime v28 smoke gate
+      - name: Post-deploy core runtime v29 smoke gate
         if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
         shell: bash
         run: |
           set -euo pipefail
           fetch(){ local label="$1" url="$2" out="$3"; code=$(curl -fsSL --retry 4 --retry-delay 2 -o "$out" -w '%{http_code}' "$url"); echo "SMOKE_HTTP: $label=$code"; test "$code" = "200"; test -s "$out"; }
-          expect(){ grep -Fq "$3" "$2" && echo "SMOKE_PASS: $1" || return 1; }
           nonhtml(){ ! grep -Eqi '<!doctype|<html' "$1"; }
+          wait_marker(){ local label="$1" url="$2" marker="$3" out="$4"; local ok=0; for i in $(seq 1 15); do fetch "$label" "$url?smoke=$(date +%s)-$i" "$out"; if grep -Fq "$marker" "$out"; then ok=1; break; fi; echo "WAIT_FRESH_${label^^}: attempt=$i"; sleep 2; done; test "$ok" = "1"; echo "SMOKE_PASS: fresh $label generation"; }
+          wait_marker index "$PREVIEW_URL/index.html" 'CORE-RUNTIME-V29' /tmp/index.html
+          wait_marker root "$PREVIEW_URL/" 'CORE-RUNTIME-V29' /tmp/home.html
           bust="$(date +%s)"
-          fresh=0
-          for i in $(seq 1 12); do fetch index "$PREVIEW_URL/index.html?smoke=$bust-$i" /tmp/index.html; if grep -Fq 'CORE-RUNTIME-V28' /tmp/index.html; then fresh=1; break; fi; echo "WAIT_FRESH_INDEX: attempt=$i"; sleep 2; done
-          test "$fresh" = "1"; echo 'SMOKE_PASS: fresh index generation v28'
-          fetch root "$PREVIEW_URL/?smoke=$bust-root" /tmp/home.html; grep -Fq 'CORE-RUNTIME-V28' /tmp/home.html || { echo 'SMOKE_FAIL: root/index deployment coherence'; exit 1; }
-          fetch core "$PREVIEW_URL/core-runtime-v28.js?smoke=$bust" /tmp/core.js; nonhtml /tmp/core.js; grep -Fq 'KV_CORE_RUNTIME' /tmp/core.js; grep -Fq 'delegated-capture' /tmp/core.js
+          fetch core "$PREVIEW_URL/core-runtime-v29.js?smoke=$bust" /tmp/core.js; nonhtml /tmp/core.js; grep -Fq 'KV_CORE_RUNTIME' /tmp/core.js; grep -Fq 'KV_PWA' /tmp/core.js; grep -Fq "SW='/sw-v29.js'" /tmp/core.js
           fetch controller "$PREVIEW_URL/visual-controller-v27.js?smoke=$bust" /tmp/controller.js; nonhtml /tmp/controller.js; grep -Fq 'KV_VISUAL_MASTER' /tmp/controller.js
           fetch adaptive "$PREVIEW_URL/learner-adaptive-v26.js?smoke=$bust" /tmp/adaptive.js; nonhtml /tmp/adaptive.js; grep -Fq 'KV_PROFILE_RUNTIME' /tmp/adaptive.js
-          fetch sw "$PREVIEW_URL/sw-v28.js?smoke=$bust" /tmp/sw.js; nonhtml /tmp/sw.js; grep -Fq 'kirthiverse-preview-v28' /tmp/sw.js; grep -Fq 'core-runtime-v28.js' /tmp/sw.js
-          fetch pwa "$PREVIEW_URL/pwa-v28.js?smoke=$bust" /tmp/pwa.js; nonhtml /tmp/pwa.js; grep -Fq "SW='/sw-v28.js'" /tmp/pwa.js
-          fetch profile "$PREVIEW_URL/profile?smoke=$bust" /tmp/profile.html; grep -Fq 'CORE-RUNTIME-V28' /tmp/profile.html
-          fetch lesson "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1?smoke=$bust" /tmp/lesson.html; grep -Fq 'CORE-RUNTIME-V28' /tmp/lesson.html
-          echo '### Core runtime v28 + PWA v28 smoke PASS' >> "$GITHUB_STEP_SUMMARY"
+          fetch sw "$PREVIEW_URL/sw-v29.js?smoke=$bust" /tmp/sw.js; nonhtml /tmp/sw.js; grep -Fq 'kirthiverse-preview-v29' /tmp/sw.js; grep -Fq 'core-runtime-v29.js' /tmp/sw.js
+          fetch profile "$PREVIEW_URL/profile?smoke=$bust" /tmp/profile.html; grep -Fq 'CORE-RUNTIME-V29' /tmp/profile.html
+          fetch lesson "$PREVIEW_URL/lesson/math.number.place-value.base10.age6-8.l1?smoke=$bust" /tmp/lesson.html; grep -Fq 'CORE-RUNTIME-V29' /tmp/lesson.html
+          echo '### Core runtime v29 + integrated PWA bootstrap smoke PASS' >> "$GITHUB_STEP_SUMMARY"
       - name: Preview safety summary
         if: always()
         run: |
           echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Core runtime: v28 combines central navigation + lifecycle adapter' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Core runtime: v29 combines navigation + lifecycle + PWA bootstrap' >> "$GITHUB_STEP_SUMMARY"
           echo '- Visual controller: v27' >> "$GITHUB_STEP_SUMMARY"
           echo '- Adaptive learner: local-only v26' >> "$GITHUB_STEP_SUMMARY"
-          echo '- PWA: preview-only v28 with fresh navigation strategy' >> "$GITHUB_STEP_SUMMARY"
+          echo '- PWA: preview-only v29 service worker; bootstrap integrated into core' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain configuration: unchanged' >> "$GITHUB_STEP_SUMMARY"
           echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"

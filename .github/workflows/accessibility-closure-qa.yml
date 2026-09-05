@@ -4,6 +4,7 @@ on:
     branches: [design/manus-visual-master]
     paths:
       - '.github/workflows/accessibility-closure-qa.yml'
+      - 'index.html'
       - 'app.js'
       - 'core-runtime-v30.js'
       - 'learner-adaptive-v26.js'
@@ -34,6 +35,7 @@ jobs:
           from pathlib import Path
           app=Path('app.js').read_text()
           core=Path('core-runtime-v30.js').read_text()
+          index=Path('index.html').read_text()
           css='\n'.join(Path(p).read_text() for p in [
             'styles.css','learning-foundation-v19.css','learning-tools-v20.css',
             'visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css'
@@ -44,7 +46,8 @@ jobs:
           assert 'prefers-reduced-motion' in css or 'prefers-reduced-motion' in core, 'reduced-motion support missing'
           assert 'தமிழ்' in app, 'Tamil rendering signal missing'
           assert 'role="timer"' in core, 'focus timer role missing'
-          print('A11Y_CONTRACT_PASS: landmarks + live regions + focus-visible + reduced-motion + Tamil + timer semantics')
+          assert 'data-kv-route-focus="v31"' in index, 'SPA route-focus runtime missing'
+          print('A11Y_CONTRACT_PASS: landmarks + live regions + focus-visible + reduced-motion + Tamil + timer + SPA route focus')
           PY
 
       - name: Chromium keyboard focus reflow reduced-motion and Tamil QA
@@ -66,7 +69,6 @@ jobs:
           for i in $(seq 1 25); do if curl -fsS http://127.0.0.1:9444/json/list >/tmp/kv-a11y-pages.json; then debug=1; break; fi; sleep 1; done
           if [ "$debug" != 1 ]; then cat /tmp/kv-a11y-chrome.log || true; exit 1; fi
           node <<'NODE'
-          const base=process.env.LOCAL_URL;
           const pages=await fetch('http://127.0.0.1:9444/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');
           if(!page)throw Error('No Chromium page target');
           const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});

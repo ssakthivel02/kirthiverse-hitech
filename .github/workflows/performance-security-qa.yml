@@ -1,0 +1,81 @@
+name: KirthiVerse Performance Security QA
+on:
+  push:
+    branches: [design/manus-visual-master]
+    paths:
+      - '.github/workflows/performance-security-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  PREVIEW_URL: https://kirthiverse-hitech.ssakthivel02.workers.dev
+jobs:
+  performance-security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+      - name: Static footprint and contamination gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          h=Path('index.html').read_text()
+          refs=[]
+          for x in re.findall(r'(?:href|src)=["\'](/[^"\']+\.(?:css|js)(?:\?[^"\']*)?)["\']',h):
+            p=x.split('?',1)[0].lstrip('/')
+            if not p.startswith('data/') and p not in refs: refs.append(p)
+          css=sum(Path(p).stat().st_size for p in refs if p.endswith('.css'))
+          js=sum(Path(p).stat().st_size for p in refs if p.endswith('.js'))
+          html=Path('index.html').stat().st_size
+          external=css+js; shell=external+html
+          assert sum(p.endswith('.js') for p in refs)<=6
+          assert external<=168000, external
+          assert html<=32000, html
+          assert shell<=200000, shell
+          corpus='\n'.join(Path(p).read_text(errors='ignore') for p in ['index.html','app.js','core-runtime-v30.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js'])
+          bad=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog','googletagmanager.com','google-analytics.com','doubleclick.net']
+          assert not [x for x in bad if x in corpus], [x for x in bad if x in corpus]
+          print(f'PERF_STATIC_PASS external={external} html={html} shell={shell} js_requests={sum(p.endswith(".js") for p in refs)}')
+          PY
+      - name: Verify preview response security headers
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=0
+          for i in $(seq 1 20); do
+            curl -fsS "$PREVIEW_URL/index.html?sec=$i-$(date +%s)" -o /tmp/kv-sec-index && grep -Fq 'data-kv-teacher-runtime="v1"' /tmp/kv-sec-index && { ok=1; break; }
+            sleep 2
+          done
+          test "$ok" = 1
+          curl -fsSI "$PREVIEW_URL/index.html?headers=$(date +%s)" >/tmp/kv-headers
+          tr -d '\r' </tmp/kv-headers | tee /tmp/kv-headers-clean
+          grep -Eqi '^x-content-type-options:[[:space:]]*nosniff' /tmp/kv-headers-clean
+          grep -Eqi '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/kv-headers-clean
+          grep -Eqi '^permissions-policy:.*camera=\(\).*microphone=\(\)' /tmp/kv-headers-clean
+          grep -Eqi '^x-frame-options:[[:space:]]*DENY' /tmp/kv-headers-clean
+          grep -Eqi '^content-security-policy:' /tmp/kv-headers-clean
+      - name: Chromium runtime and network-origin security QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"; test -n "$chrome"
+          rm -rf /tmp/kv-sec-profile
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9577 --user-data-dir=/tmp/kv-sec-profile "$PREVIEW_URL/?security=$(date +%s)" >/tmp/kv-sec-chrome.log 2>&1 & cpid=$!
+          trap 'kill "$cpid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9577/json/list >/tmp/kv-sec-pages.json && break || sleep 1; done
+          node <<'NODE'
+          const base=process.env.PREVIEW_URL,lesson='math.number.place-value.base10.age6-8.l1';const pages=await fetch('http://127.0.0.1:9577/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let seq=0,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');const ev=async x=>{const r=await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval');return r.result?.value};const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,200))}throw Error('Timeout '+l)};await wait(`!!window.KV_APP_RUNTIME&&!!window.KV_NAVIGATION`,'runtime');await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);await wait(`!!document.querySelector('[data-teacher="v1"]')`,'teacher');const origins=await ev(`[...new Set(performance.getEntriesByType('resource').map(x=>new URL(x.name).origin))]`);const allowed=[new URL(base).origin,'https://fonts.googleapis.com','https://fonts.gstatic.com'];const bad=origins.filter(x=>!allowed.includes(x));if(bad.length)throw Error('Unexpected external origins '+JSON.stringify(bad));const markers=await ev(`({app:!!window.KV_APP_RUNTIME,teacher:!!window.KV_TEACHER_RUNTIME,pwa:!!window.KV_PWA})`);if(!markers.app||!markers.teacher||!markers.pwa)throw Error('Runtime marker missing '+JSON.stringify(markers));console.log('SECURITY_BROWSER_PASS origins='+JSON.stringify(origins));ws.close();
+          NODE
+      - name: Closure summary
+        if: always()
+        run: |
+          echo '### Performance + security closure' >> "$GITHUB_STEP_SUMMARY"
+          echo '- External CSS/JS ceiling: 168,000 bytes' >> "$GITHUB_STEP_SUMMARY"
+          echo '- HTML and total shell transfer explicitly measured' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Manus/tracker contamination scan enforced' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Preview security response headers checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Browser runtime and unexpected network-origin checks enforced' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production DNS unchanged' >> "$GITHUB_STEP_SUMMARY"

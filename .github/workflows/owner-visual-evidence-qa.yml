@@ -44,6 +44,7 @@ jobs:
           assert r['production']['ownerVisualReviewRequired'] is True
           h=Path('index.html').read_text()
           assert len(re.findall(r'<script src="/(?:app|core-runtime-v30|learning-foundation-v19|learning-tools-v20|visual-controller-v27|learner-adaptive-v26)\.js',h))==6
+          assert 'mobileActiveNavVisible:true' in Path('visual-controller-v27.js').read_text()
           print('OWNER_REVIEW_STATIC_PASS')
           PY
       - name: Capture required viewport evidence and DOM contracts
@@ -92,9 +93,11 @@ jobs:
               await send('Page.navigate',{url:base+r.path+'?ownerReview='+Date.now()});
               await wait(`document.readyState==='complete'&&!!document.querySelector('main')`,v.name+' '+r.name+' ready');
               await wait(`!!window.KV_APP_RUNTIME&&!!window.KV_NAVIGATION`,v.name+' '+r.name+' runtime');
-              const check=await ev(`(()=>{const de=document.documentElement,b=document.body;return {path:location.pathname,overflow:Math.max(de.scrollWidth,b?.scrollWidth||0)-innerWidth,rolePanels:document.querySelectorAll('[data-role-experience="v1"]').length,roles:document.querySelectorAll('[data-role]').length,claims:document.querySelectorAll('[data-claim-prep="v1"]').length,profiles:document.querySelectorAll('[data-profile-runtime="v26"]').length,tamil:[...document.body.innerText].some(c=>c>='\\u0B80'&&c<='\\u0BFF')}})()`);
+              await new Promise(x=>setTimeout(x,120));
+              const check=await ev(`(()=>{const de=document.documentElement,b=document.body,n=document.querySelector('.topbar nav'),a=document.querySelector('.topbar nav a.active,.topbar nav a.nav-current,.topbar nav a[href="'+location.pathname+'"]'),ar=a?.getBoundingClientRect(),nr=n?.getBoundingClientRect();return {path:location.pathname,overflow:Math.max(de.scrollWidth,b?.scrollWidth||0)-innerWidth,rolePanels:document.querySelectorAll('[data-role-experience="v1"]').length,roles:document.querySelectorAll('[data-role]').length,claims:document.querySelectorAll('[data-claim-prep="v1"]').length,profiles:document.querySelectorAll('[data-profile-runtime="v26"]').length,tamil:[...document.body.innerText].some(c=>c>='\\u0B80'&&c<='\\u0BFF'),activeNavVisible:!a||!n||ar.left>=nr.left-1&&ar.right<=nr.right+1}})()`);
               if(check.overflow>1) throw Error(`Horizontal overflow ${v.name} ${r.name}: ${check.overflow}`);
               if(check.rolePanels>1||check.profiles>1) throw Error(`Duplicate profile surfaces ${v.name} ${r.name}: ${JSON.stringify(check)}`);
+              if(v.mobile&&!check.activeNavVisible) throw Error(`Active nav clipped ${v.name} ${r.name}: ${JSON.stringify(check)}`);
               if(r.name==='profile'&&(check.rolePanels!==1||check.roles!==5||check.claims!==1||check.profiles!==1||!check.tamil)) throw Error(`Profile review contract ${v.name}: ${JSON.stringify(check)}`);
               const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,fromSurface:true});
               const file=`owner-review-evidence/${v.name}__${r.name}.png`; fs.writeFileSync(file,Buffer.from(shot.data,'base64'));
@@ -122,5 +125,6 @@ jobs:
           echo '- Required viewports: 1440x900, 1280x800, 768x1024, 390x844' >> "$GITHUB_STEP_SUMMARY"
           echo '- Evidence routes: Home, Worlds, Progress, Profile, canonical Lesson' >> "$GITHUB_STEP_SUMMARY"
           echo '- Profile: one role surface, five roles, one claim-preparation surface, existing v26 profile preserved' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Mobile active route must remain visible in the top navigation' >> "$GITHUB_STEP_SUMMARY"
           echo '- Horizontal overflow and duplicate surfaces: rejected' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production remains HOLD; artifact is review evidence only' >> "$GITHUB_STEP_SUMMARY"

@@ -38,7 +38,7 @@ jobs:
           html=Path('index.html').read_text()
           assert len(re.findall(r'<script src="/(?:app|core-runtime-v30|learning-foundation-v19|learning-tools-v20|visual-controller-v27|learner-adaptive-v26)\.js',html))==6
           rt=Path('learner-adaptive-v26.js').read_text()
-          for token in ['data-role-experience="v1"','data-claim-prep="v1"','cloudIdentity:false','silentUpload:false','accountCreation:false','dataDeletion:false']:
+          for token in ['data-role-experience="v1"','data-claim-prep="v1"','cloudIdentity:false','silentUpload:false','accountCreation:false','dataDeletion:false','profileKey:PK']:
             assert token in rt,token
           forbidden=['vite-plugin-manus-runtime','/__manus__/','/manus-storage/','BUILT_IN_FORGE','ManusDialog']
           assert not any(x in ''.join(Path(f).read_text(errors='ignore') for f in files+['index.html']) for x in forbidden)
@@ -60,17 +60,18 @@ jobs:
           for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9555/json/list >/tmp/pages.json && break; sleep 1; done
           node <<'NODE'
           const pages=await fetch('http://127.0.0.1:9555/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('no page');
-          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let n=0,p=new Map();ws.onmessage=e=>{let m=JSON.parse(e.data);if(m.id&&p.has(m.id)){let x=p.get(m.id);p.delete(m.id);m.error?x.bad(Error(m.error.message)):x.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{let id=++n;p.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))}),ev=async expression=>{let x=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(x.exceptionDetails)throw Error(x.exceptionDetails.text);return x.result?.value},wait=async(x,l)=>{for(let i=0;i<80;i++){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('timeout '+l)};
+          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let n=0,p=new Map();ws.onmessage=e=>{let m=JSON.parse(e.data);if(m.id&&p.has(m.id)){let x=p.get(m.id);p.delete(m.id);m.error?x.bad(Error(m.error.message)):x.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{let id=++n;p.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))}),ev=async expression=>{let x=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(x.exceptionDetails)throw Error(x.exceptionDetails.exception?.description||x.exceptionDetails.text||'Runtime exception');return x.result?.value},wait=async(x,l)=>{for(let i=0;i<80;i++){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('timeout '+l)};
           await send('Runtime.enable');await send('Page.enable');await send('Network.enable');await send('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false,screenWidth:1440,screenHeight:900});
           await wait(`!!window.KV_NAVIGATION&&!!window.KV_PROFILE_RUNTIME`,'runtime');
           await ev(`localStorage.setItem('kirthiverse.hitech.profile.local.v2',JSON.stringify({displayName:'QA Learner',agePath:'7–10',language:'English + Tamil',preferredWorlds:['tamil'],sessionGoal:20}));window.KV_NAVIGATION.navigate('/profile');true`);
           await wait(`location.pathname==='/profile'&&document.querySelector('[data-profile-runtime="v27"]')`,'profile');
           let desktop=await ev(`({roles:document.querySelectorAll('[data-role]').length,claim:!!document.querySelector('[data-claim-prep="v1"]'),dupes:document.querySelectorAll('[data-role-experience="v1"]').length,ta:/[\u0B80-\u0BFF]/.test(document.body.innerText),name:document.querySelector('#vm-name')?.value,sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth})`);
           if(desktop.roles!==5||!desktop.claim||desktop.dupes!==1||!desktop.ta||desktop.name!=='QA Learner'||desktop.sw>desktop.cw+2)throw Error('desktop '+JSON.stringify(desktop));
-          let before=await ev(`JSON.stringify([...localStorage].sort())`);
+          const storageSnapshot=`JSON.stringify(Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)).sort().map(k=>[k,localStorage.getItem(k)]))`;
+          let before=await ev(storageSnapshot);
           await ev(`document.querySelector('[data-role="parent"] summary').click();document.querySelector('#kv-protection').click();true`);
           let role=await ev(`({parent:document.querySelector('[data-role="parent"]').open,privacy:document.querySelector('#kv-protection-details').open})`);if(!role.parent||!role.privacy)throw Error('progressive disclosure failed');
-          let after=await ev(`JSON.stringify([...localStorage].sort())`);if(before!==after)throw Error('role browsing mutated localStorage');
+          let after=await ev(storageSnapshot);if(before!==after)throw Error('role browsing mutated localStorage');
           await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
           await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true,screenWidth:390,screenHeight:844});await new Promise(r=>setTimeout(r,300));
           let mobile=await ev(`({sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth,roles:document.querySelectorAll('[data-role]').length,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches})`);if(mobile.sw>mobile.cw+2||mobile.roles!==5||!mobile.reduced)throw Error('mobile '+JSON.stringify(mobile));

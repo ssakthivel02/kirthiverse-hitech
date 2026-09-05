@@ -1,0 +1,94 @@
+name: KirthiVerse Release Closure QA
+on:
+  push:
+    branches: [design/manus-visual-master]
+    paths:
+      - '.github/workflows/release-closure-qa.yml'
+      - 'release/release-closure-v1.json'
+      - 'visual-preview.json'
+      - '_headers'
+      - 'index.html'
+      - 'app.js'
+      - 'core-runtime-v30.js'
+      - 'learning-foundation-v19.js'
+      - 'learning-tools-v20.js'
+      - 'visual-controller-v27.js'
+      - 'learner-adaptive-v26.js'
+      - 'identity/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  PREVIEW_URL: https://kirthiverse-hitech.ssakthivel02.workers.dev
+jobs:
+  release-closure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Release contract and static closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,re,os
+          from pathlib import Path
+          r=json.loads(Path('release/release-closure-v1.json').read_text())
+          v=json.loads(Path('visual-preview.json').read_text())
+          i=json.loads(Path('identity/role-ownership-experience-v1.json').read_text())
+          assert r['schema']=='kirthiverse.release-closure.v1'
+          assert r['branch']=='design/manus-visual-master'
+          assert r['canonical']=={'lessons':135,'assessments':72,'worlds':11}
+          assert v['canonical']==r['canonical']
+          assert r['production']=={
+            'state':'HOLD','mergeAllowed':False,'productionCutoverAllowed':False,
+            'productionDnsChangeAllowed':False,'ownerVisualReviewRequired':True,
+            'explicitOwnerProdGoRequired':True}
+          assert v['mergeAllowed'] is False and v['productionCutoverAllowed'] is False
+          assert i['cloudIdentityEnabled'] is False
+          q=i['claimPreparation']
+          assert q['enabled'] and not q['networkUpload'] and not q['accountCreation'] and not q['localDataDeletion'] and not q['silentMigration']
+          assert len(i['roles'])==5
+          files=['styles.css','learning-foundation-v19.css','learning-tools-v20.css','visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css','app.js','core-runtime-v30.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js']
+          total=sum(Path(x).stat().st_size for x in files)
+          assert total<=168000,total
+          html=Path('index.html').read_text()
+          assert len(re.findall(r'<script src="/(?:app|core-runtime-v30|learning-foundation-v19|learning-tools-v20|visual-controller-v27|learner-adaptive-v26)\.js',html))==6
+          corpus='\n'.join(Path(x).read_text(errors='ignore') for x in files+['index.html'])
+          bad=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog','googletagmanager.com','google-analytics.com','doubleclick.net']
+          assert not [x for x in bad if x in corpus]
+          headers=Path('_headers').read_text()
+          assert "'unsafe-inline'" not in headers
+          assert 'Content-Security-Policy' in headers
+          print('RELEASE_STATIC_PASS')
+          print('EXTERNAL_CSS_JS_BYTES',total)
+          print('PRODUCTION_STATE HOLD')
+          PY
+          test "$GITHUB_REF_NAME" = "design/manus-visual-master"
+      - name: Controlled preview release surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium)"; test -n "$chrome"
+          curl -fsSI "$PREVIEW_URL/index.html?release=$(date +%s)" >/tmp/h
+          tr -d '\r' </tmp/h >/tmp/hc
+          grep -Eqi '^content-security-policy:' /tmp/hc
+          ! grep -Eqi '^content-security-policy:.*unsafe-inline' /tmp/hc
+          grep -Eqi '^x-frame-options:[[:space:]]*DENY' /tmp/hc
+          rm -rf /tmp/kv-release
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9591 --user-data-dir=/tmp/kv-release "$PREVIEW_URL/profile?release=$(date +%s)" >/tmp/chrome.log 2>&1 &
+          cpid=$!; trap 'kill "$cpid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9591/json/list >/tmp/pages && break || sleep 1; done
+          node <<'NODE'
+          const pages=await fetch('http://127.0.0.1:9591/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let seq=0,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){const q=p.get(m.id);p.delete(m.id);m.error?q.bad(Error(m.error.message)):q.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;p.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');const ev=async x=>(await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true})).result?.value;const wait=async(x,l)=>{for(let n=0;n<80;n++){if(await ev(x))return;await new Promise(r=>setTimeout(r,200))}throw Error('Timeout '+l)};await wait(`location.pathname==='/profile'&&document.querySelector('[data-role-experience="v1"]')`,'profile roles');const x=await ev(`({roles:document.querySelectorAll('[data-role]').length,claim:!!document.querySelector('[data-claim-prep="v1"]'),profile:document.querySelector('[data-profile-runtime="v26"]')?.dataset.profileRuntime,cloud:window.KV_PROFILE_RUNTIME?.cloudIdentity,upload:window.KV_PROFILE_RUNTIME?.silentUpload,account:window.KV_PROFILE_RUNTIME?.accountCreation})`);if(x.roles!==5||!x.claim||x.profile!=='v26'||x.cloud!==false||x.upload!==false||x.account!==false)throw Error('Release surface '+JSON.stringify(x));console.log('RELEASE_BROWSER_PASS '+JSON.stringify(x));ws.close();
+          NODE
+      - name: Closure summary
+        if: always()
+        run: |
+          echo '### Automated release closure' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Browser-visible role / ownership preparation present' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Cloud identity remains disabled' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Claim/link remains preparation-only; no silent migration' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Strict CSP remains without unsafe-inline' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Canonical corpus: 135 lessons / 72 assessments / 11 worlds' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production: HOLD; merge/cutover/DNS change not authorised' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Final gate: owner visual review + explicit PROD_GO' >> "$GITHUB_STEP_SUMMARY"

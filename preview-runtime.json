@@ -1,0 +1,12 @@
+{
+  "project":"kirthiverse-hitech","candidate":"MANUS-VISUAL-MASTER-05","mode":"lean-controlled-preview","baseBuild":"HITECH-2026-09-03-14",
+  "learnerRuntime":["app.js","core-runtime-v30.js","learning-foundation-v19.js","learning-tools-v20.js","visual-controller-v27.js","learner-adaptive-v26.js"],
+  "learnerStyles":["styles.css","learning-foundation-v19.css","learning-tools-v20.css","visual-master-v15.css","visual-master-pages-v15.css","visual-master-features-v15.css"],
+  "coreRuntime":{"module":"core-runtime-v30.js","version":"v30","browserRequestsRemoved":2,"navigationMode":"delegated-capture","agePathCentralized":true,"lifecycleSource":"app-render-authoritative","lifecycleObserver":false,"pwaBootstrapIntegrated":true,"focusSessionIntegrated":true},
+  "visualController":{"module":"visual-controller-v27.js","version":"v27","browserRequestsRemoved":1,"routeFocusManaged":true},
+  "profile":{"module":"learner-adaptive-v26.js","version":"v26","route":"/profile","localOnly":true,"preferredWorldsMax":3,"sessionGoalMinutes":true,"backupExport":true,"homePersonalization":true,"studyStudioPersonalization":true,"dailyPlan":true},
+  "focusSession":{"module":"core-runtime-v30.js","version":"v30","localOnly":true,"profileGoalAware":true,"routes":["/","/progress"],"timer":true,"dailyHistory":true,"streak":true,"remoteTracking":false},
+  "diagnostics":{"module":"visual-preview-gate.js","browserLoaded":false,"ciOnly":true,"reason":"removed from learner critical path after v30 browser-integrity PASS"},
+  "pwa":{"bootstrap":"integrated-core-runtime-v30","version":"v30","serviceWorker":"sw-v30.js","manifest":"manifest.webmanifest","scope":"/","offlineCanonicalData":true,"productionCutoverDependency":false},
+  "rollbackEvidencePreserved":true,"manusRuntime":false,"productionDnsChanged":false,"productionCutoverAllowed":false
+}

@@ -1,10 +1,8 @@
 (()=>{
-  const BUILD='HITECH-2026-09-03-06';
   const L=window.KV_LESSONS||[];
   const A=window.KV_ASSESSMENTS||[];
   const progressKey='kirthiverse.hitech.static.progress.v2';
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const title=l=>l?.title||l?.subtopic||l?.topic||'Learning mission';
   const readState=()=>{try{return JSON.parse(localStorage.getItem(progressKey)||'{"started":[],"completed":[],"agePath":"all"}')}catch{return{started:[],completed:[],agePath:'all'}}};
   function worldId(subject=''){
     const x=String(subject).toLowerCase();
@@ -21,7 +19,7 @@
     const assessments=A.filter(a=>String(a.lessonId)===id);
     const host=document.querySelector('.lesson-content'); if(!host)return;
     const shell=document.createElement('section'); shell.className='mastery-shell'; shell.dataset.v6Lesson='true';
-    shell.innerHTML=`<div class="mastery-head"><div><small>MISSION CONSOLE // BUILD ${BUILD}</small><h3>Learn → Think → Practice → Complete</h3></div><div class="mastery-status"><i></i>${assessments.length} canonical assessment${assessments.length===1?'':'s'} linked</div></div><div class="mission-sequence"><div class="mission-step active"><b>01</b><strong>Understand</strong><span>Read the canonical learning objective and core explanation.</span></div><div class="mission-step"><b>02</b><strong>Reason</strong><span>Work through the example and explain the logic.</span></div><div class="mission-step"><b>03</b><strong>Verify</strong><span>Use only the attached canonical assessment records.</span></div><div class="mission-step"><b>04</b><strong>Complete</strong><span>Mark the mission complete when the concept is secure.</span></div></div>`;
+    shell.innerHTML=`<div class="mastery-head"><div><small>MISSION CONSOLE</small><h3>Learn → Think → Practice → Complete</h3></div><div class="mastery-status"><i></i>${assessments.length} canonical assessment${assessments.length===1?'':'s'} linked</div></div><div class="mission-sequence"><div class="mission-step active"><b>01</b><strong>Understand</strong><span>Read the canonical learning objective and core explanation.</span></div><div class="mission-step"><b>02</b><strong>Reason</strong><span>Work through the example and explain the logic.</span></div><div class="mission-step"><b>03</b><strong>Verify</strong><span>Use only the attached canonical assessment records.</span></div><div class="mission-step"><b>04</b><strong>Complete</strong><span>Mark the mission complete when the concept is secure.</span></div></div>`;
     host.prepend(shell);
     if(assessments.length)mountAssessmentConsole(host,assessments);
   }
@@ -68,6 +66,8 @@
   }
 
   function mount(){applyDensity();mountLessonConsole();mountProgressMastery();mountDeviceRail()}
-  let t;const obs=new MutationObserver(()=>{clearTimeout(t);t=setTimeout(mount,35)});obs.observe(document.documentElement,{childList:true,subtree:true});
-  addEventListener('popstate',()=>setTimeout(mount,60));addEventListener('DOMContentLoaded',mount);setTimeout(mount,100);
+  addEventListener('kv:rendered',()=>requestAnimationFrame(mount));
+  addEventListener('storage',e=>{if(e.key===progressKey)setTimeout(mount,0)});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
+  window.KV_MASTERY_LIFECYCLE='kv:rendered';
 })();

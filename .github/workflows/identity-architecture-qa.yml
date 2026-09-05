@@ -1,0 +1,65 @@
+name: KirthiVerse Identity Architecture QA
+on:
+  push:
+    branches: [design/manus-visual-master]
+    paths:
+      - 'identity/**'
+      - '.github/workflows/identity-architecture-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  identity-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+      - name: Validate privacy-first identity contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('identity/identity-architecture-v1.json').read_text())
+          assert p['schema']=='kirthiverse.identity-architecture.v1'
+          assert p['candidate']=='MANUS-VISUAL-MASTER-05'
+          assert p['cloudIdentityEnabled'] is False
+          assert p['automaticChildCloudProfile'] is False
+          assert p['localLearner']['enabled'] is True
+          assert p['localLearner']['accountRequired'] is False
+          assert p['localLearner']['claimRequiresExplicitConsent'] is True
+          roles=p['roles']
+          assert set(roles)=={'learner','parent_guardian','student','teacher','school_admin'}
+          assert roles['parent_guardian']['owner']=='verified-adult'
+          assert roles['parent_guardian']['linkRule']=='adult-owned-explicit-consent'
+          assert roles['teacher']['linkRule']=='approved-roster-or-explicit-authorisation'
+          assert roles['school_admin']['linkRule']=='organisation-authorised'
+          assert roles['student']['linkRule']=='no-hidden-auto-link'
+          g=p['guardrails']
+          for k in ['childDataMinimisation','parentLinkOptIn','teacherLinkRequiresAuthorisation','schoolLinkRequiresAuthorisation','noAdvertisingIdentity','noHiddenRemoteTracking','consentRecordRequiredForChildLink','roleAccessLeastPrivilege']:
+            assert g[k] is True, k
+          assert p['claimFlow']['silentMigrationAllowed'] is False
+          assert p['releasePolicy']['productionCloudIdentityAllowed'] is False
+          required=set(p['releasePolicy']['requires'])
+          assert {'adult-verification-design','school-roster-authorisation','consent-ledger','export-endpoint','deletion-endpoint','privacy-review','security-review'} <= required
+          print('IDENTITY_CONTRACT_PASS roles=5 cloud_identity=disabled hidden_child_profile=disabled')
+          PY
+      - name: Validate current local runtime remains account-free
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq 'localOnly:true' learner-adaptive-v26.js
+          grep -Fq 'profileKey:PK' learner-adaptive-v26.js
+          ! grep -Eqi 'firebase|supabase|auth0|clerk|cognito|createUser|signInWith|childCloudProfile:true' learner-adaptive-v26.js
+          ! grep -Eqi 'google-analytics|googletagmanager|doubleclick' index.html
+          echo 'IDENTITY_RUNTIME_PASS local learner remains account-free and tracker-free'
+      - name: Identity architecture summary
+        run: |
+          echo '### Identity architecture v1' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Independent learner remains local/account-free' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Parent/Guardian ownership is adult-owned + explicit consent' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Teacher access requires approved roster or explicit authorisation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- School/Admin access requires organisation authorisation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Student cloud profile cannot be silently auto-created' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Cloud identity remains disabled until consent/export/deletion/privacy/security gates exist' >> "$GITHUB_STEP_SUMMARY"

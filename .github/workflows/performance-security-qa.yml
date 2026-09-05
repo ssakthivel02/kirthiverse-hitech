@@ -6,6 +6,14 @@ on:
       - '.github/workflows/performance-security-qa.yml'
       - '_headers'
       - 'security-candidate.txt'
+      - 'index.html'
+      - 'app.js'
+      - 'core-runtime-v30.js'
+      - 'learning-foundation-v19.js'
+      - 'learning-tools-v20.js'
+      - 'visual-controller-v27.js'
+      - 'learner-adaptive-v26.js'
+      - 'identity/**'
   workflow_dispatch:
 permissions:
   contents: read

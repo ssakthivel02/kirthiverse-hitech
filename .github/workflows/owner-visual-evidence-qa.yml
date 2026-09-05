@@ -61,7 +61,7 @@ jobs:
           for i in $(seq 1 25); do if curl -fsS http://127.0.0.1:9601/json/list >/tmp/pages; then ready=1; break; fi; sleep 1; done
           test "$ready" = 1
           node <<'NODE'
-          const fs=require('fs');
+          import fs from 'fs';
           const base=process.env.PREVIEW_URL;
           const pages=await fetch('http://127.0.0.1:9601/json/list').then(r=>r.json());
           const page=pages.find(x=>x.type==='page'); if(!page) throw Error('No Chromium page');

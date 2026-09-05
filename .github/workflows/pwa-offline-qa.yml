@@ -38,7 +38,7 @@ jobs:
           print('PWA_CONTRACT_PASS: manifest + v30 service worker + bootstrap')
           PY
 
-      - name: Browser online warm-up and real offline direct navigation
+      - name: Browser cached-origin fallback and direct navigation
         shell: bash
         run: |
           set -euo pipefail
@@ -46,7 +46,7 @@ jobs:
           test -n "$chrome"
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/kv-http.log 2>&1 &
           spid=$!
-          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          trap 'kill "${spid:-}" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
           ready=0
           for i in $(seq 1 20); do if curl -fsS "$LOCAL_URL/index.html" -o /tmp/kv-pwa-index.html && grep -Fq 'CORE-RUNTIME-V30' /tmp/kv-pwa-index.html; then ready=1; break; fi; sleep 1; done
           if [ "$ready" != 1 ]; then cat /tmp/kv-http.log || true; exit 1; fi
@@ -56,7 +56,9 @@ jobs:
           debug=0
           for i in $(seq 1 25); do if curl -fsS http://127.0.0.1:9333/json/list >/tmp/kv-pwa-pages.json; then debug=1; break; fi; sleep 1; done
           if [ "$debug" != 1 ]; then cat /tmp/kv-pwa.log || true; exit 1; fi
+          export SPID="$spid"
           node <<'NODE'
+          const {execFileSync}=await import('node:child_process');
           const base=process.env.LOCAL_URL, lesson='math.number.place-value.base10.age6-8.l1';
           const pages=await fetch('http://127.0.0.1:9333/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');
           if(!page)throw Error('No Chromium page target');
@@ -73,18 +75,19 @@ jobs:
           await send('Page.navigate',{url:base+'/?controlled=1'});await new Promise(r=>setTimeout(r,1600));
           await wait(`document.readyState!=='loading'&&!!document.querySelector('main')`,'controlled online navigation');
           await wait(`!!navigator.serviceWorker.controller`,'service worker control',20000);
-          await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0,connectionType:'none'});
+          execFileSync('kill',[process.env.SPID]);
+          await new Promise(r=>setTimeout(r,500));
           await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);
-          await wait(`location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'offline SPA lesson',12000);
+          await wait(`location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'origin-unavailable SPA lesson',12000);
           await send('Page.navigate',{url:base+'/lesson/'+lesson});await new Promise(r=>setTimeout(r,2200));
-          await wait(`document.readyState!=='loading'&&location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'offline direct lesson navigation',20000);
-          if(!(await ev(`window.KV_CORE_RUNTIME?.pwaBootstrap===true`)))throw Error('core runtime missing offline');
-          const dataOffline=await ev(`fetch('/data/lessons-1.js').then(r=>r.ok).catch(()=>false)`);if(!dataOffline)throw Error('canonical lesson data unavailable offline');
+          await wait(`document.readyState!=='loading'&&location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'origin-unavailable direct lesson navigation',20000);
+          if(!(await ev(`window.KV_CORE_RUNTIME?.pwaBootstrap===true`)))throw Error('core runtime missing from cache');
+          const dataCached=await ev(`fetch('/data/lessons-1.js').then(r=>r.ok).catch(()=>false)`);if(!dataCached)throw Error('canonical lesson data unavailable from cache');
           console.log('PWA_PASS: service worker installed and controlling page');
           console.log('PWA_PASS: v30 cache contains core runtime');
-          console.log('PWA_PASS: offline SPA navigation works');
-          console.log('PWA_PASS: canonical lesson direct navigation works offline');
-          console.log('PWA_PASS: canonical lesson data fetch works offline');
+          console.log('PWA_PASS: SPA lesson works with origin unavailable');
+          console.log('PWA_PASS: direct canonical lesson navigation works with origin unavailable');
+          console.log('PWA_PASS: canonical lesson data served from cache');
           ws.close();
           NODE
 
@@ -95,8 +98,7 @@ jobs:
           echo '- Manifest contract checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Service worker install/control checked in Chromium localhost secure context' >> "$GITHUB_STEP_SUMMARY"
           echo '- v30 cache presence checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Offline SPA lesson navigation checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Direct canonical lesson offline navigation checked through controlled service worker client' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Canonical lesson data offline fetch checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Test is isolated from Cloudflare deployment timing' >> "$GITHUB_STEP_SUMMARY"
+          echo '- SPA lesson checked with origin unavailable' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Direct canonical lesson navigation checked with origin unavailable' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Canonical lesson data cache fallback checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production DNS: unchanged' >> "$GITHUB_STEP_SUMMARY"

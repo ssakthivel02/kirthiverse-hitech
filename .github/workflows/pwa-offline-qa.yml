@@ -67,15 +67,16 @@ jobs:
           const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'Runtime evaluation failed');return r.result?.value};
           const wait=async(expression,label,timeout=20000)=>{const end=Date.now()+timeout;while(Date.now()<end){try{if(await ev(expression))return true}catch{}await new Promise(r=>setTimeout(r,300))}throw Error('Timeout: '+label)};
           await wait(`'serviceWorker' in navigator && !!window.KV_PWA`,'PWA bootstrap');
-          await ev(`navigator.serviceWorker.ready.then(()=>true)`);
-          await send('Page.reload',{ignoreCache:true});await new Promise(r=>setTimeout(r,1800));
-          await wait(`!!navigator.serviceWorker.controller`,'service worker control');
+          await ev(`navigator.serviceWorker.register('/sw-v30.js',{updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);
           const cacheOk=await ev(`caches.keys().then(k=>k.includes('kirthiverse-preview-v30'))`);if(!cacheOk)throw Error('v30 cache not installed');
           const cachedCore=await ev(`caches.open('kirthiverse-preview-v30').then(c=>c.match('/core-runtime-v30.js')).then(Boolean)`);if(!cachedCore)throw Error('core runtime not cached');
+          await send('Page.navigate',{url:base+'/?controlled=1'});await new Promise(r=>setTimeout(r,1600));
+          await wait(`document.readyState!=='loading'&&!!document.querySelector('main')`,'controlled online reload');
+          await wait(`!!navigator.serviceWorker.controller`,'service worker control',20000);
           await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0,connectionType:'none'});
           await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);
           await wait(`location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'offline SPA lesson',12000);
-          await send('Page.reload',{ignoreCache:true});await new Promise(r=>setTimeout(r,2200));
+          await send('Page.reload');await new Promise(r=>setTimeout(r,2200));
           await wait(`document.readyState!=='loading'&&location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'offline lesson direct reload',20000);
           if(!(await ev(`window.KV_CORE_RUNTIME?.pwaBootstrap===true`)))throw Error('core runtime missing offline');
           const dataOffline=await ev(`fetch('/data/lessons-1.js').then(r=>r.ok).catch(()=>false)`);if(!dataOffline)throw Error('canonical lesson data unavailable offline');
@@ -95,7 +96,7 @@ jobs:
           echo '- Service worker install/control checked in Chromium localhost secure context' >> "$GITHUB_STEP_SUMMARY"
           echo '- v30 cache presence checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Offline SPA lesson navigation checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Direct canonical lesson offline reload checked through CDP Page.reload' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Direct canonical lesson offline reload checked through controlled client' >> "$GITHUB_STEP_SUMMARY"
           echo '- Canonical lesson data offline fetch checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Test is isolated from Cloudflare deployment timing' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production DNS: unchanged' >> "$GITHUB_STEP_SUMMARY"

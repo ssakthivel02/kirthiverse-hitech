@@ -3,7 +3,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   X-Frame-Options: DENY
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-lFerLKIdSU5Ay0H2UlkGRwSJMupHUtWPLsy9DKuxO54=' 'sha256-z9SPI/fD9/QyU9pSmBuQDXZDab9fGhmskMWXoq1vrRY=' 'sha256-y4ruZPoirm/NU1FfHFTlRVvHcocZFMcZeaxfN431t48='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-lFerLKIdSU5Ay0H2UlkGRwSJMupHUtWPLsy9DKuxO54=' 'sha256-z9SPI/fD9/QyU9pSmBuQDXZDab9fGhmskMWXoq1vrRY=' 'sha256-5Trr5fkI9mSXOcowwX6m5OCd/CRDc24wu/mhkj3Amp0='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
 
 /
   Cache-Control: no-cache, no-store, must-revalidate

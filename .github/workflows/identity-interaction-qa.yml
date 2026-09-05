@@ -1,0 +1,92 @@
+name: KirthiVerse Identity Interaction QA
+on:
+  push:
+    branches: [design/manus-visual-master]
+    paths:
+      - 'learner-adaptive-v26.js'
+      - 'identity/**'
+      - '.github/workflows/identity-interaction-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  URL: http://127.0.0.1:8767
+jobs:
+  identity-interaction:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Contract and payload checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          c=json.loads(Path('identity/role-ownership-experience-v1.json').read_text())
+          assert c['schema']=='kirthiverse.role-ownership-experience.v1'
+          assert c['cloudIdentityEnabled'] is False
+          assert set(c['roles'])=={'learner','parent_guardian','student','teacher','school_admin'}
+          q=c['claimPreparation']
+          assert q['enabled'] and not any(q[k] for k in ['networkUpload','accountCreation','localDataDeletion','silentMigration'])
+          assert c['roles']['parent_guardian']['linkRule']=='adult-owned-explicit-consent'
+          assert c['roles']['teacher']['linkRule']=='approved-roster-or-explicit-authorisation'
+          assert c['roles']['school_admin']['linkRule']=='organisation-authorised'
+          files=['styles.css','learning-foundation-v19.css','learning-tools-v20.css','visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css','app.js','core-runtime-v30.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js']
+          total=sum(Path(x).stat().st_size for x in files)
+          assert total<=168000,(total,'payload ceiling exceeded')
+          html=Path('index.html').read_text()
+          assert len(re.findall(r'<script src="/(?:app|core-runtime-v30|learning-foundation-v19|learning-tools-v20|visual-controller-v27|learner-adaptive-v26)\.js',html))==6
+          rt=Path('learner-adaptive-v26.js').read_text()
+          for token in ['data-role-experience="v1"','data-claim-prep="v1"','cloudIdentity:false','silentUpload:false','accountCreation:false','dataDeletion:false']:
+            assert token in rt,token
+          forbidden=['vite-plugin-manus-runtime','/__manus__/','/manus-storage/','BUILT_IN_FORGE','ManusDialog']
+          assert not any(x in ''.join(Path(f).read_text(errors='ignore') for f in files+['index.html']) for x in forbidden)
+          print('IDENTITY_CONTRACT_PASS')
+          print('EXTERNAL_CSS_JS_BYTES',total)
+          PY
+          node --check learner-adaptive-v26.js
+      - name: Chromium desktop and mobile interaction QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium)"
+          python3 -m http.server 8767 --bind 127.0.0.1 >/tmp/kv-http.log 2>&1 &
+          spid=$!
+          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do curl -fsS "$URL/index.html" >/dev/null && break; sleep 1; done
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9555 --user-data-dir=/tmp/kv-id-profile "$URL/" >/tmp/kv-chrome.log 2>&1 &
+          cpid=$!
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9555/json/list >/tmp/pages.json && break; sleep 1; done
+          node <<'NODE'
+          const pages=await fetch('http://127.0.0.1:9555/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('no page');
+          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let n=0,p=new Map();ws.onmessage=e=>{let m=JSON.parse(e.data);if(m.id&&p.has(m.id)){let x=p.get(m.id);p.delete(m.id);m.error?x.bad(Error(m.error.message)):x.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{let id=++n;p.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))}),ev=async expression=>{let x=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(x.exceptionDetails)throw Error(x.exceptionDetails.text);return x.result?.value},wait=async(x,l)=>{for(let i=0;i<80;i++){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('timeout '+l)};
+          await send('Runtime.enable');await send('Page.enable');await send('Network.enable');await send('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false,screenWidth:1440,screenHeight:900});
+          await wait(`!!window.KV_NAVIGATION&&!!window.KV_PROFILE_RUNTIME`,'runtime');
+          await ev(`localStorage.setItem('kirthiverse.hitech.profile.local.v2',JSON.stringify({displayName:'QA Learner',agePath:'7–10',language:'English + Tamil',preferredWorlds:['tamil'],sessionGoal:20}));window.KV_NAVIGATION.navigate('/profile');true`);
+          await wait(`location.pathname==='/profile'&&document.querySelector('[data-profile-runtime="v27"]')`,'profile');
+          let desktop=await ev(`({roles:document.querySelectorAll('[data-role]').length,claim:!!document.querySelector('[data-claim-prep="v1"]'),dupes:document.querySelectorAll('[data-role-experience="v1"]').length,ta:/[\u0B80-\u0BFF]/.test(document.body.innerText),name:document.querySelector('#vm-name')?.value,sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth})`);
+          if(desktop.roles!==5||!desktop.claim||desktop.dupes!==1||!desktop.ta||desktop.name!=='QA Learner'||desktop.sw>desktop.cw+2)throw Error('desktop '+JSON.stringify(desktop));
+          let before=await ev(`JSON.stringify([...localStorage].sort())`);
+          await ev(`document.querySelector('[data-role="parent"] summary').click();document.querySelector('#kv-protection').click();true`);
+          let role=await ev(`({parent:document.querySelector('[data-role="parent"]').open,privacy:document.querySelector('#kv-protection-details').open})`);if(!role.parent||!role.privacy)throw Error('progressive disclosure failed');
+          let after=await ev(`JSON.stringify([...localStorage].sort())`);if(before!==after)throw Error('role browsing mutated localStorage');
+          await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+          await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true,screenWidth:390,screenHeight:844});await new Promise(r=>setTimeout(r,300));
+          let mobile=await ev(`({sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth,roles:document.querySelectorAll('[data-role]').length,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches})`);if(mobile.sw>mobile.cw+2||mobile.roles!==5||!mobile.reduced)throw Error('mobile '+JSON.stringify(mobile));
+          let origins=await ev(`(()=>{let o=location.origin,a=performance.getEntriesByType('resource').map(x=>new URL(x.name).origin);return {o,bad:[...new Set(a.filter(x=>x!==o))]}})()`);if(origins.bad.length)throw Error('unexpected origin '+JSON.stringify(origins));
+          let focus=await ev(`(()=>{let a=[...document.querySelectorAll('summary,button,input,select')].filter(x=>x.offsetParent!==null);a[0]?.focus();return document.activeElement===a[0]})()`);if(!focus)throw Error('keyboard focus failed');
+          console.log('IDENTITY_UI_PASS desktop 1440x900 + mobile 390x844');
+          console.log('IDENTITY_PRIVACY_PASS no role-side localStorage mutation; same-origin resources only');
+          ws.close();
+          NODE
+      - name: Summary
+        if: always()
+        run: |
+          echo '### Identity interaction QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 5 browser-visible role surfaces' >> "$GITHUB_STEP_SUMMARY"
+          echo '- explicit local-to-persistent claim preparation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- desktop 1440×900 + mobile 390×844' >> "$GITHUB_STEP_SUMMARY"
+          echo '- progressive disclosure + keyboard focus + reduced motion' >> "$GITHUB_STEP_SUMMARY"
+          echo '- no role browsing storage mutation; same-origin resource gate' >> "$GITHUB_STEP_SUMMARY"
+          echo '- external CSS/JS ceiling ≤168,000 bytes' >> "$GITHUB_STEP_SUMMARY"

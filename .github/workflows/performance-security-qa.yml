@@ -45,9 +45,9 @@ jobs:
           corpus='\n'.join(Path(p).read_text(errors='ignore') for p in ['index.html','app.js','core-runtime-v30.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js'])
           bad=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog','googletagmanager.com','google-analytics.com','doubleclick.net']
           assert not [x for x in bad if x in corpus]
-          assert 'data-kv-teacher-runtime="v1"' in h and 'bilingual:true' in h
+          assert 'data-kv-teacher-runtime="v2"' in h and 'bilingual:true' in h
           headers=Path('_headers').read_text()
-          for token in ['sha256-lFerLKIdSU5Ay0H2UlkGRwSJMupHUtWPLsy9DKuxO54=','sha256-z9SPI/fD9/QyU9pSmBuQDXZDab9fGhmskMWXoq1vrRY=','sha256-y4ruZPoirm/NU1FfHFTlRVvHcocZFMcZeaxfN431t48=']:
+          for token in ['sha256-lFerLKIdSU5Ay0H2UlkGRwSJMupHUtWPLsy9DKuxO54=','sha256-z9SPI/fD9/QyU9pSmBuQDXZDab9fGhmskMWXoq1vrRY=','sha256-5Trr5fkI9mSXOcowwX6m5OCd/CRDc24wu/mhkj3Amp0=']:
             assert token in headers
           print(f'PERF_STATIC_PASS external={css+js} html={html} shell={css+js+html} js_requests={sum(p.endswith(".js") for p in refs)}')
           PY
@@ -83,7 +83,7 @@ jobs:
           grep -Eqi '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/kv-headers-clean
           grep -Eqi '^permissions-policy:.*camera=\(\).*microphone=\(\)' /tmp/kv-headers-clean
           grep -Eqi '^x-frame-options:[[:space:]]*DENY' /tmp/kv-headers-clean
-          grep -Eqi '^content-security-policy:.*sha256-y4ruZPoirm/NU1FfHFTlRVvHcocZFMcZeaxfN431t48=' /tmp/kv-headers-clean
+          grep -Eqi '^content-security-policy:.*sha256-5Trr5fkI9mSXOcowwX6m5OCd/CRDc24wu/mhkj3Amp0=' /tmp/kv-headers-clean
           echo 'SECURITY_HEADER_PASS'
       - name: Chromium deployed runtime and network-origin QA
         shell: bash

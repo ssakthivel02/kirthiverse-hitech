@@ -38,7 +38,7 @@ jobs:
           print('PWA_CONTRACT_PASS: manifest + v30 service worker + bootstrap')
           PY
 
-      - name: Browser online warm-up and real offline reload
+      - name: Browser online warm-up and real offline direct navigation
         shell: bash
         run: |
           set -euo pipefail
@@ -71,19 +71,19 @@ jobs:
           const cacheOk=await ev(`caches.keys().then(k=>k.includes('kirthiverse-preview-v30'))`);if(!cacheOk)throw Error('v30 cache not installed');
           const cachedCore=await ev(`caches.open('kirthiverse-preview-v30').then(c=>c.match('/core-runtime-v30.js')).then(Boolean)`);if(!cachedCore)throw Error('core runtime not cached');
           await send('Page.navigate',{url:base+'/?controlled=1'});await new Promise(r=>setTimeout(r,1600));
-          await wait(`document.readyState!=='loading'&&!!document.querySelector('main')`,'controlled online reload');
+          await wait(`document.readyState!=='loading'&&!!document.querySelector('main')`,'controlled online navigation');
           await wait(`!!navigator.serviceWorker.controller`,'service worker control',20000);
           await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0,connectionType:'none'});
           await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);
           await wait(`location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'offline SPA lesson',12000);
-          await send('Page.reload');await new Promise(r=>setTimeout(r,2200));
-          await wait(`document.readyState!=='loading'&&location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'offline lesson direct reload',20000);
+          await send('Page.navigate',{url:base+'/lesson/'+lesson});await new Promise(r=>setTimeout(r,2200));
+          await wait(`document.readyState!=='loading'&&location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'offline direct lesson navigation',20000);
           if(!(await ev(`window.KV_CORE_RUNTIME?.pwaBootstrap===true`)))throw Error('core runtime missing offline');
           const dataOffline=await ev(`fetch('/data/lessons-1.js').then(r=>r.ok).catch(()=>false)`);if(!dataOffline)throw Error('canonical lesson data unavailable offline');
           console.log('PWA_PASS: service worker installed and controlling page');
           console.log('PWA_PASS: v30 cache contains core runtime');
           console.log('PWA_PASS: offline SPA navigation works');
-          console.log('PWA_PASS: canonical lesson direct reload works offline');
+          console.log('PWA_PASS: canonical lesson direct navigation works offline');
           console.log('PWA_PASS: canonical lesson data fetch works offline');
           ws.close();
           NODE
@@ -96,7 +96,7 @@ jobs:
           echo '- Service worker install/control checked in Chromium localhost secure context' >> "$GITHUB_STEP_SUMMARY"
           echo '- v30 cache presence checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Offline SPA lesson navigation checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Direct canonical lesson offline reload checked through controlled client' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Direct canonical lesson offline navigation checked through controlled service worker client' >> "$GITHUB_STEP_SUMMARY"
           echo '- Canonical lesson data offline fetch checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Test is isolated from Cloudflare deployment timing' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production DNS: unchanged' >> "$GITHUB_STEP_SUMMARY"

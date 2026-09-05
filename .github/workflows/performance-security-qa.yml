@@ -45,8 +45,13 @@ jobs:
         run: |
           set -euo pipefail
           ok=0
-          for i in $(seq 1 20); do
-            curl -fsS "$PREVIEW_URL/index.html?sec=$i-$(date +%s)" -o /tmp/kv-sec-index && grep -Fq 'data-kv-teacher-runtime="v1"' /tmp/kv-sec-index && { ok=1; break; }
+          for i in $(seq 1 60); do
+            if curl -fsS "$PREVIEW_URL/index.html?sec=$i-$(date +%s)" -o /tmp/kv-sec-index \
+              && grep -Fq 'data-kv-teacher-runtime="v1"' /tmp/kv-sec-index \
+              && grep -Fq 'bilingual:true' /tmp/kv-sec-index; then
+              ok=1
+              break
+            fi
             sleep 2
           done
           test "$ok" = 1
@@ -67,7 +72,7 @@ jobs:
           trap 'kill "$cpid" 2>/dev/null || true' EXIT
           for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9577/json/list >/tmp/kv-sec-pages.json && break || sleep 1; done
           node <<'NODE'
-          const base=process.env.PREVIEW_URL,lesson='math.number.place-value.base10.age6-8.l1';const pages=await fetch('http://127.0.0.1:9577/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let seq=0,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');const ev=async x=>{const r=await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval');return r.result?.value};const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,200))}throw Error('Timeout '+l)};await wait(`!!window.KV_APP_RUNTIME&&!!window.KV_NAVIGATION`,'runtime');await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);await wait(`!!document.querySelector('[data-teacher="v1"]')`,'teacher');const origins=await ev(`[...new Set(performance.getEntriesByType('resource').map(x=>new URL(x.name).origin))]`);const allowed=[new URL(base).origin,'https://fonts.googleapis.com','https://fonts.gstatic.com'];const bad=origins.filter(x=>!allowed.includes(x));if(bad.length)throw Error('Unexpected external origins '+JSON.stringify(bad));const markers=await ev(`({app:!!window.KV_APP_RUNTIME,teacher:!!window.KV_TEACHER_RUNTIME,pwa:!!window.KV_PWA})`);if(!markers.app||!markers.teacher||!markers.pwa)throw Error('Runtime marker missing '+JSON.stringify(markers));console.log('SECURITY_BROWSER_PASS origins='+JSON.stringify(origins));ws.close();
+          const base=process.env.PREVIEW_URL,lesson='math.number.place-value.base10.age6-8.l1';const pages=await fetch('http://127.0.0.1:9577/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let seq=0,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');const ev=async x=>{const r=await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval');return r.result?.value};const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,200))}throw Error('Timeout '+l)};await wait(`!!window.KV_APP_RUNTIME&&!!window.KV_NAVIGATION`,'runtime');await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);await wait(`!!document.querySelector('[data-teacher="v1"]')`,'teacher');const origins=await ev(`[...new Set(performance.getEntriesByType('resource').map(x=>new URL(x.name).origin))]`);const allowed=[new URL(base).origin,'https://fonts.googleapis.com','https://fonts.gstatic.com'];const bad=origins.filter(x=>!allowed.includes(x));if(bad.length)throw Error('Unexpected external origins '+JSON.stringify(bad));const markers=await ev(`({app:!!window.KV_APP_RUNTIME,teacher:!!window.KV_TEACHER_RUNTIME,pwa:!!window.KV_PWA,bilingual:window.KV_TEACHER_RUNTIME?.bilingual===true})`);if(!markers.app||!markers.teacher||!markers.pwa||!markers.bilingual)throw Error('Runtime marker missing '+JSON.stringify(markers));console.log('SECURITY_BROWSER_PASS origins='+JSON.stringify(origins));ws.close();
           NODE
       - name: Closure summary
         if: always()
@@ -76,6 +81,6 @@ jobs:
           echo '- External CSS/JS ceiling: 168,000 bytes' >> "$GITHUB_STEP_SUMMARY"
           echo '- HTML and total shell transfer explicitly measured' >> "$GITHUB_STEP_SUMMARY"
           echo '- Manus/tracker contamination scan enforced' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Preview security response headers checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Preview security response headers checked after bilingual-candidate coherence' >> "$GITHUB_STEP_SUMMARY"
           echo '- Browser runtime and unexpected network-origin checks enforced' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production DNS unchanged' >> "$GITHUB_STEP_SUMMARY"

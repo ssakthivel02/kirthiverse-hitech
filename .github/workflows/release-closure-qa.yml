@@ -30,7 +30,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json,re,os
+          import json,re
           from pathlib import Path
           r=json.loads(Path('release/release-closure-v1.json').read_text())
           v=json.loads(Path('visual-preview.json').read_text())
@@ -57,8 +57,11 @@ jobs:
           bad=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog','googletagmanager.com','google-analytics.com','doubleclick.net']
           assert not [x for x in bad if x in corpus]
           headers=Path('_headers').read_text()
-          assert "'unsafe-inline'" not in headers
-          assert 'Content-Security-Policy' in headers
+          csp=next(x.strip() for x in headers.splitlines() if 'Content-Security-Policy:' in x)
+          script=next(x.strip() for x in csp.split(';') if x.strip().startswith('script-src '))
+          assert "'unsafe-inline'" not in script
+          for h in ['sha256-lFerLKIdSU5Ay0H2UlkGRwSJMupHUtWPLsy9DKuxO54=','sha256-z9SPI/fD9/QyU9pSmBuQDXZDab9fGhmskMWXoq1vrRY=','sha256-y4ruZPoirm/NU1FfHFTlRVvHcocZFMcZeaxfN431t48=']:
+            assert h in script
           print('RELEASE_STATIC_PASS')
           print('EXTERNAL_CSS_JS_BYTES',total)
           print('PRODUCTION_STATE HOLD')
@@ -72,7 +75,10 @@ jobs:
           curl -fsSI "$PREVIEW_URL/index.html?release=$(date +%s)" >/tmp/h
           tr -d '\r' </tmp/h >/tmp/hc
           grep -Eqi '^content-security-policy:' /tmp/hc
-          ! grep -Eqi '^content-security-policy:.*unsafe-inline' /tmp/hc
+          csp="$(grep -Ei '^content-security-policy:' /tmp/hc)"
+          script="$(printf '%s\n' "$csp" | tr ';' '\n' | grep -Ei 'script-src')"
+          ! printf '%s\n' "$script" | grep -qi 'unsafe-inline'
+          grep -Fq 'sha256-y4ruZPoirm/NU1FfHFTlRVvHcocZFMcZeaxfN431t48=' <<< "$script"
           grep -Eqi '^x-frame-options:[[:space:]]*DENY' /tmp/hc
           rm -rf /tmp/kv-release
           "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9591 --user-data-dir=/tmp/kv-release "$PREVIEW_URL/profile?release=$(date +%s)" >/tmp/chrome.log 2>&1 &
@@ -88,7 +94,7 @@ jobs:
           echo '- Browser-visible role / ownership preparation present' >> "$GITHUB_STEP_SUMMARY"
           echo '- Cloud identity remains disabled' >> "$GITHUB_STEP_SUMMARY"
           echo '- Claim/link remains preparation-only; no silent migration' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Strict CSP remains without unsafe-inline' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Script CSP remains hash-authorised without unsafe-inline' >> "$GITHUB_STEP_SUMMARY"
           echo '- Canonical corpus: 135 lessons / 72 assessments / 11 worlds' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production: HOLD; merge/cutover/DNS change not authorised' >> "$GITHUB_STEP_SUMMARY"
           echo '- Final gate: owner visual review + explicit PROD_GO' >> "$GITHUB_STEP_SUMMARY"

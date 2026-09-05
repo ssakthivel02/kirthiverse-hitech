@@ -1,0 +1,113 @@
+name: KirthiVerse Accessibility Closure QA
+on:
+  push:
+    branches: [design/manus-visual-master]
+    paths:
+      - '.github/workflows/accessibility-closure-qa.yml'
+      - 'app.js'
+      - 'core-runtime-v30.js'
+      - 'learner-adaptive-v26.js'
+      - 'visual-controller-v27.js'
+      - 'styles.css'
+      - 'learning-foundation-v19.css'
+      - 'learning-tools-v20.css'
+      - 'visual-master-v15.css'
+      - 'visual-master-pages-v15.css'
+      - 'visual-master-features-v15.css'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  LOCAL_URL: http://127.0.0.1:8766
+jobs:
+  accessibility-closure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+
+      - name: Validate accessibility contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          app=Path('app.js').read_text()
+          core=Path('core-runtime-v30.js').read_text()
+          css='\n'.join(Path(p).read_text() for p in [
+            'styles.css','learning-foundation-v19.css','learning-tools-v20.css',
+            'visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css'
+          ])
+          assert '<main>' in app, 'semantic main landmark missing'
+          assert 'aria-live=' in (app+core+Path('learner-adaptive-v26.js').read_text()), 'live status semantics missing'
+          assert ':focus-visible' in css or ':focus-visible' in core, 'focus-visible treatment missing'
+          assert 'prefers-reduced-motion' in css or 'prefers-reduced-motion' in core, 'reduced-motion support missing'
+          assert 'தமிழ்' in app, 'Tamil rendering signal missing'
+          assert 'role="timer"' in core, 'focus timer role missing'
+          print('A11Y_CONTRACT_PASS: landmarks + live regions + focus-visible + reduced-motion + Tamil + timer semantics')
+          PY
+
+      - name: Chromium keyboard focus reflow reduced-motion and Tamil QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          python3 -m http.server 8766 --bind 127.0.0.1 >/tmp/kv-a11y-http.log 2>&1 &
+          spid=$!
+          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 20); do if curl -fsS "$LOCAL_URL/index.html" -o /tmp/kv-a11y-index.html && grep -Fq 'CORE-RUNTIME-V30' /tmp/kv-a11y-index.html; then ready=1; break; fi; sleep 1; done
+          if [ "$ready" != 1 ]; then cat /tmp/kv-a11y-http.log || true; exit 1; fi
+          rm -rf /tmp/kv-a11y-profile
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9444 --user-data-dir=/tmp/kv-a11y-profile "$LOCAL_URL/" >/tmp/kv-a11y-chrome.log 2>&1 &
+          cpid=$!
+          debug=0
+          for i in $(seq 1 25); do if curl -fsS http://127.0.0.1:9444/json/list >/tmp/kv-a11y-pages.json; then debug=1; break; fi; sleep 1; done
+          if [ "$debug" != 1 ]; then cat /tmp/kv-a11y-chrome.log || true; exit 1; fi
+          node <<'NODE'
+          const base=process.env.LOCAL_URL;
+          const pages=await fetch('http://127.0.0.1:9444/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');
+          if(!page)throw Error('No Chromium page target');
+          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
+          await send('Runtime.enable');await send('Page.enable');await send('DOM.enable');await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+          const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'Runtime evaluation failed');return r.result?.value};
+          const wait=async(expression,label,timeout=20000)=>{const end=Date.now()+timeout;while(Date.now()<end){try{if(await ev(expression))return true}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout: '+label)};
+          await wait(`!!window.KV_APP_RUNTIME&&!!window.KV_NAVIGATION&&document.querySelectorAll('main').length===1&&!!document.querySelector('main h1')`,'initial semantic render');
+          const interactiveOk=await ev(`[...document.querySelectorAll('a,button,input,select,summary')].every(el=>el.matches('input,select')||((el.getAttribute('aria-label')||el.getAttribute('title')||el.innerText||'').trim().length>0))`);if(!interactiveOk)throw Error('Unnamed interactive control detected');
+          await send('Input.dispatchKeyEvent',{type:'keyDown',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});await send('Input.dispatchKeyEvent',{type:'keyUp',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});
+          await wait(`document.activeElement&&document.activeElement!==document.body`,'keyboard tab focus');
+          const reduced=await ev(`matchMedia('(prefers-reduced-motion: reduce)').matches`);if(!reduced)throw Error('Reduced-motion emulation not active');
+          await ev(`window.KV_NAVIGATION.navigate('/worlds');true`);await wait(`location.pathname==='/worlds'&&document.querySelector('main h1')?.textContent.includes('Learning universes')`,'SPA worlds render');
+          await wait(`document.activeElement===document.querySelector('main')||document.activeElement?.closest('main')===document.querySelector('main')`,'route focus moved into main');
+          await send('Emulation.setDeviceMetricsOverride',{width:320,height:800,deviceScaleFactor:1,mobile:true,screenWidth:320,screenHeight:800});await new Promise(r=>setTimeout(r,500));
+          const reflow=await ev(`({sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth})`);if(reflow.sw>reflow.cw+2)throw Error('Horizontal overflow at 320 CSS px: '+JSON.stringify(reflow));
+          await ev(`window.KV_NAVIGATION.navigate('/world/tamil');true`);await wait(`location.pathname==='/world/tamil'&&/[\u0B80-\u0BFF]/.test(document.body.innerText)`,'Tamil route rendering');
+          await ev(`window.KV_NAVIGATION.navigate('/profile');true`);await wait(`location.pathname==='/profile'&&document.querySelector('[data-profile-runtime="v26"]')`,'profile render');
+          const formLabels=await ev(`[...document.querySelectorAll('#vm-name,#vm-age,#vm-language,#vm-session')].every(el=>!!document.querySelector('label[for="'+el.id+'"]'))`);if(!formLabels)throw Error('Profile form label association missing');
+          const profileReflow=await ev(`document.documentElement.scrollWidth<=document.documentElement.clientWidth+2`);if(!profileReflow)throw Error('Profile horizontal overflow at 320 CSS px');
+          console.log('A11Y_PASS: semantic main and named controls');
+          console.log('A11Y_PASS: keyboard Tab focus reachable');
+          console.log('A11Y_PASS: SPA route focus lands in main');
+          console.log('A11Y_PASS: reduced-motion media preference honored by browser');
+          console.log('A11Y_PASS: 320 CSS px reflow proxy for 200% zoom has no horizontal overflow');
+          console.log('A11Y_PASS: Tamil Unicode route renders');
+          console.log('A11Y_PASS: profile controls retain programmatic labels');
+          ws.close();
+          NODE
+
+      - name: Accessibility closure summary
+        if: always()
+        run: |
+          echo '### Accessibility closure QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Semantic landmark and named-control checks' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Keyboard Tab reachability' >> "$GITHUB_STEP_SUMMARY"
+          echo '- SPA route-focus behavior' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Reduced-motion media emulation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 320 CSS px reflow proxy for 200% zoom' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Tamil Unicode route rendering' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Profile form label association' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Formal assistive-technology screen-reader session remains a manual/device limitation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production DNS: unchanged' >> "$GITHUB_STEP_SUMMARY"

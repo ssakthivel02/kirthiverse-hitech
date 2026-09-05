@@ -1,9 +1,8 @@
 name: KirthiVerse Performance Security QA
 on:
-  push:
-    branches: [design/manus-visual-master]
-    paths:
-      - '.github/workflows/performance-security-qa.yml'
+  workflow_run:
+    workflows: ["KirthiVerse Manus Preview"]
+    types: [completed]
   workflow_dispatch:
 permissions:
   contents: read
@@ -11,10 +10,15 @@ env:
   PREVIEW_URL: https://kirthiverse-hitech.ssakthivel02.workers.dev
 jobs:
   performance-security:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'design/manus-visual-master')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout candidate
+      - name: Checkout deployed candidate
         uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || 'design/manus-visual-master' }}
       - name: Static footprint and contamination gate
         shell: bash
         run: |
@@ -38,23 +42,16 @@ jobs:
           corpus='\n'.join(Path(p).read_text(errors='ignore') for p in ['index.html','app.js','core-runtime-v30.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js'])
           bad=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog','googletagmanager.com','google-analytics.com','doubleclick.net']
           assert not [x for x in bad if x in corpus], [x for x in bad if x in corpus]
+          assert 'data-kv-teacher-runtime="v1"' in h and 'bilingual:true' in h
           print(f'PERF_STATIC_PASS external={external} html={html} shell={shell} js_requests={sum(p.endswith(".js") for p in refs)}')
           PY
-      - name: Verify preview response security headers
+      - name: Verify deployed candidate and security headers
         shell: bash
         run: |
           set -euo pipefail
-          ok=0
-          for i in $(seq 1 60); do
-            if curl -fsS "$PREVIEW_URL/index.html?sec=$i-$(date +%s)" -o /tmp/kv-sec-index \
-              && grep -Fq 'data-kv-teacher-runtime="v1"' /tmp/kv-sec-index \
-              && grep -Fq 'bilingual:true' /tmp/kv-sec-index; then
-              ok=1
-              break
-            fi
-            sleep 2
-          done
-          test "$ok" = 1
+          curl -fsS "$PREVIEW_URL/index.html?security=$(date +%s)" -o /tmp/kv-sec-index
+          grep -Fq 'data-kv-teacher-runtime="v1"' /tmp/kv-sec-index
+          grep -Fq 'bilingual:true' /tmp/kv-sec-index
           curl -fsSI "$PREVIEW_URL/index.html?headers=$(date +%s)" >/tmp/kv-headers
           tr -d '\r' </tmp/kv-headers | tee /tmp/kv-headers-clean
           grep -Eqi '^x-content-type-options:[[:space:]]*nosniff' /tmp/kv-headers-clean
@@ -78,9 +75,10 @@ jobs:
         if: always()
         run: |
           echo '### Performance + security closure' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Sequenced after successful controlled preview deployment' >> "$GITHUB_STEP_SUMMARY"
           echo '- External CSS/JS ceiling: 168,000 bytes' >> "$GITHUB_STEP_SUMMARY"
           echo '- HTML and total shell transfer explicitly measured' >> "$GITHUB_STEP_SUMMARY"
           echo '- Manus/tracker contamination scan enforced' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Preview security response headers checked after bilingual-candidate coherence' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Deployed bilingual teacher candidate verified before security-header checks' >> "$GITHUB_STEP_SUMMARY"
           echo '- Browser runtime and unexpected network-origin checks enforced' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production DNS unchanged' >> "$GITHUB_STEP_SUMMARY"

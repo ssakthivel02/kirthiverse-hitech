@@ -64,7 +64,7 @@ jobs:
           await send('Runtime.enable');await send('Page.enable');await send('Network.enable');await send('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false,screenWidth:1440,screenHeight:900});
           await wait(`!!window.KV_NAVIGATION&&!!window.KV_PROFILE_RUNTIME`,'runtime');
           await ev(`localStorage.setItem('kirthiverse.hitech.profile.local.v2',JSON.stringify({displayName:'QA Learner',agePath:'7–10',language:'English + Tamil',preferredWorlds:['tamil'],sessionGoal:20}));window.KV_NAVIGATION.navigate('/profile');true`);
-          await wait(`location.pathname==='/profile'&&document.querySelector('[data-profile-runtime="v27"]')`,'profile');
+          await wait(`location.pathname==='/profile'&&document.querySelector('[data-profile-runtime="v26"]')`,'profile');
           let desktop=await ev(`({roles:document.querySelectorAll('[data-role]').length,claim:!!document.querySelector('[data-claim-prep="v1"]'),dupes:document.querySelectorAll('[data-role-experience="v1"]').length,ta:/[\u0B80-\u0BFF]/.test(document.body.innerText),name:document.querySelector('#vm-name')?.value,sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth})`);
           if(desktop.roles!==5||!desktop.claim||desktop.dupes!==1||!desktop.ta||desktop.name!=='QA Learner'||desktop.sw>desktop.cw+2)throw Error('desktop '+JSON.stringify(desktop));
           const storageSnapshot=`JSON.stringify(Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)).sort().map(k=>[k,localStorage.getItem(k)]))`;

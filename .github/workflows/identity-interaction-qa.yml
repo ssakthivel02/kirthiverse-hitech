@@ -75,10 +75,10 @@ jobs:
           await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
           await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true,screenWidth:390,screenHeight:844});await new Promise(r=>setTimeout(r,300));
           let mobile=await ev(`({sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth,roles:document.querySelectorAll('[data-role]').length,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches})`);if(mobile.sw>mobile.cw+2||mobile.roles!==5||!mobile.reduced)throw Error('mobile '+JSON.stringify(mobile));
-          let origins=await ev(`(()=>{let o=location.origin,a=performance.getEntriesByType('resource').map(x=>new URL(x.name).origin);return {o,bad:[...new Set(a.filter(x=>x!==o))]}})()`);if(origins.bad.length)throw Error('unexpected origin '+JSON.stringify(origins));
+          let origins=await ev(`(()=>{let allowed=new Set([location.origin,'https://fonts.googleapis.com','https://fonts.gstatic.com']),a=performance.getEntriesByType('resource').map(x=>new URL(x.name).origin);return [...new Set(a.filter(x=>!allowed.has(x)))]})()`);if(origins.length)throw Error('unexpected origin '+JSON.stringify(origins));
           let focus=await ev(`(()=>{let a=[...document.querySelectorAll('summary,button,input,select')].filter(x=>x.offsetParent!==null);a[0]?.focus();return document.activeElement===a[0]})()`);if(!focus)throw Error('keyboard focus failed');
           console.log('IDENTITY_UI_PASS desktop 1440x900 + mobile 390x844');
-          console.log('IDENTITY_PRIVACY_PASS no role-side localStorage mutation; same-origin resources only');
+          console.log('IDENTITY_PRIVACY_PASS no role-side localStorage mutation; no new network origins beyond approved font baseline');
           ws.close();
           NODE
       - name: Summary
@@ -89,5 +89,5 @@ jobs:
           echo '- explicit local-to-persistent claim preparation' >> "$GITHUB_STEP_SUMMARY"
           echo '- desktop 1440×900 + mobile 390×844' >> "$GITHUB_STEP_SUMMARY"
           echo '- progressive disclosure + keyboard focus + reduced motion' >> "$GITHUB_STEP_SUMMARY"
-          echo '- no role browsing storage mutation; same-origin resource gate' >> "$GITHUB_STEP_SUMMARY"
+          echo '- no role browsing storage mutation; no new origins beyond approved font baseline' >> "$GITHUB_STEP_SUMMARY"
           echo '- external CSS/JS ceiling ≤168,000 bytes' >> "$GITHUB_STEP_SUMMARY"

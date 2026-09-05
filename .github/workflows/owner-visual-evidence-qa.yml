@@ -1,0 +1,126 @@
+name: KirthiVerse Owner Visual Evidence QA
+on:
+  push:
+    branches: [design/manus-visual-master]
+    paths:
+      - '.github/workflows/owner-visual-evidence-qa.yml'
+      - 'index.html'
+      - 'styles.css'
+      - 'learning-foundation-v19.css'
+      - 'learning-tools-v20.css'
+      - 'visual-master-v15.css'
+      - 'visual-master-pages-v15.css'
+      - 'visual-master-features-v15.css'
+      - 'app.js'
+      - 'core-runtime-v30.js'
+      - 'learning-foundation-v19.js'
+      - 'learning-tools-v20.js'
+      - 'visual-controller-v27.js'
+      - 'learner-adaptive-v26.js'
+      - 'identity/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  PREVIEW_URL: https://kirthiverse-hitech.ssakthivel02.workers.dev
+jobs:
+  owner-visual-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Confirm review candidate contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          v=json.loads(Path('visual-preview.json').read_text())
+          r=json.loads(Path('release/release-closure-v1.json').read_text())
+          assert v['canonical']=={'lessons':135,'assessments':72,'worlds':11}
+          assert r['production']['state']=='HOLD'
+          assert r['production']['mergeAllowed'] is False
+          assert r['production']['productionCutoverAllowed'] is False
+          assert r['production']['ownerVisualReviewRequired'] is True
+          h=Path('index.html').read_text()
+          assert len(re.findall(r'<script src="/(?:app|core-runtime-v30|learning-foundation-v19|learning-tools-v20|visual-controller-v27|learner-adaptive-v26)\.js',h))==6
+          print('OWNER_REVIEW_STATIC_PASS')
+          PY
+      - name: Capture required viewport evidence and DOM contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium)"
+          test -n "$chrome"
+          rm -rf /tmp/kv-owner-review owner-review-evidence
+          mkdir -p owner-review-evidence
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9601 --user-data-dir=/tmp/kv-owner-review about:blank >/tmp/kv-owner-review.log 2>&1 &
+          cpid=$!
+          trap 'kill "$cpid" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 25); do if curl -fsS http://127.0.0.1:9601/json/list >/tmp/pages; then ready=1; break; fi; sleep 1; done
+          test "$ready" = 1
+          node <<'NODE'
+          const fs=require('fs');
+          const base=process.env.PREVIEW_URL;
+          const pages=await fetch('http://127.0.0.1:9601/json/list').then(r=>r.json());
+          const page=pages.find(x=>x.type==='page'); if(!page) throw Error('No Chromium page');
+          const ws=new WebSocket(page.webSocketDebuggerUrl); await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0; const pending=new Map();
+          ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const q=pending.get(m.id);pending.delete(m.id);m.error?q.bad(Error(m.error.message)):q.ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
+          await send('Runtime.enable'); await send('Page.enable');
+          const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'Runtime evaluation failed');return r.result?.value};
+          const wait=async(expression,label)=>{const end=Date.now()+18000;while(Date.now()<end){try{if(await ev(expression))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout '+label)};
+          const views=[
+            {name:'desktop-1440x900',w:1440,h:900,mobile:false},
+            {name:'desktop-1280x800',w:1280,h:800,mobile:false},
+            {name:'tablet-768x1024',w:768,h:1024,mobile:false},
+            {name:'mobile-390x844',w:390,h:844,mobile:true}
+          ];
+          const routes=[
+            {name:'home',path:'/'},
+            {name:'worlds',path:'/worlds'},
+            {name:'progress',path:'/progress'},
+            {name:'profile',path:'/profile'},
+            {name:'lesson',path:'/lesson/math.number.place-value.base10.age6-8.l1'}
+          ];
+          const evidence=[];
+          for(const v of views){
+            await send('Emulation.setDeviceMetricsOverride',{width:v.w,height:v.h,deviceScaleFactor:1,mobile:v.mobile});
+            for(const r of routes){
+              await send('Page.navigate',{url:base+r.path+'?ownerReview='+Date.now()});
+              await wait(`document.readyState==='complete'&&!!document.querySelector('main')`,v.name+' '+r.name+' ready');
+              await wait(`!!window.KV_APP_RUNTIME&&!!window.KV_NAVIGATION`,v.name+' '+r.name+' runtime');
+              const check=await ev(`(()=>{const de=document.documentElement,b=document.body;return {path:location.pathname,overflow:Math.max(de.scrollWidth,b?.scrollWidth||0)-innerWidth,rolePanels:document.querySelectorAll('[data-role-experience="v1"]').length,roles:document.querySelectorAll('[data-role]').length,claims:document.querySelectorAll('[data-claim-prep="v1"]').length,profiles:document.querySelectorAll('[data-profile-runtime="v26"]').length,tamil:[...document.body.innerText].some(c=>c>='\\u0B80'&&c<='\\u0BFF')}})()`);
+              if(check.overflow>1) throw Error(`Horizontal overflow ${v.name} ${r.name}: ${check.overflow}`);
+              if(check.rolePanels>1||check.profiles>1) throw Error(`Duplicate profile surfaces ${v.name} ${r.name}: ${JSON.stringify(check)}`);
+              if(r.name==='profile'&&(check.rolePanels!==1||check.roles!==5||check.claims!==1||check.profiles!==1||!check.tamil)) throw Error(`Profile review contract ${v.name}: ${JSON.stringify(check)}`);
+              const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false,fromSurface:true});
+              const file=`owner-review-evidence/${v.name}__${r.name}.png`; fs.writeFileSync(file,Buffer.from(shot.data,'base64'));
+              evidence.push({viewport:v.name,width:v.w,height:v.h,route:r.path,file,...check});
+              console.log('OWNER_VISUAL_PASS',v.name,r.name,JSON.stringify(check));
+            }
+          }
+          fs.writeFileSync('owner-review-evidence/manifest.json',JSON.stringify({head:process.env.GITHUB_SHA,preview:base,production:'HOLD',viewports:views,routes,evidence},null,2));
+          ws.close();
+          NODE
+          test "$(find owner-review-evidence -name '*.png' | wc -l)" -eq 20
+          echo 'OWNER_VISUAL_EVIDENCE_PASS: 20 screenshots / 4 required viewports / 5 critical routes'
+      - name: Upload owner visual review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: owner-visual-review-${{ github.sha }}
+          path: owner-review-evidence/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Review summary
+        if: always()
+        shell: bash
+        run: |
+          echo '### Owner visual evidence' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Required viewports: 1440x900, 1280x800, 768x1024, 390x844' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Evidence routes: Home, Worlds, Progress, Profile, canonical Lesson' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Profile: one role surface, five roles, one claim-preparation surface, existing v26 profile preserved' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Horizontal overflow and duplicate surfaces: rejected' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production remains HOLD; artifact is review evidence only' >> "$GITHUB_STEP_SUMMARY"

@@ -19,7 +19,7 @@ jobs:
           ref: design/manus-visual-master
           fetch-depth: 0
 
-      - name: Rename Kiri to Kiki everywhere in tracked product text
+      - name: Rename Kiri to Kiki in non-workflow tracked product text
         shell: bash
         run: |
           set -euo pipefail
@@ -27,14 +27,13 @@ jobs:
           from pathlib import Path
           import subprocess
 
-          self_path=Path('.github/workflows/rename-kiki-once.yml')
           files = subprocess.check_output(['git','ls-files','-z']).split(b'\0')
           changed=[]
           for raw in files:
               if not raw:
                   continue
               p=Path(raw.decode())
-              if p == self_path:
+              if str(p).startswith('.github/workflows/'):
                   continue
               try:
                   data=p.read_text(encoding='utf-8')
@@ -53,7 +52,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git grep -n -I -e 'Kiri' -e 'கிறி' -- ':!data/**' ':!.github/workflows/rename-kiki-once.yml'; then
+          if git grep -n -I -e 'Kiri' -e 'கிறி' -- ':!data/**' ':!.github/workflows/**'; then
             echo 'Legacy Kiri branding remains in product/runtime files.'
             exit 1
           fi

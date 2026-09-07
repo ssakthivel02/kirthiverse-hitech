@@ -34,13 +34,17 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import re, json
+          import re
 
           app=Path('app.js').read_text(errors='ignore')
           idx=Path('index.html').read_text(errors='ignore')
-          assessments='\n'.join(Path('data').glob('assessments-*.js')[i].read_text(errors='ignore') for i in range(len(list(Path('data').glob('assessments-*.js'))))) if list(Path('data').glob('assessments-*.js')) else ''
-          lessons='\n'.join(p.read_text(errors='ignore') for p in sorted(Path('data').glob('lessons-*.js')))
+          assessment_files=sorted(Path('data').glob('assessments-*.js'))
+          lesson_files=sorted(Path('data').glob('lessons-*.js'))
+          assessments='\n'.join(p.read_text(errors='ignore') for p in assessment_files)
+          lessons='\n'.join(p.read_text(errors='ignore') for p in lesson_files)
 
+          assert assessment_files, 'Canonical assessment files missing'
+          assert lesson_files, 'Canonical lesson files missing'
           assert "'/practice'" in app or '"/practice"' in app, 'Practice route missing'
           assert 'Kiki Practice Arena' in app, 'Practice Arena UI missing'
           assert 'kirthiverse.hitech.practice.v1' in app, 'Local practice state key missing'

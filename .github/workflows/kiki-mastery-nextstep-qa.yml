@@ -71,7 +71,7 @@ jobs:
           const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout '+l)};
           await wait(`!!window.KV_NAVIGATION&&window.KV_LESSONS?.length===135&&window.KV_ASSESSMENTS?.length===72`,'runtime + canonical corpus');
           const ids=await ev(`({first:window.KV_LESSONS[0].id,second:window.KV_LESSONS[1].id})`);
-          const seed=async(progress,mastery)=>{await ev(`localStorage.setItem('kirthiverse.hitech.static.progress.v2',JSON.stringify(${JSON.stringify(progress)}));localStorage.setItem('kirthiverse.hitech.mastery.evidence.v1',JSON.stringify(${JSON.stringify(mastery)}));window.KV_NAVIGATION.navigate('/progress');true`);await wait(`!!document.querySelector('[data-next-step-engine="v1"]')`,'next-step panel')};
+          const seed=async(progress,mastery)=>{await ev(`localStorage.setItem('kirthiverse.hitech.static.progress.v2',JSON.stringify(${JSON.stringify(progress)}));localStorage.setItem('kirthiverse.hitech.mastery.evidence.v1',JSON.stringify(${JSON.stringify(mastery)}));window.KV_NAVIGATION.navigate('/');window.KV_NAVIGATION.navigate('/progress');true`);await wait(`!!document.querySelector('[data-next-step-engine="v1"]')`,'next-step panel')};
 
           await seed({started:[],completed:[],agePath:'all'},{events:[],lessons:{}});
           let panel=await ev(`({k:document.querySelector('[data-next-step-engine="v1"] .kicker')?.textContent||'',href:document.querySelector('[data-next-step-engine="v1"] a')?.getAttribute('href')||'',text:document.querySelector('[data-next-step-engine="v1"]')?.innerText||''})`);
@@ -88,7 +88,7 @@ jobs:
 
           for(const [w,h] of [[1440,900],[768,1024],[390,844],[320,800]]){
             await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<760});
-            await ev(`window.KV_NAVIGATION.navigate('/progress');true`);
+            await ev(`window.KV_NAVIGATION.navigate('/');window.KV_NAVIGATION.navigate('/progress');true`);
             await wait(`!!document.querySelector('[data-next-step-engine="v1"]')`,'progress '+w+'x'+h);
             const overflow=await ev(`document.documentElement.scrollWidth-innerWidth`);if(overflow>2)throw Error('Horizontal overflow '+w+'x'+h+': '+overflow);
           }

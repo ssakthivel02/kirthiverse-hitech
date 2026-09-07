@@ -8,5 +8,7 @@
   "focusSession":{"module":"core-runtime-v30.js","version":"v30","localOnly":true,"profileGoalAware":true,"routes":["/","/progress"],"timer":true,"dailyHistory":true,"streak":true,"remoteTracking":false},
   "diagnostics":{"module":"visual-preview-gate.js","browserLoaded":false,"ciOnly":true,"reason":"removed from learner critical path after v30 browser-integrity PASS"},
   "pwa":{"bootstrap":"integrated-core-runtime-v30","version":"v30","serviceWorker":"sw-v30.js","manifest":"manifest.webmanifest","scope":"/","offlineCanonicalData":true,"productionCutoverDependency":false},
+  "guide":{"name":"Kiki","localOnly":true,"animatedTeacherVersion":"v2"},
+  "sourcePromotionAllowed":true,"productionCustomDomainCutoverAllowed":false,
   "rollbackEvidencePreserved":true,"manusRuntime":false,"productionDnsChanged":false,"productionCutoverAllowed":false
 }

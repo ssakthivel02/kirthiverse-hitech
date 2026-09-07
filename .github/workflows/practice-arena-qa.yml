@@ -5,6 +5,7 @@ on:
       - 'practice.html'
       - 'practice-arena.js'
       - 'practice-arena.css'
+      - 'visual-controller-v27.js'
       - 'data/assessments-*.js'
       - 'scripts/validate-practice-arena.mjs'
       - '.github/workflows/practice-arena-qa.yml'
@@ -14,6 +15,7 @@ on:
       - 'practice.html'
       - 'practice-arena.js'
       - 'practice-arena.css'
+      - 'visual-controller-v27.js'
       - 'data/assessments-*.js'
       - 'scripts/validate-practice-arena.mjs'
       - '.github/workflows/practice-arena-qa.yml'
@@ -28,7 +30,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Validate canonical-data and local-only contracts
+      - name: Validate canonical-data, integration and local-only contracts
         run: node scripts/validate-practice-arena.mjs
       - name: Static HTTP smoke test
         shell: bash
@@ -41,9 +43,11 @@ jobs:
           grep -Fq 'id="arena"' /tmp/practice.html
           curl -fsS http://127.0.0.1:8768/practice-arena.js >/tmp/practice.js
           curl -fsS http://127.0.0.1:8768/practice-arena.css >/tmp/practice.css
+          curl -fsS http://127.0.0.1:8768/visual-controller-v27.js >/tmp/visual.js
           test -s /tmp/practice.js
           test -s /tmp/practice.css
-      - name: Headless Chromium interaction QA
+          grep -Fq "a.href='/practice.html'" /tmp/visual.js
+      - name: Headless Chromium home-to-arena and interaction QA
         shell: bash
         run: |
           set -euo pipefail
@@ -52,7 +56,7 @@ jobs:
           python3 -m http.server 8769 --bind 127.0.0.1 >/tmp/kv-practice-browser.log 2>&1 &
           spid=$!
           trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
-          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9557 --user-data-dir=/tmp/kv-practice-profile http://127.0.0.1:8769/practice.html >/tmp/kv-practice-chrome.log 2>&1 &
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9557 --user-data-dir=/tmp/kv-practice-profile http://127.0.0.1:8769/ >/tmp/kv-practice-chrome.log 2>&1 &
           cpid=$!
           for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9557/json/list >/tmp/kv-practice-pages.json && break || sleep 1; done
           node <<'NODE'
@@ -64,6 +68,11 @@ jobs:
           await send('Runtime.enable');
           const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval failed');return r.result?.value};
           const wait=async(expr,label)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(expr))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout: '+label)};
+          await wait(`!!document.querySelector('.vm-nav-practice')&&!!document.querySelector('.vm-practice-cta')`,'visual-master practice entry');
+          if(await ev(`document.querySelector('.vm-nav-practice').hasAttribute('data-link')`)) throw Error('Practice nav incorrectly uses SPA data-link');
+          if(await ev(`document.querySelector('.vm-practice-cta').hasAttribute('data-link')`)) throw Error('Practice hero CTA incorrectly uses SPA data-link');
+          await ev(`document.querySelector('.vm-nav-practice').click();true`);
+          await wait(`location.pathname==='/practice.html'`,'home-to-arena navigation');
           await wait(`document.querySelectorAll('[data-start]').length===3`,'mode buttons');
           if(!(await ev(`document.getElementById('calm').checked===true`))) throw Error('Calm Mode not default-on');
           await ev(`document.querySelector('[data-start="3"]').click();true`);
@@ -72,15 +81,17 @@ jobs:
           await wait(`JSON.parse(localStorage.getItem('kirthiverse.hitech.practice.v1')).retryIds.length===1`,'retry persistence');
           const state=await ev(`JSON.parse(localStorage.getItem('kirthiverse.hitech.practice.v1'))`);
           if(!state.queue.length||!state.history.length) throw Error('Local state/history missing');
-          console.log('PRACTICE_ARENA_BROWSER_PASS: modes, Calm default, reveal, retry persistence');
+          console.log('PRACTICE_ARENA_BROWSER_PASS: home direct entry, modes, Calm default, reveal, retry persistence');
           ws.close();
           NODE
       - name: QA summary
         if: always()
         run: |
           echo '### Kiki Practice Arena QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Visual-master top navigation and hero direct-entry contract checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Canonical assessment loading and stable-ID uniqueness checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- No fetch/XHR/WebSocket/beacon/camera/recording capability in arena runtime' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Home → Practice Arena browser journey checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Calm Mode defaults on' >> "$GITHUB_STEP_SUMMARY"
           echo '- Retry signal persists locally' >> "$GITHUB_STEP_SUMMARY"
           echo '- Reduced-motion and small-screen CSS markers checked' >> "$GITHUB_STEP_SUMMARY"

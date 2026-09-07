@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+const need=(ok,msg)=>{if(!ok)throw new Error(msg)};
+const read=p=>fs.readFileSync(p,'utf8');
+const html=read('family.html'),js=read('family-bridge.js'),css=read('family-bridge.css');
+for(const marker of ['family-bridge.css','family-bridge.js','id="family"'])need(html.includes(marker),`family.html missing ${marker}`);
+for(const marker of ['syntheticOnly:true','localOnly:true','authenticatesGuardian:false','cloudChildIdentity:false','SHARE / REVOKE MODEL','No network sharing occurs in V1','No real child name'])need(js.includes(marker),`family runtime missing ${marker}`);
+for(const forbidden of ['fetch(','XMLHttpRequest','WebSocket(','navigator.sendBeacon','getUserMedia','MediaRecorder'])need(!js.includes(forbidden),`forbidden network/device capability: ${forbidden}`);
+need(js.includes("kirthiverse.hitech.family-bridge.demo.v1"),'local storage key missing');
+need(js.includes('shareActive=false')&&js.includes('shareId=null'),'revocation path missing');
+need(js.includes('sessionGoal')&&js.includes('weeklyGoal')&&js.includes('largeText')&&js.includes('reducedMotion'),'family controls incomplete');
+need(css.includes('prefers-reduced-motion:reduce'),'reduced-motion CSS missing');
+need(/@media\(max-width:\d+px\)/.test(css),'mobile breakpoint missing');
+need(css.includes(':focus-visible'),'visible focus CSS missing');
+console.log('FAMILY_BRIDGE_CONTRACT_PASS: synthetic-only local guardian prototype, goals, wellbeing/accessibility controls, explicit revocable no-network share model');

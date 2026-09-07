@@ -36,14 +36,16 @@ jobs:
           assert p['browserQa']['mobileViewport']=='390x844'
           assert p['browserQa']['routeMatrix']==['/','/worlds','/world/mathematics','/search','/progress','/profile','/lesson/math.number.place-value.base10.age6-8.l1']
           assert p['canonical']=={'lessons':135,'assessments':72,'worlds':11}
-          assert p['mergeAllowed'] is False and p['productionCutoverAllowed'] is False
+          assert p['mergeAllowed'] is True and p['productionCutoverAllowed'] is False
+          assert p.get('ownerVisualApproval',{}).get('status')=='approved'
+          assert p.get('guide',{}).get('name')=='Kiki'
           core=Path('core-runtime-v30.js').read_text(); sw=Path('sw-v30.js').read_text()
           for m in ['KV_CORE_RUNTIME','KV_FOCUS_RUNTIME','focusSession:true','profileGoalAware:true']: assert m in core
           assert 'kirthiverse-preview-v30' in sw
           contamination=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog']
           loaded=['app.js','core-runtime-v30.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js']
           assert not any(x in '\n'.join(Path(f).read_text() for f in loaded) for x in contamination)
-          print('Lean runtime + browser QA contract PASS.')
+          print('Lean runtime + owner-approved source-promotion contract PASS.')
           PY
 
       - name: Measure runtime payload and request count
@@ -218,6 +220,7 @@ jobs:
         if: always()
         run: |
           echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Source promotion: owner-approved; custom-domain cutover remains manual-gated' >> "$GITHUB_STEP_SUMMARY"
           echo '- Lean browser runtime: 6 JS requests maximum' >> "$GITHUB_STEP_SUMMARY"
           echo '- Browser QA: desktop + mobile critical route matrix' >> "$GITHUB_STEP_SUMMARY"
           echo '- Functional QA: confidence + focus + completion + SPA persistence' >> "$GITHUB_STEP_SUMMARY"

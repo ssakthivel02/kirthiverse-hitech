@@ -1,0 +1,89 @@
+name: KirthiVerse Kiki Mastery Next Step QA
+on:
+  push:
+    branches: [feature/kiki-practice-arena-v1]
+    paths:
+      - 'app.js'
+      - 'data/**'
+      - 'docs/KIKI_EXPLAINABLE_NEXT_STEP_V1_SPEC.md'
+      - '.github/workflows/kiki-mastery-nextstep-qa.yml'
+  pull_request:
+    paths:
+      - 'app.js'
+      - 'data/**'
+      - 'docs/KIKI_EXPLAINABLE_NEXT_STEP_V1_SPEC.md'
+      - '.github/workflows/kiki-mastery-nextstep-qa.yml'
+  workflow_dispatch:
+jobs:
+  next-step-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+      - name: Static contract and canonical lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check app.js
+          grep -q 'data-next-step-engine="v1"' app.js
+          grep -q "kind:'REVISIT'" app.js
+          grep -q "kind:'CONTINUE'" app.js
+          grep -q "kind:'EXPLORE'" app.js
+          grep -q "kind:'REVIEW'" app.js
+          grep -q 'not a grade, diagnosis, ranking or automatic mastery judgement' app.js
+          grep -q 'Deterministic priority order' docs/KIKI_EXPLAINABLE_NEXT_STEP_V1_SPEC.md
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          assessments='\n'.join(x.read_text(errors='ignore') for x in sorted(Path('data').glob('assessments-*.js')))
+          lessons='\n'.join(x.read_text(errors='ignore') for x in sorted(Path('data').glob('lessons-*.js')))
+          a=re.findall(r'"stableAssessmentId"\s*:\s*"([^"]+)"',assessments)
+          l=re.findall(r'"id"\s*:\s*"([^"]+)"',lessons)
+          assert len(a)==72 and len(set(a))==72, (len(a),len(set(a)))
+          assert len(l)==135 and len(set(l))==135, (len(l),len(set(l)))
+          print('CANONICAL_LOCK_PASS')
+          PY
+      - name: Headless Chromium next-step behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8775 >/tmp/kvs-nextstep-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true; kill $CHROME_PID 2>/dev/null || true' EXIT
+          chromium --headless --disable-gpu --no-sandbox --remote-debugging-port=9585 --user-data-dir=/tmp/kvs-nextstep-chrome about:blank >/tmp/kvs-nextstep-chrome.log 2>&1 &
+          CHROME_PID=$!
+          for i in $(seq 1 50); do curl -fsS http://127.0.0.1:9585/json/version >/dev/null 2>&1 && break; sleep .2; done
+          node <<'NODE'
+          const http=require('http');
+          function get(path){return new Promise((resolve,reject)=>http.get({host:'127.0.0.1',port:9585,path},r=>{let d='';r.on('data',c=>d+=c);r.on('end',()=>resolve(JSON.parse(d)))}).on('error',reject))}
+          async function main(){
+            const tabs=await get('/json/new?http://127.0.0.1:8775/progress');
+            const ws=new WebSocket(tabs.webSocketDebuggerUrl);let id=0,pending=new Map();
+            ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};
+            await new Promise(r=>ws.onopen=r);
+            const send=(method,params={})=>new Promise(r=>{const n=++id;pending.set(n,r);ws.send(JSON.stringify({id:n,method,params}))});
+            await send('Runtime.enable'); await send('Page.enable');
+            await new Promise(r=>setTimeout(r,1200));
+            async function evalJs(expression){const x=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(x.result?.exceptionDetails)throw new Error(JSON.stringify(x.result.exceptionDetails));return x.result?.result?.value}
+            const ready=await evalJs(`window.KV_LESSONS?.length===135 && window.KV_ASSESSMENTS?.length===72`);if(!ready)throw new Error('canonical runtime not ready');
+            async function seed(progress,mastery){await evalJs(`localStorage.setItem('kirthiverse.hitech.static.progress.v2',${JSON.stringify(JSON.stringify(progress))});localStorage.setItem('kirthiverse.hitech.mastery.evidence.v1',${JSON.stringify(JSON.stringify(mastery))});history.pushState({},'', '/progress');window.dispatchEvent(new PopStateEvent('popstate'));`);await new Promise(r=>setTimeout(r,100))}
+            const first=await evalJs(`window.KV_LESSONS[0].id`),second=await evalJs(`window.KV_LESSONS[1].id`);
+            await seed({started:[],completed:[],agePath:'all'},{events:[],lessons:{}});
+            let k=await evalJs(`document.querySelector('[data-next-step-engine="v1"] .kicker')?.textContent`);if(!k?.includes('EXPLORE'))throw new Error('EXPLORE priority failed: '+k);
+            await seed({started:[first],completed:[],agePath:'all'},{events:[],lessons:{}});
+            k=await evalJs(`document.querySelector('[data-next-step-engine="v1"] .kicker')?.textContent`);if(!k?.includes('CONTINUE'))throw new Error('CONTINUE priority failed: '+k);
+            await seed({started:[first,second],completed:[first],agePath:'all'},{events:[],lessons:{[second]:{secure:0,revisit:2,lastAt:Date.now(),assessmentIds:[]}}});
+            k=await evalJs(`document.querySelector('[data-next-step-engine="v1"] .kicker')?.textContent`);if(!k?.includes('REVISIT'))throw new Error('REVISIT priority failed: '+k);
+            const href=await evalJs(`document.querySelector('[data-next-step-engine="v1"] a')?.getAttribute('href')`);if(href!='/lesson/'+second)throw new Error('revisit target mismatch: '+href);
+            const text=await evalJs(`document.querySelector('[data-next-step-engine="v1"]')?.innerText`);for(const phrase of ['because','local deterministic recommendation','not a grade, diagnosis, ranking or automatic mastery judgement'])if(!text.includes(phrase))throw new Error('missing explainability: '+phrase);
+            for(const [w,h] of [[1440,900],[768,1024],[390,844],[320,800]]){await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<600});const overflow=await evalJs(`document.documentElement.scrollWidth>document.documentElement.clientWidth+2`);if(overflow)throw new Error('horizontal overflow '+w+'x'+h)}
+            await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+            console.log('NEXT_STEP_BROWSER_PASS');ws.close();
+          }
+          main().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Release gate summary
+        run: |
+          echo 'KVS-MASTERY-003: automated preview QA passed.'
+          echo 'Canonical baseline: 135 lessons / 72 assessments / 11 worlds.'
+          echo 'Production custom-domain cutover remains HOLD.'

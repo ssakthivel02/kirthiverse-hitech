@@ -54,16 +54,21 @@ jobs:
           const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');
           const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval failed');return r.result?.value};
           const wait=async(expr,label)=>{const end=Date.now()+18000;while(Date.now()<end){try{if(await ev(expr))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout: '+label)};
-          await wait(`window.KV_MASTERY_CONSTELLATION?.lessonCount===135&&window.KV_MASTERY_CONSTELLATION?.assessmentCount===72&&document.querySelectorAll('.mc-world').length===11`,'baseline constellation');
+          await wait(`window.KV_MASTERY_CONSTELLATION?.lessonCount===135&&window.KV_MASTERY_CONSTELLATION?.assessmentCount===72&&window.KV_MASTERY_EVIDENCE?.length===135&&document.querySelectorAll('.mc-world').length===11`,'baseline constellation');
           if(!(await ev(`document.body.innerText.includes('Not explored')&&document.body.innerText.includes('No public ranking')`)))throw Error('Baseline evidence/privacy copy missing');
-          const ids=await ev(`({l0:KV_LESSONS[0].id,l1:KV_LESSONS[1].id,l2:KV_LESSONS[2].id,a:KV_ASSESSMENTS.find(x=>x.lessonId===KV_LESSONS[2].id)?.stableAssessmentId})`);
-          if(!ids.a)throw Error('No assessment available for retry evidence test');
+          const ids=await ev(`(()=>{const retryAssessment=KV_ASSESSMENTS[0],l2=KV_LESSONS.find(l=>l.id===retryAssessment.lessonId),others=KV_LESSONS.filter(l=>l.id!==l2.id);return {l0:others[0].id,l1:others[1].id,l2:l2.id,a:retryAssessment.stableAssessmentId}})()`);
+          if(!ids.a||!ids.l0||!ids.l1||!ids.l2)throw Error('Synthetic evidence IDs unavailable');
           await ev(`localStorage.setItem('kirthiverse.hitech.static.progress.v2',JSON.stringify({started:[${JSON.stringify(ids.l0)},${JSON.stringify(ids.l1)},${JSON.stringify(ids.l2)}],completed:[${JSON.stringify(ids.l0)}],agePath:'7–10'}));localStorage.setItem('kirthiverse.hitech.confidence.v1',JSON.stringify({[${JSON.stringify(ids.l0)}]:{value:'confident'},[${JSON.stringify(ids.l2)}]:{value:'practice'}}));localStorage.setItem('kirthiverse.hitech.practice.v1',JSON.stringify({retryIds:[${JSON.stringify(ids.a)}],history:[]}));location.reload();true`);
-          await wait(`window.KV_MASTERY_CONSTELLATION?.lessonCount===135&&document.body.innerText.includes('Age path: 7–10')`,'synthetic local evidence reload');
-          const text=await ev(`document.body.innerText`);
-          for(const expected of ['Secure 1','Exploring 1','Practising 1','WHY THIS NEXT?','Retry evidence exists for this lesson.'])if(!text.includes(expected))throw Error('Missing aggregate evidence/reason: '+expected);
-          if(!(await ev(`document.querySelector('a[href="/practice.html"]')!==null`)))throw Error('Practice link missing');
-          console.log('MASTERY_CONSTELLATION_BROWSER_PASS: baseline counts, aggregate evidence states, retry priority, explainable next reason, local-only age path');
+          await wait(`window.KV_MASTERY_EVIDENCE?.length===135&&document.body.innerText.includes('Age path: 7–10')`,'synthetic local evidence reload');
+          const computed=await ev(`(()=>{const by=id=>KV_MASTERY_EVIDENCE.find(x=>x.lessonId===id);return {l0:by(${JSON.stringify(ids.l0)}),l1:by(${JSON.stringify(ids.l1)}),l2:by(${JSON.stringify(ids.l2)}),next:KV_MASTERY_CONSTELLATION}})()`);
+          if(computed.l0?.state!=='secure')throw Error('Completed+confident lesson not secure: '+JSON.stringify(computed.l0));
+          if(computed.l1?.state!=='exploring')throw Error('Started-only lesson not exploring: '+JSON.stringify(computed.l1));
+          if(computed.l2?.state!=='practising')throw Error('Retry/practice lesson not practising: '+JSON.stringify(computed.l2));
+          if(computed.l2?.why!=='Retry evidence exists for this lesson.')throw Error('Retry reason mismatch: '+JSON.stringify(computed.l2));
+          if(computed.next?.nextLessonId!==ids.l2||computed.next?.nextState!=='practising'||computed.next?.nextReason!=='Retry evidence exists for this lesson.')throw Error('Why-this-next mismatch: '+JSON.stringify(computed.next));
+          if(computed.next?.totals?.secure!==1||computed.next?.totals?.exploring!==1||computed.next?.totals?.practising!==1)throw Error('Aggregate totals mismatch: '+JSON.stringify(computed.next?.totals));
+          if(!(await ev(`document.querySelector('a[href="/practice.html"]')!==null&&document.body.innerText.includes('WHY THIS NEXT?')`)))throw Error('Practice link or Why This Next UI missing');
+          console.log('MASTERY_CONSTELLATION_BROWSER_PASS: exact lesson evidence, aggregate totals, retry priority, explainable next reason, local-only age path');
           ws.close();
           NODE
       - name: QA summary
@@ -71,9 +76,9 @@ jobs:
         run: |
           echo '### Mastery Constellation V1 QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- Canonical 135 lessons / 72 assessments / 11 worlds enforced' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Five-state deterministic evidence model checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Aggregate Secure / Exploring / Practising evidence checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Exact Secure / Exploring / Practising lesson evidence checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Aggregate evidence totals checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Retry evidence priority and confidence evidence checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Explainable Why This Next reason checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Explainable Why This Next lesson/reason checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Local-only/privacy copy checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Practice → Mastery integration retained' >> "$GITHUB_STEP_SUMMARY"

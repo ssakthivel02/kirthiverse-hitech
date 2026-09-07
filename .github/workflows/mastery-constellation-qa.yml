@@ -61,9 +61,9 @@ jobs:
           await ev(`localStorage.setItem('kirthiverse.hitech.static.progress.v2',JSON.stringify({started:[${JSON.stringify(ids.l0)},${JSON.stringify(ids.l1)},${JSON.stringify(ids.l2)}],completed:[${JSON.stringify(ids.l0)}],agePath:'7–10'}));localStorage.setItem('kirthiverse.hitech.confidence.v1',JSON.stringify({[${JSON.stringify(ids.l0)}]:{value:'confident'},[${JSON.stringify(ids.l2)}]:{value:'practice'}}));localStorage.setItem('kirthiverse.hitech.practice.v1',JSON.stringify({retryIds:[${JSON.stringify(ids.a)}],history:[]}));location.reload();true`);
           await wait(`window.KV_MASTERY_CONSTELLATION?.lessonCount===135&&document.body.innerText.includes('Age path: 7–10')`,'synthetic local evidence reload');
           const text=await ev(`document.body.innerText`);
-          for(const expected of ['SECURE SIGNAL','EXPLORING','PRACTISING','WHY THIS NEXT?','Retry evidence exists for this lesson.'])if(!text.includes(expected))throw Error('Missing evidence state/reason: '+expected);
+          for(const expected of ['Secure 1','Exploring 1','Practising 1','WHY THIS NEXT?','Retry evidence exists for this lesson.'])if(!text.includes(expected))throw Error('Missing aggregate evidence/reason: '+expected);
           if(!(await ev(`document.querySelector('a[href="/practice.html"]')!==null`)))throw Error('Practice link missing');
-          console.log('MASTERY_CONSTELLATION_BROWSER_PASS: baseline counts, five-state evidence, retry priority, explainable next reason, local-only age path');
+          console.log('MASTERY_CONSTELLATION_BROWSER_PASS: baseline counts, aggregate evidence states, retry priority, explainable next reason, local-only age path');
           ws.close();
           NODE
       - name: QA summary
@@ -72,6 +72,7 @@ jobs:
           echo '### Mastery Constellation V1 QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- Canonical 135 lessons / 72 assessments / 11 worlds enforced' >> "$GITHUB_STEP_SUMMARY"
           echo '- Five-state deterministic evidence model checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Aggregate Secure / Exploring / Practising evidence checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Retry evidence priority and confidence evidence checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Explainable Why This Next reason checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Local-only/privacy copy checked' >> "$GITHUB_STEP_SUMMARY"

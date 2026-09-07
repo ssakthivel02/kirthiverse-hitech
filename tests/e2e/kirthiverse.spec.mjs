@@ -25,8 +25,8 @@ test('home, bilingual shell and navigation are healthy', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('main')).toBeVisible()
   await expect(page.getByText('KirthiVerse', { exact: true }).first()).toBeVisible()
-  await expect(page.getByRole('link', { name: /Practice/i })).toBeVisible()
-  await expect(page.getByRole('link', { name: /Universes/i })).toBeVisible()
+  await expect(page.locator('header nav a[href="/practice"]')).toBeVisible()
+  await expect(page.locator('header nav a[href="/worlds"]')).toBeVisible()
   await expect(page.locator('body')).toContainText(/[஀-௿]/)
   await expectNoHorizontalOverflow(page)
   expect(errors).toEqual([])
@@ -36,10 +36,10 @@ test('direct lesson deep link survives reload and keeps Kiki local-only', async 
   const errors = captureRuntimeErrors(page)
   await page.goto(`/lesson/${canonicalLesson}`)
   await expect(page.locator('main')).toBeVisible()
-  await expect(page.getByText(/LEARNING OBJECTIVE/i)).toBeVisible()
-  await expect(page.getByText(/VERIFIED PRACTICE/i)).toBeVisible()
+  await expect(page.locator('.lesson-content label', { hasText: '01 // LEARNING OBJECTIVE' })).toBeVisible()
+  await expect(page.locator('.lesson-content label', { hasText: '04 // VERIFIED PRACTICE' })).toBeVisible()
   await expect(page.locator('[data-teacher="v2"]')).toHaveCount(1)
-  await expect(page.getByText(/I’m Kiki, your KirthiVerse guide/i)).toBeVisible()
+  await expect(page.locator('[data-teacher-message]')).toContainText('I’m Kiki, your KirthiVerse guide')
   await page.reload()
   await expect(page.locator('[data-teacher="v2"]')).toHaveCount(1)
   await expect(page).toHaveURL(new RegExp(`/lesson/${canonicalLesson}`))
@@ -60,8 +60,8 @@ test('Kiki Practice Arena completes a private adaptive practice loop', async ({ 
   await expect(page.locator('#practice-calm')).toBeChecked()
 
   await page.locator('[data-practice-start="3"]').click()
-  await expect(page.getByText(/KIKI PRACTICE ARENA/i).first()).toBeVisible()
-  await expect(page.getByText(/CALM MODE/i).first()).toBeVisible()
+  await expect(page.locator('.practice-session-v1')).toBeVisible()
+  await expect(page.locator('.practice-timer-v1')).toHaveText('CALM MODE')
   await expect(page.locator('#practice-answer summary')).toBeVisible()
   await page.locator('#practice-answer summary').click()
   await expect(page.locator('#practice-answer .answer')).toBeVisible()
@@ -84,7 +84,7 @@ test('Kiki Practice Arena completes a private adaptive practice loop', async ({ 
   expect(session.endedEarly).toBe(true)
 
   await page.goto('/progress')
-  await expect(page.getByText(/KIKI PRACTICE ARENA/i)).toBeVisible()
+  await expect(page.locator('[data-practice-history="v1"]')).toBeVisible()
   expect(errors).toEqual([])
 })
 
@@ -132,7 +132,7 @@ test('reduced-motion preference disables animated Kiki movement', async ({ page 
   expect(animation).toBe('none')
 })
 
-test('mobile layout has no unintended horizontal overflow', async ({ page }, testInfo) => {
+test('mobile layout has no unintended horizontal overflow', async ({ page }) => {
   const viewport = page.viewportSize()
   test.skip(!viewport || viewport.width > 500, 'Mobile-only layout guard')
   for (const route of ['/', '/worlds', '/practice', '/progress', `/lesson/${canonicalLesson}`]) {

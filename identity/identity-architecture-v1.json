@@ -1,0 +1,67 @@
+{
+  "schema": "kirthiverse.identity-architecture.v1",
+  "candidate": "MANUS-VISUAL-MASTER-05",
+  "status": "PRIVACY_CONTROLLED_FOUNDATION",
+  "cloudIdentityEnabled": false,
+  "automaticChildCloudProfile": false,
+  "localLearner": {
+    "enabled": true,
+    "accountRequired": false,
+    "claimableLater": true,
+    "claimRequiresExplicitConsent": true,
+    "migrationMode": "explicit-claim-or-link",
+    "data": ["displayName", "agePath", "language", "preferredWorlds", "sessionGoal", "progress", "confidence", "focusHistory"]
+  },
+  "roles": {
+    "learner": {
+      "owner": "learner-device",
+      "capabilities": ["learn", "local-progress", "confidence", "focus", "export-local-data"],
+      "cloudState": "disabled"
+    },
+    "parent_guardian": {
+      "owner": "verified-adult",
+      "capabilities": ["family-space", "create-or-claim-child-link", "view-authorised-progress", "manage-child-permissions", "export-child-data", "request-child-deletion"],
+      "linkRule": "adult-owned-explicit-consent",
+      "cloudState": "contract-only"
+    },
+    "student": {
+      "owner": "authorised-family-or-school-context",
+      "capabilities": ["learner-profile", "assignments", "progress", "recommendations", "teacher-preference"],
+      "linkRule": "no-hidden-auto-link",
+      "cloudState": "contract-only"
+    },
+    "teacher": {
+      "owner": "verified-educator",
+      "capabilities": ["classes", "assignments", "progress-view", "interventions", "curriculum-view"],
+      "linkRule": "approved-roster-or-explicit-authorisation",
+      "cloudState": "contract-only"
+    },
+    "school_admin": {
+      "owner": "verified-organisation-admin",
+      "capabilities": ["staff", "classes", "pupils", "curriculum-configuration", "reporting", "safeguarding-controls"],
+      "linkRule": "organisation-authorised",
+      "cloudState": "contract-only"
+    }
+  },
+  "guardrails": {
+    "childDataMinimisation": true,
+    "parentLinkOptIn": true,
+    "teacherLinkRequiresAuthorisation": true,
+    "schoolLinkRequiresAuthorisation": true,
+    "noAdvertisingIdentity": true,
+    "noHiddenRemoteTracking": true,
+    "exportBeforeCloudClaimSupported": true,
+    "deletionRequiredBeforeProductionCloudIdentity": true,
+    "consentRecordRequiredForChildLink": true,
+    "roleAccessLeastPrivilege": true
+  },
+  "claimFlow": {
+    "source": "kirthiverse.hitech.profile.local.v2",
+    "steps": ["show-local-data-summary", "select-owner-context", "verify-adult-or-school-authority-when-required", "capture-explicit-consent", "create-link", "confirm-export-and-deletion-controls"],
+    "silentMigrationAllowed": false
+  },
+  "releasePolicy": {
+    "productionCloudIdentityAllowed": false,
+    "requires": ["auth-provider-decision", "adult-verification-design", "school-roster-authorisation", "consent-ledger", "export-endpoint", "deletion-endpoint", "privacy-review", "security-review"]
+  }
+}

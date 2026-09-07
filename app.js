@@ -1,5 +1,7 @@
 (()=>{
-  const BUILD='HITECH-2026-09-03-02';
+  const BUILD=window.KV_BUILD||'HITECH-2026-09-03-14';
+  const CANDIDATE='MANUS-VISUAL-MASTER-05';
+  let renderSeq=0;
   const worlds=[
     {id:'mathematics',name:'Mathematics',icon:'∑',lab:'Quantum Number Lab',desc:'Numbers, patterns and reasoning',signal:'logic'},
     {id:'science',name:'Science',icon:'✦',lab:'Discovery Reactor',desc:'Observe, test and explain',signal:'discovery'},
@@ -45,12 +47,12 @@
     return `<div class="app">
       <div class="ambient-grid"></div><div class="aurora a1"></div><div class="aurora a2"></div><div class="scanline"></div>
       <header class="topbar">
-        ${link('/','<span class="brand-orb"><i>K</i></span><span><b>KirthiVerse</b><small>FUTURE CLASSROOM OS</small></span>','brand')}
+        ${link('/','<span class="brand-orb"><i>K</i></span><span><b>KirthiVerse</b><small>EDITORIAL LEARNING UNIVERSE</small></span>','brand')}
         <nav>${link('/','⌂ <span>Home</span>')}${link('/worlds','◫ <span>Universes</span>')}${link('/search','⌕ <span>Search</span>')}${link('/progress','◌ <span>Progress</span>')}</nav>
         <div class="system-pill"><span class="pulse"></span><b>LEARNING CORE</b><small>ONLINE</small></div>
       </header>
       <main>${content}</main>
-      <footer><span>KV // ${BUILD}</span><span>${L.length} lessons · ${A.length} assessments · ${worlds.length} universes · local-first</span></footer>
+      <footer><span>KIRTHIVERSE // VISUAL MASTER</span><span>${L.length} lessons · ${A.length} assessments · ${worlds.length} universes · local-first</span></footer>
     </div>`;
   }
 
@@ -72,7 +74,7 @@
     return `<div class="page home-page">
       <section class="hero hero-v2">
         <div class="hero-copy">
-          <div class="system-label"><span></span>KIRTHIVERSE LEARNING OS · BUILD ${BUILD}</div>
+          <div class="system-label"><span></span>KIRTHIVERSE · VISUAL MASTER</div>
           <h1>Enter the classroom<br><em>of the future.</em></h1>
           <p class="hero-lead">An immersive learning universe for ages 3–16 — eleven connected subject worlds, verified lessons, local progress and zero noisy social feeds.</p>
           <div class="actions">${next?link('/lesson/'+next.id,'Launch next mission <b>↗</b>','primary'):link('/worlds','Enter learning universes','primary')}${link('/worlds','Explore universe map','secondary')}</div>
@@ -124,21 +126,25 @@
     return `<div class="page"><div class="page-title"><span>LOCAL LEARNING SIGNAL</span><h1>Your progress constellation</h1><p>This progress is stored in this browser only. No remote child profile is required.</p></div><section class="progress-hero"><div class="progress-ring" style="--p:${pct*3.6}deg"><b>${pct}%</b><small>COMPLETE</small></div><div class="progress-copy"><span>LEARNING SIGNAL</span><h2>${s.completed.length} missions completed</h2><p>${explored} lessons explored · ${Math.max(L.length-s.completed.length,0)} missions still available</p><div class="progress-bar"><i style="width:${pct}%"></i></div></div></section><div class="results">${(s.started||[]).slice().reverse().slice(0,30).map(id=>{const l=L.find(x=>x.id===id);return l?link('/lesson/'+id,`<div><small>${s.completed.includes(id)?'MISSION COMPLETE':'MISSION IN PROGRESS'}</small><h3>${esc(title(l))}</h3><p>${esc(l.subject||l.worldId)}</p></div><span>${s.completed.includes(id)?'✓':'↗'}</span>`):''}).join('')||'<div class="empty-state"><span>◇</span><h3>No local learning signal yet.</h3><p>Open a lesson mission to begin your progress constellation.</p></div>'}</div></div>`;
   }
 
+  function emitRendered(path){
+    renderSeq++;
+    window.dispatchEvent(new CustomEvent('kv:rendered',{detail:{reason:'app-render',sequence:renderSeq,path,candidate:CANDIDATE,source:'app'}}));
+  }
+
   function render(){
     const path=location.pathname;
     const view=path==='/'?home():path==='/worlds'?worldsPage():path==='/search'?searchPage():path==='/progress'?progressPage():path.startsWith('/world/')?worldPage(decodeURIComponent(path.split('/')[2]||'')):path.startsWith('/lesson/')?lessonPage(decodeURIComponent(path.split('/')[2]||'')):home();
-    document.getElementById('app').innerHTML=shell(view); bind(); window.scrollTo({top:0,behavior:'instant'});
+    document.getElementById('app').innerHTML=shell(view); bind(); window.scrollTo({top:0,behavior:'instant'}); emitRendered(path);
   }
 
   function bind(){
-    document.querySelectorAll('[data-link]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();history.pushState({},'',a.getAttribute('href'));render()}));
-    document.querySelectorAll('[data-age]').forEach(b=>b.addEventListener('click',()=>{const s=state();s.agePath=b.dataset.age;save(s);history.pushState({},'','/worlds');render()}));
     const q=document.getElementById('q');
-    const paint=()=>{if(!q)return;const term=q.value.trim().toLowerCase();const r=term?L.filter(l=>JSON.stringify(l).toLowerCase().includes(term)).slice(0,50):[];document.getElementById('results').innerHTML=r.length?r.map(l=>link('/lesson/'+l.id,`<div><small>${esc(l.subject||l.worldId)} · ${esc(l.ageBand||'age guide')}</small><h3>${esc(title(l))}</h3><p>${esc(obj(l))}</p></div><span>↗</span>`)).join(''):(term?'<div class="empty-state"><span>⌕</span><h3>No verified lesson match.</h3><p>Try another subject, concept or age guide.</p></div>':'');document.querySelectorAll('#results [data-link]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();history.pushState({},'',a.getAttribute('href'));render()}));};
+    const paint=()=>{if(!q)return;const term=q.value.trim().toLowerCase();const r=term?L.filter(l=>JSON.stringify(l).toLowerCase().includes(term)).slice(0,50):[];document.getElementById('results').innerHTML=r.length?r.map(l=>link('/lesson/'+l.id,`<div><small>${esc(l.subject||l.worldId)} · ${esc(l.ageBand||'age guide')}</small><h3>${esc(title(l))}</h3><p>${esc(obj(l))}</p></div><span>↗</span>`)).join(''):(term?'<div class="empty-state"><span>⌕</span><h3>No verified lesson match.</h3><p>Try another subject, concept or age guide.</p></div>':'');};
     if(q)q.addEventListener('input',paint);
     document.querySelectorAll('[data-query]').forEach(b=>b.addEventListener('click',()=>{if(q){q.value=b.dataset.query;paint();q.focus();}}));
     const c=document.getElementById('complete'); if(c&&!c.disabled)c.addEventListener('click',()=>{const id=decodeURIComponent(location.pathname.split('/')[2]||'');const s=state();if(!s.completed.includes(id))s.completed.push(id);save(s);c.textContent='Mission complete ✓';c.disabled=true;});
   }
 
+  window.KV_APP_RUNTIME={candidate:CANDIDATE,version:'v22',navigation:'central-delegated',renderLifecycle:'authoritative-app-render',legacyPerLinkHandlers:false,legacyAgeHandlers:false};
   addEventListener('popstate',render); render();
 })();

@@ -1,0 +1,27 @@
+{
+  "schema": "kirthiverse.release-closure.v1",
+  "candidate": "MANUS-VISUAL-MASTER-05",
+  "branch": "design/manus-visual-master",
+  "canonical": {"lessons": 135, "assessments": 72, "worlds": 11},
+  "automatedSequence": {
+    "browserVisibleRoleOwnership": "implemented",
+    "identityInteractionQa": "required-green",
+    "privacyControlClosure": "required-green",
+    "releaseClosure": "required-green"
+  },
+  "identity": {
+    "cloudIdentityEnabled": false,
+    "silentUploadAllowed": false,
+    "automaticChildAccountAllowed": false,
+    "silentMigrationAllowed": false
+  },
+  "production": {
+    "state": "HOLD",
+    "mergeAllowed": false,
+    "productionCutoverAllowed": false,
+    "productionDnsChangeAllowed": false,
+    "ownerVisualReviewRequired": true,
+    "explicitOwnerProdGoRequired": true
+  },
+  "manualFinalGate": "OWNER_VISUAL_REVIEW_AND_EXPLICIT_PROD_GO"
+}

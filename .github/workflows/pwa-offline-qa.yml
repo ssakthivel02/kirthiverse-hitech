@@ -1,0 +1,104 @@
+name: KirthiVerse PWA Offline QA
+on:
+  push:
+    branches: [design/manus-visual-master]
+    paths:
+      - '.github/workflows/pwa-offline-qa.yml'
+      - 'sw-v30.js'
+      - 'core-runtime-v30.js'
+      - 'manifest.webmanifest'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  LOCAL_URL: http://127.0.0.1:8765
+jobs:
+  pwa-offline-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+
+      - name: Validate PWA contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('manifest.webmanifest').read_text())
+          sw=Path('sw-v30.js').read_text()
+          core=Path('core-runtime-v30.js').read_text()
+          assert m['start_url']=='/' and m['scope']=='/' and m['display']=='standalone'
+          assert m['name'].startswith('KirthiVerse') and m['icons']
+          for marker in ['kirthiverse-preview-v30','/index.html','/core-runtime-v30.js','/data/lessons-1.js','/data/assessments-1.js']:
+            assert marker in sw, marker
+          for marker in ["navigator.serviceWorker.register(SW", "updateViaCache:'none'", 'offlineCapable']:
+            assert marker in core, marker
+          print('PWA_CONTRACT_PASS: manifest + v30 service worker + bootstrap')
+          PY
+
+      - name: Browser cached-origin fallback and direct navigation
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/kv-http.log 2>&1 &
+          spid=$!
+          trap 'kill "${spid:-}" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 20); do if curl -fsS "$LOCAL_URL/index.html" -o /tmp/kv-pwa-index.html && grep -Fq 'CORE-RUNTIME-V30' /tmp/kv-pwa-index.html; then ready=1; break; fi; sleep 1; done
+          if [ "$ready" != 1 ]; then cat /tmp/kv-http.log || true; exit 1; fi
+          rm -rf /tmp/kv-pwa
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9333 --user-data-dir=/tmp/kv-pwa "$LOCAL_URL/?pwa=$(date +%s)" >/tmp/kv-pwa.log 2>&1 &
+          cpid=$!
+          debug=0
+          for i in $(seq 1 25); do if curl -fsS http://127.0.0.1:9333/json/list >/tmp/kv-pwa-pages.json; then debug=1; break; fi; sleep 1; done
+          if [ "$debug" != 1 ]; then cat /tmp/kv-pwa.log || true; exit 1; fi
+          export SPID="$spid"
+          node <<'NODE'
+          const {execFileSync}=await import('node:child_process');
+          const base=process.env.LOCAL_URL, lesson='math.number.place-value.base10.age6-8.l1';
+          const pages=await fetch('http://127.0.0.1:9333/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');
+          if(!page)throw Error('No Chromium page target');
+          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
+          await send('Runtime.enable');await send('Network.enable');await send('Page.enable');
+          const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'Runtime evaluation failed');return r.result?.value};
+          const wait=async(expression,label,timeout=20000)=>{const end=Date.now()+timeout;while(Date.now()<end){try{if(await ev(expression))return true}catch{}await new Promise(r=>setTimeout(r,300))}throw Error('Timeout: '+label)};
+          await wait(`'serviceWorker' in navigator && !!window.KV_PWA`,'PWA bootstrap');
+          await ev(`navigator.serviceWorker.register('/sw-v30.js',{updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);
+          const cacheOk=await ev(`caches.keys().then(k=>k.includes('kirthiverse-preview-v30'))`);if(!cacheOk)throw Error('v30 cache not installed');
+          const cachedCore=await ev(`caches.open('kirthiverse-preview-v30').then(c=>c.match('/core-runtime-v30.js')).then(Boolean)`);if(!cachedCore)throw Error('core runtime not cached');
+          await send('Page.navigate',{url:base+'/?controlled=1'});await new Promise(r=>setTimeout(r,1600));
+          await wait(`document.readyState!=='loading'&&!!document.querySelector('main')`,'controlled online navigation');
+          await wait(`!!navigator.serviceWorker.controller`,'service worker control',20000);
+          execFileSync('kill',[process.env.SPID]);
+          await new Promise(r=>setTimeout(r,500));
+          await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);
+          await wait(`location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'origin-unavailable SPA lesson',12000);
+          await send('Page.navigate',{url:base+'/lesson/'+lesson});await new Promise(r=>setTimeout(r,2200));
+          await wait(`document.readyState!=='loading'&&location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'origin-unavailable direct lesson navigation',20000);
+          if(!(await ev(`window.KV_CORE_RUNTIME?.pwaBootstrap===true`)))throw Error('core runtime missing from cache');
+          const dataCached=await ev(`fetch('/data/lessons-1.js').then(r=>r.ok).catch(()=>false)`);if(!dataCached)throw Error('canonical lesson data unavailable from cache');
+          console.log('PWA_PASS: service worker installed and controlling page');
+          console.log('PWA_PASS: v30 cache contains core runtime');
+          console.log('PWA_PASS: SPA lesson works with origin unavailable');
+          console.log('PWA_PASS: direct canonical lesson navigation works with origin unavailable');
+          console.log('PWA_PASS: canonical lesson data served from cache');
+          ws.close();
+          NODE
+
+      - name: PWA closure summary
+        if: always()
+        run: |
+          echo '### PWA / offline QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Manifest contract checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Service worker install/control checked in Chromium localhost secure context' >> "$GITHUB_STEP_SUMMARY"
+          echo '- v30 cache presence checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- SPA lesson checked with origin unavailable' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Direct canonical lesson navigation checked with origin unavailable' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Canonical lesson data cache fallback checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production DNS: unchanged' >> "$GITHUB_STEP_SUMMARY"

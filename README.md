@@ -1,5 +1,9 @@
 # KirthiVerse Hi-Tech
 
-Canonical repository for the clean Next-Generation KirthiVerse Future Classroom website.
+Controlled visual-master preview branch for KirthiVerse.
 
-Source boundary: only the owner-provided Next-Generation source package is permitted as implementation donor. The legacy `ssakthivel02/kirthiverse` application is explicitly excluded.
+Current preview architecture:
+- learner runtime bundles: v19 + v20
+- generated visual stylesheet: `visual-system-v21.css`
+- build command: `python build-visual-css.py`
+- production DNS remains unchanged until owner-approved browser QA passes.

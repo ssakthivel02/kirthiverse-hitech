@@ -1,0 +1,110 @@
+name: KirthiVerse Performance Security QA
+on:
+  push:
+    branches: [design/manus-visual-master]
+    paths:
+      - '.github/workflows/performance-security-qa.yml'
+      - '_headers'
+      - 'security-candidate.txt'
+      - 'index.html'
+      - 'app.js'
+      - 'core-runtime-v30.js'
+      - 'learning-foundation-v19.js'
+      - 'learning-tools-v20.js'
+      - 'visual-controller-v27.js'
+      - 'learner-adaptive-v26.js'
+      - 'identity/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  RAW_CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  RAW_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+  PREVIEW_URL: https://kirthiverse-hitech.ssakthivel02.workers.dev
+  SENTINEL: KIRTHIVERSE_SECURITY_CANDIDATE_2026-09-05_1609
+jobs:
+  performance-security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v5
+      - name: Static footprint and contamination gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          h=Path('index.html').read_text(); refs=[]
+          for x in re.findall(r'(?:href|src)=["\'](/[^"\']+\.(?:css|js)(?:\?[^"\']*)?)["\']',h):
+            p=x.split('?',1)[0].lstrip('/')
+            if not p.startswith('data/') and p not in refs: refs.append(p)
+          css=sum(Path(p).stat().st_size for p in refs if p.endswith('.css')); js=sum(Path(p).stat().st_size for p in refs if p.endswith('.js')); html=Path('index.html').stat().st_size
+          assert sum(p.endswith('.js') for p in refs)<=6
+          assert css+js<=168000 and html<=32000 and css+js+html<=200000
+          corpus='\n'.join(Path(p).read_text(errors='ignore') for p in ['index.html','app.js','core-runtime-v30.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js'])
+          bad=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog','googletagmanager.com','google-analytics.com','doubleclick.net']
+          assert not [x for x in bad if x in corpus]
+          assert 'data-kv-teacher-runtime="v2"' in h and 'bilingual:true' in h
+          headers=Path('_headers').read_text()
+          for token in ['sha256-lFerLKIdSU5Ay0H2UlkGRwSJMupHUtWPLsy9DKuxO54=','sha256-z9SPI/fD9/QyU9pSmBuQDXZDab9fGhmskMWXoq1vrRY=','sha256-5Trr5fkI9mSXOcowwX6m5OCd/CRDc24wu/mhkj3Amp0=']:
+            assert token in headers
+          print(f'PERF_STATIC_PASS external={css+js} html={html} shell={css+js+html} js_requests={sum(p.endswith(".js") for p in refs)}')
+          PY
+      - name: Normalize Cloudflare credential formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os
+          t=os.environ['RAW_CLOUDFLARE_API_TOKEN'].strip().strip('"').strip("'"); a=os.environ['RAW_CLOUDFLARE_ACCOUNT_ID'].strip().strip('"').strip("'")
+          if t.lower().startswith('bearer '): t=t[7:].strip()
+          assert t and a
+          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLOUDFLARE_API_TOKEN_CLEAN='+t+'\nCLOUDFLARE_ACCOUNT_ID_CLEAN='+a+'\n')
+          PY
+      - name: Deploy exact candidate to existing preview Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN_CLEAN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID_CLEAN }}
+        run: npx --yes wrangler@4 deploy --assets=.
+      - name: Verify exact asset manifest and response security headers
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=0
+          for i in $(seq 1 30); do
+            if curl -fsS "$PREVIEW_URL/security-candidate.txt?sentinel=$i-$(date +%s)" -o /tmp/sentinel && grep -Fq "$SENTINEL" /tmp/sentinel; then ok=1; break; fi
+            sleep 2
+          done
+          test "$ok" = 1
+          curl -fsSI "$PREVIEW_URL/index.html?headers=$(date +%s)" >/tmp/kv-headers
+          tr -d '\r' </tmp/kv-headers | tee /tmp/kv-headers-clean
+          grep -Eqi '^x-content-type-options:[[:space:]]*nosniff' /tmp/kv-headers-clean
+          grep -Eqi '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/kv-headers-clean
+          grep -Eqi '^permissions-policy:.*camera=\(\).*microphone=\(\)' /tmp/kv-headers-clean
+          grep -Eqi '^x-frame-options:[[:space:]]*DENY' /tmp/kv-headers-clean
+          grep -Eqi '^content-security-policy:.*sha256-5Trr5fkI9mSXOcowwX6m5OCd/CRDc24wu/mhkj3Amp0=' /tmp/kv-headers-clean
+          echo 'SECURITY_HEADER_PASS'
+      - name: Chromium deployed runtime and network-origin QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"; test -n "$chrome"
+          rm -rf /tmp/kv-sec-profile
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9577 --user-data-dir=/tmp/kv-sec-profile "$PREVIEW_URL/?security=$(date +%s)" >/tmp/kv-sec-chrome.log 2>&1 & cpid=$!
+          trap 'kill "$cpid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9577/json/list >/tmp/pages && break || sleep 1; done
+          node <<'NODE'
+          const base=process.env.PREVIEW_URL,lesson='math.number.place-value.base10.age6-8.l1';const pages=await fetch('http://127.0.0.1:9577/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let seq=0,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');const ev=async x=>(await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true})).result?.value;const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,200))}throw Error('Timeout '+l)};await wait(`!!window.KV_APP_RUNTIME&&!!window.KV_NAVIGATION`,'runtime');await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);await wait(`!!document.querySelector('[data-teacher="v1"]')&&window.KV_TEACHER_RUNTIME?.bilingual===true`,'bilingual teacher');const origins=await ev(`[...new Set(performance.getEntriesByType('resource').map(x=>new URL(x.name).origin))]`);const allowed=[new URL(base).origin,'https://fonts.googleapis.com','https://fonts.gstatic.com'];const bad=origins.filter(x=>!allowed.includes(x));if(bad.length)throw Error('Unexpected origins '+JSON.stringify(bad));console.log('SECURITY_BROWSER_PASS '+JSON.stringify(origins));ws.close();
+          NODE
+      - name: Closure summary
+        if: always()
+        run: |
+          echo '### Performance + security closure' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Exact asset manifest proven by unique sentinel' >> "$GITHUB_STEP_SUMMARY"
+          echo '- External CSS/JS ceiling: 168,000 bytes' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Strict CSP allows only the three audited inline runtime hashes' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Security response headers enforced' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Bilingual Animated Teacher verified in deployed Chromium runtime' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Unexpected network origins rejected' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production DNS unchanged; no paid Cloudflare services added' >> "$GITHUB_STEP_SUMMARY"

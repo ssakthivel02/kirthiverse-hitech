@@ -1,1 +1,20 @@
-{"name":"KirthiVerse Future Classroom","short_name":"KirthiVerse","start_url":"/","display":"standalone","background_color":"#07111f","theme_color":"#07111f"}
+{
+  "id":"/",
+  "name":"KirthiVerse — Editorial Learning Universe",
+  "short_name":"KirthiVerse",
+  "description":"A local-first learning universe for ages 3–16 with verified lessons and assessments.",
+  "start_url":"/",
+  "scope":"/",
+  "display":"standalone",
+  "orientation":"any",
+  "background_color":"#FBF8F1",
+  "theme_color":"#F4EBDD",
+  "lang":"en",
+  "categories":["education","kids"],
+  "icons":[{"src":"/kirthiverse-mark.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}],
+  "shortcuts":[
+    {"name":"Learning Universes","short_name":"Universes","url":"/worlds"},
+    {"name":"Search Lessons","short_name":"Search","url":"/search"},
+    {"name":"Learning Progress","short_name":"Progress","url":"/progress"}
+  ]
+}

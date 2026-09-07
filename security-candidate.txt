@@ -1,0 +1,3 @@
+KIRTHIVERSE_SECURITY_CANDIDATE_2026-09-05_1609
+branch=design/manus-visual-master
+teacher=v1-bilingual

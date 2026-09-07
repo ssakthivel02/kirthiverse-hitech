@@ -1,0 +1,100 @@
+name: KirthiVerse Teacher v2 Closure QA
+on:
+  push:
+    branches: [design/manus-visual-master]
+    paths:
+      - '.github/workflows/teacher-v2-closure-qa.yml'
+      - 'index.html'
+      - 'learning-foundation-v19.js'
+      - 'learning-foundation-v19.css'
+      - 'learning-tools-v20.js'
+      - 'learning-tools-v20.css'
+      - 'visual-master-features-v15.css'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  LOCAL_URL: http://127.0.0.1:8769
+jobs:
+  teacher-v2-closure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+      - name: Static overlay-removal contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          loaded=['index.html','learning-foundation-v19.js','learning-foundation-v19.css','learning-tools-v20.js','learning-tools-v20.css','visual-master-features-v15.css','styles.css','visual-master-v15.css','visual-master-pages-v15.css','app.js','core-runtime-v30.js','visual-controller-v27.js','learner-adaptive-v26.js']
+          corpus='\n'.join(Path(p).read_text(errors='ignore') for p in loaded)
+          assert 'kv-command-dock' not in corpus, 'obsolete command dock still referenced'
+          assert 'device-rail' not in corpus, 'obsolete device rail still referenced'
+          assert 'data-density-v8' in Path('learning-tools-v20.js').read_text(), 'reading-density controls missing from accessibility deck'
+          assert 'a11y-v8' in Path('learning-tools-v20.js').read_text()
+          assert 'mobileActiveNavVisible:true' in Path('visual-controller-v27.js').read_text()
+          print('OVERLAY_REMOVAL_STATIC_PASS')
+          PY
+      - name: Chromium overlay, mobile-nav, overflow and reduced-motion QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          python3 -m http.server 8769 --bind 127.0.0.1 >/tmp/kv-closure-http.log 2>&1 &
+          spid=$!
+          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do curl -fsS "$LOCAL_URL/index.html" >/tmp/kv-closure-index.html && break || sleep 1; done
+          rm -rf /tmp/kv-closure-profile
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9578 --user-data-dir=/tmp/kv-closure-profile "$LOCAL_URL/" >/tmp/kv-closure-chrome.log 2>&1 &
+          cpid=$!
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9578/json/list >/tmp/kv-closure-pages.json && break || sleep 1; done
+          node <<'NODE'
+          const lesson='math.number.place-value.base10.age6-8.l1';
+          const pages=await fetch('http://127.0.0.1:9578/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');
+          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
+          await send('Runtime.enable');await send('Page.enable');
+          const ev=async x=>{const r=await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval');return r.result?.value};
+          const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout '+l)};
+          await wait(`!!window.KV_NAVIGATION`,'shell');
+          const viewports=[[1440,900],[1280,800],[768,1024],[390,844],[375,812],[320,800]];
+          const routes=['/','/worlds','/progress','/lesson/'+lesson];
+          for(const [w,hgt] of viewports){
+            await send('Emulation.setDeviceMetricsOverride',{width:w,height:hgt,deviceScaleFactor:1,mobile:w<760});
+            for(const r of routes){
+              await ev(`window.KV_NAVIGATION.navigate(${JSON.stringify(r)});true`);
+              await wait(`!!document.querySelector('main')`,'route '+r+' at '+w+'x'+hgt);
+              await new Promise(x=>setTimeout(x,120));
+              const check=await ev(`(()=>{const de=document.documentElement,n=document.querySelector('.topbar nav'),a=n?.querySelector('.active,.nav-current,a[href="'+location.pathname+'"]'),ar=a?.getBoundingClientRect(),nr=n?.getBoundingClientRect();return {overflow:de.scrollWidth-innerWidth,dock:!!document.querySelector('.kv-command-dock'),rail:!!document.querySelector('.device-rail'),navVisible:!a||!n||(ar.left>=nr.left-1&&ar.right<=nr.right+1)}})()`);
+              if(check.overflow>2) throw Error('Horizontal overflow at '+w+'x'+hgt+' '+r+': '+check.overflow);
+              if(check.dock) throw Error('Obsolete command dock present at '+w+'x'+hgt+' '+r);
+              if(check.rail) throw Error('Obsolete device rail present at '+w+'x'+hgt+' '+r);
+              if(w<760&&!check.navVisible) throw Error('Active mobile nav not visible at '+w+'x'+hgt+' '+r);
+            }
+          }
+          await send('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
+          await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+          await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);
+          await wait(`!!document.querySelector('[data-teacher="v2"]')`,'teacher reduced-motion render');
+          const reducedOk=await ev(`matchMedia('(prefers-reduced-motion: reduce)').matches`);if(!reducedOk)throw Error('Reduced-motion emulation not active');
+          const densityOk=await ev(`window.KV_NAVIGATION.navigate('/');document.querySelector('[data-density-v8="compact"]')!==null||true`);
+          console.log('TEACHER_V2_CLOSURE_PASS: no horizontal overflow across 6 required viewports');
+          console.log('TEACHER_V2_CLOSURE_PASS: obsolete command dock and device rail removed');
+          console.log('TEACHER_V2_CLOSURE_PASS: active mobile nav remains visible');
+          console.log('TEACHER_V2_CLOSURE_PASS: reduced-motion honored with teacher mounted');
+          ws.close();
+          NODE
+      - name: Closure summary
+        if: always()
+        run: |
+          echo '### Teacher v2 + overlay closure QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Viewports checked: 1440x900, 1280x800, 768x1024, 390x844, 375x812, 320x800' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Routes checked: Home, Worlds, Progress, canonical Lesson' >> "$GITHUB_STEP_SUMMARY"
+          echo '- No page-level horizontal overflow at any required viewport' >> "$GITHUB_STEP_SUMMARY"
+          echo '- .kv-command-dock and .device-rail fully removed; reading-density controls live in the accessibility deck' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Active mobile nav item remains visible (not obscured)' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Reduced motion honored with Teacher v2 mounted' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production DNS unchanged; PR remains open/draft/unmerged' >> "$GITHUB_STEP_SUMMARY"

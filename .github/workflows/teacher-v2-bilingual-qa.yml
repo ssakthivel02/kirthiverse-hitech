@@ -1,0 +1,58 @@
+name: KirthiVerse Teacher v2 Bilingual QA
+on:
+  push:
+    branches: [design/manus-visual-master]
+    paths:
+      - '.github/workflows/teacher-v2-bilingual-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  LOCAL_URL: http://127.0.0.1:8768
+jobs:
+  teacher-v2-bilingual-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+      - name: Validate bilingual teacher v2 contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          h=Path('index.html').read_text()
+          for marker in ["bilingual:true","languages:['English','Tamil','English + Tamil']","kirthiverse.hitech.profile.local.v2",'lang="ta"','lang="en"','வரவேற்பு','விளக்கம்','ஊக்கம்','கேள்வி','வெற்றி','மீண்டும் முயற்சி',"voiceApi:'speechSynthesis'","tamilVoice","ta-IN","en-GB"]:
+            assert marker in h, marker
+          t=h.split('data-kv-teacher-runtime="v2"',1)[1]
+          assert 'fetch(' not in t and 'XMLHttpRequest' not in t
+          print('TEACHER_V2_BILINGUAL_CONTRACT_PASS')
+          PY
+      - name: Chromium language-mode and voice-selection QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"; test -n "$chrome"
+          python3 -m http.server 8768 --bind 127.0.0.1 >/tmp/kv-tb-http.log 2>&1 & spid=$!
+          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do curl -fsS "$LOCAL_URL/index.html" >/tmp/kv-tb-index.html && break || sleep 1; done
+          rm -rf /tmp/kv-tb-profile
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9567 --user-data-dir=/tmp/kv-tb-profile "$LOCAL_URL/" >/tmp/kv-tb-chrome.log 2>&1 & cpid=$!
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9567/json/list >/tmp/kv-tb-pages.json && break || sleep 1; done
+          node <<'NODE'
+          const lesson='math.number.place-value.base10.age6-8.l1',pages=await fetch('http://127.0.0.1:9567/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let seq=0,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');const ev=async x=>{const r=await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval');return r.result?.value};const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,200))}throw Error('Timeout '+l)};await wait(`!!window.KV_NAVIGATION`,'shell');await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);await wait(`!!document.querySelector('[data-teacher="v2"]')`,'teacher');
+          async function mode(language){await ev(`localStorage.setItem('kirthiverse.hitech.profile.local.v2',JSON.stringify({displayName:'Learner',agePath:'all',language:${JSON.stringify(language)},preferredWorlds:[],sessionGoal:20}));dispatchEvent(new CustomEvent('kv:profile'));true`);await wait(`document.querySelector('[data-teacher="v2"]')?.dataset.teacherLanguage===${JSON.stringify(language)}`,'mode '+language);return await ev(`({ta:!!document.querySelector('[data-teacher-message] span[lang="ta"]'),en:!!document.querySelector('[data-teacher-message] span[lang="en"]'),count:document.querySelectorAll('[data-teacher]').length,text:document.querySelector('[data-teacher-message]').innerText})`)}
+          let x=await mode('English');if(!x.en||x.ta||x.count!==1)throw Error('English mode failed '+JSON.stringify(x));x=await mode('Tamil');if(!x.ta||x.en||x.count!==1||!/[஀-௿]/.test(x.text))throw Error('Tamil mode failed '+JSON.stringify(x));x=await mode('English + Tamil');if(!x.ta||!x.en||x.count!==1)throw Error('Bilingual mode failed '+JSON.stringify(x));
+          const voiceMock=await ev(`(()=>{const orig=speechSynthesis.getVoices;speechSynthesis.getVoices=()=>[{lang:'en-GB',name:'MockEnGB'},{lang:'hi-IN',name:'MockHi'}];const evt=new Event('voiceschanged');speechSynthesis.dispatchEvent?.(evt);speechSynthesis.onvoiceschanged&&speechSynthesis.onvoiceschanged();document.querySelector('[data-teacher-speak]').click();return new Promise(r=>setTimeout(()=>{speechSynthesis.getVoices=orig;r(document.querySelector('[data-voice-note]').hidden===false&&document.querySelector('[data-voice-note]').textContent.toLowerCase().includes('unavailable'))},400))})()`);
+          if(!voiceMock)throw Error('Tamil-voice-unavailable fallback did not surface when no Tamil voice exists');
+          console.log('TEACHER_V2_BILINGUAL_PASS: English + Tamil + combined profile-driven modes');console.log('TEACHER_V2_BILINGUAL_PASS: Tamil-device-voice-unavailable fallback verified');ws.close();
+          NODE
+      - name: Bilingual teacher v2 summary
+        if: always()
+        run: |
+          echo '### Teacher v2 bilingual + voice QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- English, Tamil and English + Tamil modes checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Language preference remains local-only' >> "$GITHUB_STEP_SUMMARY"
+          echo '- No duplicate teacher during profile-language refresh' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Tamil-device-voice-unavailable fallback verified without misusing an English voice' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production DNS unchanged' >> "$GITHUB_STEP_SUMMARY"

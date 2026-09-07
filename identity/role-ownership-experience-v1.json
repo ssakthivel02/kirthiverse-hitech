@@ -1,0 +1,23 @@
+{
+  "schema": "kirthiverse.role-ownership-experience.v1",
+  "candidate": "MANUS-VISUAL-MASTER-05",
+  "cloudIdentityEnabled": false,
+  "surface": "/profile",
+  "roles": {
+    "learner": {"state": "local-active", "label": "Continue learning on this device", "owner": "learner-on-device"},
+    "parent_guardian": {"state": "future-verified", "label": "Manage or link a learner", "owner": "verified-adult", "linkRule": "adult-owned-explicit-consent"},
+    "student": {"state": "future-verified", "label": "My learning profile", "owner": "authorised-learner", "linkRule": "no-hidden-auto-link"},
+    "teacher": {"state": "future-authorised", "label": "Teacher workspace", "owner": "authorised-teacher", "linkRule": "approved-roster-or-explicit-authorisation"},
+    "school_admin": {"state": "future-authorised", "label": "School administration", "owner": "authorised-organisation", "linkRule": "organisation-authorised"}
+  },
+  "claimPreparation": {
+    "enabled": true,
+    "networkUpload": false,
+    "accountCreation": false,
+    "localDataDeletion": false,
+    "silentMigration": false,
+    "phases": ["choose-claim-or-link", "verify-responsible-adult-or-school", "preview-data-to-move", "explicit-consent", "link-approved-data", "confirmation", "export-delete-controls"]
+  },
+  "childSafety": {"publicProfiles": false, "advertising": false, "behaviouralAdvertising": false, "hiddenTracking": false, "automaticCloudIdentity": false, "unapprovedTeacherLinking": false, "realNameRequired": false},
+  "futureActivationGates": ["adult-verification-design", "school-roster-authorisation", "consent-ledger", "export", "deletion", "privacy-review", "security-review"]
+}

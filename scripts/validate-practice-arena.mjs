@@ -18,7 +18,8 @@ for (const forbidden of ['fetch(','XMLHttpRequest','WebSocket(','navigator.sendB
   need(!js.includes(forbidden),`forbidden network/device capability in practice runtime: ${forbidden}`);
 }
 need(css.includes('prefers-reduced-motion:reduce'),'reduced-motion support missing');
-need(css.includes('@media(max-width:520px)'),'small-screen support missing');
+need(/@media\(max-width:\d+px\)/.test(css),'small-screen support missing');
+need(css.includes('.pa-modes{grid-template-columns:1fr}'),'mobile single-column mission modes missing');
 
 const context={window:{KV_ASSESSMENTS:[]}};
 vm.createContext(context);

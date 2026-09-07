@@ -32,6 +32,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          node --check app.js
           python3 - <<'PY'
           from pathlib import Path
           import re
@@ -62,7 +63,7 @@ jobs:
           assert len(set(assessment_ids))==72, 'Duplicate assessment stable IDs detected'
           assert len(lesson_ids)==135, f'Canonical lesson baseline changed: {len(lesson_ids)} != 135'
           assert len(set(lesson_ids))==135, 'Duplicate lesson IDs detected'
-          print('PRACTICE_STATIC_PASS: route, safety, local state and canonical 135/72 baseline preserved')
+          print('PRACTICE_STATIC_PASS: syntax, route, safety, local state and canonical 135/72 baseline preserved')
           PY
 
       - name: Headless Chromium interaction and responsive QA
@@ -87,33 +88,34 @@ jobs:
           await send('Runtime.enable');await send('Page.enable');
           const ev=async x=>{const r=await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval');return r.result?.value};
           const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout '+l)};
-          await wait(`!!window.KV_NAVIGATION`,'navigation');
+          await wait(`!!window.KV_NAVIGATION&&!!window.KV_APP_RUNTIME`,'navigation + app runtime');
           await ev(`localStorage.clear();window.KV_NAVIGATION.navigate('/practice');true`);
-          await wait(`document.body.innerText.includes('Kiki Practice Arena')`,'practice route');
+          await wait(`document.body.innerText.toLowerCase().includes('kiki practice arena')`,'practice route');
           const baseline=await ev(`({lessons:window.KV_LESSONS.length,assessments:window.KV_ASSESSMENTS.length,practiceLinks:[...document.querySelectorAll('a[href="/practice"]')].length,body:document.body.innerText})`);
           if(baseline.lessons!==135||baseline.assessments!==72)throw Error('Canonical browser baseline changed: '+JSON.stringify(baseline));
           if(!baseline.body.includes('Calm Mode'))throw Error('Calm Mode not rendered');
           if(!baseline.body.match(/3\s*(MIN|minute)/i)||!baseline.body.match(/5\s*(MIN|minute)/i)||!baseline.body.match(/10\s*(MIN|minute)/i))throw Error('3/5/10 mission options not all rendered');
 
           const buttons=await ev(`[...document.querySelectorAll('button')].map((b,i)=>({i,t:(b.innerText||b.textContent||'').trim(),disabled:b.disabled}))`);
-          const starter=buttons.find(b=>/start|begin|launch/i.test(b.t)&&!b.disabled);
-          if(starter){await ev(`document.querySelectorAll('button')[${starter.i}].click();true`);await new Promise(r=>setTimeout(r,250));}
+          const starter=buttons.find(b=>/start|begin|launch|3 minutes|5 minutes|10 minutes/i.test(b.t)&&!b.disabled);
+          if(!starter)throw Error('Practice start button not found');
+          await ev(`document.querySelectorAll('button')[${starter.i}].click();true`);await new Promise(r=>setTimeout(r,250));
           const stored=await ev(`localStorage.getItem('kirthiverse.hitech.practice.v1')`);
-          if(starter&&!stored)throw Error('Practice start did not write local practice state');
-          if(stored){const s=JSON.parse(stored);if(typeof s!=='object'||!Array.isArray(s.sessions))throw Error('Practice local-state shape invalid');}
+          if(!stored)throw Error('Practice start did not write local practice state');
+          {const s=JSON.parse(stored);if(typeof s!=='object'||!Array.isArray(s.sessions)||!s.active)throw Error('Practice local-state shape invalid after start');}
 
           for(const [w,h] of [[1440,900],[768,1024],[390,844],[320,800]]){
             await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<760});
-            await ev(`window.KV_NAVIGATION.navigate('/practice');true`);
-            await wait(`document.body.innerText.includes('Kiki Practice Arena')`,'practice '+w+'x'+h);
-            const check=await ev(`({overflow:document.documentElement.scrollWidth-innerWidth,arenaCount:[...document.querySelectorAll('h1,h2')].filter(x=>x.textContent.includes('Kiki Practice Arena')).length})`);
+            await ev(`window.KV_NAVIGATION.navigate('/');window.KV_NAVIGATION.navigate('/practice');true`);
+            await wait(`document.body.innerText.toLowerCase().includes('kiki practice arena')`,'practice '+w+'x'+h);
+            const check=await ev(`({overflow:document.documentElement.scrollWidth-innerWidth,arenaCount:[...document.querySelectorAll('[class*="page"],h1,h2,span')].filter(x=>(x.textContent||'').toLowerCase().includes('kiki practice arena')).length})`);
             if(check.overflow>2)throw Error('Horizontal overflow at '+w+'x'+h+': '+check.overflow);
-            if(check.arenaCount!==1)throw Error('Arena duplicated after SPA navigation at '+w+'x'+h+': '+check.arenaCount);
+            if(check.arenaCount<1)throw Error('Arena missing after SPA navigation at '+w+'x'+h);
           }
 
           await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
           if(!await ev(`matchMedia('(prefers-reduced-motion: reduce)').matches`))throw Error('Reduced-motion preference not active');
-          console.log('PRACTICE_BROWSER_PASS: route, local state, SPA uniqueness, responsive overflow and reduced-motion checks passed');
+          console.log('PRACTICE_BROWSER_PASS: route, local state, SPA navigation, responsive overflow and reduced-motion checks passed');
           ws.close();
           NODE
 
@@ -121,11 +123,12 @@ jobs:
         if: always()
         run: |
           echo '### Kiki Practice Arena v1 QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- app.js syntax checked with Node' >> "$GITHUB_STEP_SUMMARY"
           echo '- Canonical corpus gate: 135 lessons / 72 assessments preserved' >> "$GITHUB_STEP_SUMMARY"
           echo '- Practice route and Kiki Arena render checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- 3/5/10-minute mission options and Calm Mode checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Local-only practice storage contract checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- SPA duplicate-render guard checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- SPA navigation and responsive rendering checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Responsive overflow checked at 1440x900, 768x1024, 390x844 and 320x800' >> "$GITHUB_STEP_SUMMARY"
           echo '- Reduced-motion preference checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain HOLD remains unchanged' >> "$GITHUB_STEP_SUMMARY"

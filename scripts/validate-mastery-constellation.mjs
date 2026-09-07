@@ -4,7 +4,7 @@ const need=(ok,msg)=>{if(!ok)throw new Error(msg)};
 const read=p=>fs.readFileSync(p,'utf8');
 const html=read('mastery.html'),js=read('mastery-constellation.js'),css=read('mastery-constellation.css');
 for(const marker of ['mastery-constellation.css','mastery-constellation.js','data/lessons-1.js','data/lessons-6.js','data/assessments-1.js','data/assessments-3.js'])need(html.includes(marker),`mastery.html missing ${marker}`);
-for(const marker of ['not-explored','exploring','practising','developing','secure','WHY THIS NEXT?','localStorage','kirthiverse.hitech.static.progress.v2','kirthiverse.hitech.confidence.v1','kirthiverse.hitech.practice.v1'])need(js.includes(marker),`mastery runtime missing ${marker}`);
+for(const marker of ['not-explored','exploring','practising','developing','secure','WHY THIS NEXT?','localStorage','kirthiverse.hitech.static.progress.v2','kirthiverse.hitech.confidence.v1','kirthiverse.hitech.practice.v1','KV_MASTERY_EVIDENCE','nextLessonId','nextReason'])need(js.includes(marker),`mastery runtime missing ${marker}`);
 for(const forbidden of ['fetch(','XMLHttpRequest','WebSocket(','navigator.sendBeacon','getUserMedia','MediaRecorder'])need(!js.includes(forbidden),`forbidden capability in mastery runtime: ${forbidden}`);
 need(css.includes('prefers-reduced-motion:reduce'),'reduced-motion support missing');
 need(/@media\(max-width:\d+px\)/.test(css),'responsive breakpoint missing');
@@ -18,4 +18,4 @@ need(js.includes("positive>=2&&!retry"),'repeated-positive secure rule missing')
 need(js.includes("completed.has(id)||conf==='getting'"),'developing rule missing');
 need(js.includes("started.has(id)"),'exploring rule missing');
 need(js.includes("No local learning evidence exists for this lesson yet."),'no-evidence explanation missing');
-console.log('MASTERY_CONSTELLATION_CONTRACT_PASS: 135 lessons, 72 assessments, explainable five-state local-only model');
+console.log('MASTERY_CONSTELLATION_CONTRACT_PASS: 135 lessons, 72 assessments, explainable five-state local-only model with inspectable evidence');

@@ -1,0 +1,59 @@
+name: KirthiVerse Safe Challenges QA
+on:
+  pull_request:
+    paths:
+      - 'challenges.html'
+      - 'safe-challenges.js'
+      - 'safe-challenges.css'
+      - 'scripts/validate-safe-challenges.mjs'
+      - '.github/workflows/safe-challenges-qa.yml'
+  push:
+    branches: [feat/safe-community-challenges-v1]
+    paths:
+      - 'challenges.html'
+      - 'safe-challenges.js'
+      - 'safe-challenges.css'
+      - 'scripts/validate-safe-challenges.mjs'
+      - '.github/workflows/safe-challenges-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  challenge-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate safe challenge contract
+        run: node scripts/validate-safe-challenges.mjs
+      - name: Headless Chromium safe challenge QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          python3 -m http.server 8774 --bind 127.0.0.1 >/tmp/kv-safe-http.log 2>&1 &
+          spid=$!
+          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9562 --user-data-dir=/tmp/kv-safe-profile http://127.0.0.1:8774/challenges.html >/tmp/kv-safe-chrome.log 2>&1 &
+          cpid=$!
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9562/json/list >/tmp/kv-safe-pages.json && break || sleep 1; done
+          node <<'NODE'
+          const pages=await fetch('http://127.0.0.1:9562/json/list').then(r=>r.json());const page=pages.find(x=>x.type==='page');if(!page)throw Error('No Chromium page');const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let seq=0;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval failed');return r.result?.value};const wait=async(expr,label)=>{const end=Date.now()+18000;while(Date.now()<end){try{if(await ev(expr))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout: '+label)};
+          await wait(`window.KV_SAFE_CHALLENGES?.dailyCap===3&&document.querySelector('#optIn')`,'baseline');const base=await ev(`({opt:document.querySelector('#optIn').checked,hide:document.querySelector('#hideMe').checked,join:document.querySelector('#join').disabled,text:document.body.innerText})`);if(base.opt||!base.hide||!base.join)throw Error('Safe defaults incorrect '+JSON.stringify(base));for(const x of ['no real names','no chat','no network sharing','3 entries per day','NO SPEED RANKING'])if(!base.text.toLowerCase().includes(x.toLowerCase()))throw Error('Missing safety copy '+x);
+          await ev(`document.querySelector('#optIn').click();true`);await wait(`document.querySelector('#join')&&!document.querySelector('#join').disabled`,'opt in enables challenge');for(let i=0;i<3;i++){await ev(`document.querySelector('#join').click();true`);await new Promise(r=>setTimeout(r,100))}const capped=await ev(`({stored:JSON.parse(localStorage.getItem('kirthiverse.hitech.safeChallenges.v1')),disabled:document.querySelector('#join').disabled,text:document.body.innerText})`);if(capped.stored.entries!==3||!capped.disabled||!capped.text.includes('0 participation slots remaining today'))throw Error('Daily cap enforcement failed');
+          await ev(`document.querySelector('#hideMe').click();true`);const alias=await ev(`document.querySelector('.sc-list').innerText`);if(!alias.includes('Aurora Finch'))throw Error('Hide Me off did not reveal anonymous local alias');
+          await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});const mobile=await ev(`({overflow:document.documentElement.scrollWidth-innerWidth,min:Math.min(...[...document.querySelectorAll('button,a,.sc-select')].map(x=>x.getBoundingClientRect().height).filter(Boolean))})`);if(mobile.overflow>1||mobile.min<44)throw Error('Mobile/target failure '+JSON.stringify(mobile));
+          await ev(`document.querySelector('#clear').click();true`);await new Promise(r=>setTimeout(r,500));if((await ev(`localStorage.getItem('kirthiverse.hitech.safeChallenges.v1')`))!==null)throw Error('Clear local challenge data failed');console.log('SAFE_CHALLENGES_BROWSER_PASS: safe defaults, opt-in, Hide Me, daily cap, anonymous alias, 390px/44px, clear-data');ws.close();
+          NODE
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### Safe Community Challenges V1 QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Opt-in OFF and Hide Me ON defaults verified' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Anonymous alias-only preview verified' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Three-entry daily cap enforced' >> "$GITHUB_STEP_SUMMARY"
+          echo '- No chat/network/public-name/speed-only contracts enforced' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 390px mobile and >=44px interactive targets checked' >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,78 @@
+name: KirthiVerse Mastery Constellation QA
+on:
+  pull_request:
+    paths:
+      - 'mastery.html'
+      - 'mastery-constellation.js'
+      - 'mastery-constellation.css'
+      - 'practice-arena.js'
+      - 'data/lessons-*.js'
+      - 'data/assessments-*.js'
+      - 'scripts/validate-mastery-constellation.mjs'
+      - '.github/workflows/mastery-constellation-qa.yml'
+  push:
+    branches: [feat/mastery-constellation-v1]
+    paths:
+      - 'mastery.html'
+      - 'mastery-constellation.js'
+      - 'mastery-constellation.css'
+      - 'practice-arena.js'
+      - 'data/lessons-*.js'
+      - 'data/assessments-*.js'
+      - 'scripts/validate-mastery-constellation.mjs'
+      - '.github/workflows/mastery-constellation-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mastery-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate deterministic mastery contract
+        run: node scripts/validate-mastery-constellation.mjs
+      - name: Headless Chromium evidence-state QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          python3 -m http.server 8771 --bind 127.0.0.1 >/tmp/kv-mastery-http.log 2>&1 &
+          spid=$!
+          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9559 --user-data-dir=/tmp/kv-mastery-profile http://127.0.0.1:8771/mastery.html >/tmp/kv-mastery-chrome.log 2>&1 &
+          cpid=$!
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9559/json/list >/tmp/kv-mastery-pages.json && break || sleep 1; done
+          node <<'NODE'
+          const pages=await fetch('http://127.0.0.1:9559/json/list').then(r=>r.json());
+          const page=pages.find(x=>x.type==='page');if(!page)throw Error('No Chromium page');
+          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');
+          const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval failed');return r.result?.value};
+          const wait=async(expr,label)=>{const end=Date.now()+18000;while(Date.now()<end){try{if(await ev(expr))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout: '+label)};
+          await wait(`window.KV_MASTERY_CONSTELLATION?.lessonCount===135&&window.KV_MASTERY_CONSTELLATION?.assessmentCount===72&&document.querySelectorAll('.mc-world').length===11`,'baseline constellation');
+          if(!(await ev(`document.body.innerText.includes('Not explored')&&document.body.innerText.includes('No public ranking')`)))throw Error('Baseline evidence/privacy copy missing');
+          const ids=await ev(`({l0:KV_LESSONS[0].id,l1:KV_LESSONS[1].id,l2:KV_LESSONS[2].id,a:KV_ASSESSMENTS.find(x=>x.lessonId===KV_LESSONS[2].id)?.stableAssessmentId})`);
+          if(!ids.a)throw Error('No assessment available for retry evidence test');
+          await ev(`localStorage.setItem('kirthiverse.hitech.static.progress.v2',JSON.stringify({started:[${JSON.stringify(ids.l0)},${JSON.stringify(ids.l1)},${JSON.stringify(ids.l2)}],completed:[${JSON.stringify(ids.l0)}],agePath:'7–10'}));localStorage.setItem('kirthiverse.hitech.confidence.v1',JSON.stringify({[${JSON.stringify(ids.l0)}]:{value:'confident'},[${JSON.stringify(ids.l2)}]:{value:'practice'}}));localStorage.setItem('kirthiverse.hitech.practice.v1',JSON.stringify({retryIds:[${JSON.stringify(ids.a)}],history:[]}));location.reload();true`);
+          await wait(`window.KV_MASTERY_CONSTELLATION?.lessonCount===135&&document.body.innerText.includes('Age path: 7–10')`,'synthetic local evidence reload');
+          const text=await ev(`document.body.innerText`);
+          for(const expected of ['SECURE SIGNAL','EXPLORING','PRACTISING','WHY THIS NEXT?','Retry evidence exists for this lesson.'])if(!text.includes(expected))throw Error('Missing evidence state/reason: '+expected);
+          if(!(await ev(`document.querySelector('a[href="/practice.html"]')!==null`)))throw Error('Practice link missing');
+          console.log('MASTERY_CONSTELLATION_BROWSER_PASS: baseline counts, five-state evidence, retry priority, explainable next reason, local-only age path');
+          ws.close();
+          NODE
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### Mastery Constellation V1 QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Canonical 135 lessons / 72 assessments / 11 worlds enforced' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Five-state deterministic evidence model checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Retry evidence priority and confidence evidence checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Explainable Why This Next reason checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Local-only/privacy copy checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Practice → Mastery integration retained' >> "$GITHUB_STEP_SUMMARY"

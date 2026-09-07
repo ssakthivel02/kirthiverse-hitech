@@ -50,6 +50,11 @@ jobs:
           assert 'Kiki Practice Arena' in app, 'Practice Arena UI missing'
           assert 'kirthiverse.hitech.practice.v1' in app, 'Local practice state key missing'
           assert 'kirthiverse.hitech.confidence.v1' in app, 'Confidence integration missing'
+          assert 'kirthiverse.hitech.mastery.evidence.v1' in app, 'Local mastery evidence key missing'
+          assert "source:'practice-self-report'" in app, 'Evidence provenance missing'
+          assert 'automaticCorrectness:false' in app, 'Automatic-correctness prohibition missing'
+          assert 'automaticMastery:false' in app, 'Automatic-mastery prohibition missing'
+          assert 'not exam scores' in app.lower(), 'Learner-facing evidence limitation missing'
           assert 'Calm Mode' in app, 'Calm Mode missing'
           for minutes in ('3','5','10'):
               assert minutes in app, f'{minutes}-minute mission option missing'
@@ -63,7 +68,7 @@ jobs:
           assert len(set(assessment_ids))==72, 'Duplicate assessment stable IDs detected'
           assert len(lesson_ids)==135, f'Canonical lesson baseline changed: {len(lesson_ids)} != 135'
           assert len(set(lesson_ids))==135, 'Duplicate lesson IDs detected'
-          print('PRACTICE_STATIC_PASS: syntax, route, safety, local state and canonical 135/72 baseline preserved')
+          print('PRACTICE_STATIC_PASS: syntax, evidence provenance, safety and canonical 135/72 baseline preserved')
           PY
 
       - name: Headless Chromium interaction and responsive QA
@@ -88,7 +93,9 @@ jobs:
           await send('Runtime.enable');await send('Page.enable');
           const ev=async x=>{const r=await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval');return r.result?.value};
           const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout '+l)};
-          await wait(`!!window.KV_NAVIGATION&&!!window.KV_APP_RUNTIME`,'navigation + app runtime');
+          await wait(`!!window.KV_NAVIGATION&&!!window.KV_APP_RUNTIME&&!!window.KV_MASTERY_EVIDENCE`,'navigation + app + mastery evidence runtime');
+          const contract=await ev(`window.KV_MASTERY_EVIDENCE`);
+          if(!contract.localOnly||contract.automaticCorrectness!==false||contract.automaticMastery!==false||contract.source!=='practice-self-report')throw Error('Mastery evidence runtime contract invalid: '+JSON.stringify(contract));
           await ev(`localStorage.clear();window.KV_NAVIGATION.navigate('/practice');true`);
           await wait(`document.body.innerText.toLowerCase().includes('kiki practice arena')`,'practice route');
           const baseline=await ev(`({lessons:window.KV_LESSONS.length,assessments:window.KV_ASSESSMENTS.length,practiceLinks:[...document.querySelectorAll('a[href="/practice"]')].length,body:document.body.innerText})`);
@@ -104,31 +111,48 @@ jobs:
           if(!stored)throw Error('Practice start did not write local practice state');
           {const s=JSON.parse(stored);if(typeof s!=='object'||!Array.isArray(s.sessions)||!s.active)throw Error('Practice local-state shape invalid after start');}
 
+          const expected=await ev(`(()=>{const p=JSON.parse(localStorage.getItem('kirthiverse.hitech.practice.v1')),i=p.active.indexes[p.active.index],a=window.KV_ASSESSMENTS[i];return {assessmentId:a.stableAssessmentId,lessonId:a.lessonId}})()`);
+          const resultButton=await ev(`(()=>{const b=document.querySelector('[data-practice-result="practice"]');if(!b)return false;b.click();return true})()`);
+          if(!resultButton)throw Error('Need-more-practice result control missing');
+          await new Promise(r=>setTimeout(r,200));
+          const evidence=await ev(`JSON.parse(localStorage.getItem('kirthiverse.hitech.mastery.evidence.v1')||'null')`);
+          if(!evidence||!Array.isArray(evidence.events)||evidence.events.length!==1)throw Error('Mastery evidence event not recorded exactly once');
+          const e=evidence.events[0];
+          if(e.assessmentId!==expected.assessmentId||e.lessonId!==expected.lessonId||e.signal!=='revisit'||e.source!=='practice-self-report')throw Error('Mastery evidence provenance mismatch: '+JSON.stringify(e));
+          if(!evidence.lessons?.[expected.lessonId]||evidence.lessons[expected.lessonId].revisit!==1)throw Error('Lesson evidence aggregate missing revisit signal');
+
+          await ev(`window.KV_NAVIGATION.navigate('/progress');true`);
+          await wait(`!!document.querySelector('[data-mastery-evidence="v1"]')`,'progress evidence panel');
+          const progressCopy=await ev(`document.querySelector('[data-mastery-evidence="v1"]').innerText`);
+          if(!/self-reported/i.test(progressCopy)||!/not exam scores/i.test(progressCopy)||!/automatic mastery/i.test(progressCopy))throw Error('Progress evidence limitation copy missing');
+
           for(const [w,h] of [[1440,900],[768,1024],[390,844],[320,800]]){
             await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<760});
             await ev(`window.KV_NAVIGATION.navigate('/');window.KV_NAVIGATION.navigate('/practice');true`);
             await wait(`document.body.innerText.toLowerCase().includes('kiki practice arena')`,'practice '+w+'x'+h);
-            const check=await ev(`({overflow:document.documentElement.scrollWidth-innerWidth,arenaCount:[...document.querySelectorAll('[class*="page"],h1,h2,span')].filter(x=>(x.textContent||'').toLowerCase().includes('kiki practice arena')).length})`);
+            const check=await ev(`({overflow:document.documentElement.scrollWidth-innerWidth,arena:[...document.querySelectorAll('span')].some(x=>(x.textContent||'').toLowerCase().includes('kiki practice arena'))})`);
             if(check.overflow>2)throw Error('Horizontal overflow at '+w+'x'+h+': '+check.overflow);
-            if(check.arenaCount<1)throw Error('Arena missing after SPA navigation at '+w+'x'+h);
+            if(!check.arena)throw Error('Arena missing after SPA navigation at '+w+'x'+h);
           }
 
           await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
           if(!await ev(`matchMedia('(prefers-reduced-motion: reduce)').matches`))throw Error('Reduced-motion preference not active');
-          console.log('PRACTICE_BROWSER_PASS: route, local state, SPA navigation, responsive overflow and reduced-motion checks passed');
+          console.log('PRACTICE_BROWSER_PASS: local evidence provenance, route, SPA navigation, responsive overflow and reduced-motion checks passed');
           ws.close();
           NODE
 
       - name: QA summary
         if: always()
         run: |
-          echo '### Kiki Practice Arena v1 QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '### Kiki Practice Arena v1 + mastery evidence QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- app.js syntax checked with Node' >> "$GITHUB_STEP_SUMMARY"
           echo '- Canonical corpus gate: 135 lessons / 72 assessments preserved' >> "$GITHUB_STEP_SUMMARY"
           echo '- Practice route and Kiki Arena render checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- 3/5/10-minute mission options and Calm Mode checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Local-only practice storage contract checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- SPA navigation and responsive rendering checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Self-reported evidence recorded against stable assessment + lesson IDs' >> "$GITHUB_STEP_SUMMARY"
+          echo '- No automatic correctness or mastery claim permitted' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Progress evidence limitation copy checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Responsive overflow checked at 1440x900, 768x1024, 390x844 and 320x800' >> "$GITHUB_STEP_SUMMARY"
           echo '- Reduced-motion preference checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production custom-domain HOLD remains unchanged' >> "$GITHUB_STEP_SUMMARY"

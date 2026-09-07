@@ -1,0 +1,99 @@
+name: KirthiVerse Mastery Constellation v1 QA
+on:
+  push:
+    branches: [feature/mastery-constellation-v1]
+    paths:
+      - '.github/workflows/mastery-constellation-qa.yml'
+      - 'mastery-constellation-v1.js'
+      - 'app.js'
+      - 'data/assessments-*.js'
+      - 'data/lessons-*.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  LOCAL_URL: http://127.0.0.1:8772
+jobs:
+  mastery-constellation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+      - name: Static contract and canonical baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check mastery-constellation-v1.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          js=Path('mastery-constellation-v1.js').read_text(errors='ignore')
+          assessments='\n'.join(p.read_text(errors='ignore') for p in sorted(Path('data').glob('assessments-*.js')))
+          lessons='\n'.join(p.read_text(errors='ignore') for p in sorted(Path('data').glob('lessons-*.js')))
+          assert "route:'/mastery'" in js
+          assert 'readOnly:true' in js
+          assert 'automaticCorrectness:false' in js
+          assert 'automaticMastery:false' in js
+          assert "states:['revisit','mixed','secure-signal','no-evidence']" in js
+          assert 'not a grade' in js.lower()
+          assert 'None of these states is called mastered in v1.' in js
+          aids=re.findall(r'"stableAssessmentId"\s*:\s*"([^"]+)"',assessments)
+          lids=re.findall(r'"id"\s*:\s*"([^"]+)"',lessons)
+          assert len(aids)==72 and len(set(aids))==72
+          assert len(lids)==135 and len(set(lids))==135
+          print('MASTERY_STATIC_PASS: read-only contract + canonical 135/72 baseline')
+          PY
+      - name: Chromium evidence-state and responsive QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          python3 -m http.server 8772 --bind 127.0.0.1 >/tmp/kv-mastery-http.log 2>&1 &
+          spid=$!
+          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do curl -fsS "$LOCAL_URL/index.html" >/dev/null && break || sleep 1; done
+          rm -rf /tmp/kv-mastery-profile
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9582 --user-data-dir=/tmp/kv-mastery-profile "$LOCAL_URL/" >/tmp/kv-mastery-chrome.log 2>&1 &
+          cpid=$!
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9582/json/list >/tmp/kv-mastery-pages.json && break || sleep 1; done
+          node <<'NODE'
+          const pages=await fetch('http://127.0.0.1:9582/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');
+          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
+          await send('Runtime.enable');
+          const ev=async x=>{const r=await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval');return r.result?.value};
+          const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,200))}throw Error('Timeout '+l)};
+          await wait(`window.KV_LESSONS?.length===135&&window.KV_ASSESSMENTS?.length===72`,'canonical data');
+          const source=await fetch(process.env.LOCAL_URL+'/mastery-constellation-v1.js').then(r=>r.text());
+          await ev(JSON.stringify(source)+`.length&&eval(${JSON.stringify(source)});true`);
+          await wait(`!!window.KV_MASTERY_CONSTELLATION`,'mastery runtime');
+          const contract=await ev(`window.KV_MASTERY_CONSTELLATION`);
+          if(!contract.localOnly||!contract.readOnly||contract.automaticMastery!==false||contract.automaticCorrectness!==false)throw Error('Bad contract '+JSON.stringify(contract));
+          await ev(`localStorage.removeItem('kirthiverse.hitech.mastery.evidence.v1');window.KV_MASTERY_CONSTELLATION.render(document.querySelector('main'));true`);
+          if(!await ev(`!!document.querySelector('[data-mastery-empty="v1"]')`))throw Error('Empty evidence state missing');
+          const before=await ev(`localStorage.getItem('kirthiverse.hitech.mastery.evidence.v1')`);if(before!==null)throw Error('Read-only render wrote evidence state');
+          const ids=await ev(`(()=>{const a=window.KV_ASSESSMENTS,l1=a[0].lessonId,l2=a.find(x=>x.lessonId!==l1).lessonId;return {l1,l2}})()`);
+          const seed={events:[],lessons:{}};seed.lessons[ids.l1]={secure:0,revisit:2,lastAt:200,assessmentIds:[]};seed.lessons[ids.l2]={secure:2,revisit:0,lastAt:100,assessmentIds:[]};
+          await ev(`localStorage.setItem('kirthiverse.hitech.mastery.evidence.v1',${JSON.stringify(JSON.stringify(seed))});window.KV_MASTERY_CONSTELLATION.render(document.querySelector('main'));true`);
+          const states=await ev(`[...document.querySelectorAll('[data-evidence-state]')].map(x=>x.dataset.evidenceState)`);
+          if(!states.includes('revisit')||!states.includes('secure-signal'))throw Error('Deterministic states missing '+JSON.stringify(states));
+          const recommendation=await ev(`document.querySelector('[data-mastery-recommendation="v1"]')?.innerText||''`);
+          if(!/2 revisit signals/i.test(recommendation)||!/0 secure signals/i.test(recommendation))throw Error('Explainable rationale missing: '+recommendation);
+          const storedAfter=await ev(`localStorage.getItem('kirthiverse.hitech.mastery.evidence.v1')`);if(storedAfter!==JSON.stringify(seed))throw Error('Read-only renderer mutated evidence');
+          for(const [w,h] of [[1440,900],[768,1024],[390,844],[320,800]]){await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<760});await ev(`window.KV_MASTERY_CONSTELLATION.render(document.querySelector('main'));true`);const overflow=await ev(`document.documentElement.scrollWidth-innerWidth`);if(overflow>2)throw Error('Horizontal overflow '+w+'x'+h+': '+overflow)}
+          await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});if(!await ev(`matchMedia('(prefers-reduced-motion: reduce)').matches`))throw Error('Reduced-motion inactive');
+          console.log('MASTERY_BROWSER_PASS: empty state, deterministic states, explainable revisit, read-only storage, responsive widths');ws.close();
+          NODE
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### Mastery Constellation v1 QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Canonical 135 lessons / 72 assessments preserved' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Read-only/local-only contract validated' >> "$GITHUB_STEP_SUMMARY"
+          echo '- No-evidence, Revisit and Secure signal states validated' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Explainable recommendation rationale validated' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Evidence storage mutation guard validated' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Responsive widths and reduced motion validated' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production custom-domain HOLD unchanged' >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,92 @@
+name: KirthiVerse Mastery World Map Implement
+on:
+  push:
+    branches: [feature/kiki-practice-arena-v1]
+    paths:
+      - '.github/workflows/kvs-mastery-worldmap-implement.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  implement-world-map:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v5
+        with:
+          ref: feature/kiki-practice-arena-v1
+          fetch-depth: 0
+
+      - name: Patch mastery world constellation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          p=Path('app.js')
+          src=p.read_text()
+          if 'data-world-constellation="v1"' in src:
+              print('WORLD_MAP_ALREADY_PRESENT')
+              raise SystemExit(0)
+
+          start=src.index('  function progressPage(){')
+          end=src.index('\n\n  function confidenceState()', start)
+          replacement=r'''  function worldSignalMap(){
+    const s=state(),me=masteryState(),started=new Set(s.started||[]),completed=new Set(s.completed||[]);
+    return worlds.map(w=>{
+      const ls=L.filter(l=>l.worldId===w.id),ids=new Set(ls.map(l=>l.id));
+      let secure=0,revisit=0,evidenceLessons=0,lastAt=0;
+      for(const [id,v] of Object.entries(me.lessons||{}))if(ids.has(id)){
+        evidenceLessons++;secure+=v.secure||0;revisit+=v.revisit||0;lastAt=Math.max(lastAt,v.lastAt||0);
+      }
+      return {...w,total:ls.length,explored:ls.filter(l=>started.has(l.id)).length,completed:ls.filter(l=>completed.has(l.id)).length,evidenceLessons,secure,revisit,lastAt};
+    });
+  }
+
+  function progressPage(){
+    const s=state(),pct=Math.round((s.completed?.length||0)/Math.max(L.length,1)*100);
+    const explored=(s.started||[]).length;
+    const ps=practiceState(),last=ps.sessions.at(-1),me=masteryState(),evidence=Object.entries(me.lessons),secure=evidence.reduce((n,[,v])=>n+(v.secure||0),0),revisit=evidence.reduce((n,[,v])=>n+(v.revisit||0),0),revisitLesson=evidence.filter(([,v])=>(v.revisit||0)>(v.secure||0)).sort((a,b)=>(b[1].lastAt||0)-(a[1].lastAt||0))[0]?.[0],revisitItem=L.find(x=>x.id===revisitLesson);
+    const worldSignals=worldSignalMap(),recommendedWorld=worldSignals.slice().sort((a,b)=>{
+      const need=x=>(x.revisit-x.secure)*20+(x.explored-x.completed)*4+(x.total-x.explored)+(x.lastAt?1:0);
+      return need(b)-need(a);
+    })[0],recommendWhy=recommendedWorld?(recommendedWorld.revisit>recommendedWorld.secure?'more revisit signals than secure signals':recommendedWorld.explored>recommendedWorld.completed?'explored lessons are still in progress':'verified lessons remain unexplored'):'';
+    const worldRows=worldSignals.map((w,i)=>{
+      const strength=w.revisit>w.secure?'REVISIT SIGNAL':w.secure>0?'SECURE SIGNAL':w.explored>0?'IN PROGRESS':'READY TO EXPLORE';
+      return link('/world/'+w.id,`<span class="world-num">${String(i+1).padStart(2,'0')}</span><span class="world-bigicon">${w.icon}</span><div><small>${strength} · ${w.evidenceLessons} lesson${w.evidenceLessons===1?'':'s'} with practice evidence</small><h2>${w.name}</h2><p>${w.explored}/${w.total} explored · ${w.completed} completed · ${w.secure} secure · ${w.revisit} revisit</p><div class="progress-bar"><i style="width:${Math.round(w.completed/Math.max(w.total,1)*100)}%"></i></div></div><div class="world-stats"><b>${w.completed}/${w.total}</b><small>COMPLETE</small></div><span class="arrow">↗</span>`,'world-row');
+    }).join('');
+    return `<div class="page"><div class="page-title"><span>LOCAL LEARNING SIGNAL</span><h1>Your progress constellation</h1><p>This progress is stored in this browser only. No remote child profile is required.</p></div><section class="progress-hero"><div class="progress-ring" style="--p:${pct*3.6}deg"><b>${pct}%</b><small>COMPLETE</small></div><div class="progress-copy"><span>LEARNING SIGNAL</span><h2>${s.completed.length} missions completed</h2><p>${explored} lessons explored · ${Math.max(L.length-s.completed.length,0)} missions still available</p><div class="progress-bar"><i style="width:${pct}%"></i></div></div></section><section class="mission mission-v2"><div class="mission-index">PRACTICE<br><b>${ps.sessions.length}</b></div><div><span class="kicker">KIKI PRACTICE ARENA // LOCAL ONLY</span><h2>${last?`${last.reviewed} checks in your last mission`:'Build confidence with a short verified practice mission'}</h2><p>${last?`${last.gotIt} felt secure · ${last.needsPractice} marked for more practice.`:'Kiki prioritises concepts you have marked “Need more practice”, then unfinished verified lessons.'}</p></div>${link('/practice',ps.active?'Resume practice →':'Start practice →','primary')}</section><section class="glass-card worked-card" data-mastery-evidence="v1"><label>CONFIDENCE EVIDENCE // SELF-REPORTED</label><h2>${evidence.length} lessons with practice evidence</h2><p>${secure} secure signal${secure===1?'':'s'} · ${revisit} revisit signal${revisit===1?'':'s'}. These are learner self-reports after viewing canonical guidance; they are not exam scores and do not create an automatic mastery claim.</p>${revisitItem?`<p><b>Suggested revisit:</b> ${esc(title(revisitItem))}</p>${link('/lesson/'+revisitItem.id,'Review this lesson →','text-link')}`:'<p>No revisit signal is currently stronger than the secure signal for a lesson.</p>'}</section><section class="section universe-section" data-world-constellation="v1"><div class="section-head"><div><span>MASTERY CONSTELLATION // 11 WORLDS</span><h2>See where your learning signals are forming.</h2></div><p>Explored and completed counts come from local lesson progress. Secure and revisit counts are self-reported Practice Arena signals — never automatic mastery scores.</p></div>${recommendedWorld?`<section class="mission mission-v2"><div class="mission-index">NEXT<br><b>${recommendedWorld.icon}</b></div><div><span class="kicker">EXPLAINABLE WORLD RECOMMENDATION</span><h2>${esc(recommendedWorld.name)}</h2><p>Kiki suggests this world because ${esc(recommendWhy)}. This is a transparent local recommendation, not a grade or ranking.</p><small>${recommendedWorld.explored}/${recommendedWorld.total} explored · ${recommendedWorld.completed} completed · ${recommendedWorld.secure} secure · ${recommendedWorld.revisit} revisit</small></div>${link('/world/'+recommendedWorld.id,'Open this world →','primary')}</section>`:''}<div class="world-list world-list-v2" data-world-signal-count="${worldSignals.length}">${worldRows}</div><p class="count">No public leaderboard · no comparison with other children · no cloud learner identity · local-only evidence.</p></section><div class="results">${(s.started||[]).slice().reverse().slice(0,30).map(id=>{const l=L.find(x=>x.id===id);return l?link('/lesson/'+id,`<div><small>${s.completed.includes(id)?'MISSION COMPLETE':'MISSION IN PROGRESS'}</small><h3>${esc(title(l))}</h3><p>${esc(l.subject||l.worldId)}</p></div><span>${s.completed.includes(id)?'✓':'↗'}</span>`):''}).join('')||'<div class="empty-state"><span>◇</span><h3>No local learning signal yet.</h3><p>Open a lesson mission to begin your progress constellation.</p></div>'}</div></div>`;
+  }'''
+          out=src[:start]+replacement+src[end:]
+          p.write_text(out)
+
+          assessment_files=sorted(Path('data').glob('assessments-*.js'))
+          lesson_files=sorted(Path('data').glob('lessons-*.js'))
+          assessments='\n'.join(x.read_text(errors='ignore') for x in assessment_files)
+          lessons='\n'.join(x.read_text(errors='ignore') for x in lesson_files)
+          assert len(re.findall(r'"stableAssessmentId"\s*:\s*"([^"]+)"',assessments))==72
+          assert len(re.findall(r'"id"\s*:\s*"([^"]+)"',lessons))==135
+          assert 'data-world-constellation="v1"' in out
+          assert 'EXPLAINABLE WORLD RECOMMENDATION' in out
+          assert 'not a grade or ranking' in out
+          assert 'never automatic mastery scores' in out
+          print('WORLD_MAP_PATCH_PASS')
+          PY
+          node --check app.js
+          git diff --check
+
+      - name: Commit scoped implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'No implementation change required.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app.js
+          git commit -m 'feat(mastery): add 11-world learning constellation'
+          git push origin HEAD:feature/kiki-practice-arena-v1

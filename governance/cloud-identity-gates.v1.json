@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "phase": "authorised-cloud-identity",
+  "status": "architecture_only_hold",
+  "activationAllowed": false,
+  "productionAuthEnabled": false,
+  "childCloudIdentityEnabled": false,
+  "guardianLinkingEnabled": false,
+  "teacherSchoolRbacEnabled": false,
+  "rosterSyncEnabled": false,
+  "realPersonalDataAllowed": false,
+  "gates": {
+    "privacyImpactAssessmentApproved": false,
+    "guardianConsentModelApproved": false,
+    "childDataMinimisationApproved": false,
+    "retentionScheduleApproved": false,
+    "deletionExportWorkflowApproved": false,
+    "tenantIsolationVerified": false,
+    "encryptionArchitectureVerified": false,
+    "rbacThreatModelApproved": false,
+    "auditLoggingDesignApproved": false,
+    "incidentResponseRunbookApproved": false,
+    "schoolDataProcessingTermsApproved": false,
+    "ageAssuranceApproachApproved": false,
+    "accessibilityReviewApproved": false,
+    "securityTestEvidenceApproved": false
+  },
+  "prohibitedUntilAllRequiredGatesPass": [
+    "create real child cloud profile",
+    "link guardian to real learner",
+    "create real teacher or school tenant",
+    "upload or sync a roster",
+    "store child name email school id contact data",
+    "enable SSO or third-party school integration",
+    "send learner evidence to a remote API",
+    "activate production authentication"
+  ],
+  "principles": [
+    "adult-owned identity before child linkage",
+    "minimum necessary child data",
+    "explicit consent and revocation",
+    "role-scoped access",
+    "tenant isolation",
+    "encryption in transit and at rest",
+    "auditable access",
+    "export deletion and retention controls",
+    "local-first until approved"
+  ]
+}

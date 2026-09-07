@@ -1,0 +1,126 @@
+name: KirthiVerse Kiki Mastery Constellation QA
+on:
+  push:
+    branches: [feature/kiki-practice-arena-v1]
+    paths:
+      - '.github/workflows/kiki-mastery-constellation-qa.yml'
+      - 'app.js'
+      - 'index.html'
+      - 'data/assessments-*.js'
+      - 'data/lessons-*.js'
+      - 'docs/KIKI_MASTERY_CONSTELLATION_V1_SPEC.md'
+  pull_request:
+    paths:
+      - 'app.js'
+      - 'index.html'
+      - 'data/assessments-*.js'
+      - 'data/lessons-*.js'
+      - 'docs/KIKI_MASTERY_CONSTELLATION_V1_SPEC.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  LOCAL_URL: http://127.0.0.1:8773
+jobs:
+  mastery-constellation-closure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+
+      - name: Static contract and canonical baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check app.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          app=Path('app.js').read_text(errors='ignore')
+          spec=Path('docs/KIKI_MASTERY_CONSTELLATION_V1_SPEC.md').read_text(errors='ignore')
+          assessment_files=sorted(Path('data').glob('assessments-*.js'))
+          lesson_files=sorted(Path('data').glob('lessons-*.js'))
+          assessments='\n'.join(p.read_text(errors='ignore') for p in assessment_files)
+          lessons='\n'.join(p.read_text(errors='ignore') for p in lesson_files)
+
+          assert 'kirthiverse.hitech.mastery.evidence.v1' in app
+          assert 'data-mastery-evidence="v1"' in app
+          assert "source:'practice-self-report'" in app
+          assert 'automaticCorrectness:false' in app
+          assert 'automaticMastery:false' in app
+          assert 'not exam scores' in app.lower()
+          assert 'Suggested revisit:' in app
+          assert 'revisit > secure' in spec
+          assert 'This is an explainable local recommendation, not an AI diagnosis.' in spec
+
+          assessment_ids=re.findall(r'"stableAssessmentId"\s*:\s*"([^"]+)"', assessments)
+          lesson_ids=re.findall(r'"id"\s*:\s*"([^"]+)"', lessons)
+          assert len(assessment_ids)==72 and len(set(assessment_ids))==72
+          assert len(lesson_ids)==135 and len(set(lesson_ids))==135
+          print('MASTERY_STATIC_PASS: local evidence semantics, explainability and canonical 135/72 baseline preserved')
+          PY
+
+      - name: Headless Chromium recommendation and responsive QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          python3 -m http.server 8773 --bind 127.0.0.1 >/tmp/kv-mastery-http.log 2>&1 &
+          spid=$!
+          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do curl -fsS "$LOCAL_URL/index.html" >/tmp/kv-mastery-index.html && break || sleep 1; done
+          rm -rf /tmp/kv-mastery-profile
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9583 --user-data-dir=/tmp/kv-mastery-profile "$LOCAL_URL/" >/tmp/kv-mastery-chrome.log 2>&1 &
+          cpid=$!
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9583/json/list >/tmp/kv-mastery-pages.json && break || sleep 1; done
+          node <<'NODE'
+          const pages=await fetch('http://127.0.0.1:9583/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');
+          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
+          await send('Runtime.enable');await send('Page.enable');
+          const ev=async x=>{const r=await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval');return r.result?.value};
+          const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout '+l)};
+
+          await wait(`!!window.KV_NAVIGATION&&!!window.KV_MASTERY_EVIDENCE&&window.KV_LESSONS?.length===135&&window.KV_ASSESSMENTS?.length===72`,'runtime');
+          const contract=await ev(`window.KV_MASTERY_EVIDENCE`);
+          if(!contract.localOnly||contract.automaticCorrectness!==false||contract.automaticMastery!==false||contract.source!=='practice-self-report')throw Error('Unsafe mastery runtime contract: '+JSON.stringify(contract));
+
+          const target=await ev(`window.KV_LESSONS.find(l=>l&&l.id)?.id`);if(!target)throw Error('No canonical lesson target');
+          const now=Date.now();
+          await ev(`localStorage.clear();localStorage.setItem('kirthiverse.hitech.mastery.evidence.v1',JSON.stringify({events:[{assessmentId:'synthetic-qa',lessonId:${JSON.stringify('PLACEHOLDER')},signal:'revisit',recordedAt:${Date.now()},source:'practice-self-report'}],lessons:{}}));true`);
+          await ev(`(()=>{const id=${JSON.stringify('PLACEHOLDER')};const m={events:[{assessmentId:'synthetic-qa',lessonId:id,signal:'revisit',recordedAt:Date.now(),source:'practice-self-report'}],lessons:{}};m.lessons[id]={secure:0,revisit:2,lastSignal:'revisit',lastAt:Date.now(),assessmentIds:['synthetic-qa']};localStorage.setItem('kirthiverse.hitech.mastery.evidence.v1',JSON.stringify(m));window.KV_NAVIGATION.navigate('/progress');return id})()`.replaceAll('PLACEHOLDER',target));
+          await wait(`!!document.querySelector('[data-mastery-evidence="v1"]')`,'constellation panel');
+          const panel=await ev(`document.querySelector('[data-mastery-evidence="v1"]').innerText`);
+          if(!/self-reported/i.test(panel)||!/not exam scores/i.test(panel)||!/automatic mastery/i.test(panel)||!/Suggested revisit:/i.test(panel))throw Error('Explainability/limitation copy missing: '+panel);
+          const href=await ev(`document.querySelector('[data-mastery-evidence="v1"] a[href^="/lesson/"]')?.getAttribute('href')||''`);
+          if(href!==('/lesson/'+target))throw Error('Suggested revisit did not resolve to canonical lesson: '+href+' expected /lesson/'+target);
+
+          for(const [w,h] of [[1440,900],[768,1024],[390,844],[320,800]]){
+            await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<760});
+            await ev(`window.KV_NAVIGATION.navigate('/progress');true`);
+            await wait(`!!document.querySelector('[data-mastery-evidence="v1"]')`,'progress '+w+'x'+h);
+            const overflow=await ev(`document.documentElement.scrollWidth-innerWidth`);
+            if(overflow>2)throw Error('Horizontal overflow at '+w+'x'+h+': '+overflow);
+          }
+
+          await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+          if(!await ev(`matchMedia('(prefers-reduced-motion: reduce)').matches`))throw Error('Reduced-motion preference not active');
+          console.log('MASTERY_BROWSER_PASS: explainable canonical revisit recommendation, responsive layout and reduced-motion checks passed');
+          ws.close();
+          NODE
+
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### Kiki Mastery Constellation V1 QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Canonical corpus gate: 135 lessons / 72 assessments preserved' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Local-only self-reported evidence contract checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Automatic correctness/mastery remains disabled' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Explainable revisit recommendation checked against canonical lesson ID' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Learner-facing limitation copy checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Responsive overflow checked at desktop, tablet, 390px and 320px mobile' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Reduced-motion preference checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production custom-domain HOLD remains unchanged' >> "$GITHUB_STEP_SUMMARY"

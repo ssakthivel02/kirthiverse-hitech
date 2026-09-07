@@ -23,13 +23,12 @@ jobs:
         run: |
           set -euo pipefail
           if ! grep -Fq 'KVS_A11Y_CONTRAST_V1' styles.css; then
-            cat >> styles.css <<'CSS'
-
-/* KVS_A11Y_CONTRAST_V1 — final visual-master contrast safeguards. */
-.system-pill{background:#F1F6F1!important;border-color:#B8CBBF!important}
-.system-pill b,.system-pill small{color:#2F5F52!important}
-.continuity-v8 p,.continuity-row-v8 small,.a11y-v8 p{color:#425A52!important}
-CSS
+            printf '%s\n' '' \
+              '/* KVS_A11Y_CONTRAST_V1 — final visual-master contrast safeguards. */' \
+              '.system-pill{background:#F1F6F1!important;border-color:#B8CBBF!important}' \
+              '.system-pill b,.system-pill small{color:#2F5F52!important}' \
+              '.continuity-v8 p,.continuity-row-v8 small,.a11y-v8 p{color:#425A52!important}' \
+              >> styles.css
           fi
 
       - name: Commit patch

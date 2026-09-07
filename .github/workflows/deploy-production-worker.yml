@@ -1,0 +1,88 @@
+name: Deploy KirthiVerse Hi-Tech Production Worker
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kirthiverse-hitech-production-worker
+  cancel-in-progress: false
+
+env:
+  RAW_CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  RAW_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+  PRODUCTION_URL: https://kirthiverse-hitech.ssakthivel02.workers.dev
+
+jobs:
+  validate-deploy-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact main commit
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install test dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Run Playwright production gate
+        run: npm run test:e2e
+
+      - name: Normalize Cloudflare credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os
+          token=os.environ.get('RAW_CLOUDFLARE_API_TOKEN','').strip().strip('"').strip("'")
+          account=os.environ.get('RAW_CLOUDFLARE_ACCOUNT_ID','').strip().strip('"').strip("'")
+          if token.lower().startswith('bearer '): token=token[7:].strip()
+          if not token or not account: raise SystemExit('Cloudflare production credentials are unavailable.')
+          with open(os.environ['GITHUB_ENV'],'a') as f:
+              f.write('CLOUDFLARE_API_TOKEN_CLEAN='+token+'\n')
+              f.write('CLOUDFLARE_ACCOUNT_ID_CLEAN='+account+'\n')
+          PY
+
+      - name: Deploy exact main commit to existing Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN_CLEAN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID_CLEAN }}
+        run: npx --yes wrangler@4 deploy --assets=.
+
+      - name: Post-deploy production smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          bust="$(date +%s)"
+          for route in / /worlds /practice /progress /lesson/math.number.place-value.base10.age6-8.l1; do
+            code=$(curl -fsSL --retry 5 --retry-delay 2 -o /tmp/page.html -w '%{http_code}' "$PRODUCTION_URL$route?prod=$bust")
+            test "$code" = 200
+            grep -Fq '<main' /tmp/page.html || grep -Fq 'id="app"' /tmp/page.html
+          done
+          curl -fsSL --retry 5 "$PRODUCTION_URL/app.js?prod=$bust" -o /tmp/app.js
+          grep -Fq "practiceArena:'v1-local-only'" /tmp/app.js
+          curl -fsSL --retry 5 "$PRODUCTION_URL/index.html?prod=$bust" -o /tmp/index.html
+          grep -Fq "I’m Kiki, your KirthiVerse guide" /tmp/index.html
+          echo 'PRODUCTION_SMOKE_PASS: Kiki + Practice Arena v1 + core routes'
+
+      - name: Upload production Playwright evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-playwright-${{ github.sha }}
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: ignore
+          retention-days: 14

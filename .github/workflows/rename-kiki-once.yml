@@ -19,7 +19,7 @@ jobs:
           ref: design/manus-visual-master
           fetch-depth: 0
 
-      - name: Rename Kiri to Kiki everywhere in tracked text
+      - name: Rename Kiri to Kiki everywhere in tracked product text
         shell: bash
         run: |
           set -euo pipefail
@@ -27,12 +27,15 @@ jobs:
           from pathlib import Path
           import subprocess
 
+          self_path=Path('.github/workflows/rename-kiki-once.yml')
           files = subprocess.check_output(['git','ls-files','-z']).split(b'\0')
           changed=[]
           for raw in files:
               if not raw:
                   continue
               p=Path(raw.decode())
+              if p == self_path:
+                  continue
               try:
                   data=p.read_text(encoding='utf-8')
               except Exception:
@@ -44,21 +47,20 @@ jobs:
           print('Changed files:')
           for p in changed:
               print(' -',p)
-          if not changed:
-              print('No Kiri occurrences found; nothing to change.')
           PY
 
-      - name: Enforce Kiki-only guide branding
+      - name: Enforce Kiki-only product branding
         shell: bash
         run: |
           set -euo pipefail
-          if git grep -n -I -e 'Kiri' -e 'கிறி' -- ':!data/**'; then
-            echo 'Legacy Kiri branding remains.'
+          if git grep -n -I -e 'Kiri' -e 'கிறி' -- ':!data/**' ':!.github/workflows/rename-kiki-once.yml'; then
+            echo 'Legacy Kiri branding remains in product/runtime files.'
             exit 1
           fi
           grep -q "name:'Kiki'" index.html
           grep -q "I’m Kiki, your KirthiVerse guide" index.html
           grep -q 'Kiki · Animated Teacher' index.html
+          grep -q 'நான் கிகி' index.html
           echo 'KIKI_BRANDING_PASS'
 
       - name: Commit rename if needed

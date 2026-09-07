@@ -4,6 +4,7 @@ on:
     branches: [design/manus-visual-master]
     paths:
       - '.github/workflows/teacher-v2-qa.yml'
+      - 'index.html'
   workflow_dispatch:
 permissions:
   contents: read

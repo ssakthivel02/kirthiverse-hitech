@@ -12,7 +12,7 @@
   --vm-paper-deep:#EDE4D4;
   --vm-ink:#1F2A2B;
   --vm-ink-soft:#50605B;
-  --vm-muted:#78847C;
+  --vm-muted:#5F6B64;
   --vm-line:#D9D3C6;
   --vm-green:#2F6B57;
   --vm-green-dark:#255746;
@@ -258,7 +258,7 @@ p{color:var(--vm-ink-soft)}
   color:var(--vm-ink)!important;
   box-shadow:none!important;
 }
-.learning-pulse-v4 *, .mission-rail-v4 *, .cockpit-v5 *, .mastery-v6 *, .study-studio *, .planner-v8 *, .challenge-v8 *, .a11y-v8 *, .diagnostics-v9 *, .release-v10 *, .gate-v11 *, .rc-v12 *, .closure-v13 *, .preprod-v14 *{--panel:#FBF8F1;--text:#1F2A2B;--muted:#78847C}
+.learning-pulse-v4 *, .mission-rail-v4 *, .cockpit-v5 *, .mastery-v6 *, .study-studio *, .planner-v8 *, .challenge-v8 *, .a11y-v8 *, .diagnostics-v9 *, .release-v10 *, .gate-v11 *, .rc-v12 *, .closure-v13 *, .preprod-v14 *{--panel:#FBF8F1;--text:#1F2A2B;--muted:#5F6B64}
 
 /* Footer */
 footer{margin-top:20px!important;padding:28px clamp(18px,4vw,54px)!important;border-top:1px solid var(--vm-line)!important;background:transparent!important;color:var(--vm-muted)!important;font-size:10px!important}
@@ -292,4 +292,14 @@ footer{margin-top:20px!important;padding:28px clamp(18px,4vw,54px)!important;bor
 
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}.vm-route-transition{display:none!important}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+
+/* KVS_E2E_A11Y_GATE_FIX_2026_09_07 — maintain visual layout while preserving mobile accessible names. */
+@media(max-width:720px){
+  .app .command-orbit .node span{
+    display:block!important;position:absolute!important;width:1px!important;height:1px!important;
+    padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;
+    white-space:nowrap!important;border:0!important;
+  }
 }

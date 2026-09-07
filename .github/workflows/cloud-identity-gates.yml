@@ -1,0 +1,40 @@
+name: KirthiVerse Cloud Identity Governance
+on:
+  pull_request:
+    paths:
+      - 'governance/cloud-identity-gates.v1.json'
+      - 'docs/CLOUD_IDENTITY_ARCHITECTURE_V1.md'
+      - 'scripts/validate-cloud-identity-gates.mjs'
+      - '.github/workflows/cloud-identity-gates.yml'
+  push:
+    branches: [feat/cloud-identity-governance-v1]
+    paths:
+      - 'governance/cloud-identity-gates.v1.json'
+      - 'docs/CLOUD_IDENTITY_ARCHITECTURE_V1.md'
+      - 'scripts/validate-cloud-identity-gates.mjs'
+      - '.github/workflows/cloud-identity-gates.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fail-closed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate cloud identity gates remain closed
+        run: node scripts/validate-cloud-identity-gates.mjs
+      - name: Assert no production identity implementation in governance increment
+        run: |
+          test ! -e auth-production.js
+          test ! -e child-cloud-profile.js
+          test ! -e roster-sync.js
+          echo 'IDENTITY_IMPLEMENTATION_HOLD_PASS: governance increment contains no production identity runtime'
+      - name: Governance summary
+        run: |
+          echo '### Phase 5 Cloud Identity Governance' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Architecture only / activation HOLD' >> "$GITHUB_STEP_SUMMARY"
+          echo '- All required governance gates fail closed' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production auth, child cloud identity, guardian linking, school RBAC and roster sync disabled' >> "$GITHUB_STEP_SUMMARY"

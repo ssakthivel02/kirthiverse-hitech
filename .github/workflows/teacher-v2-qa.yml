@@ -22,7 +22,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           h=Path('index.html').read_text()
-          for marker in ['data-kv-teacher-runtime="v2"','data-kv-teacher-style="v2"','KV_TEACHER_RUNTIME',"version:'v2'","name:'Kiri'",'localOnly:true','voice:true',"voiceApi:'speechSynthesis'",'autoplay:false','camera:false','microphone:false','recording:false','speechRecognition:false','remoteTts:false','tracking:false','childCloudProfile:false','visuallyDistinctStates:true','gestureIcons:true','prefers-reduced-motion:reduce']:
+          for marker in ['data-kv-teacher-runtime="v2"','data-kv-teacher-style="v2"','KV_TEACHER_RUNTIME',"version:'v2'","name:'Kiki'",'localOnly:true','voice:true',"voiceApi:'speechSynthesis'",'autoplay:false','camera:false','microphone:false','recording:false','speechRecognition:false','remoteTts:false','tracking:false','childCloudProfile:false','visuallyDistinctStates:true','gestureIcons:true','prefers-reduced-motion:reduce']:
             assert marker in h, marker
           for state in ['welcome','explain','encourage','question','success','retry']:
             assert state in h, state
@@ -30,14 +30,13 @@ jobs:
           assert 'fetch(' not in teacher and 'XMLHttpRequest' not in teacher
           for forbidden in ['getUserMedia','MediaRecorder','SpeechRecognition','webkitSpeechRecognition']:
             assert forbidden not in teacher, forbidden
-          # Six states must each define a distinct mouth path, eyebrow key and gesture icon: not text-label only.
           import re
           mouth=dict(re.findall(r"(\w+):'(M[^']+)'", teacher.split('MOUTH=',1)[1].split('};',1)[0]))
           assert len(set(mouth.values()))==6, 'mouth paths are not all distinct'
           gesture_src=teacher.split('GESTURE={',1)[1].split('},MOUTH=',1)[0]
           for s in ['welcome','explain','encourage','question','success','retry']:
             assert s+":'<" in gesture_src, 'missing distinct gesture icon for '+s
-          print('TEACHER_V2_CONTRACT_PASS: local-only, device-voice, six visually distinct states, reduced motion')
+          print('TEACHER_V2_CONTRACT_PASS: Kiki local-only, device-voice, six visually distinct states, reduced motion')
           PY
       - name: Chromium teacher v2 interaction and visual-state QA
         shell: bash
@@ -71,13 +70,13 @@ jobs:
           const speakOk=await ev(`typeof window.speechSynthesis!=='undefined'&&document.querySelector('[data-teacher-speak]')!==null&&document.querySelector('[data-teacher-stop]')!==null&&document.querySelector('[data-teacher-stop]').disabled===true`);
           if(!speakOk)throw Error('Speak/Stop controls missing or Stop not idle-disabled');
           const noAuto=await ev(`window.speechSynthesis.speaking!==true`);if(!noAuto)throw Error('Voice appears to autoplay');
-          console.log('TEACHER_V2_PASS: Kiri renders once on canonical lesson');console.log('TEACHER_V2_PASS: six visually distinct states across mouth/eyebrow/gesture/badge');console.log('TEACHER_V2_PASS: motion toggle + local persistence');console.log('TEACHER_V2_PASS: accessible collapse + live status');console.log('TEACHER_V2_PASS: Speak/Stop controls present, no autoplay');ws.close();
+          console.log('TEACHER_V2_PASS: Kiki renders once on canonical lesson');console.log('TEACHER_V2_PASS: six visually distinct states across mouth/eyebrow/gesture/badge');console.log('TEACHER_V2_PASS: motion toggle + local persistence');console.log('TEACHER_V2_PASS: accessible collapse + live status');console.log('TEACHER_V2_PASS: Speak/Stop controls present, no autoplay');ws.close();
           NODE
       - name: Teacher v2 summary
         if: always()
         run: |
           echo '### Animated Teacher v2 QA' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Original CSS/SVG/DOM Kiri character; no third-party avatar asset' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Original CSS/SVG/DOM Kiki character; no third-party avatar asset' >> "$GITHUB_STEP_SUMMARY"
           echo '- Six visually distinct states: welcome, explain, encourage, question, success, retry' >> "$GITHUB_STEP_SUMMARY"
           echo '- Each state differs by mouth path, eyebrow pose, eye style, gesture icon, accent color and badge' >> "$GITHUB_STEP_SUMMARY"
           echo '- Local device voice via speechSynthesis; Speak/Stop controls; no autoplay' >> "$GITHUB_STEP_SUMMARY"

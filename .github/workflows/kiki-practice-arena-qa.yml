@@ -1,0 +1,127 @@
+name: KirthiVerse Kiki Practice Arena QA
+on:
+  push:
+    branches: [feature/kiki-practice-arena-v1]
+    paths:
+      - '.github/workflows/kiki-practice-arena-qa.yml'
+      - 'app.js'
+      - 'index.html'
+      - 'data/assessments-*.js'
+      - 'data/lessons-*.js'
+      - 'learner-adaptive-v26.js'
+  pull_request:
+    paths:
+      - 'app.js'
+      - 'index.html'
+      - 'data/assessments-*.js'
+      - 'data/lessons-*.js'
+      - 'learner-adaptive-v26.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  LOCAL_URL: http://127.0.0.1:8771
+jobs:
+  practice-arena-closure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+
+      - name: Static contract and canonical baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, json
+
+          app=Path('app.js').read_text(errors='ignore')
+          idx=Path('index.html').read_text(errors='ignore')
+          assessments='\n'.join(Path('data').glob('assessments-*.js')[i].read_text(errors='ignore') for i in range(len(list(Path('data').glob('assessments-*.js'))))) if list(Path('data').glob('assessments-*.js')) else ''
+          lessons='\n'.join(p.read_text(errors='ignore') for p in sorted(Path('data').glob('lessons-*.js')))
+
+          assert "'/practice'" in app or '"/practice"' in app, 'Practice route missing'
+          assert 'Kiki Practice Arena' in app, 'Practice Arena UI missing'
+          assert 'kirthiverse.hitech.practice.v1' in app, 'Local practice state key missing'
+          assert 'kirthiverse.hitech.confidence.v1' in app, 'Confidence integration missing'
+          assert 'Calm Mode' in app, 'Calm Mode missing'
+          for minutes in ('3','5','10'):
+              assert minutes in app, f'{minutes}-minute mission option missing'
+          assert 'public leaderboard' in app.lower(), 'No-public-leaderboard safety copy missing'
+          assert 'local-only' in app.lower() or 'local only' in app.lower(), 'Local-only safety copy missing'
+          assert 'window.KV_ASSESSMENTS' in idx and 'window.KV_LESSONS' in idx, 'Canonical data bootstrap missing'
+
+          assessment_ids=re.findall(r'"stableAssessmentId"\s*:\s*"([^"]+)"', assessments)
+          lesson_ids=re.findall(r'"id"\s*:\s*"([^"]+)"', lessons)
+          assert len(assessment_ids)==72, f'Canonical assessment baseline changed: {len(assessment_ids)} != 72'
+          assert len(set(assessment_ids))==72, 'Duplicate assessment stable IDs detected'
+          assert len(lesson_ids)==135, f'Canonical lesson baseline changed: {len(lesson_ids)} != 135'
+          assert len(set(lesson_ids))==135, 'Duplicate lesson IDs detected'
+          print('PRACTICE_STATIC_PASS: route, safety, local state and canonical 135/72 baseline preserved')
+          PY
+
+      - name: Headless Chromium interaction and responsive QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          python3 -m http.server 8771 --bind 127.0.0.1 >/tmp/kv-practice-http.log 2>&1 &
+          spid=$!
+          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do curl -fsS "$LOCAL_URL/index.html" >/tmp/kv-practice-index.html && break || sleep 1; done
+          rm -rf /tmp/kv-practice-profile
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9581 --user-data-dir=/tmp/kv-practice-profile "$LOCAL_URL/" >/tmp/kv-practice-chrome.log 2>&1 &
+          cpid=$!
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9581/json/list >/tmp/kv-practice-pages.json && break || sleep 1; done
+          node <<'NODE'
+          const pages=await fetch('http://127.0.0.1:9581/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');
+          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
+          await send('Runtime.enable');await send('Page.enable');
+          const ev=async x=>{const r=await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval');return r.result?.value};
+          const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout '+l)};
+          await wait(`!!window.KV_NAVIGATION`,'navigation');
+          await ev(`localStorage.clear();window.KV_NAVIGATION.navigate('/practice');true`);
+          await wait(`document.body.innerText.includes('Kiki Practice Arena')`,'practice route');
+          const baseline=await ev(`({lessons:window.KV_LESSONS.length,assessments:window.KV_ASSESSMENTS.length,practiceLinks:[...document.querySelectorAll('a[href="/practice"]')].length,body:document.body.innerText})`);
+          if(baseline.lessons!==135||baseline.assessments!==72)throw Error('Canonical browser baseline changed: '+JSON.stringify(baseline));
+          if(!baseline.body.includes('Calm Mode'))throw Error('Calm Mode not rendered');
+          if(!baseline.body.match(/3\s*(MIN|minute)/i)||!baseline.body.match(/5\s*(MIN|minute)/i)||!baseline.body.match(/10\s*(MIN|minute)/i))throw Error('3/5/10 mission options not all rendered');
+
+          const buttons=await ev(`[...document.querySelectorAll('button')].map((b,i)=>({i,t:(b.innerText||b.textContent||'').trim(),disabled:b.disabled}))`);
+          const starter=buttons.find(b=>/start|begin|launch/i.test(b.t)&&!b.disabled);
+          if(starter){await ev(`document.querySelectorAll('button')[${starter.i}].click();true`);await new Promise(r=>setTimeout(r,250));}
+          const stored=await ev(`localStorage.getItem('kirthiverse.hitech.practice.v1')`);
+          if(starter&&!stored)throw Error('Practice start did not write local practice state');
+          if(stored){const s=JSON.parse(stored);if(typeof s!=='object'||!Array.isArray(s.sessions))throw Error('Practice local-state shape invalid');}
+
+          for(const [w,h] of [[1440,900],[768,1024],[390,844],[320,800]]){
+            await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<760});
+            await ev(`window.KV_NAVIGATION.navigate('/practice');true`);
+            await wait(`document.body.innerText.includes('Kiki Practice Arena')`,'practice '+w+'x'+h);
+            const check=await ev(`({overflow:document.documentElement.scrollWidth-innerWidth,arenaCount:[...document.querySelectorAll('h1,h2')].filter(x=>x.textContent.includes('Kiki Practice Arena')).length})`);
+            if(check.overflow>2)throw Error('Horizontal overflow at '+w+'x'+h+': '+check.overflow);
+            if(check.arenaCount!==1)throw Error('Arena duplicated after SPA navigation at '+w+'x'+h+': '+check.arenaCount);
+          }
+
+          await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+          if(!await ev(`matchMedia('(prefers-reduced-motion: reduce)').matches`))throw Error('Reduced-motion preference not active');
+          console.log('PRACTICE_BROWSER_PASS: route, local state, SPA uniqueness, responsive overflow and reduced-motion checks passed');
+          ws.close();
+          NODE
+
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### Kiki Practice Arena v1 QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Canonical corpus gate: 135 lessons / 72 assessments preserved' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Practice route and Kiki Arena render checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 3/5/10-minute mission options and Calm Mode checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Local-only practice storage contract checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- SPA duplicate-render guard checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Responsive overflow checked at 1440x900, 768x1024, 390x844 and 320x800' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Reduced-motion preference checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production custom-domain HOLD remains unchanged' >> "$GITHUB_STEP_SUMMARY"

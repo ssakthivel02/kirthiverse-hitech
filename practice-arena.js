@@ -12,7 +12,7 @@
   const state=Object.assign({history:[],retryIds:[],best:0,streak:0,lastDay:'',calm:true,minutes:5,index:0,queue:[],correct:0,attempted:0},load());
 
   function usable(){return A.filter(a=>a&&a.lessonId&&prompt(a)&&a.correctAnswer);}
-  function uid(a,i){return a.id||a.assessmentId||`${a.lessonId}:${i}`;}
+  function uid(a,i){return a.stableAssessmentId||a.id||a.assessmentId||`${a.lessonId}:${i}`;}
   function shuffled(xs){return xs.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);}
   function buildQueue(minutes){
     const pool=usable();

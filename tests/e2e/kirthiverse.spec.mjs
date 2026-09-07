@@ -60,8 +60,8 @@ test('Kiki Practice Arena completes a private adaptive practice loop', async ({ 
   await expect(page.locator('#practice-calm')).toBeChecked()
 
   await page.locator('[data-practice-start="3"]').click()
-  await expect(page.locator('.practice-session-v1')).toBeVisible()
-  await expect(page.locator('.practice-timer-v1')).toHaveText('CALM MODE')
+  await expect(page.locator('.assessment').filter({ has: page.locator('[data-practice-result]') })).toBeVisible()
+  await expect(page.locator('#practice-status')).toContainText('Calm Mode')
   await expect(page.locator('#practice-answer summary')).toBeVisible()
   await page.locator('#practice-answer summary').click()
   await expect(page.locator('#practice-answer .answer')).toBeVisible()

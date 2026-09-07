@@ -1,0 +1,61 @@
+name: KirthiVerse Classroom Studio QA
+on:
+  pull_request:
+    paths:
+      - 'classroom.html'
+      - 'classroom-studio.js'
+      - 'classroom-studio.css'
+      - 'scripts/validate-classroom-studio.mjs'
+      - '.github/workflows/classroom-studio-qa.yml'
+  push:
+    branches: [feat/classroom-studio-v1]
+    paths:
+      - 'classroom.html'
+      - 'classroom-studio.js'
+      - 'classroom-studio.css'
+      - 'scripts/validate-classroom-studio.mjs'
+      - '.github/workflows/classroom-studio-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  classroom-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate synthetic local-only contract
+        run: node scripts/validate-classroom-studio.mjs
+      - name: Headless Chromium classroom workflow QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          python3 -m http.server 8773 --bind 127.0.0.1 >/tmp/kv-classroom-http.log 2>&1 &
+          spid=$!
+          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9561 --user-data-dir=/tmp/kv-classroom-profile http://127.0.0.1:8773/classroom.html >/tmp/kv-classroom-chrome.log 2>&1 &
+          cpid=$!
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9561/json/list >/tmp/kv-classroom-pages.json && break || sleep 1; done
+          node <<'NODE'
+          const pages=await fetch('http://127.0.0.1:9561/json/list').then(r=>r.json());const page=pages.find(x=>x.type==='page');if(!page)throw Error('No Chromium page');const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let seq=0;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval failed');return r.result?.value};const wait=async(expr,label)=>{const end=Date.now()+18000;while(Date.now()<end){try{if(await ev(expr))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout: '+label)};
+          await wait(`window.KV_CLASSROOM_STUDIO?.syntheticOnly===true&&document.querySelectorAll('.cs-cell').length===6`,'classroom baseline');
+          const base=await ev(`({text:document.body.innerText,opts:document.querySelectorAll('#lessonSelect option').length,links:[...document.querySelectorAll('a')].map(a=>a.getAttribute('href'))})`);for(const x of ['synthetic learner aliases','Not a real join code','Misconception groups','Teacher recommendations','Printable / offline pack'])if(!base.text.includes(x))throw Error('Missing prototype boundary/workflow: '+x);if(base.opts<20)throw Error('Canonical lesson planner too small');if(!base.links.includes('/mastery.html')||!base.links.includes('/family.html'))throw Error('Cross-phase links missing');
+          await ev(`document.querySelector('#packMode').value='support';document.querySelector('#packMode').dispatchEvent(new Event('change',{bubbles:true}));document.querySelector('#savePack').click();document.querySelector('#lessonSelect').selectedIndex=1;document.querySelector('#lessonSelect').dispatchEvent(new Event('change',{bubbles:true}));document.querySelector('#saveAssignment').click();true`);const stored=await ev(`JSON.parse(localStorage.getItem('kirthiverse.hitech.classroom.v1'))`);if(stored.packMode!=='support'||!stored.assignmentLessonId||!stored.savedAt)throw Error('Local planner persistence failed');
+          await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});const mob=await ev(`({overflow:document.documentElement.scrollWidth-innerWidth,min:Math.min(...[...document.querySelectorAll('button,a,.cs-select')].map(x=>x.getBoundingClientRect().height).filter(Boolean))})`);if(mob.overflow>1||mob.min<40)throw Error('Mobile overflow/target failure '+JSON.stringify(mob));
+          const focus=await ev(`(()=>{const b=document.querySelector('#saveAssignment');b.focus();return document.activeElement===b})()`);if(!focus)throw Error('Keyboard focus failed');
+          await send('Emulation.setEmulatedMedia',{media:'print'});if(!(await ev(`matchMedia('print').matches`)))throw Error('Print media emulation failed');
+          await ev(`document.querySelector('#clearClassroom').click();true`);await new Promise(r=>setTimeout(r,500));const cleared=await ev(`localStorage.getItem('kirthiverse.hitech.classroom.v1')`);if(cleared!==null)throw Error('Classroom local data clear failed');console.log('CLASSROOM_STUDIO_BROWSER_PASS: synthetic boundary, canonical planner, local persistence/clear, cross-links, 390px, keyboard, print');ws.close();
+          NODE
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### Classroom Studio V1 QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Synthetic learner aliases and non-enrolment boundary checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Canonical lesson assignment planner checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Mastery heatmap/misconception/recommendation surfaces checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Local assignment/pack persistence and clear-data flow checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 390px mobile, keyboard focus and print media checked' >> "$GITHUB_STEP_SUMMARY"

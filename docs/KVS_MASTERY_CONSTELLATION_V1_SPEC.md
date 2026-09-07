@@ -31,9 +31,15 @@ The Constellation may recommend a lesson to revisit when local evidence supports
 - no child account requirement
 - no new canonical content
 
+## SPA integration status
+KVS-MASTERY-002 wires the validated Constellation renderer into the existing SPA as `/mastery`, loaded before `app.js`, with the learner entry exposed from Progress rather than adding another top-navigation item. This preserves the existing compact mobile navigation while keeping Mastery evidence discoverable from the learner’s progress context.
+
+The integration does not change evidence semantics, canonical content, storage scope, cloud identity, public ranking or production-domain state.
+
 ## Acceptance gates
 - 135 lessons / 72 assessments / 11 worlds remain unchanged
 - `/mastery` renders through the existing SPA lifecycle
+- Progress exposes a working Mastery Constellation entry
 - seeded evidence produces deterministic evidence states
 - recommendation rationale is visible
 - zero evidence has a clear empty state

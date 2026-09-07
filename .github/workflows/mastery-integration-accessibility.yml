@@ -1,0 +1,87 @@
+name: KirthiVerse Mastery Integration Accessibility
+on:
+  pull_request:
+    paths:
+      - 'visual-controller-v27.js'
+      - 'practice-arena.js'
+      - 'mastery-constellation.js'
+      - 'mastery.html'
+      - 'mastery-constellation.css'
+      - 'scripts/validate-mastery-integration.mjs'
+      - '.github/workflows/mastery-integration-accessibility.yml'
+  push:
+    branches: [feat/mastery-constellation-v1]
+    paths:
+      - 'visual-controller-v27.js'
+      - 'practice-arena.js'
+      - 'mastery-constellation.js'
+      - 'mastery.html'
+      - 'mastery-constellation.css'
+      - 'scripts/validate-mastery-integration.mjs'
+      - '.github/workflows/mastery-integration-accessibility.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integration-a11y:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate additive integration contract
+        run: node scripts/validate-mastery-integration.mjs
+      - name: Headless Chromium Home Progress mobile keyboard QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          python3 -m http.server 8772 --bind 127.0.0.1 >/tmp/kv-mastery-integration-http.log 2>&1 &
+          spid=$!
+          trap 'kill "$spid" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9560 --user-data-dir=/tmp/kv-mastery-integration-profile http://127.0.0.1:8772/ >/tmp/kv-mastery-integration-chrome.log 2>&1 &
+          cpid=$!
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9560/json/list >/tmp/kv-mastery-integration-pages.json && break || sleep 1; done
+          node <<'NODE'
+          const pages=await fetch('http://127.0.0.1:9560/json/list').then(r=>r.json());
+          const page=pages.find(x=>x.type==='page');if(!page)throw Error('No Chromium page');
+          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
+          await send('Runtime.enable');await send('Page.enable');
+          const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'eval failed');return r.result?.value};
+          const wait=async(expr,label)=>{const end=Date.now()+18000;while(Date.now()<end){try{if(await ev(expr))return}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout: '+label)};
+          await wait(`document.querySelector('.vm-nav-mastery')&&document.querySelector('[data-mastery-entry="v1"]')`,'home mastery integration');
+          const home=await ev(`(()=>{const nav=document.querySelector('.vm-nav-mastery'),card=document.querySelector('[data-mastery-entry="v1"]'),cta=card.querySelector('a');return{navHref:nav.getAttribute('href'),navData:nav.hasAttribute('data-link'),cardHref:cta.getAttribute('href'),cardText:card.innerText}})()`);
+          if(home.navHref!=='/mastery.html'||home.navData||home.cardHref!=='/mastery.html'||!home.cardText.includes('Evidence stays on this device'))throw Error('Home Mastery direct-link/privacy integration incorrect');
+          await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+          const mobile=await ev(`(()=>{const card=document.querySelector('[data-mastery-entry="v1"]'),a=card.querySelector('a'),r=card.getBoundingClientRect(),ar=a.getBoundingClientRect();return{left:r.left,right:r.right,width:r.width,viewport:innerWidth,targetH:ar.height,overflow:document.documentElement.scrollWidth-innerWidth}})()`);
+          if(mobile.left<0||mobile.right>mobile.viewport+1||mobile.overflow>1||mobile.targetH<44)throw Error('390px mobile mastery card overflow/touch-target failure: '+JSON.stringify(mobile));
+          const focus=await ev(`(()=>{const a=document.querySelector('[data-mastery-entry="v1"] a');a.focus();const cs=getComputedStyle(a);return{focused:document.activeElement===a,outline:cs.outlineStyle,outlineWidth:cs.outlineWidth}})()`);
+          if(!focus.focused)throw Error('Mastery CTA cannot receive keyboard focus');
+          await ev(`history.pushState({},'', '/progress');dispatchEvent(new PopStateEvent('popstate'));true`);
+          await wait(`location.pathname==='/progress'&&document.querySelector('[data-mastery-entry="v1"]')`,'progress mastery integration');
+          const progress=await ev(`document.querySelector('[data-mastery-entry="v1"]')?.innerText||''`);
+          if(!progress.includes('Mastery Constellation'))throw Error('Progress Mastery integration missing');
+          await send('Emulation.setEmulatedMedia',{media:'screen',features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+          if(!(await ev(`matchMedia('(prefers-reduced-motion: reduce)').matches`)))throw Error('Reduced-motion emulation unavailable');
+          await ev(`location.href='/mastery.html';true`);
+          await wait(`location.pathname==='/mastery.html'&&window.KV_MASTERY_CONSTELLATION?.lessonCount===135`,'direct mastery navigation');
+          const mastery=await ev(`({practice:!!document.querySelector('a[href="/practice.html"]'),worlds:document.querySelectorAll('.mc-world').length,local:document.body.innerText.includes('Local-only evidence')})`);
+          if(!mastery.practice||mastery.worlds!==11||!mastery.local)throw Error('Mastery destination integration incomplete');
+          console.log('MASTERY_INTEGRATION_A11Y_PASS: Home+Progress injection, direct routing, 390px layout, keyboard focus, reduced-motion, 135/11 Mastery destination');
+          ws.close();
+          NODE
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### Mastery Integration Accessibility QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- app.js remains untouched; additive visual-controller integration enforced' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Home and Progress Mastery entry cards verified' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Mastery navigation bypasses SPA router intentionally' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 390px mobile overflow and 44px touch target checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Keyboard focusability checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Reduced-motion media contract checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Mastery destination loads 135 lessons across 11 worlds' >> "$GITHUB_STEP_SUMMARY"

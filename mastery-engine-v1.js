@@ -14,7 +14,7 @@
 
   const WORLDS=[['mathematics','Mathematics','∑'],['science','Science','✦'],['english','English','Aa'],['tamil','Tamil','அ'],['coding-ai','Coding & AI','</>'],['geography','Geography','⌖'],['history','History','⌛'],['music-rhythm','Music & Rhythm','♫'],['art-design','Art & Design','◌'],['general-knowledge','General Knowledge','?'],['life-skills','Life Skills','＋']];
 
-  const read=(k,f)=>{try{return Object.assign(structuredClone?structuredClone(f):JSON.parse(JSON.stringify(f)),JSON.parse(localStorage.getItem(k)||'{}'))}catch{return structuredClone?structuredClone(f):JSON.parse(JSON.stringify(f))}};
+  const read=(k,f)=>{try{const raw=localStorage.getItem(k);if(raw===null)return structuredClone?structuredClone(f):JSON.parse(JSON.stringify(f));const parsed=JSON.parse(raw);return(f&&typeof f==='object'&&!Array.isArray(f)&&typeof parsed==='object'&&parsed!==null&&!Array.isArray(parsed))?Object.assign(structuredClone?structuredClone(f):JSON.parse(JSON.stringify(f)),parsed):parsed}catch{return structuredClone?structuredClone(f):JSON.parse(JSON.stringify(f))}};
 
   function worldId(subject=''){
     const x=String(subject).toLowerCase();
@@ -97,7 +97,7 @@
       const opWords={addition:['add'],subtraction:['subtract','minus'],multiplication:['multiply','times','product'],division:['divide','division']};
       for(const op of speedlab.weakOps){
         const words=opWords[op]||[op];
-        const candidate=mathsLessons.find(l=>!completed.has(l.id)&&words.some(w=>String(l.topic||'').toLowerCase().includes(w)||String(l.subtopic||'').toLowerCase().includes(w)));
+        const candidate=mathsLessons.find(l=>!completed.has(l.id)&&words.some(w=>String(l.topic||'').toLowerCase().includes(w)||String(l.subtopic||'').toLowerCase().includes(w)||String(l.id||'').toLowerCase().includes(w)));
         if(candidate)return {lesson:candidate,reason:`Quick Skills shows ${op} fluency needs more reps.`};
       }
     }

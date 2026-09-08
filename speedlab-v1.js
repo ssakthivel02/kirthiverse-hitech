@@ -116,6 +116,7 @@
   }
   function bind(){
     document.querySelectorAll('[data-start]').forEach(b=>b.addEventListener('click',()=>{const [skill,duration]=b.dataset.start.split(':');startSession(skill,Number(duration));}));
+    document.querySelectorAll('.sl-session header a').forEach(a=>a.addEventListener('click',()=>{if(session){clearInterval(session.timer);session=null;render();}}));
     const form=document.getElementById('sl-form');
     form?.addEventListener('submit',e=>{e.preventDefault();const v=document.getElementById('sl-answer').value;answer(v);});
   }

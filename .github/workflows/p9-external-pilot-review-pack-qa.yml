@@ -1,0 +1,66 @@
+name: KirthiVerse P9 External Pilot Review Pack QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'EXTERNAL_PILOT_REVIEW_PACK.md'
+      - 'PILOT_PARTICIPANT_INFORMATION_DRAFT.md'
+      - 'PILOT_DATA_MINIMISATION_RETENTION_DRAFT.md'
+      - 'PILOT_INCIDENT_ESCALATION_DRAFT.md'
+      - 'PILOT_STOPPING_CRITERIA_DRAFT.md'
+      - 'PILOT_METRICS_PROTOCOL_DRAFT.md'
+      - 'PILOT_SPECIALIST_REVIEW_CHECKLIST.md'
+      - 'PILOT_APPROVAL_REGISTER_TEMPLATE.md'
+      - 'tests/external-pilot-review-pack.test.mjs'
+      - '.github/workflows/p9-external-pilot-review-pack-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  external-review-pack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+      - name: Static review-pack contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tests/external-pilot-review-pack.test.mjs
+          node tests/external-pilot-review-pack.test.mjs
+      - name: Placeholder / approval boundary check
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          required={
+            'EXTERNAL_PILOT_REVIEW_PACK.md':['DRAFT','Repository presence is not approval','Do not use placeholder references'],
+            'PILOT_PARTICIPANT_INFORMATION_DRAFT.md':['DRAFT','Placeholder — must be replaced before use','does not contain a consent form'],
+            'PILOT_DATA_MINIMISATION_RETENTION_DRAFT.md':['DRAFT','[DECIDE]','REAL REFERENCE REQUIRED'],
+            'PILOT_INCIDENT_ESCALATION_DRAFT.md':['DRAFT','[REQUIRED]','REAL REFERENCE REQUIRED'],
+            'PILOT_STOPPING_CRITERIA_DRAFT.md':['DRAFT','[REQUIRED]','REAL REFERENCE REQUIRED'],
+            'PILOT_METRICS_PROTOCOL_DRAFT.md':['DRAFT','seven-day retention','REAL REFERENCE REQUIRED'],
+            'PILOT_SPECIALIST_REVIEW_CHECKLIST.md':['DRAFT','CHANGES REQUIRED — DO NOT START PILOT','NOT APPROVED — DO NOT START PILOT'],
+            'PILOT_APPROVAL_REGISTER_TEMPLATE.md':['BLANK TEMPLATE — NO APPROVALS RECORDED','REAL REFERENCE REQUIRED','NOT APPROVED — TEMPLATE ONLY']
+          }
+          for f,markers in required.items():
+              s=Path(f).read_text()
+              for marker in markers:
+                  assert marker in s,(f,marker)
+          print('P9_PLACEHOLDER_APPROVAL_BOUNDARY_PASS')
+          PY
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### KirthiVerse P9 External Pilot Review Pack' >> "$GITHUB_STEP_SUMMARY"
+          echo '- review pack remains DRAFT/template material only' >> "$GITHUB_STEP_SUMMARY"
+          echo '- repository merge cannot create external approval' >> "$GITHUB_STEP_SUMMARY"
+          echo '- participant information explicitly does not obtain consent' >> "$GITHUB_STEP_SUMMARY"
+          echo '- retention/contact/approval decisions remain unresolved placeholders until real review' >> "$GITHUB_STEP_SUMMARY"
+          echo '- metrics retain no-retention/no-learning-improvement claim boundary' >> "$GITHUB_STEP_SUMMARY"
+          echo '- P4 must receive real external references, not example placeholders' >> "$GITHUB_STEP_SUMMARY"

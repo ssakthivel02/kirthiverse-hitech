@@ -6,12 +6,12 @@
 
 ## Pilot identity
 
-Pilot reference: `[REQUIRED]`  
-Pilot owner: `[REQUIRED]`  
-Intended age band: `[REQUIRED]`  
-Subject/scope: `[REQUIRED]`  
-Planned duration: `[REQUIRED]`  
-Cohort ceiling: `[REQUIRED]`  
+Pilot reference: `[REQUIRED]`
+Pilot owner: `[REQUIRED]`
+Intended age band: `[REQUIRED]`
+Subject/scope: `[REQUIRED]`
+Planned duration: `[REQUIRED]`
+Cohort ceiling: `[REQUIRED]`
 Register version: `[REQUIRED]`
 
 ## Approval / review register

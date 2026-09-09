@@ -1,8 +1,13 @@
-/* KirthiVerse P0 entry points v1 — adds Diagnostic / Speed Lab / Parent Space to the top nav
-   (same DOM-injection technique visual-controller-v27.js already uses for the Profile link)
-   and a "Start here" panel on the home page. Does not modify app.js. */
+/* KirthiVerse P0 entry points v2 — adds Diagnostic / Speed Lab / Parent Space to the top nav,
+   loads the additive Educator Pilot module, and adds a "Start here" panel on the home page.
+   Does not modify app.js. */
 (()=>{
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  function loadEducatorPilot(){
+    if(!document.querySelector('link[data-ep-pilot]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/educator-pilot-v1.css?v=EDUCATOR-PILOT-1';l.dataset.epPilot='style';document.head.appendChild(l);}
+    if(!document.querySelector('script[data-ep-pilot]')){const s=document.createElement('script');s.src='/educator-pilot-v1.js?v=EDUCATOR-PILOT-1';s.dataset.epPilot='script';s.defer=true;document.body.appendChild(s);}
+  }
 
   function addNavLinks(){
     const nav=document.querySelector('.topbar nav'); if(!nav)return;
@@ -34,10 +39,12 @@
         <a class="p0-card" data-link href="/speedlab"><b>2</b><h3>Quick Skills</h3><p>Fast fluency practice.</p></a>
         ${rec?`<a class="p0-card" data-link href="/lesson/${encodeURIComponent(rec.lesson.id)}"><b>3</b><h3>${esc(window.KV_MASTERY.title(rec.lesson))}</h3><p>${esc(rec.reason)}</p></a>`:''}
         <a class="p0-card" data-link href="/parent"><b>◈</b><h3>Parent Space</h3><p>Progress dashboard &amp; controls.</p></a>
+        <a class="p0-card" data-link href="/educator"><b>▦</b><h3>Educator Pilot</h3><p>Local roster, assignments &amp; evidence.</p></a>
       </div>`;
     const hero=main.querySelector('.hero'); if(hero&&hero.parentNode)hero.parentNode.insertBefore(section,hero.nextSibling); else main.prepend(section);
   }
 
+  loadEducatorPilot();
   addEventListener('kv:rendered',()=>{ addNavLinks(); addHomePanel(); });
   addNavLinks(); addHomePanel();
 })();

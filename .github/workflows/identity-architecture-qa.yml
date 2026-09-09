@@ -1,65 +1,198 @@
 name: KirthiVerse Identity Architecture QA
+
 on:
-  push:
-    branches: [design/manus-visual-master]
+  pull_request:
+    branches: [main]
     paths:
-      - 'identity/**'
       - '.github/workflows/identity-architecture-qa.yml'
+      - 'ACTIVE_MASTER_CONTROL.json'
+      - 'release/release-closure-v1.json'
+      - 'identity/**'
+      - 'learner-adaptive-v26.js'
+      - 'parent-v1.js'
+      - 'educator-pilot-v1.js'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/identity-architecture-qa.yml'
+      - 'ACTIVE_MASTER_CONTROL.json'
+      - 'release/release-closure-v1.json'
+      - 'identity/**'
+      - 'learner-adaptive-v26.js'
+      - 'parent-v1.js'
+      - 'educator-pilot-v1.js'
   workflow_dispatch:
+
 permissions:
   contents: read
+
+concurrency:
+  group: kirthiverse-identity-architecture-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'main' }}
+  cancel-in-progress: true
+
 jobs:
   identity-contract:
+    name: identity-contract
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Checkout candidate
+      - name: Checkout exact candidate
         uses: actions/checkout@v5
-      - name: Validate privacy-first identity contract
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Confirm HI-TECH ACTIVE MASTER authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          c=json.loads(Path('ACTIVE_MASTER_CONTROL.json').read_text(encoding='utf-8'))
+          assert c['project']=='KirthiVerse'
+          assert c['status']=='HI-TECH — ACTIVE MASTER'
+          assert c['canonicalRepository']==os.environ['GITHUB_REPOSITORY']
+          assert c['activeBranch']=='main'
+          assert c['oldLegacyPolicy']=='READ_ONLY_REFERENCE'
+          if os.environ.get('GITHUB_BASE_REF'):
+              assert os.environ['GITHUB_BASE_REF']=='main'
+          print('IDENTITY_ACTIVE_MASTER_PASS repo='+c['canonicalRepository']+' branch=main')
+          PY
+
+      - name: Validate aligned identity and role contracts
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import json
           from pathlib import Path
-          p=json.loads(Path('identity/identity-architecture-v1.json').read_text())
-          assert p['schema']=='kirthiverse.identity-architecture.v1'
-          assert p['candidate']=='MANUS-VISUAL-MASTER-05'
-          assert p['cloudIdentityEnabled'] is False
-          assert p['automaticChildCloudProfile'] is False
-          assert p['localLearner']['enabled'] is True
-          assert p['localLearner']['accountRequired'] is False
-          assert p['localLearner']['claimRequiresExplicitConsent'] is True
-          roles=p['roles']
-          assert set(roles)=={'learner','parent_guardian','student','teacher','school_admin'}
-          assert roles['parent_guardian']['owner']=='verified-adult'
-          assert roles['parent_guardian']['linkRule']=='adult-owned-explicit-consent'
-          assert roles['teacher']['linkRule']=='approved-roster-or-explicit-authorisation'
-          assert roles['school_admin']['linkRule']=='organisation-authorised'
-          assert roles['student']['linkRule']=='no-hidden-auto-link'
-          g=p['guardrails']
-          for k in ['childDataMinimisation','parentLinkOptIn','teacherLinkRequiresAuthorisation','schoolLinkRequiresAuthorisation','noAdvertisingIdentity','noHiddenRemoteTracking','consentRecordRequiredForChildLink','roleAccessLeastPrivilege']:
-            assert g[k] is True, k
-          assert p['claimFlow']['silentMigrationAllowed'] is False
-          assert p['releasePolicy']['productionCloudIdentityAllowed'] is False
-          required=set(p['releasePolicy']['requires'])
-          assert {'adult-verification-design','school-roster-authorisation','consent-ledger','export-endpoint','deletion-endpoint','privacy-review','security-review'} <= required
-          print('IDENTITY_CONTRACT_PASS roles=5 cloud_identity=disabled hidden_child_profile=disabled')
+
+          architecture=json.loads(Path('identity/identity-architecture-v1.json').read_text(encoding='utf-8'))
+          experience=json.loads(Path('identity/role-ownership-experience-v1.json').read_text(encoding='utf-8'))
+          release=json.loads(Path('release/release-closure-v1.json').read_text(encoding='utf-8'))
+
+          assert architecture['schema']=='kirthiverse.identity-architecture.v1'
+          assert experience['schema']=='kirthiverse.role-ownership-experience.v1'
+          assert architecture['candidate']=='HI-TECH-ACTIVE-MASTER'
+          assert experience['candidate']=='HI-TECH-ACTIVE-MASTER'
+          assert architecture['status']=='PRIVACY_CONTROLLED_FOUNDATION'
+          assert architecture['cloudIdentityEnabled'] is False
+          assert architecture['automaticChildCloudProfile'] is False
+          assert experience['cloudIdentityEnabled'] is False
+
+          local=architecture['localLearner']
+          assert local['enabled'] is True
+          assert local['accountRequired'] is False
+          assert local['claimableLater'] is True
+          assert local['claimRequiresExplicitConsent'] is True
+          assert local['migrationMode']=='explicit-claim-or-link'
+
+          expected_roles={'learner','parent_guardian','student','teacher','school_admin'}
+          assert set(architecture['roles'])==expected_roles
+          assert set(experience['roles'])==expected_roles
+
+          expected_rules={
+            'parent_guardian':'adult-owned-explicit-consent',
+            'student':'no-hidden-auto-link',
+            'teacher':'approved-roster-or-explicit-authorisation',
+            'school_admin':'organisation-authorised',
+          }
+          for role, rule in expected_rules.items():
+              assert architecture['roles'][role]['linkRule']==rule, role
+              assert experience['roles'][role]['linkRule']==rule, role
+
+          assert architecture['roles']['learner']['cloudState']=='disabled'
+          for role in ['parent_guardian','student','teacher','school_admin']:
+              assert architecture['roles'][role]['cloudState']=='contract-only', role
+          assert experience['roles']['learner']['state']=='local-active'
+          assert experience['roles']['parent_guardian']['state']=='future-verified'
+          assert experience['roles']['student']['state']=='future-verified'
+          assert experience['roles']['teacher']['state']=='future-authorised'
+          assert experience['roles']['school_admin']['state']=='future-authorised'
+
+          guardrails=architecture['guardrails']
+          for key in [
+            'childDataMinimisation','parentLinkOptIn','teacherLinkRequiresAuthorisation',
+            'schoolLinkRequiresAuthorisation','noAdvertisingIdentity','noHiddenRemoteTracking',
+            'exportBeforeCloudClaimSupported','deletionRequiredBeforeProductionCloudIdentity',
+            'consentRecordRequiredForChildLink','roleAccessLeastPrivilege'
+          ]:
+              assert guardrails[key] is True, key
+
+          assert architecture['claimFlow']['silentMigrationAllowed'] is False
+          claim=experience['claimPreparation']
+          assert claim['enabled'] is True
+          for key in ['networkUpload','accountCreation','localDataDeletion','silentMigration']:
+              assert claim[key] is False, key
+
+          safety=experience['childSafety']
+          for key in ['publicProfiles','advertising','behaviouralAdvertising','hiddenTracking','automaticCloudIdentity','unapprovedTeacherLinking','realNameRequired']:
+              assert safety[key] is False, key
+
+          policy=architecture['releasePolicy']
+          assert policy['productionCloudIdentityAllowed'] is False
+          required=set(policy['requires'])
+          assert {
+            'auth-provider-decision','adult-verification-design','school-roster-authorisation',
+            'consent-ledger','export-endpoint','deletion-endpoint','privacy-review','security-review'
+          } <= required
+
+          release_identity=release['identity']
+          assert release['production']['state']=='HOLD'
+          assert release_identity['cloudIdentityEnabled'] is False
+          assert release_identity['silentUploadAllowed'] is False
+          assert release_identity['automaticChildAccountAllowed'] is False
+          assert release_identity['silentMigrationAllowed'] is False
+          assert release_identity['educatorPilotLocalOnly'] is True
+          assert release_identity['schoolAccountImplemented'] is False
+          assert release_identity['teacherAuthenticationImplemented'] is False
+
+          print('IDENTITY_CONTRACT_PASS candidate=HI-TECH-ACTIVE-MASTER roles=5')
+          print('IDENTITY_RELEASE_BOUNDARY_PASS cloud=false school_account=false teacher_auth=false production=HOLD')
           PY
-      - name: Validate current local runtime remains account-free
+
+      - name: Validate identity implementation remains network and account fail-closed
         shell: bash
         run: |
           set -euo pipefail
-          grep -Fq 'localOnly:true' learner-adaptive-v26.js
-          grep -Fq 'profileKey:PK' learner-adaptive-v26.js
-          ! grep -Eqi 'firebase|supabase|auth0|clerk|cognito|createUser|signInWith|childCloudProfile:true' learner-adaptive-v26.js
-          ! grep -Eqi 'google-analytics|googletagmanager|doubleclick' index.html
-          echo 'IDENTITY_RUNTIME_PASS local learner remains account-free and tracker-free'
+          python3 - <<'PY'
+          from pathlib import Path
+
+          files=['learner-adaptive-v26.js','parent-v1.js','educator-pilot-v1.js']
+          text='\n'.join(Path(path).read_text(encoding='utf-8',errors='ignore') for path in files)
+          lower=text.lower()
+
+          provider_tokens=['firebase','supabase','auth0','clerk','cognito','signinwith','createuserwith','childcloudprofile:true']
+          found=[token for token in provider_tokens if token in lower]
+          assert not found, f'identity provider/account implementation appeared without activation review: {found}'
+
+          network_tokens=['fetch(', 'xmlhttprequest', 'websocket(', 'sendbeacon(']
+          found_network=[token for token in network_tokens if token in lower]
+          assert not found_network, f'identity-related runtime gained network transport: {found_network}'
+
+          profile=Path('learner-adaptive-v26.js').read_text(encoding='utf-8')
+          for token in ['localOnly:true','cloudIdentity:false','silentUpload:false','accountCreation:false','dataDeletion:false']:
+              assert token in profile, token
+
+          educator=Path('educator-pilot-v1.js').read_text(encoding='utf-8')
+          for token in ['NOT a school account','cloud roster or teacher authentication','local-only','notSchoolAccount:true']:
+              assert token in educator, token
+
+          parent=Path('parent-v1.js').read_text(encoding='utf-8')
+          assert 'PBKDF2' in parent or 'pbkdf2' in parent.lower(), 'local Parent Space PBKDF2 contract missing'
+
+          print('IDENTITY_RUNTIME_FAIL_CLOSED_PASS files='+str(len(files))+' network_transports=0 cloud_providers=0')
+          PY
+
       - name: Identity architecture summary
+        if: always()
         run: |
-          echo '### Identity architecture v1' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Independent learner remains local/account-free' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Parent/Guardian ownership is adult-owned + explicit consent' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Teacher access requires approved roster or explicit authorisation' >> "$GITHUB_STEP_SUMMARY"
-          echo '- School/Admin access requires organisation authorisation' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Student cloud profile cannot be silently auto-created' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Cloud identity remains disabled until consent/export/deletion/privacy/security gates exist' >> "$GITHUB_STEP_SUMMARY"
+          echo '### KirthiVerse Identity Architecture QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Exact HI-TECH ACTIVE MASTER candidate checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Identity architecture and role/ownership contracts aligned to ACTIVE MASTER' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Five role contracts remain least-privilege / future-authorised where applicable' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Local learner remains account-free; claim/link remains explicit-consent preparation only' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Identity-related runtime has no cloud identity provider or network transport implementation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Educator Pilot remains local-only and is not a school account or teacher authentication' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production cloud identity remains disabled and production remains HOLD' >> "$GITHUB_STEP_SUMMARY"

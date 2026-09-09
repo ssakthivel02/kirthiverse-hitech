@@ -1,6 +1,14 @@
 /* KirthiVerse P0 sprint styles v1 — Diagnostic, Speed Lab, Parent Space, lesson check, nav/home entry.
    Reuses existing --vm-* theme tokens, .page-title, .glass-card, .primary, .section-head so new
    screens match the visual-master theme without redefining it. */
+
+/* Accessibility contrast reconciliation.
+   #55645F remains visually muted while maintaining >=4.5:1 against the active light theme surfaces,
+   including white, paper, oat and the current soft section backgrounds. */
+:root{--vm-muted:#55645F}
+.system-pill b{color:var(--vm-green,#2F6B57)!important}
+.continuity-v8>p,.a11y-v8>div:first-child>p{color:var(--vm-ink-soft,#50605B)!important}
+
 .vm-nav-p0{white-space:nowrap}
 
 .p0-panel{margin:28px 0}
@@ -9,20 +17,20 @@
 .p0-card:hover{transform:translateY(-3px)}
 .p0-card b{display:inline-block;width:28px;height:28px;border-radius:50%;background:var(--vm-green,#2F6B57);color:#fff;text-align:center;line-height:28px;font-size:13px;margin-bottom:10px}
 .p0-card h3{margin:4px 0}
-.p0-card p{margin:0;color:var(--vm-muted,#78847C);font-size:14px}
+.p0-card p{margin:0;color:var(--vm-muted,#55645F);font-size:14px}
 
 /* Diagnostic */
 .dg-page{max-width:820px;margin:0 auto}
 .dg-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
 .dg-summary article{padding:18px;border-radius:18px;background:var(--vm-white,#FFFDF8);border:1px solid var(--vm-line,#D9D3C6);text-align:center}
 .dg-summary article b{display:block;font-size:28px}
-.dg-summary article span{font-size:12px;color:var(--vm-muted,#78847C)}
+.dg-summary article span{font-size:12px;color:var(--vm-muted,#55645F)}
 .dg-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
 .dg-session header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .dg-progress{height:6px;border-radius:6px;background:var(--vm-line,#D9D3C6);overflow:hidden;margin-bottom:20px}
 .dg-progress i{display:block;height:100%;background:var(--vm-green,#2F6B57)}
-.dg-kicker{letter-spacing:.12em;font-size:11px;color:var(--vm-muted,#78847C)}
-.dg-note{font-size:13px;color:var(--vm-muted,#78847C)}
+.dg-kicker{letter-spacing:.12em;font-size:11px;color:var(--vm-muted,#55645F)}
+.dg-note{font-size:13px;color:var(--vm-muted,#55645F)}
 #dg-form{display:flex;gap:10px;margin-top:16px}
 #dg-form input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--vm-line,#D9D3C6);font-size:16px}
 .dg-next{margin-top:20px;padding:20px;border-radius:20px;background:var(--vm-oat,#F4EBDD)}
@@ -35,7 +43,7 @@
 .sl-sym{font-size:28px}
 .sl-durations{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
 .sl-durations button,[data-start]{border-radius:999px;border:1px solid var(--vm-line,#D9D3C6);background:var(--vm-white,#FFFDF8);padding:8px 14px;font-weight:700}
-.sl-note{font-size:13px;color:var(--vm-muted,#78847C);margin-top:14px}
+.sl-note{font-size:13px;color:var(--vm-muted,#55645F);margin-top:14px}
 .sl-session header{display:flex;justify-content:space-between;align-items:center;font-weight:800}
 .sl-problem{text-align:center;padding:40px 10px}
 .sl-problem h1{font-size:56px;margin:0 0 20px}
@@ -48,19 +56,19 @@
 /* Parent Space */
 .pv-page{max-width:960px;margin:0 auto}
 .pv-form{display:grid;gap:14px;max-width:360px}
-.pv-form label{display:grid;gap:6px;font-size:13px;color:var(--vm-muted,#78847C)}
+.pv-form label{display:grid;gap:6px;font-size:13px;color:var(--vm-muted,#55645F)}
 .pv-form input{padding:12px;border-radius:12px;border:1px solid var(--vm-line,#D9D3C6);font-size:16px}
 .pv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:16px 0}
-.pv-note{font-size:13px;color:var(--vm-muted,#78847C)}
+.pv-note{font-size:13px;color:var(--vm-muted,#55645F)}
 .pv-activity li{padding:6px 0;border-bottom:1px solid var(--vm-line,#D9D3C6);font-size:14px}
-.pv-activity b{display:inline-block;min-width:170px;color:var(--vm-muted,#78847C);font-weight:600;font-size:12px}
+.pv-activity b{display:inline-block;min-width:170px;color:var(--vm-muted,#55645F);font-weight:600;font-size:12px}
 .pv-toggle{display:flex;align-items:center;gap:10px;margin:12px 0;font-weight:700}
 .pv-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 .pv-actions button{border-radius:999px;border:1px solid var(--vm-line,#D9D3C6);background:var(--vm-white,#FFFDF8);padding:10px 16px;font-weight:700}
 
 /* Lesson check */
 .lc-box{margin:16px 0;padding:16px;border-radius:16px;background:var(--vm-oat,#F4EBDD)}
-.lc-box label{font-size:11px;letter-spacing:.1em;color:var(--vm-muted,#78847C)}
+.lc-box label{font-size:11px;letter-spacing:.1em;color:var(--vm-muted,#55645F)}
 #lc-form{display:flex;gap:10px;margin-top:8px}
 #lc-form input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid var(--vm-line,#D9D3C6)}
 #lc-status{font-size:13px;margin-top:8px}

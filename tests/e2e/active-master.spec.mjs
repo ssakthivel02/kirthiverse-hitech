@@ -77,7 +77,11 @@ test('serious and critical WCAG findings are blocked on representative routes', 
     const summary = severe.map(item => ({
       id: item.id,
       impact: item.impact,
-      nodes: item.nodes.length,
+      nodes: item.nodes.map(node => ({
+        target: node.target,
+        html: node.html,
+        failureSummary: node.failureSummary,
+      })),
       help: item.help,
     }));
     expect(summary, `serious/critical accessibility findings on ${route}: ${JSON.stringify(summary)}`).toEqual([]);

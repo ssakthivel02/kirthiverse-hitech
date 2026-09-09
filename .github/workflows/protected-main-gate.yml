@@ -29,6 +29,50 @@ jobs:
             exit 1
           fi
 
+      - name: Validate HI-TECH active master contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          path = Path('ACTIVE_MASTER_CONTROL.json')
+          assert path.is_file(), 'ACTIVE_MASTER_CONTROL.json is required'
+          control = json.loads(path.read_text(encoding='utf-8'))
+
+          assert control.get('project') == 'KirthiVerse', 'wrong active-master project'
+          assert control.get('status') == 'HI-TECH — ACTIVE MASTER', 'repository is not declared HI-TECH — ACTIVE MASTER'
+          assert control.get('canonicalRepository') == 'ssakthivel02/kirthiverse-hitech', 'wrong canonical repository'
+          assert control.get('activeBranch') == 'main', 'active integration branch must remain main'
+          assert control.get('oldLegacyPolicy') == 'READ_ONLY_REFERENCE', 'OLD/LEGACY policy must remain read-only reference'
+
+          task = control.get('taskPolicy') or {}
+          required_true = [
+              'verifyActiveMasterBeforeWork',
+              'inventoryCompletedWorkBeforeChanges',
+              'changeOnlyEvidenceBackedGaps',
+              'neverRebuildCompletedTasks',
+              'legacyDevelopmentProhibited',
+              'duplicateRepositoryProhibited',
+              'duplicateBranchForCompletedWorkProhibited',
+              'oneTaskAtATime',
+              'requireBuildTestEvidenceBeforeNextTask',
+              'clarifyIfActiveMasterUnknown'
+          ]
+          for key in required_true:
+              assert task.get(key) is True, f'active-master task rule must remain true: {key}'
+          assert task.get('legacyReconciliation') == 'ONE_TIME_INTO_ACTIVE_MASTER_ONLY', 'legacy reconciliation policy changed'
+
+          runtime_repo = os.environ.get('GITHUB_REPOSITORY')
+          assert runtime_repo == control['canonicalRepository'], f'workflow running in non-canonical repository: {runtime_repo}'
+          base_ref = os.environ.get('GITHUB_BASE_REF')
+          if base_ref:
+              assert base_ref == control['activeBranch'], f'pull request must target active branch {control["activeBranch"]}'
+
+          print('ACTIVE_MASTER_CONTRACT_PASS project=KirthiVerse repo=ssakthivel02/kirthiverse-hitech branch=main')
+          PY
+
       - name: Validate static application contract
         shell: bash
         run: |
@@ -66,7 +110,9 @@ jobs:
         if: always()
         run: |
           echo '### Protected Main Gate' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Always runs for every pull request targeting main' >> "$GITHUB_STEP_SUMMARY"
+          echo '- HI-TECH — ACTIVE MASTER identity and canonical repository check' >> "$GITHUB_STEP_SUMMARY"
+          echo '- OLD/LEGACY remains read-only reference' >> "$GITHUB_STEP_SUMMARY"
+          echo '- completed-work duplication and evidence-first task rules enforced' >> "$GITHUB_STEP_SUMMARY"
           echo '- git diff whitespace/conflict check' >> "$GITHUB_STEP_SUMMARY"
           echo '- manifest and core static-file contract check' >> "$GITHUB_STEP_SUMMARY"
           echo '- local assets referenced by index.html must exist' >> "$GITHUB_STEP_SUMMARY"

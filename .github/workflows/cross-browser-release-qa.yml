@@ -1,0 +1,75 @@
+name: KirthiVerse Cross-Browser Release QA
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-matrix:
+    name: browser-matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Confirm HI-TECH ACTIVE MASTER candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const c = JSON.parse(fs.readFileSync('ACTIVE_MASTER_CONTROL.json', 'utf8'));
+          if (c.status !== 'HI-TECH — ACTIVE MASTER') throw new Error('Not HI-TECH ACTIVE MASTER');
+          if (c.canonicalRepository !== process.env.GITHUB_REPOSITORY) throw new Error('Canonical repository mismatch');
+          if (c.activeBranch !== 'main') throw new Error('Active branch must remain main');
+          if (process.env.GITHUB_BASE_REF && process.env.GITHUB_BASE_REF !== 'main') throw new Error('PR must target main');
+          console.log('CROSS_BROWSER_ACTIVE_MASTER_PASS');
+          NODE
+          node --check tests/static-server.mjs
+          node --check playwright.config.mjs
+          node --check tests/e2e/active-master.spec.mjs
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Install pinned QA dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install Playwright browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Run Chromium Firefox WebKit desktop/mobile release gate
+        run: npm run test:e2e
+
+      - name: Upload failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kirthiverse-cross-browser-failure-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 5
+
+      - name: Cross-browser summary
+        if: always()
+        run: |
+          echo '### KirthiVerse Cross-Browser Release QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- HI-TECH ACTIVE MASTER identity checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Desktop Chromium / Firefox / WebKit' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Pixel 7 Chromium and iPhone 13 WebKit emulation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Current core route rendering and direct-route reload' >> "$GITHUB_STEP_SUMMARY"
+          echo '- CORE-RUNTIME-V30 identity and loaded asset check' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Horizontal-overflow and uncaught-page-error gates' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Serious/critical WCAG 2 A/AA findings blocked on representative desktop routes' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Failure trace/screenshot/video evidence retained for 5 days' >> "$GITHUB_STEP_SUMMARY"

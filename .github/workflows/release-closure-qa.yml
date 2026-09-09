@@ -1,100 +1,296 @@
 name: KirthiVerse Release Closure QA
+
 on:
-  push:
-    branches: [design/manus-visual-master]
+  pull_request:
+    branches: [main]
     paths:
       - '.github/workflows/release-closure-qa.yml'
       - 'release/release-closure-v1.json'
+      - 'ACTIVE_MASTER_CONTROL.json'
       - 'visual-preview.json'
       - '_headers'
+      - 'wrangler.jsonc'
       - 'index.html'
       - 'app.js'
       - 'core-runtime-v30.js'
-      - 'learning-foundation-v19.js'
-      - 'learning-tools-v20.js'
-      - 'visual-controller-v27.js'
       - 'learner-adaptive-v26.js'
+      - 'p0-entry-v1.js'
+      - 'parent-v1.js'
+      - 'educator-pilot-v1.js'
+      - 'pilot-*.js'
       - 'identity/**'
+      - 'data/**'
+      - 'tests/e2e/release-closure.spec.mjs'
+      - 'package*.json'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/release-closure-qa.yml'
+      - 'release/release-closure-v1.json'
+      - 'ACTIVE_MASTER_CONTROL.json'
+      - 'visual-preview.json'
+      - '_headers'
+      - 'wrangler.jsonc'
+      - 'index.html'
+      - 'app.js'
+      - 'core-runtime-v30.js'
+      - 'learner-adaptive-v26.js'
+      - 'p0-entry-v1.js'
+      - 'parent-v1.js'
+      - 'educator-pilot-v1.js'
+      - 'pilot-*.js'
+      - 'identity/**'
+      - 'data/**'
+      - 'tests/e2e/release-closure.spec.mjs'
+      - 'package*.json'
   workflow_dispatch:
+
 permissions:
   contents: read
-env:
-  PREVIEW_URL: https://kirthiverse-hitech.ssakthivel02.workers.dev
+
+concurrency:
+  group: kirthiverse-release-closure-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'main' }}
+  cancel-in-progress: true
+
 jobs:
-  release-closure:
+  release-contract:
+    name: release-contract
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v5
-      - name: Release contract and static closure
+      - name: Checkout exact candidate
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Setup pinned Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Validate current ACTIVE MASTER release contract
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json,re
+          import json
           from pathlib import Path
-          r=json.loads(Path('release/release-closure-v1.json').read_text())
-          v=json.loads(Path('visual-preview.json').read_text())
-          i=json.loads(Path('identity/role-ownership-experience-v1.json').read_text())
-          assert r['schema']=='kirthiverse.release-closure.v1'
-          assert r['branch']=='design/manus-visual-master'
-          assert r['canonical']=={'lessons':135,'assessments':72,'worlds':11}
-          assert v['canonical']==r['canonical']
-          assert r['production']=={
-            'state':'HOLD','mergeAllowed':False,'productionCutoverAllowed':False,
-            'productionDnsChangeAllowed':False,'ownerVisualReviewRequired':True,
-            'explicitOwnerProdGoRequired':True}
-          assert v['mergeAllowed'] is False and v['productionCutoverAllowed'] is False
-          assert i['cloudIdentityEnabled'] is False
-          q=i['claimPreparation']
-          assert q['enabled'] and not q['networkUpload'] and not q['accountCreation'] and not q['localDataDeletion'] and not q['silentMigration']
-          assert len(i['roles'])==5
-          files=['styles.css','learning-foundation-v19.css','learning-tools-v20.css','visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css','app.js','core-runtime-v30.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js']
-          total=sum(Path(x).stat().st_size for x in files)
-          assert total<=168000,total
-          html=Path('index.html').read_text()
-          assert len(re.findall(r'<script src="/(?:app|core-runtime-v30|learning-foundation-v19|learning-tools-v20|visual-controller-v27|learner-adaptive-v26)\.js',html))==6
-          corpus='\n'.join(Path(x).read_text(errors='ignore') for x in files+['index.html'])
-          bad=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog','googletagmanager.com','google-analytics.com','doubleclick.net']
-          assert not [x for x in bad if x in corpus]
-          headers=Path('_headers').read_text()
-          csp=next(x.strip() for x in headers.splitlines() if 'Content-Security-Policy:' in x)
-          script=next(x.strip() for x in csp.split(';') if x.strip().startswith('script-src '))
-          assert "'unsafe-inline'" not in script
-          for h in ['sha256-lFerLKIdSU5Ay0H2UlkGRwSJMupHUtWPLsy9DKuxO54=','sha256-z9SPI/fD9/QyU9pSmBuQDXZDab9fGhmskMWXoq1vrRY=','sha256-5Trr5fkI9mSXOcowwX6m5OCd/CRDc24wu/mhkj3Amp0=']:
-            assert h in script
-          print('RELEASE_STATIC_PASS')
-          print('EXTERNAL_CSS_JS_BYTES',total)
+
+          active=json.loads(Path('ACTIVE_MASTER_CONTROL.json').read_text(encoding='utf-8'))
+          release=json.loads(Path('release/release-closure-v1.json').read_text(encoding='utf-8'))
+          visual=json.loads(Path('visual-preview.json').read_text(encoding='utf-8'))
+          identity=json.loads(Path('identity/role-ownership-experience-v1.json').read_text(encoding='utf-8'))
+
+          assert active['project']=='KirthiVerse'
+          assert active['status']=='HI-TECH — ACTIVE MASTER'
+          assert active['canonicalRepository']=='ssakthivel02/kirthiverse-hitech'
+          assert active['activeBranch']=='main'
+          assert active['oldLegacyPolicy']=='READ_ONLY_REFERENCE'
+
+          assert release['schema']=='kirthiverse.release-closure.v1'
+          assert release['candidate']=='HI-TECH-ACTIVE-MASTER'
+          assert release['branch']=='main'
+          assert release['canonical']=={'lessons':135,'assessments':72,'worlds':11}
+          assert visual['canonical']==release['canonical']
+          # visual-preview.json is historical visual-promotion evidence, not the current release authority.
+          assert visual['productionCutoverAllowed'] is False
+
+          sequence=release['automatedSequence']
+          required_sequence={
+            'activeMasterControl','protectedMainContract','pwaOfflineQa',
+            'accessibilityClosureQa','crossBrowserReleaseQa',
+            'performanceSecurityQa','releaseClosure'
+          }
+          assert set(sequence)==required_sequence
+          assert all(sequence[k]=='required-green' for k in required_sequence)
+
+          ri=release['identity']
+          assert ri['cloudIdentityEnabled'] is False
+          assert ri['silentUploadAllowed'] is False
+          assert ri['automaticChildAccountAllowed'] is False
+          assert ri['silentMigrationAllowed'] is False
+          assert ri['educatorPilotLocalOnly'] is True
+          assert ri['schoolAccountImplemented'] is False
+          assert ri['teacherAuthenticationImplemented'] is False
+
+          assert identity['cloudIdentityEnabled'] is False
+          assert set(identity['roles'])=={'learner','parent_guardian','student','teacher','school_admin'}
+          claim=identity['claimPreparation']
+          assert claim['enabled'] is True
+          assert claim['networkUpload'] is False
+          assert claim['accountCreation'] is False
+          assert claim['localDataDeletion'] is False
+          assert claim['silentMigration'] is False
+          assert identity['roles']['parent_guardian']['linkRule']=='adult-owned-explicit-consent'
+          assert identity['roles']['teacher']['linkRule']=='approved-roster-or-explicit-authorisation'
+          assert identity['roles']['school_admin']['linkRule']=='organisation-authorised'
+
+          governance=release['governance']
+          for key in [
+            'githubMainBranchProtectionRequired','specialistSafeguardingReviewRequired',
+            'securityReviewRequired','privacyReviewRequired','ciDoesNotConstituteProductionApproval'
+          ]:
+            assert governance[key] is True, key
+
+          production=release['production']
+          assert production['state']=='HOLD'
+          assert production['mergeAllowed'] is False
+          assert production['productionCutoverAllowed'] is False
+          assert production['productionDnsChangeAllowed'] is False
+          assert production['ownerVisualReviewRequired'] is True
+          assert production['explicitOwnerProdGoRequired'] is True
+          assert 'production-release-promotion-only' in production['mergeMeaning']
+          assert release['manualFinalGate']=='GITHUB_MAIN_PROTECTION_PLUS_SPECIALIST_SAFEGUARDING_SECURITY_PRIVACY_REVIEW_PLUS_EXPLICIT_OWNER_PROD_GO'
+
+          educator=Path('educator-pilot-v1.js').read_text(encoding='utf-8')
+          for token in [
+            'NOT a school account', 'cloud roster or teacher authentication',
+            'local-only', 'notSchoolAccount:true'
+          ]:
+            assert token in educator, f'educator pilot boundary missing: {token}'
+
+          profile=Path('learner-adaptive-v26.js').read_text(encoding='utf-8')
+          for token in [
+            'cloudIdentity:false','silentUpload:false','accountCreation:false',
+            'dataDeletion:false','data-role-experience="v1"','data-claim-prep="v1"'
+          ]:
+            assert token in profile, f'profile safety boundary missing: {token}'
+
+          html=Path('index.html').read_text(encoding='utf-8')
+          assert 'CORE-RUNTIME-V30' in html
+          assert 'data-kv-teacher-runtime="v2"' in html
+          assert 'bilingual:true' in html
+
+          print('RELEASE_CONTRACT_PASS candidate=HI-TECH-ACTIVE-MASTER branch=main')
+          print('RELEASE_CANONICAL_PASS lessons=135 assessments=72 worlds=11')
+          print('RELEASE_IDENTITY_BOUNDARY_PASS cloudIdentity=false schoolAccount=false teacherAuth=false')
           print('PRODUCTION_STATE HOLD')
           PY
-          test "$GITHUB_REF_NAME" = "design/manus-visual-master"
-      - name: Controlled preview release surface
+
+      - name: Validate current QA gate topology
         shell: bash
         run: |
           set -euo pipefail
-          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium)"; test -n "$chrome"
-          curl -fsSI "$PREVIEW_URL/index.html?release=$(date +%s)" >/tmp/h
-          tr -d '\r' </tmp/h >/tmp/hc
-          grep -Eqi '^content-security-policy:' /tmp/hc
-          csp="$(grep -Ei '^content-security-policy:' /tmp/hc)"
-          script="$(printf '%s\n' "$csp" | tr ';' '\n' | grep -Ei 'script-src')"
-          ! printf '%s\n' "$script" | grep -qi 'unsafe-inline'
-          grep -Fq 'sha256-5Trr5fkI9mSXOcowwX6m5OCd/CRDc24wu/mhkj3Amp0=' <<< "$script"
-          grep -Eqi '^x-frame-options:[[:space:]]*DENY' /tmp/hc
-          rm -rf /tmp/kv-release
-          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9591 --user-data-dir=/tmp/kv-release "$PREVIEW_URL/profile?release=$(date +%s)" >/tmp/chrome.log 2>&1 &
-          cpid=$!; trap 'kill "$cpid" 2>/dev/null || true' EXIT
-          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9591/json/list >/tmp/pages && break || sleep 1; done
-          node <<'NODE'
-          const pages=await fetch('http://127.0.0.1:9591/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let seq=0,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){const q=p.get(m.id);p.delete(m.id);m.error?q.bad(Error(m.error.message)):q.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;p.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');const ev=async x=>(await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true})).result?.value;const wait=async(x,l)=>{for(let n=0;n<80;n++){if(await ev(x))return;await new Promise(r=>setTimeout(r,200))}throw Error('Timeout '+l)};await wait(`location.pathname==='/profile'&&document.querySelector('[data-role-experience="v1"]')`,'profile roles');const x=await ev(`({roles:document.querySelectorAll('[data-role]').length,claim:!!document.querySelector('[data-claim-prep="v1"]'),profile:document.querySelector('[data-profile-runtime="v26"]')?.dataset.profileRuntime,cloud:window.KV_PROFILE_RUNTIME?.cloudIdentity,upload:window.KV_PROFILE_RUNTIME?.silentUpload,account:window.KV_PROFILE_RUNTIME?.accountCreation})`);if(x.roles!==5||!x.claim||x.profile!=='v26'||x.cloud!==false||x.upload!==false||x.account!==false)throw Error('Release surface '+JSON.stringify(x));console.log('RELEASE_BROWSER_PASS '+JSON.stringify(x));ws.close();
-          NODE
-      - name: Closure summary
+          python3 - <<'PY'
+          from pathlib import Path
+
+          gate_paths=[
+            '.github/workflows/protected-main-gate.yml',
+            '.github/workflows/pwa-offline-qa.yml',
+            '.github/workflows/accessibility-closure-qa.yml',
+            '.github/workflows/cross-browser-release-qa.yml',
+            '.github/workflows/performance-security-qa.yml',
+          ]
+          for path in gate_paths:
+            text=Path(path).read_text(encoding='utf-8')
+            assert 'pull_request:' in text, f'{path} is not PR-gated'
+            assert 'branches: [main]' in text, f'{path} is not attached to main'
+            assert 'design/manus-visual-master' not in text, f'{path} still targets historical visual branch'
+
+          perf=Path('.github/workflows/performance-security-qa.yml').read_text(encoding='utf-8')
+          assert 'post-merge-preview-proof' in perf
+          assert 'security-candidate.txt' in perf
+          assert 'ACTIVE_MASTER_SHA=' in perf
+
+          closure=Path('.github/workflows/release-closure-qa.yml').read_text(encoding='utf-8')
+          assert 'design/manus-visual-master' not in closure
+          assert '168000' not in closure
+          assert 'browserJsRequestCeiling' not in closure
+          assert 'sha256-5Trr5fkI9mSXOcowwX6m5OCd/CRDc24wu/mhkj3Amp0=' not in closure
+
+          print('RELEASE_GATE_TOPOLOGY_PASS current_main_gates=5 exact_preview_sentinel=true')
+          PY
+          node --check tests/e2e/release-closure.spec.mjs
+
+      - name: Report GitHub main protection governance state
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          req=urllib.request.Request(
+            f'https://api.github.com/repos/{repo}/branches/main',
+            headers={
+              'Authorization':f'Bearer {os.environ["GH_TOKEN"]}',
+              'Accept':'application/vnd.github+json',
+              'User-Agent':'kirthiverse-release-closure-qa'
+            }
+          )
+          try:
+            with urllib.request.urlopen(req, timeout=10) as r:
+              data=json.load(r)
+            state='PROTECTED' if data.get('protected') is True else 'UNPROTECTED'
+          except Exception as exc:
+            print(f'::warning::Unable to read GitHub main protection state: {exc}')
+            state='UNKNOWN'
+          with open(os.environ['GITHUB_ENV'],'a',encoding='utf-8') as f:
+            f.write(f'KV_MAIN_PROTECTION_STATE={state}\n')
+          if state!='PROTECTED':
+            print(f'::warning::GitHub main protection is {state}. Production remains HOLD; CI gate success is not branch-protection enforcement.')
+          print('MAIN_PROTECTION_STATE',state)
+          PY
+
+      - name: Release contract summary
         if: always()
         run: |
-          echo '### Automated release closure' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Browser-visible role / ownership preparation present' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Cloud identity remains disabled' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Claim/link remains preparation-only; no silent migration' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Script CSP remains hash-authorised without unsafe-inline' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Canonical corpus: 135 lessons / 72 assessments / 11 worlds' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Production: HOLD; merge/cutover/DNS change not authorised' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Final gate: owner visual review + explicit PROD_GO' >> "$GITHUB_STEP_SUMMARY"
+          echo '### KirthiVerse automated release contract' >> "$GITHUB_STEP_SUMMARY"
+          echo '- HI-TECH ACTIVE MASTER / main is the current source authority' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Canonical corpus contract: 135 lessons / 72 assessments / 11 worlds' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Cloud identity, school account and teacher authentication remain unimplemented' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Current PWA / Accessibility / Cross-Browser / Performance-Security gates are attached to main' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Performance-Security owns exact-main Cloudflare preview sentinel proof after merge' >> "$GITHUB_STEP_SUMMARY"
+          echo "- GitHub main branch protection observed: ${KV_MAIN_PROTECTION_STATE:-UNKNOWN}" >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production: HOLD. CI success does not authorise production cutover or DNS changes.' >> "$GITHUB_STEP_SUMMARY"
+
+  release-browser:
+    name: release-browser
+    needs: release-contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Setup pinned Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Install pinned QA dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install Chromium engine
+        run: npx playwright install --with-deps chromium
+
+      - name: Run ACTIVE MASTER release-boundary browser proof
+        run: npx playwright test tests/e2e/release-closure.spec.mjs --project=desktop-chromium
+
+      - name: Upload failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kirthiverse-release-closure-failure-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 5
+
+      - name: Browser closure summary
+        if: always()
+        run: |
+          echo '### KirthiVerse release-boundary browser proof' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Current CORE-RUNTIME-V30 loaded' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 135 canonical lessons / 72 assessments / 11 universes verified in browser' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Profile role surfaces remain local/future-authorised, not cloud accounts' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Educator Pilot remains parent-gated local-only and not teacher authentication or a school account' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Direct profile deep link checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Uncaught browser exceptions blocked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Production remains HOLD regardless of automated PASS' >> "$GITHUB_STEP_SUMMARY"

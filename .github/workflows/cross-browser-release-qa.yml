@@ -19,6 +19,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup pinned Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
       - name: Confirm HI-TECH ACTIVE MASTER candidate
         shell: bash
         run: |
@@ -35,11 +40,6 @@ jobs:
           node --check tests/static-server.mjs
           node --check playwright.config.mjs
           node --check tests/e2e/active-master.spec.mjs
-
-      - name: Setup Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: '22'
 
       - name: Install pinned QA dependencies
         run: npm install --no-audit --no-fund
@@ -66,6 +66,7 @@ jobs:
         run: |
           echo '### KirthiVerse Cross-Browser Release QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- HI-TECH ACTIVE MASTER identity checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Pinned Node 22 QA runtime' >> "$GITHUB_STEP_SUMMARY"
           echo '- Desktop Chromium / Firefox / WebKit' >> "$GITHUB_STEP_SUMMARY"
           echo '- Pixel 7 Chromium and iPhone 13 WebKit emulation' >> "$GITHUB_STEP_SUMMARY"
           echo '- Current core route rendering and direct-route reload' >> "$GITHUB_STEP_SUMMARY"

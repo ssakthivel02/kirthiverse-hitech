@@ -1,0 +1,43 @@
+name: KirthiVerse P7 Pilot Evidence Pack QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/build-pilot-evidence-pack.mjs'
+      - 'tests/pilot-evidence-pack.test.mjs'
+      - 'PILOT_EVIDENCE_PACK.md'
+      - '.github/workflows/p7-pilot-evidence-pack-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence-pack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Static P7 claim boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/build-pilot-evidence-pack.mjs
+          node --check tests/pilot-evidence-pack.test.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('scripts/build-pilot-evidence-pack.mjs').read_text()
+          for x in ['kirthiverse.p7.pilot-evidence-pack.v1','DUPLICATE_RUN_ID','DUPLICATE_SOURCE_DIGEST','P6_VALIDATION_FAILED','canClaimCohortOutcome:false','canClaimRetention:false','canClaimLearningImprovement:false','canClaimProductionReadiness:false']:
+              assert x in s,x
+          for x in ['canClaimCohortOutcome:true','canClaimRetention:true','canClaimLearningImprovement:true','canClaimProductionReadiness:true']:
+              assert x not in s,x
+          print('P7_STATIC_CONTRACT_PASS')
+          PY
+      - name: Deterministic pack tests
+        run: node tests/pilot-evidence-pack.test.mjs
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### KirthiVerse P7 Pilot Evidence Pack' >> "$GITHUB_STEP_SUMMARY"
+          echo '- every original P5 source is revalidated by P6' >> "$GITHUB_STEP_SUMMARY"
+          echo '- duplicate run IDs and source digests fail closed' >> "$GITHUB_STEP_SUMMARY"
+          echo '- early-window runs remain bounded and strict-all-seven mode fails closed' >> "$GITHUB_STEP_SUMMARY"
+          echo '- totals are descriptive sums only; cohort/retention/improvement claims remain blocked' >> "$GITHUB_STEP_SUMMARY"

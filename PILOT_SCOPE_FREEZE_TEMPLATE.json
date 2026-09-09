@@ -1,0 +1,27 @@
+{
+  "schema": "kirthiverse.p11a.pilot-scope-freeze.v1",
+  "template": true,
+  "pilotReference": "[REQUIRED]",
+  "scopeVersion": "[REQUIRED]",
+  "ownerRole": "[REQUIRED]",
+  "jurisdiction": "[REQUIRED]",
+  "organisationContext": "[REQUIRED]",
+  "ageBand": "[3–6 | 7–10 | 11–13 | 14–16]",
+  "subject": "Mathematics",
+  "durationWeeks": 0,
+  "cohortCeiling": 0,
+  "supervisionModel": "[REQUIRED]",
+  "deviceModel": "[REQUIRED]",
+  "dataModel": "[REQUIRED]",
+  "liveAIEnabled": false,
+  "cloudChildIdentityEnabled": false,
+  "externalServices": [],
+  "materialChangeRequiresReReview": false,
+  "ownerAcknowledgements": {
+    "scopeIsAccurate": false,
+    "noParticipantPIIInRecord": false,
+    "noUnreviewedFeatureExpansion": false,
+    "externalReviewStillRequired": false,
+    "notProductionReadiness": false
+  }
+}

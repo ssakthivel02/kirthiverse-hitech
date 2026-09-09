@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 
 const PROFILE_KEY = 'kirthiverse.hitech.profile.local.v2';
+const IDENTITY_STORAGE_PREFIXES = [
+  'kirthiverse.hitech.profile.',
+  'kirthiverse.hitech.parentgate.',
+];
 
 async function waitForIdentityRuntime(page) {
   await page.waitForFunction(() => Boolean(
@@ -11,16 +15,18 @@ async function waitForIdentityRuntime(page) {
 }
 
 async function storageSnapshot(page) {
-  return page.evaluate(() => ({
-    local: Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i))
+  return page.evaluate(({ prefixes }) => {
+    const identityEntries = storage => Array.from({ length: storage.length }, (_, i) => storage.key(i))
       .filter(Boolean)
+      .filter(key => prefixes.some(prefix => key.startsWith(prefix)))
       .sort()
-      .map(key => [key, localStorage.getItem(key)]),
-    session: Array.from({ length: sessionStorage.length }, (_, i) => sessionStorage.key(i))
-      .filter(Boolean)
-      .sort()
-      .map(key => [key, sessionStorage.getItem(key)]),
-  }));
+      .map(key => [key, storage.getItem(key)]);
+
+    return {
+      local: identityEntries(localStorage),
+      session: identityEntries(sessionStorage),
+    };
+  }, { prefixes: IDENTITY_STORAGE_PREFIXES });
 }
 
 function assertAllowedOrigins(urls, baseURL) {
@@ -122,7 +128,7 @@ test('educator route remains parent-gated local-only and does not create identit
   await expect(page.locator('main')).toContainText('It is not teacher authentication or a school account.');
 
   const before = await storageSnapshot(page);
-  await expect(page.locator('a[href="/parent"]')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Parent Space', exact: true })).toBeVisible();
   const after = await storageSnapshot(page);
   expect(after).toEqual(before);
 

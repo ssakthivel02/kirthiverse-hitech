@@ -105,8 +105,8 @@ The final approved process should state clearly:
 
 **Placeholder — must be replaced before use.**
 
-Responsible pilot owner: `[NAME / ROLE]`  
-Contact route: `[APPROVED CONTACT]`  
+Responsible pilot owner: `[NAME / ROLE]`
+Contact route: `[APPROVED CONTACT]`
 Safeguarding/privacy escalation route: `[APPROVED REFERENCE / CONTACT]`
 
 Do not issue this participant information while placeholders remain unresolved.

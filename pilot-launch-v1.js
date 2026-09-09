@@ -1,0 +1,64 @@
+/* KirthiVerse Pilot Launch Readiness v1 — route /pilot-readiness
+   Controlled-pilot coordination only. Adult acknowledgement is a self-attestation, NOT verified guardian identity,
+   legal consent, school authorization, or regulatory compliance. Data remains local to this browser.
+   New pilots default bounded assistance OFF unless the supervising adult explicitly opts in. */
+(()=>{
+  const KEY='kirthiverse.hitech.pilot.launch.v1';
+  const METRICS_KEY='kirthiverse.hitech.pilot.metrics.v1';
+  const EDUCATOR_KEY='kirthiverse.hitech.educator.pilot.v1';
+  const GATE_KEY='kirthiverse.hitech.parentgate.v1';
+  const UNLOCK_KEY='kirthiverse.hitech.parentgate.unlocked.v1';
+  const PREFIX='kirthiverse.hitech.';
+  const ACK_VERSION='adult-self-attestation-v1';
+  const ACK_TEXT='I am the adult supervising this device for this controlled KirthiVerse pilot. I understand this is a local prototype acknowledgement, not verified guardian identity or legal consent.';
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const clone=x=>JSON.parse(JSON.stringify(x));
+  const read=(k,f)=>{try{const raw=localStorage.getItem(k);return raw===null?clone(f):JSON.parse(raw)}catch{return clone(f)}};
+  const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+  const now=()=>new Date().toISOString();
+  const unlocked=()=>sessionStorage.getItem(UNLOCK_KEY)==='1';
+  const uid=()=>crypto.randomUUID?.()||`pilot-${Date.now()}-${Math.random().toString(36).slice(2,9)}`;
+  const launch=()=>read(KEY,null);
+  const metrics=()=>window.KV_PILOT_METRICS?.summary?.()||null;
+  const gate=()=>read(GATE_KEY,{});
+  function setAssistance(enabled){const g=gate();g.assistanceEnabled=Boolean(enabled);save(GATE_KEY,g);dispatchEvent(new CustomEvent('kv:assistance',{detail:{enabled:g.assistanceEnabled}}));}
+  function educatorSummary(){const e=read(EDUCATOR_KEY,null);if(!e)return null;return {className:String(e.className||''),learnerAliasCount:Array.isArray(e.learners)?e.learners.length:0,linkedLocalLearners:Array.isArray(e.learners)?e.learners.filter(x=>x?.linkedLocal).length:0,assignmentCount:Array.isArray(e.assignments)?e.assignments.length:0};}
+  function publicLaunch(s=launch()){if(!s)return null;return {schema:s.schema,status:s.status,pilotId:s.pilotId,alias:s.alias,targetEndDate:s.targetEndDate||null,startedAt:s.startedAt||null,endedAt:s.endedAt||null,adultAcknowledgement:s.adultAcknowledgement||null,assistanceEnabledAtStart:Boolean(s.assistanceEnabledAtStart),finalSummary:s.finalSummary||null};}
+  function evidenceBundle(){return {schema:'kirthiverse.hitech.pilot-evidence-bundle.v1',exportedAt:now(),launch:publicLaunch(),currentMetrics:metrics(),educatorPilot:educatorSummary(),evidenceBoundary:{localOnly:true,adultIdentityVerified:false,legalConsentVerified:false,cloudTelemetry:false,tamperEvident:false,auditedResearchEvidence:false,productionReady:false}};}
+  function downloadJson(payload,name){const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),0)}
+
+  function lockedView(){return `<div class="page pl-page"><div class="page-title"><span>PILOT LAUNCH // PARENT GATE</span><h1>Unlock Parent Space first</h1><p>Pilot start/end and local-data controls require the grown-up session to be unlocked. This is still an on-device deterrent, not verified identity.</p></div><a class="primary" data-link href="/parent">Open Parent Space →</a></div>`;}
+  function setupView(){return `<div class="page pl-page"><div class="page-title"><span>PILOT LAUNCH READINESS // LOCAL ONLY</span><h1>Start a controlled pilot</h1><p>This step creates a local observation window. It does not verify guardian identity, create legal consent, or send child data to a server.</p></div>
+    <section class="glass-card"><small class="kicker">ADULT SELF-ACKNOWLEDGEMENT</small><form id="pl-start" class="pl-form">
+      <label>Pilot learner alias<input id="pl-alias" maxlength="30" placeholder="Alias only" required aria-label="Pilot learner alias"></label>
+      <label>Optional target end date<input id="pl-target" type="date" aria-label="Optional target end date"></label>
+      <label class="pl-check"><input id="pl-ack" type="checkbox" required> <span>${esc(ACK_TEXT)}</span></label>
+      <label class="pl-check"><input id="pl-assist" type="checkbox"> <span>Allow bounded hints/worked guidance during this pilot. Default is OFF. There is no live AI tutor in this build.</span></label>
+      <button class="primary" type="submit">Start pilot observation</button><p id="pl-status" class="pl-note" role="status" aria-live="polite"></p>
+    </form></section>
+    ${dataControls()}
+  </div>`;}
+  function activeView(s){const w=metrics();return `<div class="page pl-page"><div class="page-title"><span>PILOT ACTIVE // LOCAL ONLY</span><h1>${esc(s.alias||'Pilot learner')}</h1><p>Started ${esc(new Date(s.startedAt).toLocaleString())}${s.targetEndDate?` · target ${esc(s.targetEndDate)}`:''}. Adult acknowledgement is a local self-attestation only.</p></div>
+    <section class="pl-grid"><article class="glass-card"><small class="kicker">OBSERVATION</small><h2>${w?esc(w.observationDays):'—'} day${w?.observationDays===1?'':'s'}</h2><p>${w?.completeSevenDayWindow?'A full seven-day observation window is available.':'Do not describe this as seven-day retention yet.'}</p></article><article class="glass-card"><small class="kicker">ACTIVE LEARNING</small><h2>${w?esc(w.activeMinutes):'—'} min</h2><p>Conservative local measurement on eligible learning routes only.</p></article><article class="glass-card"><small class="kicker">ASSISTANCE AT START</small><h2>${s.assistanceEnabledAtStart?'ON':'OFF'}</h2><p>Bounded hints/worked guidance only; no live AI tutor.</p></article></section>
+    <section class="glass-card"><small class="kicker">PILOT ACTIONS</small><div class="pl-actions"><a class="primary" data-link href="/weekly-report">Weekly report →</a><button id="pl-export">Export evidence bundle</button><button id="pl-end">End pilot &amp; freeze summary</button></div><p id="pl-status" class="pl-note" role="status" aria-live="polite"></p></section>
+    ${dataControls()}
+  </div>`;}
+  function endedView(s){const f=s.finalSummary?.metrics;return `<div class="page pl-page"><div class="page-title"><span>PILOT ENDED // LOCAL EVIDENCE</span><h1>${esc(s.alias||'Pilot learner')}</h1><p>Ended ${esc(new Date(s.endedAt).toLocaleString())}. This evidence is local and not tamper-evident or audited research analytics.</p></div>
+    <section class="pl-grid"><article class="glass-card"><small class="kicker">OBSERVATION DAYS</small><h2>${f?esc(f.observationDays):'—'}</h2></article><article class="glass-card"><small class="kicker">ACTIVE MINUTES</small><h2>${f?esc(f.activeMinutes):'—'}</h2></article><article class="glass-card"><small class="kicker">LESSONS COMPLETED</small><h2>${f?esc(f.uniqueLessonsCompleted):'—'}</h2></article></section>
+    <section class="glass-card"><div class="pl-actions"><button id="pl-export">Export final evidence bundle</button><a class="primary" data-link href="/weekly-report">View current local report →</a></div></section>
+    ${dataControls()}
+  </div>`;}
+  function dataControls(){return `<section class="glass-card pl-danger"><small class="kicker">LOCAL DATA CONTROLS</small><p>Resetting pilot data keeps ordinary learning progress. Full local deletion removes only keys beginning <code>${PREFIX}</code> from this browser; unrelated site storage is left alone.</p><div class="pl-actions"><button id="pl-reset">Reset pilot-only data</button></div><label>Type <b>DELETE LOCAL DATA</b> to enable full local deletion<input id="pl-delete-confirm" autocomplete="off" aria-label="Type DELETE LOCAL DATA to confirm deletion"></label><button id="pl-delete" disabled>Delete all KirthiVerse local data on this browser</button><p id="pl-delete-status" class="pl-note" role="status" aria-live="polite"></p></section>`;}
+
+  function startPilot(e){e.preventDefault();const status=document.getElementById('pl-status'),alias=document.getElementById('pl-alias').value.trim(),target=document.getElementById('pl-target').value||null,ack=document.getElementById('pl-ack').checked,assist=document.getElementById('pl-assist').checked;if(!alias){status.textContent='Enter a learner alias.';return}if(!ack){status.textContent='Adult self-acknowledgement is required to start this local pilot.';return}if(target&&target<new Date().toISOString().slice(0,10)){status.textContent='Target end date cannot be in the past.';return}
+    localStorage.removeItem(METRICS_KEY);window.KV_PILOT_METRICS?.sync?.();const startedAt=now();const s={schema:'kirthiverse.hitech.pilot-launch.v1',status:'active',pilotId:uid(),alias:alias.slice(0,30),targetEndDate:target,startedAt,endedAt:null,adultAcknowledgement:{version:ACK_VERSION,statement:ACK_TEXT,acknowledgedAt:startedAt,mode:'self-attestation',identityVerified:false,legalConsentVerified:false},assistanceEnabledAtStart:Boolean(assist),finalSummary:null};save(KEY,s);setAssistance(assist);dispatchEvent(new CustomEvent('kv:pilot-started',{detail:{pilotId:s.pilotId,startedAt}}));render();}
+  function endPilot(){const s=launch();if(!s||s.status!=='active')return;window.KV_PILOT_METRICS?.sync?.();const endedAt=now(),summary={capturedAt:endedAt,metrics:metrics(),educatorPilot:educatorSummary(),evidenceBoundary:{localOnly:true,tamperEvident:false,auditedResearchEvidence:false}};s.status='ended';s.endedAt=endedAt;s.finalSummary=summary;save(KEY,s);dispatchEvent(new CustomEvent('kv:pilot-ended',{detail:{pilotId:s.pilotId,endedAt}}));render();}
+  function resetPilot(){if(!confirm('Reset pilot-only launch, metrics and educator-plan data? Ordinary learning progress and Parent Space remain.'))return;[KEY,METRICS_KEY,EDUCATOR_KEY].forEach(k=>localStorage.removeItem(k));dispatchEvent(new CustomEvent('kv:pilot-reset'));render();}
+  function fullDelete(){const input=document.getElementById('pl-delete-confirm'),status=document.getElementById('pl-delete-status');if(input?.value!=='DELETE LOCAL DATA'){status.textContent='Type the exact confirmation phrase first.';return}if(!confirm('Delete all KirthiVerse local data on this browser? This cannot be undone.'))return;const localKeys=[];for(let i=0;i<localStorage.length;i++)localKeys.push(localStorage.key(i));for(const k of localKeys.filter(Boolean))if(k.startsWith(PREFIX))localStorage.removeItem(k);const sessionKeys=[];for(let i=0;i<sessionStorage.length;i++)sessionKeys.push(sessionStorage.key(i));for(const k of sessionKeys.filter(Boolean))if(k.startsWith(PREFIX))sessionStorage.removeItem(k);status.textContent='KirthiVerse local data deleted. Unrelated origin storage was not touched.';history.replaceState({},'', '/');location.reload();}
+  function bind(){document.getElementById('pl-start')?.addEventListener('submit',startPilot);document.getElementById('pl-export')?.addEventListener('click',()=>downloadJson(evidenceBundle(),'kirthiverse-pilot-evidence.json'));document.getElementById('pl-end')?.addEventListener('click',endPilot);document.getElementById('pl-reset')?.addEventListener('click',resetPilot);const input=document.getElementById('pl-delete-confirm'),button=document.getElementById('pl-delete');input?.addEventListener('input',()=>{button.disabled=input.value!=='DELETE LOCAL DATA'});button?.addEventListener('click',fullDelete)}
+  function injectParentCard(){if(location.pathname!=='/parent'||!unlocked())return;const main=document.querySelector('main');if(!main||main.querySelector('.pl-parent-card'))return;const s=launch(),card=document.createElement('section');card.className='glass-card pl-parent-card';card.innerHTML=`<small class="kicker">PILOT LAUNCH</small><h3>${s?.status==='active'?'Pilot observation active':s?.status==='ended'?'Pilot ended — evidence available':'Pilot not started'}</h3><p>${s?.status==='active'?'Longitudinal local evidence is being collected from this point forward.':'Use the controlled pilot gate before presenting longitudinal evidence externally.'}</p><a class="primary" data-link href="/pilot-readiness">Pilot readiness →</a>`;main.appendChild(card)}
+  function render(){injectParentCard();if(location.pathname!=='/pilot-readiness')return;const main=document.querySelector('main');if(!main)return;if(!unlocked()){main.innerHTML=lockedView();return}const s=launch();main.innerHTML=!s?setupView():s.status==='active'?activeView(s):endedView(s);bind()}
+
+  addEventListener('kv:rendered',render);render();
+  window.KV_PILOT_LAUNCH={version:'v1',route:'/pilot-readiness',localOnly:true,adultIdentityVerified:false,legalConsentVerified:false,productionReady:false,state:()=>publicLaunch(),evidence:evidenceBundle};
+})();

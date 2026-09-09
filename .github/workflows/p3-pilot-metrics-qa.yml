@@ -1,0 +1,92 @@
+name: KirthiVerse P3 Pilot Metrics QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'pilot-metrics-v1.js'
+      - 'pilot-metrics-v1.css'
+      - 'p0-entry-v1.js'
+      - 'sw-v30.js'
+      - 'scripts/pilot-metrics-browser-qa.mjs'
+      - 'PILOT_METRICS_EVIDENCE.md'
+      - '.github/workflows/p3-pilot-metrics-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  LOCAL_URL: http://127.0.0.1:8770
+  KV_DEBUG_PORT: '9342'
+
+jobs:
+  pilot-metrics-qa:
+    name: pilot-metrics-qa
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+
+      - name: Static evidence and privacy boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check pilot-metrics-v1.js
+          node --check p0-entry-v1.js
+          node --check scripts/pilot-metrics-browser-qa.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          js=Path('pilot-metrics-v1.js').read_text()
+          entry=Path('p0-entry-v1.js').read_text()
+          sw=Path('sw-v30.js').read_text()
+          for marker in ['trackingStartedAt','baselineEstablishedAt','HEARTBEAT_MS=15000','RECENT_ACTIVITY_MS=60000','completeSevenDayWindow','tamperEvident:false','backfillsHistory:false','LOCAL_PILOT_EVIDENCE_ONLY','/weekly-report']:
+              assert marker in js, marker
+          for marker in ["path.startsWith('/lesson/')","path==='/diagnostic'","path==='/speedlab'"]:
+              assert marker in js, marker
+          for forbidden in ['fetch(', 'XMLHttpRequest', 'sendBeacon(', 'teacherEmail', 'studentEmail', 'schoolId']:
+              assert forbidden not in js, forbidden
+          for marker in ['pilot-metrics-v1.js','pilot-metrics-v1.css','/weekly-report']:
+              assert marker in entry, marker
+          for marker in ['/pilot-metrics-v1.js','/pilot-metrics-v1.css']:
+              assert marker in sw, marker
+          print('PILOT_METRICS_STATIC_PASS')
+          PY
+
+      - name: Start site and Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          python3 -m http.server 8770 --bind 127.0.0.1 >/tmp/kv-p3-http.log 2>&1 &
+          echo $! >/tmp/kv-p3-http.pid
+          for i in $(seq 1 20); do curl -fsS "$LOCAL_URL/index.html" >/dev/null && break; sleep 1; done
+          rm -rf /tmp/kv-p3-chrome
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=$KV_DEBUG_PORT --user-data-dir=/tmp/kv-p3-chrome "$LOCAL_URL/?pilotmetrics=$(date +%s)" >/tmp/kv-p3-chrome.log 2>&1 &
+          echo $! >/tmp/kv-p3-chrome.pid
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:$KV_DEBUG_PORT/json/list >/dev/null && break; sleep 1; done
+
+      - name: Browser longitudinal evidence flow
+        run: node scripts/pilot-metrics-browser-qa.mjs
+
+      - name: Stop local processes
+        if: always()
+        shell: bash
+        run: |
+          test ! -f /tmp/kv-p3-chrome.pid || kill "$(cat /tmp/kv-p3-chrome.pid)" 2>/dev/null || true
+          test ! -f /tmp/kv-p3-http.pid || kill "$(cat /tmp/kv-p3-http.pid)" 2>/dev/null || true
+
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### KirthiVerse P3 Pilot Metrics' >> "$GITHUB_STEP_SUMMARY"
+          echo '- existing local evidence is baselined, not backfilled' >> "$GITHUB_STEP_SUMMARY"
+          echo '- active time requires visible + recently interactive learner route' >> "$GITHUB_STEP_SUMMARY"
+          echo '- lesson / diagnostic / Quick Skills / answer-check signals checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- early observation window cannot claim seven-day retention' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Parent + Educator weekly-report integration checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- export privacy/evidence boundary checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- mobile overflow + PWA cache checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- local-only pilot evidence; not tamper-evident or audited research analytics' >> "$GITHUB_STEP_SUMMARY"

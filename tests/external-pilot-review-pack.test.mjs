@@ -16,10 +16,20 @@ const files=[
   'PILOT_APPROVAL_REGISTER_TEMPLATE.md'
 ];
 const docs=Object.fromEntries(files.map(f=>[f,fs.readFileSync(path.join(root,f),'utf8')]));
+const explicitBoundary={
+  'EXTERNAL_PILOT_REVIEW_PACK.md':/not legal advice, consent, school approval, ethics approval, safeguarding certification, privacy certification, or production readiness/i,
+  'PILOT_PARTICIPANT_INFORMATION_DRAFT.md':/not legal advice and is not evidence that consent\/permission has been obtained/i,
+  'PILOT_DATA_MINIMISATION_RETENTION_DRAFT.md':/not a compliance certification or legal determination/i,
+  'PILOT_INCIDENT_ESCALATION_DRAFT.md':/not a safeguarding procedure, emergency service, legal policy or compliance certification/i,
+  'PILOT_STOPPING_CRITERIA_DRAFT.md':/not legal\/safeguarding certification/i,
+  'PILOT_METRICS_PROTOCOL_DRAFT.md':/not a research study protocol, statistical analysis plan, or proof of educational efficacy/i,
+  'PILOT_SPECIALIST_REVIEW_CHECKLIST.md':/does not itself create legal\/safeguarding certification/i,
+  'PILOT_APPROVAL_REGISTER_TEMPLATE.md':/BLANK TEMPLATE — NO APPROVALS RECORDED/i
+};
 for(const [f,s] of Object.entries(docs)){
   assert.ok(s.length>500,`${f} unexpectedly short`);
   assert.match(s,/DRAFT|TEMPLATE/,`${f} must visibly remain draft/template material`);
-  assert.match(s,/not (legal advice|a compliance certification|legal\/safeguarding certification|evidence that consent|legal advice, consent)/i,`${f} needs an explicit non-certification/non-legal boundary`);
+  assert.match(s,explicitBoundary[f],`${f} needs its explicit draft/non-certification boundary`);
 }
 const index=docs['EXTERNAL_PILOT_REVIEW_PACK.md'];
 for(const f of files.slice(1))assert.ok(index.includes(`\`${f}\``)||index.includes(f),`index missing ${f}`);
@@ -35,27 +45,27 @@ for(const marker of ['P4 readiness changes from READY to HOLD','Evidence-quality
 const metrics=docs['PILOT_METRICS_PROTOCOL_DRAFT.md'];
 for(const marker of ['does **not**, by itself, support','seven-day retention','Do not infer learning improvement','Evidence source hierarchy','REAL REFERENCE REQUIRED'])assert.ok(metrics.includes(marker),marker);
 const review=docs['PILOT_SPECIALIST_REVIEW_CHECKLIST.md'];
-for(const marker of ['CHANGES REQUIRED — DO NOT START PILOT','NOT APPROVED — DO NOT START PILOT','checking boxes in a repository copy is not sufficient'.toUpperCase()]){}
 assert.ok(review.includes('CHANGES REQUIRED — DO NOT START PILOT'));
 assert.ok(review.includes('NOT APPROVED — DO NOT START PILOT'));
 assert.match(review,/Checking boxes in a repository copy is not sufficient evidence of approval/i);
 const register=docs['PILOT_APPROVAL_REGISTER_TEMPLATE.md'];
 for(const marker of ['BLANK TEMPLATE — NO APPROVALS RECORDED','REAL REFERENCE REQUIRED','P4 transfer checklist','NOT APPROVED — TEMPLATE ONLY'])assert.ok(register.includes(marker),marker);
+
+// Detect common unqualified positive assertions while allowing those phrases only inside clear negation/boundary language.
 const unsafePositive=[
-  /KirthiVerse is (?:legally )?compliant/i,
-  /KirthiVerse is safeguarding certified/i,
-  /consent has been obtained/i,
-  /guardian identity (?:is|has been) verified/i,
-  /production ready/i,
-  /proves learning improvement/i,
-  /proves retention/i
+  /KirthiVerse is (?:legally )?compliant/ig,
+  /KirthiVerse is safeguarding certified/ig,
+  /consent has been obtained/ig,
+  /guardian identity (?:is|has been) verified/ig,
+  /production ready/ig,
+  /proves learning improvement/ig,
+  /proves retention/ig
 ];
-for(const [f,s] of Object.entries(docs))for(const re of unsafePositive){
-  const matches=s.match(new RegExp(re.source,'ig'))||[];
-  // Positive terms may appear inside explicit negation/list-of-things-not-provided. Reject only common unqualified assertions.
-  for(const m of matches){
-    const i=s.toLowerCase().indexOf(m.toLowerCase()),context=s.slice(Math.max(0,i-60),i+m.length+60).toLowerCase();
-    assert.ok(/not|does not|no |without|never|isn't|is not/.test(context),`${f} contains unsafe unqualified assertion: ${m}`);
+for(const [f,s] of Object.entries(docs))for(const re0 of unsafePositive){
+  const re=new RegExp(re0.source,re0.flags);let m;
+  while((m=re.exec(s))!==null){
+    const context=s.slice(Math.max(0,m.index-90),Math.min(s.length,m.index+m[0].length+90)).toLowerCase();
+    assert.ok(/not|does not|no |without|never|isn't|is not|cannot|do not/.test(context),`${f} contains unsafe unqualified assertion: ${m[0]}`);
   }
 }
 console.log('EXTERNAL_PILOT_REVIEW_PACK_CONTRACT_PASS');

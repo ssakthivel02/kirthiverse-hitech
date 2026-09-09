@@ -2,7 +2,7 @@
    (same DOM-injection technique visual-controller-v27.js already uses for the Profile link)
    and a "Start here" panel on the home page. Does not modify app.js. */
 (()=>{
-  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   function addNavLinks(){
     const nav=document.querySelector('.topbar nav'); if(!nav)return;

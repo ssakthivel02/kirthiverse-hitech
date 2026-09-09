@@ -10,6 +10,14 @@
 .continuity-v8>p,.a11y-v8>div:first-child>p{color:var(--vm-ink-soft,#50605B)!important}
 
 .vm-nav-p0{white-space:nowrap}
+/* Current-route foreground/background must not tween through low-contrast intermediate colors.
+   Keep transform motion only; the selected-state colors settle immediately in every engine. */
+.topbar nav a.active,.topbar nav a.nav-current,.topbar nav a[aria-current="page"]{
+  background:var(--vm-green,#2F6B57)!important;
+  color:var(--vm-white,#FFFDF8)!important;
+  transition:transform .18s var(--vm-ease,ease)!important;
+}
+.topbar nav a.active>span,.topbar nav a.nav-current>span,.topbar nav a[aria-current="page"]>span{color:inherit!important}
 
 .p0-panel{margin:28px 0}
 .p0-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}

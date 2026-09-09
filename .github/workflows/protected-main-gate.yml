@@ -1,0 +1,73 @@
+name: Protected Main Gate
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  protected-main-gate:
+    name: protected-main-gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout full candidate
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Reject whitespace/conflict defects
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check "${{ github.event.pull_request.base.sha || 'HEAD^' }}" HEAD
+          if git grep -n -E '^(<<<<<<<|=======|>>>>>>>)' -- ':!*.md' ':!Claude outputs/**'; then
+            echo 'Unresolved merge-conflict marker found.' >&2
+            exit 1
+          fi
+
+      - name: Validate static application contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, re
+          from pathlib import Path
+
+          required = [
+              'index.html','app.js','manifest.webmanifest','sw-v30.js',
+              'data/lessons-1.js','data/assessments-1.js'
+          ]
+          for p in required:
+              assert Path(p).is_file(), f'missing required file: {p}'
+
+          manifest = json.loads(Path('manifest.webmanifest').read_text(encoding='utf-8'))
+          assert manifest.get('start_url') == '/', 'manifest start_url must remain /'
+          assert manifest.get('scope') == '/', 'manifest scope must remain /'
+
+          html = Path('index.html').read_text(encoding='utf-8')
+          refs = set(re.findall(r'''(?:src|href)=["'](/[^"'?#]+)''', html))
+          missing=[]
+          for ref in refs:
+              if ref == '/':
+                  continue
+              p = Path(ref.lstrip('/'))
+              if p.suffix.lower() in {'.js','.css','.svg','.webmanifest','.png','.jpg','.jpeg','.webp'} and not p.exists():
+                  missing.append(ref)
+          assert not missing, f'index references missing local assets: {missing}'
+
+          print(f'PROTECTED_MAIN_STATIC_PASS refs={len(refs)} required={len(required)}')
+          PY
+
+      - name: Governance summary
+        if: always()
+        run: |
+          echo '### Protected Main Gate' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Always runs for every pull request targeting main' >> "$GITHUB_STEP_SUMMARY"
+          echo '- git diff whitespace/conflict check' >> "$GITHUB_STEP_SUMMARY"
+          echo '- manifest and core static-file contract check' >> "$GITHUB_STEP_SUMMARY"
+          echo '- local assets referenced by index.html must exist' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Feature-specific QA workflows remain additive, not replacements for this gate' >> "$GITHUB_STEP_SUMMARY"

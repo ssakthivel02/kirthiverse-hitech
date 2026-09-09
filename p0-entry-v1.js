@@ -1,13 +1,15 @@
-/* KirthiVerse P0 entry points v2 — adds Diagnostic / Speed Lab / Parent Space to the top nav,
-   loads the additive Educator Pilot module, and adds a "Start here" panel on the home page.
+/* KirthiVerse P0 entry points v3 — adds Diagnostic / Speed Lab / Parent Space to the top nav,
+   loads the additive Educator Pilot + Pilot Metrics modules, and adds a "Start here" panel on the home page.
    Does not modify app.js. */
 (()=>{
-  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 
-  function loadEducatorPilot(){
-    if(!document.querySelector('link[data-ep-pilot]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/educator-pilot-v1.css?v=EDUCATOR-PILOT-1';l.dataset.epPilot='style';document.head.appendChild(l);}
-    if(!document.querySelector('script[data-ep-pilot]')){const s=document.createElement('script');s.src='/educator-pilot-v1.js?v=EDUCATOR-PILOT-1';s.dataset.epPilot='script';s.defer=true;document.body.appendChild(s);}
+  function loadAddon({tag,css,js,version}){
+    if(css&&!document.querySelector(`link[data-${tag}]`)){const l=document.createElement('link');l.rel='stylesheet';l.href=`/${css}?v=${version}`;l.setAttribute(`data-${tag}`,'style');document.head.appendChild(l);}
+    if(js&&!document.querySelector(`script[data-${tag}]`)){const s=document.createElement('script');s.async=false;s.src=`/${js}?v=${version}`;s.setAttribute(`data-${tag}`,'script');document.body.appendChild(s);}
   }
+  function loadEducatorPilot(){loadAddon({tag:'ep-pilot',css:'educator-pilot-v1.css',js:'educator-pilot-v1.js',version:'EDUCATOR-PILOT-1'})}
+  function loadPilotMetrics(){loadAddon({tag:'pm-pilot',css:'pilot-metrics-v1.css',js:'pilot-metrics-v1.js',version:'PILOT-METRICS-1'})}
 
   function addNavLinks(){
     const nav=document.querySelector('.topbar nav'); if(!nav)return;
@@ -40,11 +42,13 @@
         ${rec?`<a class="p0-card" data-link href="/lesson/${encodeURIComponent(rec.lesson.id)}"><b>3</b><h3>${esc(window.KV_MASTERY.title(rec.lesson))}</h3><p>${esc(rec.reason)}</p></a>`:''}
         <a class="p0-card" data-link href="/parent"><b>◈</b><h3>Parent Space</h3><p>Progress dashboard &amp; controls.</p></a>
         <a class="p0-card" data-link href="/educator"><b>▦</b><h3>Educator Pilot</h3><p>Local roster, assignments &amp; evidence.</p></a>
+        <a class="p0-card" data-link href="/weekly-report"><b>▥</b><h3>Weekly Report</h3><p>Real local pilot activity from this point forward.</p></a>
       </div>`;
     const hero=main.querySelector('.hero'); if(hero&&hero.parentNode)hero.parentNode.insertBefore(section,hero.nextSibling); else main.prepend(section);
   }
 
   loadEducatorPilot();
+  loadPilotMetrics();
   addEventListener('kv:rendered',()=>{ addNavLinks(); addHomePanel(); });
   addNavLinks(); addHomePanel();
 })();

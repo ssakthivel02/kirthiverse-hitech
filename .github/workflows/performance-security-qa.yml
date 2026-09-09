@@ -288,7 +288,7 @@ jobs:
           await page.waitForFunction(()=>Boolean(window.KV_APP_RUNTIME&&window.KV_NAVIGATION));
           const lesson='math.number.place-value.base10.age6-8.l1';
           await page.evaluate(id=>window.KV_NAVIGATION.navigate('/lesson/'+id),lesson);
-          await page.waitForFunction(()=>location.pathname.startsWith('/lesson/')&&Boolean(document.querySelector('[data-teacher="v1"]'))&&window.KV_TEACHER_RUNTIME?.bilingual===true);
+          await page.waitForFunction(()=>location.pathname.startsWith('/lesson/')&&Boolean(document.querySelector('[data-teacher="v2"]'))&&window.KV_TEACHER_RUNTIME?.bilingual===true);
           const entries=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,initiatorType:x.initiatorType})));
           const origins=[...new Set(entries.map(x=>new URL(x.name,base).origin))];
           const allowed=[baseOrigin,'https://fonts.googleapis.com','https://fonts.gstatic.com'];

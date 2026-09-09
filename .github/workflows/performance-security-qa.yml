@@ -196,16 +196,49 @@ jobs:
       - name: Install Chromium engine
         run: npx playwright install --with-deps chromium
 
-      - name: Start local Cloudflare assets runtime
+      - name: Stage isolated assets for local Cloudflare proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .qa-assets .qa-wrangler
+          mkdir -p .qa-assets .qa-wrangler
+          rsync -a --delete \
+            --exclude-from=.assetsignore \
+            --exclude='.qa-assets/' \
+            --exclude='.qa-wrangler/' \
+            --exclude='node_modules/' \
+            --exclude='playwright-report/' \
+            --exclude='test-results/' \
+            --exclude='tests/' \
+            --exclude='scripts/' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='playwright.config.mjs' \
+            ./ .qa-assets/
+          test -f .qa-assets/index.html
+          test -f .qa-assets/_headers
+          test -f .qa-assets/core-runtime-v30.js
+          test -f .qa-assets/data/lessons-1.js
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          cfg=json.loads(Path('wrangler.jsonc').read_text())
+          cfg['name']='kirthiverse-hitech-local-qa'
+          cfg['assets']['directory']='../.qa-assets'
+          Path('.qa-wrangler/wrangler.jsonc').write_text(json.dumps(cfg,indent=2)+'\n')
+          PY
+          echo 'CLOUDFLARE_LOCAL_STAGE_PASS'
+
+      - name: Start staged local Cloudflare assets runtime
         shell: bash
         run: |
           set -euo pipefail
           rm -f /tmp/kv-wrangler.pid /tmp/kv-wrangler.log
-          setsid npx --yes wrangler@4 dev --ip 127.0.0.1 --port 8788 </dev/null >/tmp/kv-wrangler.log 2>&1 &
+          setsid npx --yes wrangler@4 dev --config .qa-wrangler/wrangler.jsonc --ip 127.0.0.1 --port 8788 </dev/null >/tmp/kv-wrangler.log 2>&1 &
           wpid=$!
           echo "$wpid" > /tmp/kv-wrangler.pid
           ready=0
-          for i in $(seq 1 35); do
+          for i in $(seq 1 30); do
             if ! kill -0 "$wpid" 2>/dev/null; then
               echo 'Wrangler process exited before readiness'
               cat /tmp/kv-wrangler.log || true
@@ -278,6 +311,7 @@ jobs:
             kill -- -"$wpid" 2>/dev/null || kill "$wpid" 2>/dev/null || true
           fi
           tail -n 80 /tmp/kv-wrangler.log 2>/dev/null || true
+          rm -rf .qa-assets .qa-wrangler
 
       - name: Static/local closure summary
         if: always()
@@ -289,8 +323,9 @@ jobs:
           echo '- CSP inline-script hashes derived from index.html and matched exactly' >> "$GITHUB_STEP_SUMMARY"
           echo '- Security-header policy contract checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Known Manus detector markers allowed only in the audited detector file' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Wrangler assets-only SPA contract checked; custom/production routes rejected' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Local Cloudflare runtime response headers checked without credentials' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Real Wrangler config kept assets-only SPA with custom/production routes rejected' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Isolated staged Cloudflare local runtime used to avoid repository-root watch feedback' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Local Cloudflare response headers checked without credentials' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chromium bilingual guide, page-error and unexpected-origin gates checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- No PR deployment credentials are used by this job' >> "$GITHUB_STEP_SUMMARY"
 

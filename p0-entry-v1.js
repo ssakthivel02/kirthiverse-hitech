@@ -2,7 +2,7 @@
    loads the additive Educator Pilot + Pilot Metrics modules, and adds a "Start here" panel on the home page.
    Does not modify app.js. */
 (()=>{
-  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   function loadAddon({tag,css,js,version}){
     if(css&&!document.querySelector(`link[data-${tag}]`)){const l=document.createElement('link');l.rel='stylesheet';l.href=`/${css}?v=${version}`;l.setAttribute(`data-${tag}`,'style');document.head.appendChild(l);}

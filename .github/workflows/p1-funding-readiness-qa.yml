@@ -1,0 +1,175 @@
+name: KirthiVerse P1 Funding Readiness QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'parent-v1.js'
+      - 'diagnostic-v1.js'
+      - 'p0-entry-v1.js'
+      - 'p0-v1.css'
+      - 'sw-v30.js'
+      - 'mastery-engine-v1.js'
+      - 'speedlab-v1.js'
+      - 'lesson-check-v1.js'
+      - 'index.html'
+      - '.github/workflows/p1-funding-readiness-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  LOCAL_URL: http://127.0.0.1:8765
+
+jobs:
+  p1-funding-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+
+      - name: Static safety contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          parent=Path('parent-v1.js').read_text()
+          diagnostic=Path('diagnostic-v1.js').read_text()
+          nav=Path('p0-entry-v1.js').read_text()
+          sw=Path('sw-v30.js').read_text()
+
+          for marker in ['PBKDF2','SHA-256','pinHash','pinSalt','RATE_KEY','pinProtection']:
+              assert marker in parent, marker
+          assert "saveGate({pin," not in parent, 'new plaintext PIN write must not return'
+          assert "schema:'kirthiverse.hitech.p0-backup.v2'" in parent
+          assert 'PIN secrets are excluded from exported backups' in parent
+
+          for marker in ['conciseAnswer','conciseAnswersOnly:true','verified KirthiVerse mathematics corpus']:
+              assert marker in diagnostic, marker
+
+          for marker in ["setAttribute('aria-label',label)","setAttribute('aria-current','page')",'aria-labelledby']:
+              assert marker in nav, marker
+
+          for marker in ["CACHE='kirthiverse-preview-v31'",'/parent-v1.js','/diagnostic-v1.js','/speedlab-v1.js','/mastery-engine-v1.js','/p0-entry-v1.js','/p0-v1.css']:
+              assert marker in sw, marker
+
+          print('P1_STATIC_PASS: parent safety + diagnostic + accessibility + PWA markers')
+          PY
+
+      - name: Browser functional checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/kv-p1-http.log 2>&1 &
+          spid=$!
+          trap 'kill "${spid:-}" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+
+          ready=0
+          for i in $(seq 1 20); do
+            if curl -fsS "$LOCAL_URL/index.html" -o /tmp/kv-p1-index.html; then ready=1; break; fi
+            sleep 1
+          done
+          if [ "$ready" != 1 ]; then cat /tmp/kv-p1-http.log || true; exit 1; fi
+
+          rm -rf /tmp/kv-p1-chrome
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage \
+            --remote-debugging-port=9334 --user-data-dir=/tmp/kv-p1-chrome \
+            "$LOCAL_URL/?p1=$(date +%s)" >/tmp/kv-p1-chrome.log 2>&1 &
+          cpid=$!
+
+          debug=0
+          for i in $(seq 1 25); do
+            if curl -fsS http://127.0.0.1:9334/json/list >/tmp/kv-p1-pages.json; then debug=1; break; fi
+            sleep 1
+          done
+          if [ "$debug" != 1 ]; then cat /tmp/kv-p1-chrome.log || true; exit 1; fi
+
+          node <<'NODE'
+          const pages=await fetch('http://127.0.0.1:9334/json/list').then(r=>r.json());
+          const page=pages.find(x=>x.type==='page');
+          if(!page)throw Error('No Chromium page target');
+          const ws=new WebSocket(page.webSocketDebuggerUrl);
+          await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0; const pending=new Map();
+          ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
+          await send('Runtime.enable'); await send('Page.enable');
+          const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||JSON.stringify(r.exceptionDetails));return r.result?.value};
+          const wait=async(expression,label,timeout=20000)=>{const end=Date.now()+timeout;while(Date.now()<end){try{if(await ev(expression))return true}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout: '+label)};
+          const nav=async path=>{await ev(`window.KV_NAVIGATION.navigate(${JSON.stringify(path)});true`);await wait(`location.pathname===${JSON.stringify(path)}`,'route '+path)};
+
+          await wait(`!!window.KV_NAVIGATION && !!window.KV_PARENT_RUNTIME && !!window.KV_DIAGNOSTIC_RUNTIME`,'P1 runtimes');
+          if(!(await ev(`window.KV_PARENT_RUNTIME.version==='v2'&&window.KV_PARENT_RUNTIME.realAuthentication===false`)))throw Error('Parent runtime contract mismatch');
+          if(!(await ev(`window.KV_DIAGNOSTIC_RUNTIME.conciseAnswersOnly===true`)))throw Error('Diagnostic concise-answer contract missing');
+
+          // Accessibility: injected P0 navigation has explicit names.
+          const navA11y=await ev(`['/diagnostic','/speedlab','/parent'].every(h=>{const a=document.querySelector('.topbar nav a[href="'+h+'"]');return !!a&&!!a.getAttribute('aria-label')})`);
+          if(!navA11y)throw Error('P0 nav accessible names missing');
+
+          // New PIN setup: raw PIN must not be persisted.
+          await nav('/parent');
+          await wait(`!!document.getElementById('pv-setup')`,'parent setup');
+          await ev(`document.getElementById('pv-child').value='QA Learner';document.getElementById('pv-pin').value='4826';document.getElementById('pv-setup').requestSubmit();true`);
+          await wait(`!!document.getElementById('pv-export')`,'parent dashboard after setup');
+          const gate=await ev(`JSON.parse(localStorage.getItem('kirthiverse.hitech.parentgate.v1'))`);
+          if(gate.pin!==undefined)throw Error('Raw PIN field persisted');
+          if(!gate.pinHash||!gate.pinSalt||!gate.pinIterations)throw Error('Hashed PIN fields missing');
+          if(JSON.stringify(gate).includes('4826'))throw Error('Raw PIN leaked into gate payload');
+
+          // Export backup must not contain PIN/hash/salt secrets.
+          const backup=await ev(`(async()=>{window.__kvBlob=null;const old=URL.createObjectURL;URL.createObjectURL=b=>{window.__kvBlob=b;return 'blob:qa'};const oldClick=HTMLAnchorElement.prototype.click;HTMLAnchorElement.prototype.click=function(){};document.getElementById('pv-export').click();const text=await window.__kvBlob.text();URL.createObjectURL=old;HTMLAnchorElement.prototype.click=oldClick;return text})()`);
+          if(backup.includes('4826')||backup.includes('pinHash')||backup.includes('pinSalt')||backup.includes('pinIterations'))throw Error('Backup contains PIN secret material');
+
+          // Lock + failed-attempt throttling.
+          await ev(`document.getElementById('pv-lock').click();true`);
+          await wait(`!!document.getElementById('pv-unlock')`,'parent locked');
+          for(let i=0;i<5;i++){
+            await ev(`document.getElementById('pv-pin-try').value='0000';document.getElementById('pv-unlock').requestSubmit();true`);
+            await new Promise(r=>setTimeout(r,140));
+          }
+          const rate=await ev(`JSON.parse(localStorage.getItem('kirthiverse.hitech.parentgate.rate.v1'))`);
+          if(!(rate.failures>=5&&rate.lockUntil>Date.now()))throw Error('PIN throttling did not activate');
+          // Expire wait without sleeping 30s, then correct PIN must unlock.
+          await ev(`localStorage.setItem('kirthiverse.hitech.parentgate.rate.v1',JSON.stringify({failures:5,lockUntil:Date.now()-1}));window.KV_NAVIGATION.navigate('/');window.KV_NAVIGATION.navigate('/parent');true`);
+          await wait(`!!document.getElementById('pv-unlock')`,'parent relock after expired wait');
+          await ev(`document.getElementById('pv-pin-try').value='4826';document.getElementById('pv-unlock').requestSubmit();true`);
+          await wait(`!!document.getElementById('pv-export')`,'correct PIN unlock');
+
+          // Diagnostic should expose a usable concise verified set.
+          await nav('/diagnostic');
+          if(!(await ev(`!!document.getElementById('dg-start') || !!document.getElementById('dg-retake')`)))throw Error('Diagnostic start/result control missing');
+          await ev(`(document.getElementById('dg-start')||document.getElementById('dg-retake')).click();true`);
+          await wait(`!!document.getElementById('dg-answer')`,'diagnostic first question');
+          const promptLength=await ev(`document.querySelector('.dg-session article h1')?.textContent?.trim().length||0`);
+          if(!(promptLength>0&&promptLength<=280))throw Error('Diagnostic prompt is empty or too long: '+promptLength);
+
+          // PWA cache generation includes P0 assets.
+          await ev(`navigator.serviceWorker.register('/sw-v30.js',{scope:'/',updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);
+          await wait(`caches.keys().then(k=>k.includes('kirthiverse-preview-v31'))`,'v31 PWA cache',20000);
+          const cached=await ev(`caches.open('kirthiverse-preview-v31').then(async c=>(await Promise.all(['/parent-v1.js','/diagnostic-v1.js','/speedlab-v1.js','/mastery-engine-v1.js','/p0-entry-v1.js','/p0-v1.css'].map(x=>c.match(x).then(Boolean)))).every(Boolean))`);
+          if(!cached)throw Error('One or more P0 assets missing from v31 cache');
+
+          console.log('P1_BROWSER_PASS: PIN hashed + throttled + unlock verified');
+          console.log('P1_BROWSER_PASS: backup excludes PIN secret material');
+          console.log('P1_BROWSER_PASS: diagnostic concise verified question rendered');
+          console.log('P1_BROWSER_PASS: P0 nav accessible names present');
+          console.log('P1_BROWSER_PASS: v31 cache contains P0 assets');
+          ws.close();
+          NODE
+
+      - name: P1 closure summary
+        if: always()
+        run: |
+          echo '### KirthiVerse P1 Funding Readiness QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Parent PIN hashing/throttling contract checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- PIN-secret-free backup checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Concise verified diagnostic question checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- P0 nav accessible names checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- v31 PWA cache P0 assets checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- This workflow is a funding-readiness hardening gate, not a production-readiness declaration' >> "$GITHUB_STEP_SUMMARY"

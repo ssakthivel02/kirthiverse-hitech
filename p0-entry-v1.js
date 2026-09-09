@@ -8,10 +8,15 @@
     const nav=document.querySelector('.topbar nav'); if(!nav)return;
     const links=[['/diagnostic','◈','Diagnostic'],['/speedlab','⚡','Speed Lab'],['/parent','⚿','Parent Space']];
     for(const [href,icon,label] of links){
-      if(nav.querySelector(`a[href="${href}"]`))continue;
-      const a=document.createElement('a'); a.href=href; a.dataset.link=''; a.className='vm-nav-p0';
-      a.innerHTML=`${icon} <span>${label}</span>`;
-      nav.appendChild(a);
+      let a=nav.querySelector(`a[href="${href}"]`);
+      if(!a){
+        a=document.createElement('a'); a.href=href; a.dataset.link=''; a.className='vm-nav-p0';
+        a.innerHTML=`${icon} <span>${label}</span>`;
+        nav.appendChild(a);
+      }
+      a.setAttribute('aria-label',label);
+      a.setAttribute('title',label);
+      if(location.pathname===href)a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
     }
   }
 
@@ -22,7 +27,8 @@
     const rec=window.KV_MASTERY?.recommend?.();
     const section=document.createElement('section');
     section.className='p0-panel section';
-    section.innerHTML=`<div class="section-head"><div><span>P0 LEARNING LOOP</span><h2>Start today's maths session.</h2></div></div>
+    section.setAttribute('aria-labelledby','p0-learning-loop-title');
+    section.innerHTML=`<div class="section-head"><div><span>P0 LEARNING LOOP</span><h2 id="p0-learning-loop-title">Start today's maths session.</h2></div></div>
       <div class="p0-cards">
         <a class="p0-card" data-link href="/diagnostic"><b>1</b><h3>Maths Diagnostic</h3><p>Find your starting point.</p></a>
         <a class="p0-card" data-link href="/speedlab"><b>2</b><h3>Quick Skills</h3><p>Fast fluency practice.</p></a>

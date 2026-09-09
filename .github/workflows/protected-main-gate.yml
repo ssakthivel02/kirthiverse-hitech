@@ -119,6 +119,13 @@ jobs:
           )
           PY
 
+      - name: Validate cloud identity architecture HOLD
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/validate-cloud-identity-gates.mjs
+          node tests/cloud-identity-gates.test.mjs
+
       - name: Validate static application contract
         shell: bash
         run: |
@@ -160,6 +167,7 @@ jobs:
           echo '- OLD/LEGACY remains read-only reference' >> "$GITHUB_STEP_SUMMARY"
           echo '- completed-work duplication and evidence-first task rules enforced' >> "$GITHUB_STEP_SUMMARY"
           echo '- README runtime generation must match the live index.html runtime marker and asset' >> "$GITHUB_STEP_SUMMARY"
+          echo '- cloud identity architecture remains fail-closed; P4/P10/local pilot cannot self-authorise real identity' >> "$GITHUB_STEP_SUMMARY"
           echo '- git diff whitespace/conflict check' >> "$GITHUB_STEP_SUMMARY"
           echo '- manifest and core static-file contract check' >> "$GITHUB_STEP_SUMMARY"
           echo '- local assets referenced by index.html must exist' >> "$GITHUB_STEP_SUMMARY"

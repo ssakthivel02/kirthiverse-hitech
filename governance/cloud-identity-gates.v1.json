@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0.0",
+  "project": "KirthiVerse",
+  "status": "ARCHITECTURE_ONLY_HOLD",
+  "canonicalRepository": "ssakthivel02/kirthiverse-hitech",
+  "activeBranch": "main",
+  "reconciliation": {
+    "source": "historical PR #9",
+    "sourcePolicy": "READ_ONLY_REFERENCE",
+    "method": "ONE_TIME_RECONCILED_INTO_ACTIVE_MASTER",
+    "oldBranchIsNotActiveSource": true
+  },
+  "capabilities": {
+    "activationAllowed": false,
+    "productionAuthEnabled": false,
+    "childCloudIdentityEnabled": false,
+    "guardianLinkingEnabled": false,
+    "teacherSchoolRbacEnabled": false,
+    "rosterSyncEnabled": false,
+    "realPersonalDataAllowed": false,
+    "remoteLearnerEvidenceSyncEnabled": false
+  },
+  "requiredEvidenceGates": {
+    "privacyImpactAssessmentApproved": false,
+    "guardianPermissionModelApproved": false,
+    "childDataMinimisationApproved": false,
+    "retentionDeletionModelApproved": false,
+    "tenantIsolationVerified": false,
+    "encryptionArchitectureVerified": false,
+    "rbacThreatModelApproved": false,
+    "auditLoggingDesignApproved": false,
+    "incidentResponseProcessApproved": false,
+    "organisationDataTermsApproved": false,
+    "ageAssuranceApproachApproved": false,
+    "accessibilityReviewApproved": false,
+    "securityTestEvidenceApproved": false
+  },
+  "pilotBoundary": {
+    "p4OwnerAttestationDoesNotAuthorizeCloudIdentity": true,
+    "p10ExternalReferenceGateDoesNotAuthorizeCloudIdentity": true,
+    "localControlledPilotDoesNotVerifyGuardianIdentity": true,
+    "localControlledPilotDoesNotVerifyLegalConsent": true,
+    "localControlledPilotMayContinueOnlyWithinItsSeparatelyReviewedLocalScope": true
+  },
+  "prohibitedWhileHold": [
+    "create real child cloud profile",
+    "link guardian identity to a real learner",
+    "create real teacher or school tenant",
+    "upload or synchronise a real learner roster",
+    "store child email phone precise location or school identifiers for cloud identity",
+    "enable school SSO or SIS/LMS integration for real learner data",
+    "send learner evidence to a remote identity service",
+    "activate production authentication for child-linked cloud identity"
+  ],
+  "principles": [
+    "adult-owned identity before any child linkage",
+    "minimum necessary child data",
+    "explicit purpose and revocation design",
+    "role-scoped access",
+    "tenant isolation",
+    "encryption in transit and at rest",
+    "auditable access",
+    "export deletion and retention controls",
+    "local-first until separately approved"
+  ],
+  "claimBoundaries": {
+    "legalComplianceVerified": false,
+    "safeguardingCertificationVerified": false,
+    "guardianIdentityVerified": false,
+    "legalConsentVerified": false,
+    "productionReady": false
+  },
+  "changeRule": "Any future move from HOLD requires a deliberate reviewed contract revision with real evidence for the applicable gates. Code, local fixtures, owner checkboxes, P4 readiness or P10 structural validation alone cannot satisfy this cloud-identity activation contract."
+}

@@ -4,10 +4,10 @@
 
 ## Reviewer identification
 
-Reviewer / organisation: `[REQUIRED]`  
-Role / relevant competence: `[REQUIRED]`  
-Review date: `[REQUIRED]`  
-Review reference: `[REQUIRED]`  
+Reviewer / organisation: `[REQUIRED]`
+Role / relevant competence: `[REQUIRED]`
+Review date: `[REQUIRED]`
+Review reference: `[REQUIRED]`
 Pilot version/scope reviewed: `[REQUIRED]`
 
 The responsible pilot owner must decide whether the reviewer is appropriate for the intended jurisdiction, organisation and participant group. KirthiVerse cannot verify reviewer qualifications.

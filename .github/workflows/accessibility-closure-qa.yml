@@ -1,9 +1,11 @@
 name: KirthiVerse Accessibility Closure QA
+
 on:
-  push:
-    branches: [design/manus-visual-master]
+  pull_request:
+    branches: [main]
     paths:
       - '.github/workflows/accessibility-closure-qa.yml'
+      - 'ACTIVE_MASTER_CONTROL.json'
       - 'index.html'
       - 'app.js'
       - 'core-runtime-v30.js'
@@ -15,17 +17,78 @@ on:
       - 'visual-master-v15.css'
       - 'visual-master-pages-v15.css'
       - 'visual-master-features-v15.css'
+      - 'p0-v1.css'
+      - 'p0-entry-v1.js'
+      - 'parent-v1.js'
+      - 'diagnostic-v1.js'
+      - 'speedlab-v1.js'
+      - 'lesson-check-v1.js'
+      - 'educator-pilot-v1.css'
+      - 'educator-pilot-v1.js'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/accessibility-closure-qa.yml'
+      - 'ACTIVE_MASTER_CONTROL.json'
+      - 'index.html'
+      - 'app.js'
+      - 'core-runtime-v30.js'
+      - 'learner-adaptive-v26.js'
+      - 'visual-controller-v27.js'
+      - 'styles.css'
+      - 'learning-foundation-v19.css'
+      - 'learning-tools-v20.css'
+      - 'visual-master-v15.css'
+      - 'visual-master-pages-v15.css'
+      - 'visual-master-features-v15.css'
+      - 'p0-v1.css'
+      - 'p0-entry-v1.js'
+      - 'parent-v1.js'
+      - 'diagnostic-v1.js'
+      - 'speedlab-v1.js'
+      - 'lesson-check-v1.js'
+      - 'educator-pilot-v1.css'
+      - 'educator-pilot-v1.js'
   workflow_dispatch:
+
 permissions:
   contents: read
+
+concurrency:
+  group: kirthiverse-accessibility-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   LOCAL_URL: http://127.0.0.1:8766
+
 jobs:
   accessibility-closure:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - name: Checkout candidate
+      - name: Checkout exact candidate
         uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup pinned Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Confirm HI-TECH ACTIVE MASTER candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const c = JSON.parse(fs.readFileSync('ACTIVE_MASTER_CONTROL.json', 'utf8'));
+          if (c.status !== 'HI-TECH — ACTIVE MASTER') throw new Error('Not HI-TECH ACTIVE MASTER');
+          if (c.canonicalRepository !== process.env.GITHUB_REPOSITORY) throw new Error('Canonical repository mismatch');
+          if (c.activeBranch !== 'main') throw new Error('Active branch must remain main');
+          if (process.env.GITHUB_BASE_REF && process.env.GITHUB_BASE_REF !== 'main') throw new Error('PR must target main');
+          console.log('A11Y_ACTIVE_MASTER_PASS');
+          NODE
 
       - name: Validate accessibility contracts
         shell: bash
@@ -38,7 +101,8 @@ jobs:
           index=Path('index.html').read_text()
           css='\n'.join(Path(p).read_text() for p in [
             'styles.css','learning-foundation-v19.css','learning-tools-v20.css',
-            'visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css'
+            'visual-master-v15.css','visual-master-pages-v15.css','visual-master-features-v15.css',
+            'p0-v1.css','educator-pilot-v1.css'
           ])
           assert '<main>' in app, 'semantic main landmark missing'
           assert 'aria-live=' in (app+core+Path('learner-adaptive-v26.js').read_text()), 'live status semantics missing'
@@ -103,7 +167,9 @@ jobs:
       - name: Accessibility closure summary
         if: always()
         run: |
-          echo '### Accessibility closure QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '### KirthiVerse Accessibility Closure QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- HI-TECH ACTIVE MASTER identity checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Pinned Node 22 QA runtime' >> "$GITHUB_STEP_SUMMARY"
           echo '- Semantic landmark and named-control checks' >> "$GITHUB_STEP_SUMMARY"
           echo '- Keyboard Tab reachability' >> "$GITHUB_STEP_SUMMARY"
           echo '- SPA route-focus behavior' >> "$GITHUB_STEP_SUMMARY"
@@ -112,4 +178,5 @@ jobs:
           echo '- Tamil Unicode route rendering' >> "$GITHUB_STEP_SUMMARY"
           echo '- Profile form label association' >> "$GITHUB_STEP_SUMMARY"
           echo '- Formal assistive-technology screen-reader session remains a manual/device limitation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Tamil human-language review remains a manual evidence item' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production DNS: unchanged' >> "$GITHUB_STEP_SUMMARY"

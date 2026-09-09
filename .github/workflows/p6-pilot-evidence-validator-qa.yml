@@ -1,0 +1,74 @@
+name: KirthiVerse P6 Pilot Evidence Validator QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/validate-pilot-evidence.mjs'
+      - 'tests/pilot-evidence-validator.test.mjs'
+      - 'PILOT_EVIDENCE_VALIDATION.md'
+      - 'CONTROLLED_PILOT_EXECUTION_RUNBOOK.md'
+      - '.github/workflows/p6-pilot-evidence-validator-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pilot-evidence-validator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+
+      - name: Static validator contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/validate-pilot-evidence.mjs
+          node --check tests/pilot-evidence-validator.test.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          js=Path('scripts/validate-pilot-evidence.mjs').read_text()
+          required=[
+            "kirthiverse.p6.pilot-evidence-validator.v1",
+            "--require-seven-day-window",
+            "SEVEN_DAY_WINDOW_INCONSISTENT",
+            "SENSITIVE_FIELD_PRESENT",
+            "POSITIVE_CLAIM_PRESENT",
+            "adultIdentityVerified",
+            "legalConsentVerified",
+            "canClaimRetention:false",
+            "canClaimLearningImprovement:false",
+            "canClaimLegalCompliance:false",
+            "canClaimProductionReadiness:false",
+            "canClaimTamperEvidentAnalytics:false",
+            "sha256"
+          ]
+          for marker in required:
+              assert marker in js, marker
+          for forbidden in [
+            "canClaimRetention:true",
+            "canClaimLearningImprovement:true",
+            "canClaimLegalCompliance:true",
+            "canClaimProductionReadiness:true",
+            "canClaimTamperEvidentAnalytics:true"
+          ]:
+              assert forbidden not in js, forbidden
+          print('P6_STATIC_CONTRACT_PASS')
+          PY
+
+      - name: Deterministic fixture tests
+        run: node tests/pilot-evidence-validator.test.mjs
+
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### KirthiVerse P6 Pilot Evidence Validator' >> "$GITHUB_STEP_SUMMARY"
+          echo '- valid seven-day P5 evidence accepted only when timestamps support the window' >> "$GITHUB_STEP_SUMMARY"
+          echo '- early-window evidence remains usable but cannot be labelled seven-day evidence' >> "$GITHUB_STEP_SUMMARY"
+          echo '- strict seven-day mode fails closed on incomplete windows' >> "$GITHUB_STEP_SUMMARY"
+          echo '- malformed JSON, P4-not-ready starts, secret leaks and metric-range errors fail closed' >> "$GITHUB_STEP_SUMMARY"
+          echo '- positive retention/improvement/compliance/production/tamper-evidence claims remain blocked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- SHA-256 is traceability only, not tamper-evident proof' >> "$GITHUB_STEP_SUMMARY"

@@ -9,6 +9,7 @@ on:
       - 'wrangler.jsonc'
       - '.assetsignore'
       - 'index.html'
+      - 'package*.json'
       - '*.js'
       - '*.css'
       - 'data/**'
@@ -21,6 +22,7 @@ on:
       - 'wrangler.jsonc'
       - '.assetsignore'
       - 'index.html'
+      - 'package*.json'
       - '*.js'
       - '*.css'
       - 'data/**'
@@ -162,18 +164,30 @@ jobs:
           assert cfg.get('assets',{}).get('not_found_handling') == 'single-page-application', 'SPA asset handling changed'
           assert not cfg.get('routes') and not cfg.get('route'), 'production/custom route must not be introduced here'
 
-          corpus='\n'.join([index]+[Path(p).read_text(encoding='utf-8',errors='ignore') for p in paths if p.endswith('.js')])
-          forbidden=[
-              '__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE',
-              'artifacts.cloudflare.net','ManusDialog','googletagmanager.com',
-              'google-analytics.com','doubleclick.net','facebook.net','segment.io'
+          js_paths=[p for p in paths if p.endswith('.js')]
+          detector='visual-preview-gate.js'
+          detector_text=Path(detector).read_text(encoding='utf-8',errors='ignore') if detector in js_paths else ''
+          implementation='\n'.join([index]+[Path(p).read_text(encoding='utf-8',errors='ignore') for p in js_paths if p != detector])
+          full_corpus='\n'.join([implementation,detector_text])
+
+          detector_markers=['__manus__','manus-storage','vite-plugin-manus-runtime']
+          leaked=[x for x in detector_markers if x.lower() in implementation.lower()]
+          assert not leaked, f'legacy Manus marker leaked outside audited detector: {leaked}'
+          if detector_text:
+              for marker in detector_markers:
+                  assert detector_text.lower().count(marker.lower()) == 1, f'audited detector occurrence changed for {marker}'
+
+          hard_forbidden=[
+              'BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog',
+              'googletagmanager.com','google-analytics.com','doubleclick.net',
+              'facebook.net','segment.io'
           ]
-          found=[x for x in forbidden if x.lower() in corpus.lower()]
+          found=[x for x in hard_forbidden if x.lower() in full_corpus.lower()]
           assert not found, f'forbidden runtime/tracking contamination: {found}'
           assert 'data-kv-teacher-runtime="v2"' in index and 'bilingual:true' in index, 'bilingual guide contract missing'
 
           print(f'PERF_STATIC_PASS runtime_source={total} html={html_size} assets={len(paths)} js={js_count} css={css_count}')
-          print(f'SECURITY_STATIC_PASS inline_hashes={len(expected_hashes)} worker={cfg["name"]}')
+          print(f'SECURITY_STATIC_PASS inline_hashes={len(expected_hashes)} worker={cfg["name"]} legacy_detector={bool(detector_text)}')
           PY
 
       - name: Install pinned browser QA dependencies
@@ -259,6 +273,7 @@ jobs:
           echo '- PR candidates compared with current main to block unbounded payload growth' >> "$GITHUB_STEP_SUMMARY"
           echo '- CSP inline-script hashes derived from index.html and matched exactly' >> "$GITHUB_STEP_SUMMARY"
           echo '- Security-header policy contract checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Known Manus detector markers allowed only in the audited detector file' >> "$GITHUB_STEP_SUMMARY"
           echo '- Wrangler assets-only SPA contract checked; custom/production routes rejected' >> "$GITHUB_STEP_SUMMARY"
           echo '- Local Cloudflare runtime response headers checked without credentials' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chromium bilingual guide, page-error and unexpected-origin gates checked' >> "$GITHUB_STEP_SUMMARY"

@@ -39,7 +39,9 @@ jobs:
           js=Path('pilot-run-v1.js').read_text(); entry=Path('p0-entry-v1.js').read_text(); sw=Path('sw-v30.js').read_text()
           for marker in ['requiresReadiness:true','window.KV_PILOT_READINESS','readinessAtStart','readinessAtEnd','adultIdentityVerified:false','legalConsentVerified:false','externalReviewIndependentlyVerified:false','productionReady:false','DELETE LOCAL DATA','kirthiverse.hitech.pilot.run.v1']:
               assert marker in js, marker
-          for forbidden in ['verified guardian','legal consent obtained','COPPA compliant','UK GDPR compliant','production certified']:
+          # Reject actual positive compliance/identity claims, while allowing truthful wording such as
+          # "no verified guardian identity" or "does not verify legal consent".
+          for forbidden in ['adultIdentityVerified:true','legalConsentVerified:true','externalReviewIndependentlyVerified:true','productionReady:true','legalCertification:true','COPPA compliant','UK GDPR compliant','production certified']:
               assert forbidden not in js, forbidden
           assert "startsWith(PREFIX)" in js
           for marker in ['pilot-run-v1.js','pilot-run-v1.css','/pilot-run']:

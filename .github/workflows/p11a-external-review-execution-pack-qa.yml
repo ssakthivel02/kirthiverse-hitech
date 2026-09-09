@@ -1,0 +1,72 @@
+name: KirthiVerse P11A External Review Execution Pack QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'PILOT_SCOPE_FREEZE_TEMPLATE.json'
+      - 'P11A_EXTERNAL_REVIEW_EXECUTION_PACK.md'
+      - 'P11A_UK_OFFICIAL_REFERENCE_GUIDE.md'
+      - 'scripts/validate-pilot-scope-freeze.mjs'
+      - 'tests/pilot-scope-freeze-validator.test.mjs'
+      - '.github/workflows/p11a-external-review-execution-pack-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p11a-external-review-execution-pack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+
+      - name: Static contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/validate-pilot-scope-freeze.mjs
+          node --check tests/pilot-scope-freeze-validator.test.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          v=Path('scripts/validate-pilot-scope-freeze.mjs').read_text()
+          for marker in ['STRUCTURALLY_FROZEN_PILOT_SCOPE','canSendToExternalReview:ready','canStartParticipantPilot:false','canClaimLegalCompliance:false','canClaimSafeguardingCertification:false','canClaimProductionReadiness:false','UNREVIEWED_FEATURE_SCOPE','SENSITIVE_FIELD_PRESENT']:
+              assert marker in v, marker
+          guide=Path('P11A_UK_OFFICIAL_REFERENCE_GUIDE.md').read_text()
+          for marker in ['Keeping Children Safe in Education 2026','Data protection in schools','Children\'s Code','Data Protection Impact Assessments','not a substitute for competent external review']:
+              assert marker in guide, marker
+          print('P11A_STATIC_CONTRACT_PASS')
+          PY
+
+      - name: Blank template must HOLD
+        shell: bash
+        run: |
+          set -euo pipefail
+          if node scripts/validate-pilot-scope-freeze.mjs PILOT_SCOPE_FREEZE_TEMPLATE.json >/tmp/p11a-template.json 2>/tmp/p11a-template.err; then
+            echo 'Blank scope template unexpectedly passed.' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/p11a-template.json'))
+          assert r['status']=='HOLD'
+          assert r['claimGates']['canSendToExternalReview'] is False
+          assert r['claimGates']['canStartParticipantPilot'] is False
+          print('P11A_TEMPLATE_HOLD_PASS')
+          PY
+
+      - name: Deterministic scope-freeze tests
+        run: node tests/pilot-scope-freeze-validator.test.mjs
+
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### KirthiVerse P11A External Review Execution Pack' >> "$GITHUB_STEP_SUMMARY"
+          echo '- blank repository template must HOLD' >> "$GITHUB_STEP_SUMMARY"
+          echo '- scope must bind age/duration/cohort/jurisdiction/supervision/device/data model' >> "$GITHUB_STEP_SUMMARY"
+          echo '- live AI and cloud child identity remain disabled for this baseline' >> "$GITHUB_STEP_SUMMARY"
+          echo '- participant PII fields fail closed' >> "$GITHUB_STEP_SUMMARY"
+          echo '- material scope changes require re-review' >> "$GITHUB_STEP_SUMMARY"
+          echo '- P11A can only permit external-review handoff, never participant-pilot launch' >> "$GITHUB_STEP_SUMMARY"

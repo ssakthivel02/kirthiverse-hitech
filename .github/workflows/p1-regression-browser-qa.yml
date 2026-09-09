@@ -1,0 +1,132 @@
+name: KirthiVerse P1 Regression Browser QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'parent-v1.js'
+      - 'diagnostic-v1.js'
+      - 'p0-entry-v1.js'
+      - 'p0-v1.css'
+      - 'sw-v30.js'
+      - 'mastery-engine-v1.js'
+      - 'speedlab-v1.js'
+      - 'lesson-check-v1.js'
+      - 'index.html'
+      - '.github/workflows/p1-regression-browser-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  LOCAL_URL: http://127.0.0.1:8766
+
+jobs:
+  regression-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Desktop + mobile route regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+
+          python3 -m http.server 8766 --bind 127.0.0.1 >/tmp/kv-reg-http.log 2>&1 &
+          spid=$!
+          trap 'kill "${spid:-}" 2>/dev/null || true; kill "${cpid:-}" 2>/dev/null || true' EXIT
+
+          for i in $(seq 1 20); do curl -fsS "$LOCAL_URL/index.html" >/dev/null && break || sleep 1; done
+
+          rm -rf /tmp/kv-reg-chrome
+          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage \
+            --remote-debugging-port=9335 --user-data-dir=/tmp/kv-reg-chrome \
+            "$LOCAL_URL/?reg=$(date +%s)" >/tmp/kv-reg-chrome.log 2>&1 &
+          cpid=$!
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9335/json/list >/tmp/kv-reg-pages.json && break || sleep 1; done
+
+          node <<'NODE'
+          const pages=await fetch('http://127.0.0.1:9335/json/list').then(r=>r.json());
+          const page=pages.find(x=>x.type==='page'); if(!page)throw Error('No page target');
+          const ws=new WebSocket(page.webSocketDebuggerUrl); await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
+          let seq=0; const pending=new Map(), exceptions=[];
+          ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.method==='Runtime.exceptionThrown')exceptions.push(m.params?.exceptionDetails?.text||'exception');if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};
+          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
+          await send('Runtime.enable');await send('Page.enable');await send('Emulation.setDeviceMetricsOverride',{width:1280,height:800,deviceScaleFactor:1,mobile:false});
+          const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||JSON.stringify(r.exceptionDetails));return r.result?.value};
+          const wait=async(expression,label,timeout=16000)=>{const end=Date.now()+timeout;while(Date.now()<end){try{if(await ev(expression))return true}catch{}await new Promise(r=>setTimeout(r,220))}throw Error('Timeout: '+label)};
+          const nav=async p=>{await ev(`window.KV_NAVIGATION.navigate(${JSON.stringify(p)});true`);await wait(`location.pathname===${JSON.stringify(p)}&&!!document.querySelector('main')`,'route '+p);await new Promise(r=>setTimeout(r,120))};
+          await wait(`!!window.KV_NAVIGATION&&!!window.KV_PARENT_RUNTIME`,'runtime');
+
+          const routes=['/','/worlds','/search','/progress','/profile','/diagnostic','/speedlab','/parent'];
+          for(const p of routes){
+            await nav(p);
+            const ok=await ev(`!!document.querySelector('main')&&document.querySelector('main').textContent.trim().length>0`);
+            if(!ok)throw Error('Empty route: '+p);
+          }
+
+          // Active P0 nav current-state semantics.
+          await nav('/diagnostic');
+          if(!(await ev(`document.querySelector('.topbar nav a[href="/diagnostic"]')?.getAttribute('aria-current')==='page'`)))throw Error('aria-current missing on diagnostic');
+          await nav('/parent');
+          if(!(await ev(`document.querySelector('.topbar nav a[href="/parent"]')?.getAttribute('aria-current')==='page'`)))throw Error('aria-current missing on parent');
+
+          // Corrupt local gate/rate data must recover to setup without throwing.
+          await ev(`localStorage.setItem('kirthiverse.hitech.parentgate.v1','{broken');localStorage.setItem('kirthiverse.hitech.parentgate.rate.v1','{bad');sessionStorage.clear();window.KV_NAVIGATION.navigate('/');window.KV_NAVIGATION.navigate('/parent');true`);
+          await wait(`!!document.getElementById('pv-setup')`,'corrupt-state recovery');
+
+          // Legacy plaintext P0 PIN migrates on successful unlock.
+          await ev(`localStorage.setItem('kirthiverse.hitech.parentgate.v1',JSON.stringify({pin:'1357',childName:'Legacy Learner',assistanceEnabled:true,createdAt:new Date().toISOString()}));localStorage.removeItem('kirthiverse.hitech.parentgate.rate.v1');sessionStorage.clear();window.KV_NAVIGATION.navigate('/');window.KV_NAVIGATION.navigate('/parent');true`);
+          await wait(`!!document.getElementById('pv-unlock')`,'legacy lock view');
+          await ev(`document.getElementById('pv-pin-try').value='1357';document.getElementById('pv-unlock').requestSubmit();true`);
+          await wait(`!!document.getElementById('pv-export')`,'legacy PIN unlock');
+          const migrated=await ev(`JSON.parse(localStorage.getItem('kirthiverse.hitech.parentgate.v1'))`);
+          if(migrated.pin!==undefined||!migrated.pinHash||!migrated.pinSalt)throw Error('Legacy PIN migration failed');
+
+          // Assistance toggle is deterministic and persists locally.
+          const before=await ev(`document.getElementById('pv-assist').checked`);
+          await ev(`document.getElementById('pv-assist').click();true`);
+          const after=await ev(`JSON.parse(localStorage.getItem('kirthiverse.hitech.parentgate.v1')).assistanceEnabled`);
+          if(after===before)throw Error('Assistance toggle did not persist');
+
+          // Desktop overflow guard on P0 routes.
+          for(const p of ['/diagnostic','/speedlab','/parent']){
+            await nav(p);
+            const overflow=await ev(`document.documentElement.scrollWidth>window.innerWidth+4`);
+            if(overflow)throw Error('Desktop horizontal overflow: '+p);
+          }
+
+          // Mobile route/layout pass.
+          await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+          for(const p of ['/', '/diagnostic','/speedlab','/parent']){
+            await nav(p);
+            const overflow=await ev(`document.documentElement.scrollWidth>window.innerWidth+4`);
+            if(overflow)throw Error('Mobile horizontal overflow: '+p);
+            const main=await ev(`!!document.querySelector('main')&&document.querySelector('main').textContent.trim().length>0`);
+            if(!main)throw Error('Mobile route empty: '+p);
+          }
+
+          if(exceptions.length)throw Error('Uncaught runtime exceptions: '+exceptions.join(' | '));
+          console.log('P1_REGRESSION_PASS: core routes render on desktop');
+          console.log('P1_REGRESSION_PASS: P0 routes render without horizontal overflow on desktop/mobile');
+          console.log('P1_REGRESSION_PASS: corrupt local state recovers safely');
+          console.log('P1_REGRESSION_PASS: legacy plaintext PIN migrates to hashed storage');
+          console.log('P1_REGRESSION_PASS: assistance toggle persists');
+          console.log('P1_REGRESSION_PASS: no uncaught browser exceptions');
+          ws.close();
+          NODE
+
+      - name: Regression summary
+        if: always()
+        run: |
+          echo '### KirthiVerse P1 Regression Browser QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Core route render checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Desktop/mobile P0 overflow checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Corrupt local state recovery checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Legacy plaintext PIN migration checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Parent assistance persistence checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Uncaught browser exception gate checked' >> "$GITHUB_STEP_SUMMARY"

@@ -1,27 +1,41 @@
 {
   "schema": "kirthiverse.release-closure.v1",
-  "candidate": "MANUS-VISUAL-MASTER-05",
-  "branch": "design/manus-visual-master",
+  "candidate": "HI-TECH-ACTIVE-MASTER",
+  "branch": "main",
   "canonical": {"lessons": 135, "assessments": 72, "worlds": 11},
   "automatedSequence": {
-    "browserVisibleRoleOwnership": "implemented",
-    "identityInteractionQa": "required-green",
-    "privacyControlClosure": "required-green",
+    "activeMasterControl": "required-green",
+    "protectedMainContract": "required-green",
+    "pwaOfflineQa": "required-green",
+    "accessibilityClosureQa": "required-green",
+    "crossBrowserReleaseQa": "required-green",
+    "performanceSecurityQa": "required-green",
     "releaseClosure": "required-green"
   },
   "identity": {
     "cloudIdentityEnabled": false,
     "silentUploadAllowed": false,
     "automaticChildAccountAllowed": false,
-    "silentMigrationAllowed": false
+    "silentMigrationAllowed": false,
+    "educatorPilotLocalOnly": true,
+    "schoolAccountImplemented": false,
+    "teacherAuthenticationImplemented": false
+  },
+  "governance": {
+    "githubMainBranchProtectionRequired": true,
+    "specialistSafeguardingReviewRequired": true,
+    "securityReviewRequired": true,
+    "privacyReviewRequired": true,
+    "ciDoesNotConstituteProductionApproval": true
   },
   "production": {
     "state": "HOLD",
     "mergeAllowed": false,
+    "mergeMeaning": "production-release-promotion-only; QA merges into the active main source remain governed by the ACTIVE MASTER process",
     "productionCutoverAllowed": false,
     "productionDnsChangeAllowed": false,
     "ownerVisualReviewRequired": true,
     "explicitOwnerProdGoRequired": true
   },
-  "manualFinalGate": "OWNER_VISUAL_REVIEW_AND_EXPLICIT_PROD_GO"
+  "manualFinalGate": "GITHUB_MAIN_PROTECTION_PLUS_SPECIALIST_SAFEGUARDING_SECURITY_PRIVACY_REVIEW_PLUS_EXPLICIT_OWNER_PROD_GO"
 }

@@ -200,24 +200,36 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npx --yes wrangler@4 dev --ip 127.0.0.1 --port 8788 >/tmp/kv-wrangler.log 2>&1 &
-          echo $! > /tmp/kv-wrangler.pid
+          rm -f /tmp/kv-wrangler.pid /tmp/kv-wrangler.log
+          setsid npx --yes wrangler@4 dev --ip 127.0.0.1 --port 8788 </dev/null >/tmp/kv-wrangler.log 2>&1 &
+          wpid=$!
+          echo "$wpid" > /tmp/kv-wrangler.pid
           ready=0
-          for i in $(seq 1 40); do
-            if curl -fsS "$LOCAL_URL/index.html?ready=$i" -o /tmp/kv-local-index.html; then ready=1; break; fi
+          for i in $(seq 1 35); do
+            if ! kill -0 "$wpid" 2>/dev/null; then
+              echo 'Wrangler process exited before readiness'
+              cat /tmp/kv-wrangler.log || true
+              exit 1
+            fi
+            if curl --connect-timeout 1 --max-time 2 -fsS "$LOCAL_URL/index.html?ready=$i" -o /tmp/kv-local-index.html; then
+              ready=1
+              break
+            fi
             sleep 1
           done
           if [ "$ready" != 1 ]; then
+            echo 'Wrangler did not become ready within bounded startup window'
             cat /tmp/kv-wrangler.log || true
             exit 1
           fi
           grep -Fq 'CORE-RUNTIME-V30' /tmp/kv-local-index.html
+          echo 'WRANGLER_LOCAL_READY'
 
       - name: Verify local Cloudflare security headers
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsSI "$LOCAL_URL/index.html?headers=$(date +%s)" >/tmp/kv-local-headers
+          curl --connect-timeout 2 --max-time 5 -fsSI "$LOCAL_URL/index.html?headers=$(date +%s)" >/tmp/kv-local-headers
           tr -d '\r' </tmp/kv-local-headers | tee /tmp/kv-local-headers-clean
           grep -Eqi '^x-content-type-options:[[:space:]]*nosniff' /tmp/kv-local-headers-clean
           grep -Eqi '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/kv-local-headers-clean
@@ -261,7 +273,10 @@ jobs:
         if: always()
         shell: bash
         run: |
-          if [ -f /tmp/kv-wrangler.pid ]; then kill "$(cat /tmp/kv-wrangler.pid)" 2>/dev/null || true; fi
+          if [ -f /tmp/kv-wrangler.pid ]; then
+            wpid="$(cat /tmp/kv-wrangler.pid)"
+            kill -- -"$wpid" 2>/dev/null || kill "$wpid" 2>/dev/null || true
+          fi
           tail -n 80 /tmp/kv-wrangler.log 2>/dev/null || true
 
       - name: Static/local closure summary
@@ -331,11 +346,14 @@ jobs:
           set -euo pipefail
           ok=0
           for i in $(seq 1 30); do
-            if curl -fsS "$PREVIEW_URL/security-candidate.txt?sentinel=$i-$(date +%s)" -o /tmp/sentinel && grep -Fqx "ACTIVE_MASTER_SHA=$GITHUB_SHA" /tmp/sentinel; then ok=1; break; fi
+            if curl --connect-timeout 2 --max-time 6 -fsS "$PREVIEW_URL/security-candidate.txt?sentinel=$i-$(date +%s)" -o /tmp/sentinel && grep -Fqx "ACTIVE_MASTER_SHA=$GITHUB_SHA" /tmp/sentinel; then
+              ok=1
+              break
+            fi
             sleep 2
           done
           test "$ok" = 1
-          curl -fsSI "$PREVIEW_URL/index.html?headers=$(date +%s)" >/tmp/kv-preview-headers
+          curl --connect-timeout 2 --max-time 6 -fsSI "$PREVIEW_URL/index.html?headers=$(date +%s)" >/tmp/kv-preview-headers
           tr -d '\r' </tmp/kv-preview-headers | tee /tmp/kv-preview-headers-clean
           grep -Eqi '^x-content-type-options:[[:space:]]*nosniff' /tmp/kv-preview-headers-clean
           grep -Eqi '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/kv-preview-headers-clean

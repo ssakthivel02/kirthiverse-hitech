@@ -35,8 +35,27 @@ jobs:
           for marker in ['STRUCTURALLY_FROZEN_PILOT_SCOPE','canSendToExternalReview:ready','canStartParticipantPilot:false','canClaimLegalCompliance:false','canClaimSafeguardingCertification:false','canClaimProductionReadiness:false','UNREVIEWED_FEATURE_SCOPE','SENSITIVE_FIELD_PRESENT']:
               assert marker in v, marker
           guide=Path('P11A_UK_OFFICIAL_REFERENCE_GUIDE.md').read_text()
-          for marker in ['Keeping Children Safe in Education 2026','Data protection in schools','Children\'s Code','Data Protection Impact Assessments','not a substitute for competent external review']:
+          for marker in [
+              'Keeping Children Safe in Education 2026',
+              'Data protection in schools',
+              'Data (Use and Access) Act 2025',
+              'Generative AI and data protection in schools',
+              'Procuring educational technology (EdTech)',
+              "Children's Code",
+              'Data Protection Impact Assessments',
+              'liveAIEnabled=false',
+              'not a substitute for competent external review'
+          ]:
               assert marker in guide, marker
+          for url in [
+              'https://www.gov.uk/government/publications/keeping-children-safe-in-education--2',
+              'https://www.gov.uk/guidance/data-protection-in-schools',
+              'https://www.gov.uk/guidance/data-protection-in-schools/the-data-use-and-access-act-2025',
+              'https://www.gov.uk/guidance/data-protection-in-schools/generative-artificial-intelligence-ai-and-data-protection-in-schools',
+              'https://www.gov.uk/guidance/data-protection-in-schools/procuring-educational-technology-edtech',
+              'https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/childrens-information/childrens-code-guidance-and-resources/age-appropriate-design-a-code-of-practice-for-online-services/'
+          ]:
+              assert url in guide, url
           print('P11A_STATIC_CONTRACT_PASS')
           PY
 
@@ -67,6 +86,7 @@ jobs:
           echo '- blank repository template must HOLD' >> "$GITHUB_STEP_SUMMARY"
           echo '- scope must bind age/duration/cohort/jurisdiction/supervision/device/data model' >> "$GITHUB_STEP_SUMMARY"
           echo '- live AI and cloud child identity remain disabled for this baseline' >> "$GITHUB_STEP_SUMMARY"
+          echo '- current UK reference guide must retain KCSIE 2026, DUAA 2025, DfE AI/EdTech and ICO child-DPIA references' >> "$GITHUB_STEP_SUMMARY"
           echo '- participant PII fields fail closed' >> "$GITHUB_STEP_SUMMARY"
           echo '- material scope changes require re-review' >> "$GITHUB_STEP_SUMMARY"
           echo '- P11A can only permit external-review handoff, never participant-pilot launch' >> "$GITHUB_STEP_SUMMARY"

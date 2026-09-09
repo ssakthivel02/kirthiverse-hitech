@@ -244,7 +244,7 @@ jobs:
               cat /tmp/kv-wrangler.log || true
               exit 1
             fi
-            if curl --connect-timeout 1 --max-time 2 -fsS "$LOCAL_URL/index.html?ready=$i" -o /tmp/kv-local-index.html; then
+            if curl --connect-timeout 1 --max-time 3 -fsSL "$LOCAL_URL/?ready=$i" -o /tmp/kv-local-index.html; then
               ready=1
               break
             fi
@@ -262,7 +262,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --connect-timeout 2 --max-time 5 -fsSI "$LOCAL_URL/index.html?headers=$(date +%s)" >/tmp/kv-local-headers
+          curl --connect-timeout 2 --max-time 5 -fsSI "$LOCAL_URL/?headers=$(date +%s)" >/tmp/kv-local-headers
           tr -d '\r' </tmp/kv-local-headers | tee /tmp/kv-local-headers-clean
           grep -Eqi '^x-content-type-options:[[:space:]]*nosniff' /tmp/kv-local-headers-clean
           grep -Eqi '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/kv-local-headers-clean
@@ -325,7 +325,7 @@ jobs:
           echo '- Known Manus detector markers allowed only in the audited detector file' >> "$GITHUB_STEP_SUMMARY"
           echo '- Real Wrangler config kept assets-only SPA with custom/production routes rejected' >> "$GITHUB_STEP_SUMMARY"
           echo '- Isolated staged Cloudflare local runtime used to avoid repository-root watch feedback' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Local Cloudflare response headers checked without credentials' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Canonical root response security headers checked without credentials' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chromium bilingual guide, page-error and unexpected-origin gates checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- No PR deployment credentials are used by this job' >> "$GITHUB_STEP_SUMMARY"
 
@@ -388,7 +388,7 @@ jobs:
             sleep 2
           done
           test "$ok" = 1
-          curl --connect-timeout 2 --max-time 6 -fsSI "$PREVIEW_URL/index.html?headers=$(date +%s)" >/tmp/kv-preview-headers
+          curl --connect-timeout 2 --max-time 6 -fsSI "$PREVIEW_URL/?headers=$(date +%s)" >/tmp/kv-preview-headers
           tr -d '\r' </tmp/kv-preview-headers | tee /tmp/kv-preview-headers-clean
           grep -Eqi '^x-content-type-options:[[:space:]]*nosniff' /tmp/kv-preview-headers-clean
           grep -Eqi '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/kv-preview-headers-clean
@@ -405,7 +405,7 @@ jobs:
           if [ "${KV_CF_READY:-false}" = 'true' ]; then
             echo '- Existing preview Worker refreshed from exact main SHA' >> "$GITHUB_STEP_SUMMARY"
             echo '- Exact-head sentinel verified after deployment' >> "$GITHUB_STEP_SUMMARY"
-            echo '- Preview response security headers verified' >> "$GITHUB_STEP_SUMMARY"
+            echo '- Canonical root preview security headers verified' >> "$GITHUB_STEP_SUMMARY"
           else
             echo '- Preview deployment not run because Cloudflare credentials were unavailable to this workflow' >> "$GITHUB_STEP_SUMMARY"
           fi

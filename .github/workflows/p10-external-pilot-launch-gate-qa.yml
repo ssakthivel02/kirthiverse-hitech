@@ -1,0 +1,95 @@
+name: KirthiVerse P10 External Pilot Launch Gate QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'PILOT_EXTERNAL_APPROVAL_RECORD_TEMPLATE.json'
+      - 'PILOT_EXTERNAL_APPROVAL_GATE.md'
+      - 'scripts/validate-external-pilot-approval.mjs'
+      - 'tests/external-pilot-approval-validator.test.mjs'
+      - '.github/workflows/p10-external-pilot-launch-gate-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  external-pilot-launch-gate:
+    name: external-pilot-launch-gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v5
+
+      - name: Static P10 contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/validate-external-pilot-approval.mjs
+          node --check tests/external-pilot-approval-validator.test.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('scripts/validate-external-pilot-approval.mjs').read_text()
+          for marker in [
+              'kirthiverse.p10.external-pilot-launch-gate.v1',
+              'STRUCTURALLY_COMPLETE_EXTERNAL_REFERENCE_SET',
+              'TEMPLATE_NOT_EVIDENCE',
+              'DUPLICATE_REFERENCE',
+              'SCOPE_MISMATCH',
+              'SENSITIVE_FIELD_PRESENT',
+              'UNSUPPORTED_POSITIVE_CLAIM',
+              'canProceedToP4OwnerAttestation:ready',
+              'canStartP5:false',
+              'canClaimExternalApproval:false',
+              'canClaimLegalCompliance:false',
+              'canClaimSafeguardingCertification:false',
+              'canClaimProductionReadiness:false'
+          ]:
+              assert marker in s, marker
+          for forbidden in [
+              'canStartP5:true',
+              'canClaimExternalApproval:true',
+              'canClaimLegalCompliance:true',
+              'canClaimSafeguardingCertification:true',
+              'canClaimProductionReadiness:true'
+          ]:
+              assert forbidden not in s, forbidden
+          print('P10_STATIC_CONTRACT_PASS')
+          PY
+
+      - name: Template must HOLD
+        shell: bash
+        run: |
+          set -euo pipefail
+          if node scripts/validate-external-pilot-approval.mjs PILOT_EXTERNAL_APPROVAL_RECORD_TEMPLATE.json >/tmp/p10-template.json 2>/tmp/p10-template.err; then
+            echo 'P10 template unexpectedly passed.' >&2
+            cat /tmp/p10-template.json >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/p10-template.json'))
+          assert r['status']=='HOLD'
+          assert r['claimGates']['canProceedToP4OwnerAttestation'] is False
+          assert r['claimGates']['canStartP5'] is False
+          codes={x['code'] for x in r['errors']}
+          assert 'TEMPLATE_NOT_EVIDENCE' in codes
+          print('P10_TEMPLATE_HOLD_PASS')
+          PY
+
+      - name: Deterministic P10 validator tests
+        run: node tests/external-pilot-approval-validator.test.mjs
+
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### KirthiVerse P10 External Pilot Launch Gate' >> "$GITHUB_STEP_SUMMARY"
+          echo '- repository template always HOLDs' >> "$GITHUB_STEP_SUMMARY"
+          echo '- six P4 prerequisite approval references are structurally required' >> "$GITHUB_STEP_SUMMARY"
+          echo '- all approval/decision records must bind to one pilot scopeVersion' >> "$GITHUB_STEP_SUMMARY"
+          echo '- duplicate references, placeholders, invalid dates/bounds and sensitive fields fail closed' >> "$GITHUB_STEP_SUMMARY"
+          echo '- organisation/school and research-ethics applicability remain external decisions; strict CLI flags can require either' >> "$GITHUB_STEP_SUMMARY"
+          echo '- P10 READY permits only progression to P4 owner attestation; it never starts P5 directly' >> "$GITHUB_STEP_SUMMARY"
+          echo '- legal compliance, safeguarding certification, external approval authenticity and production readiness remain unverified' >> "$GITHUB_STEP_SUMMARY"

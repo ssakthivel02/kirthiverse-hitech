@@ -1,0 +1,99 @@
+{
+  "schema": "kirthiverse.hitech.external-pilot-approval-record.v1",
+  "template": true,
+  "recordedDate": "[REQUIRED YYYY-MM-DD]",
+  "pilot": {
+    "pilotReference": "[REQUIRED]",
+    "ownerRole": "[REQUIRED ROLE — avoid personal contact details]",
+    "ageBand": "[REQUIRED: 3–6 | 7–10 | 11–13 | 14–16]",
+    "subject": "[REQUIRED]",
+    "durationWeeks": 0,
+    "cohortCeiling": 0,
+    "scopeVersion": "[REQUIRED — same value must appear on every approval/decision]",
+    "jurisdiction": "[REQUIRED]",
+    "organisationContext": "[REQUIRED]"
+  },
+  "approvals": {
+    "specialistReview": {
+      "required": true,
+      "status": "[REQUIRED: approved_by_responsible_process]",
+      "reference": "[REAL REFERENCE REQUIRED]",
+      "authorityRoleOrOrganisation": "[REQUIRED]",
+      "reviewDate": "[REQUIRED YYYY-MM-DD]",
+      "scopeVersion": "[REQUIRED]",
+      "conditions": "[RECORD CONDITIONS OR STATE NONE]"
+    },
+    "participantInformationPermission": {
+      "required": true,
+      "status": "[REQUIRED: approved_by_responsible_process]",
+      "reference": "[REAL REFERENCE REQUIRED]",
+      "authorityRoleOrOrganisation": "[REQUIRED]",
+      "reviewDate": "[REQUIRED YYYY-MM-DD]",
+      "scopeVersion": "[REQUIRED]",
+      "conditions": "[RECORD CONDITIONS OR STATE NONE]"
+    },
+    "dataMinimisationRetention": {
+      "required": true,
+      "status": "[REQUIRED: approved_by_responsible_process]",
+      "reference": "[REAL REFERENCE REQUIRED]",
+      "authorityRoleOrOrganisation": "[REQUIRED]",
+      "reviewDate": "[REQUIRED YYYY-MM-DD]",
+      "scopeVersion": "[REQUIRED]",
+      "conditions": "[RECORD CONDITIONS OR STATE NONE]"
+    },
+    "incidentEscalation": {
+      "required": true,
+      "status": "[REQUIRED: approved_by_responsible_process]",
+      "reference": "[REAL REFERENCE REQUIRED]",
+      "authorityRoleOrOrganisation": "[REQUIRED]",
+      "reviewDate": "[REQUIRED YYYY-MM-DD]",
+      "scopeVersion": "[REQUIRED]",
+      "conditions": "[RECORD CONDITIONS OR STATE NONE]"
+    },
+    "stoppingRestart": {
+      "required": true,
+      "status": "[REQUIRED: approved_by_responsible_process]",
+      "reference": "[REAL REFERENCE REQUIRED]",
+      "authorityRoleOrOrganisation": "[REQUIRED]",
+      "reviewDate": "[REQUIRED YYYY-MM-DD]",
+      "scopeVersion": "[REQUIRED]",
+      "approvedSummary": "[REQUIRED 20–1000 CHARACTERS — approved stop/restart criteria for transfer to P4]",
+      "conditions": "[RECORD CONDITIONS OR STATE NONE]"
+    },
+    "metricsEvidence": {
+      "required": true,
+      "status": "[REQUIRED: approved_by_responsible_process]",
+      "reference": "[REAL REFERENCE REQUIRED]",
+      "authorityRoleOrOrganisation": "[REQUIRED]",
+      "reviewDate": "[REQUIRED YYYY-MM-DD]",
+      "scopeVersion": "[REQUIRED]",
+      "approvedSummary": "[REQUIRED 20–1000 CHARACTERS — descriptive metrics protocol only; no pre-stated outcomes]",
+      "conditions": "[RECORD CONDITIONS OR STATE NONE]"
+    },
+    "organisationApproval": {
+      "required": false,
+      "status": "not_applicable_by_responsible_process",
+      "decisionReference": "[REAL DECISION REFERENCE REQUIRED]",
+      "decisionAuthorityRoleOrOrganisation": "[REQUIRED]",
+      "decisionDate": "[REQUIRED YYYY-MM-DD]",
+      "decisionRationale": "[REQUIRED — responsible process decides applicability]",
+      "scopeVersion": "[REQUIRED]"
+    },
+    "researchEthicsApproval": {
+      "required": false,
+      "status": "not_applicable_by_responsible_process",
+      "decisionReference": "[REAL DECISION REFERENCE REQUIRED]",
+      "decisionAuthorityRoleOrOrganisation": "[REQUIRED]",
+      "decisionDate": "[REQUIRED YYYY-MM-DD]",
+      "decisionRationale": "[REQUIRED — responsible process decides applicability]",
+      "scopeVersion": "[REQUIRED]"
+    }
+  },
+  "ownerAttestation": {
+    "referencesCorrespondToRealExternalRecords": false,
+    "allConditionsUnderstood": false,
+    "p4WillUseSamePilotScope": false,
+    "noProductionClaimAcknowledged": false,
+    "noLegalCertificationClaimAcknowledged": false
+  }
+}

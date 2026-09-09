@@ -73,6 +73,52 @@ jobs:
           print('ACTIVE_MASTER_CONTRACT_PASS project=KirthiVerse repo=ssakthivel02/kirthiverse-hitech branch=main')
           PY
 
+      - name: Validate runtime architecture truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          html = Path('index.html').read_text(encoding='utf-8')
+          readme = Path('README.md').read_text(encoding='utf-8')
+
+          marker = re.search(
+              r'''<meta[^>]+name=["']kv-runtime-generation["'][^>]+content=["']([^"']+)["']''',
+              html,
+              re.IGNORECASE,
+          )
+          assert marker, 'index.html must declare kv-runtime-generation'
+          runtime_generation = marker.group(1).strip()
+          assert re.fullmatch(r'CORE-RUNTIME-V\d+', runtime_generation), (
+              f'unexpected runtime-generation format: {runtime_generation}'
+          )
+
+          core_runtime = runtime_generation.lower() + '.js'
+          assert Path(core_runtime).is_file(), f'core runtime asset missing: {core_runtime}'
+          assert re.search(rf'''src=["']/{re.escape(core_runtime)}(?:\?|["'])''', html), (
+              f'index.html does not load declared core runtime: {core_runtime}'
+          )
+
+          readme_generation = re.search(r'Runtime generation:\s*`([^`]+)`', readme)
+          assert readme_generation, 'README must declare Runtime generation'
+          assert readme_generation.group(1).strip() == runtime_generation, (
+              f'README runtime generation {readme_generation.group(1).strip()} '
+              f'does not match index.html {runtime_generation}'
+          )
+
+          readme_core = re.search(r'Core runtime:\s*`([^`]+)`', readme)
+          assert readme_core, 'README must declare Core runtime'
+          assert readme_core.group(1).strip() == core_runtime, (
+              f'README core runtime {readme_core.group(1).strip()} does not match {core_runtime}'
+          )
+
+          print(
+              f'RUNTIME_ARCHITECTURE_TRUTH_PASS generation={runtime_generation} core={core_runtime}'
+          )
+          PY
+
       - name: Validate static application contract
         shell: bash
         run: |
@@ -113,6 +159,7 @@ jobs:
           echo '- HI-TECH — ACTIVE MASTER identity and canonical repository check' >> "$GITHUB_STEP_SUMMARY"
           echo '- OLD/LEGACY remains read-only reference' >> "$GITHUB_STEP_SUMMARY"
           echo '- completed-work duplication and evidence-first task rules enforced' >> "$GITHUB_STEP_SUMMARY"
+          echo '- README runtime generation must match the live index.html runtime marker and asset' >> "$GITHUB_STEP_SUMMARY"
           echo '- git diff whitespace/conflict check' >> "$GITHUB_STEP_SUMMARY"
           echo '- manifest and core static-file contract check' >> "$GITHUB_STEP_SUMMARY"
           echo '- local assets referenced by index.html must exist' >> "$GITHUB_STEP_SUMMARY"

@@ -210,7 +210,7 @@ jobs:
           grep -Eqi '^permissions-policy:.*camera=\(\).*microphone=\(\).*geolocation=\(\)' /tmp/kv-local-headers-clean
           grep -Eqi '^x-frame-options:[[:space:]]*DENY' /tmp/kv-local-headers-clean
           grep -Eqi '^content-security-policy:.*script-src' /tmp/kv-local-headers-clean
-          grep -Eqi '^content-security-policy:.*frame-ancestors[[:space:]]+\x27none\x27' /tmp/kv-local-headers-clean || grep -Eqi '^content-security-policy:.*frame-ancestors[[:space:]]+\x27none\x27' /tmp/kv-local-headers-clean
+          grep -Fqi "frame-ancestors 'none'" /tmp/kv-local-headers-clean
           echo 'SECURITY_LOCAL_HEADER_PASS'
 
       - name: Chromium runtime network-origin and request-budget QA
@@ -230,8 +230,8 @@ jobs:
           const lesson='math.number.place-value.base10.age6-8.l1';
           await page.evaluate(id=>window.KV_NAVIGATION.navigate('/lesson/'+id),lesson);
           await page.waitForFunction(()=>location.pathname.startsWith('/lesson/')&&Boolean(document.querySelector('[data-teacher="v1"]'))&&window.KV_TEACHER_RUNTIME?.bilingual===true);
-          const entries=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,initiatorType:x.initiatorType}))); 
-          const origins=[...new Set(entries.map(x=>new URL(x.name,location.href).origin))];
+          const entries=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,initiatorType:x.initiatorType})));
+          const origins=[...new Set(entries.map(x=>new URL(x.name,base).origin))];
           const allowed=[baseOrigin,'https://fonts.googleapis.com','https://fonts.gstatic.com'];
           const unexpected=origins.filter(x=>!allowed.includes(x));
           if(unexpected.length)throw new Error('Unexpected runtime origins '+JSON.stringify(unexpected));

@@ -9,10 +9,22 @@
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const norm=s=>String(s??'').trim().toLowerCase().replace(/[^\p{L}\p{N}.\-]/gu,'');
   const lessonById=new Map(L.map(l=>[l.id,l]));
+  const promptText=a=>typeof a?.questionActivity==='string'?a.questionActivity:(a?.questionActivity?.prompt||'');
+  const conciseAnswer=a=>{
+    const answer=String(a?.correctAnswer??'').trim();
+    const prompt=String(promptText(a)||'').trim();
+    if(!answer||!prompt)return false;
+    if(answer.length>48||answer.split(/\s+/).length>6)return false;
+    if(prompt.length>280)return false;
+    if(/[\r\n]/.test(answer))return false;
+    return true;
+  };
 
   function buildQuestionSet(){
     const lessonIsMaths=id=>{const l=lessonById.get(id);return l&&(l.worldId==='mathematics'||String(l.subject||'').toLowerCase().includes('math'))};
-    const pool=A.filter(a=>a.lessonId&&lessonIsMaths(a.lessonId)&&a.questionActivity&&a.correctAnswer);
+    // Use only concise, objectively auto-gradable answers for the diagnostic. Longer explanatory
+    // assessment items remain in the canonical lesson corpus, but are not appropriate for this short baseline signal.
+    const pool=A.filter(a=>a.lessonId&&lessonIsMaths(a.lessonId)&&a.questionActivity&&a.correctAnswer&&conciseAnswer(a));
     const byTopic=new Map();
     for(const a of pool){
       const l=lessonById.get(a.lessonId);
@@ -27,7 +39,7 @@
       picked.push(arr[Math.floor(Math.random()*arr.length)]);
       if(picked.length>=10)break;
     }
-    // top up to at least 6 questions if few topics exist
+    // Top up to at least 6 questions if enough concise verified items exist.
     if(picked.length<Math.min(6,pool.length)){
       for(const a of pool){ if(picked.length>=Math.min(10,pool.length))break; if(!picked.includes(a))picked.push(a); }
     }
@@ -74,7 +86,7 @@
     const pct=Math.round(session.index/session.questions.length*100);
     return `<section class="dg-session"><header><a href="/" data-link>← Home</a><div><b>${session.index+1}/${session.questions.length}</b><span>${pct}%</span></div></header>
       <div class="dg-progress"><i style="width:${pct}%"></i></div>
-      <article><span class="dg-kicker">MATHS DIAGNOSTIC // ${esc(q.topic.toUpperCase())}</span><h1>${esc(typeof q.a.questionActivity==='string'?q.a.questionActivity:(q.a.questionActivity?.prompt||'Question'))}</h1>
+      <article><span class="dg-kicker">MATHS DIAGNOSTIC // ${esc(q.topic.toUpperCase())}</span><h1>${esc(promptText(q.a)||'Question')}</h1>
       <p class="dg-note">Type your answer. Each question is asked once — this finds your starting point, it is not a test to pass or fail.</p>
       <form id="dg-form"><input id="dg-answer" aria-label="Your answer" autocomplete="off" autofocus placeholder="Your answer"><button class="primary" type="submit">Submit</button></form>
       </article></section>`;
@@ -96,8 +108,8 @@
 
   function startView(){
     const usable=buildQuestionSet();
-    if(!usable.length)return `<div class="page dg-page"><div class="page-title"><span>MATHS DIAGNOSTIC</span><h1>Diagnostic unavailable</h1><p>No verified mathematics assessment records are available. KirthiVerse will not fabricate diagnostic questions.</p></div></div>`;
-    return `<div class="page dg-page"><div class="page-title"><span>MATHS DIAGNOSTIC // LOCAL-FIRST</span><h1>Let's find your starting point.</h1><p>${usable.length} short questions drawn from the verified KirthiVerse mathematics corpus. No pressure — this only helps pick what to learn next.</p></div><button class="primary" id="dg-start">Start diagnostic →</button></div>`;
+    if(!usable.length)return `<div class="page dg-page"><div class="page-title"><span>MATHS DIAGNOSTIC</span><h1>Diagnostic unavailable</h1><p>No concise verified mathematics assessment records are available. KirthiVerse will not fabricate diagnostic questions.</p></div></div>`;
+    return `<div class="page dg-page"><div class="page-title"><span>MATHS DIAGNOSTIC // LOCAL-FIRST</span><h1>Let's find your starting point.</h1><p>${usable.length} short, auto-gradable questions drawn from the verified KirthiVerse mathematics corpus. No pressure — this only helps pick what to learn next.</p></div><button class="primary" id="dg-start">Start diagnostic →</button></div>`;
   }
 
   function render(){
@@ -116,5 +128,5 @@
 
   addEventListener('kv:rendered',render);
   render();
-  window.KV_DIAGNOSTIC_RUNTIME={version:'v1',route:'/diagnostic',localOnly:true,storageKey:KEY,fabricatesQuestions:false};
+  window.KV_DIAGNOSTIC_RUNTIME={version:'v1.1',route:'/diagnostic',localOnly:true,storageKey:KEY,fabricatesQuestions:false,conciseAnswersOnly:true};
 })();

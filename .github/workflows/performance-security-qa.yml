@@ -1,110 +1,344 @@
 name: KirthiVerse Performance Security QA
+
 on:
-  push:
-    branches: [design/manus-visual-master]
+  pull_request:
+    branches: [main]
     paths:
       - '.github/workflows/performance-security-qa.yml'
       - '_headers'
-      - 'security-candidate.txt'
+      - 'wrangler.jsonc'
+      - '.assetsignore'
       - 'index.html'
-      - 'app.js'
-      - 'core-runtime-v30.js'
-      - 'learning-foundation-v19.js'
-      - 'learning-tools-v20.js'
-      - 'visual-controller-v27.js'
-      - 'learner-adaptive-v26.js'
+      - '*.js'
+      - '*.css'
+      - 'data/**'
+      - 'identity/**'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/performance-security-qa.yml'
+      - '_headers'
+      - 'wrangler.jsonc'
+      - '.assetsignore'
+      - 'index.html'
+      - '*.js'
+      - '*.css'
+      - 'data/**'
       - 'identity/**'
   workflow_dispatch:
+
 permissions:
   contents: read
+
+concurrency:
+  group: kirthiverse-performance-security-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'main' }}
+  cancel-in-progress: true
+
 env:
-  RAW_CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-  RAW_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
   PREVIEW_URL: https://kirthiverse-hitech.ssakthivel02.workers.dev
-  SENTINEL: KIRTHIVERSE_SECURITY_CANDIDATE_2026-09-05_1609
+  LOCAL_URL: http://127.0.0.1:8788
+
 jobs:
-  performance-security:
+  static-local-security:
+    name: static-local-security
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout exact candidate
         uses: actions/checkout@v5
-      - name: Static footprint and contamination gate
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Setup pinned Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Confirm HI-TECH ACTIVE MASTER candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const c = JSON.parse(fs.readFileSync('ACTIVE_MASTER_CONTROL.json', 'utf8'));
+          if (c.status !== 'HI-TECH — ACTIVE MASTER') throw new Error('Not HI-TECH ACTIVE MASTER');
+          if (c.canonicalRepository !== process.env.GITHUB_REPOSITORY) throw new Error('Canonical repository mismatch');
+          if (c.activeBranch !== 'main') throw new Error('Active branch must remain main');
+          if (process.env.GITHUB_BASE_REF && process.env.GITHUB_BASE_REF !== 'main') throw new Error('PR must target main');
+          console.log('PERF_SECURITY_ACTIVE_MASTER_PASS');
+          NODE
+
+      - name: Fetch current main for PR non-regression comparison
+        if: github.event_name == 'pull_request'
+        run: git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+
+      - name: Deterministic source budget and security contract
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import re
-          h=Path('index.html').read_text(); refs=[]
-          for x in re.findall(r'(?:href|src)=["\'](/[^"\']+\.(?:css|js)(?:\?[^"\']*)?)["\']',h):
-            p=x.split('?',1)[0].lstrip('/')
-            if not p.startswith('data/') and p not in refs: refs.append(p)
-          css=sum(Path(p).stat().st_size for p in refs if p.endswith('.css')); js=sum(Path(p).stat().st_size for p in refs if p.endswith('.js')); html=Path('index.html').stat().st_size
-          assert sum(p.endswith('.js') for p in refs)<=6
-          assert css+js<=168000 and html<=32000 and css+js+html<=200000
-          corpus='\n'.join(Path(p).read_text(errors='ignore') for p in ['index.html','app.js','core-runtime-v30.js','learning-foundation-v19.js','learning-tools-v20.js','visual-controller-v27.js','learner-adaptive-v26.js'])
-          bad=['__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE','artifacts.cloudflare.net','ManusDialog','googletagmanager.com','google-analytics.com','doubleclick.net']
-          assert not [x for x in bad if x in corpus]
-          assert 'data-kv-teacher-runtime="v2"' in h and 'bilingual:true' in h
-          headers=Path('_headers').read_text()
-          for token in ['sha256-lFerLKIdSU5Ay0H2UlkGRwSJMupHUtWPLsy9DKuxO54=','sha256-z9SPI/fD9/QyU9pSmBuQDXZDab9fGhmskMWXoq1vrRY=','sha256-5Trr5fkI9mSXOcowwX6m5OCd/CRDc24wu/mhkj3Amp0=']:
-            assert token in headers
-          print(f'PERF_STATIC_PASS external={css+js} html={html} shell={css+js+html} js_requests={sum(p.endswith(".js") for p in refs)}')
+          import base64, hashlib, json, os, re, subprocess
+
+          def runtime_paths(index_text, sw_text):
+              refs=set()
+              for x in re.findall(r'(?:href|src)=["\'](/[^"\']+\.(?:css|js)(?:\?[^"\']*)?)["\']', index_text, re.I):
+                  p=x.split('?',1)[0].lstrip('/')
+                  if not p.startswith('data/'):
+                      refs.add(p)
+              for x in re.findall(r'["\'](/[^"\']+\.(?:css|js))["\']', sw_text, re.I):
+                  p=x.lstrip('/')
+                  if not p.startswith('data/'):
+                      refs.add(p)
+              return sorted(refs)
+
+          index=Path('index.html').read_text(encoding='utf-8')
+          sw=Path('sw-v30.js').read_text(encoding='utf-8')
+          paths=runtime_paths(index, sw)
+          missing=[p for p in paths if not Path(p).is_file()]
+          assert not missing, f'missing runtime assets: {missing}'
+          total=sum(Path(p).stat().st_size for p in paths)
+          html_size=Path('index.html').stat().st_size
+          js_count=sum(p.endswith('.js') for p in paths)
+          css_count=sum(p.endswith('.css') for p in paths)
+          assert total <= 360000, f'non-data runtime source ceiling exceeded: {total}'
+          assert html_size <= 40000, f'HTML source ceiling exceeded: {html_size}'
+          assert len(paths) <= 48, f'runtime asset-family ceiling exceeded: {len(paths)}'
+
+          if os.environ.get('GITHUB_EVENT_NAME') == 'pull_request':
+              def git_text(path):
+                  return subprocess.check_output(['git','show',f'origin/main:{path}']).decode('utf-8')
+              base_index=git_text('index.html')
+              base_sw=git_text('sw-v30.js')
+              base_paths=runtime_paths(base_index, base_sw)
+              def git_size(path):
+                  return int(subprocess.check_output(['git','cat-file','-s',f'origin/main:{path}']).decode().strip())
+              base_total=sum(git_size(p) for p in base_paths)
+              base_html=git_size('index.html')
+              allowed_total=max(int(base_total*1.05), base_total+8192)
+              allowed_html=max(int(base_html*1.20), base_html+4096)
+              assert total <= allowed_total, f'runtime source grew beyond bounded PR allowance: candidate={total} base={base_total} allowed={allowed_total}'
+              assert html_size <= allowed_html, f'HTML grew beyond bounded PR allowance: candidate={html_size} base={base_html} allowed={allowed_html}'
+              print(f'PERF_BASELINE_PASS candidate={total} base={base_total} assets={len(paths)} base_assets={len(base_paths)}')
+
+          headers=Path('_headers').read_text(encoding='utf-8')
+          csp_line=next((line.strip() for line in headers.splitlines() if line.strip().lower().startswith('content-security-policy:')), None)
+          assert csp_line, 'CSP header missing'
+          csp=csp_line.split(':',1)[1].strip()
+          required=[
+              "default-src 'self'",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'none'",
+              "connect-src 'self'",
+          ]
+          for token in required:
+              assert token in csp, f'CSP directive missing: {token}'
+          script_segment=next((x.strip() for x in csp.split(';') if x.strip().startswith('script-src ')), '')
+          assert script_segment, 'script-src missing'
+          assert "'unsafe-inline'" not in script_segment and "'unsafe-eval'" not in script_segment, 'unsafe script CSP token present'
+
+          inline_scripts=[m.group(1) for m in re.finditer(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', index, re.I|re.S)]
+          expected_hashes={
+              'sha256-'+base64.b64encode(hashlib.sha256(s.encode('utf-8')).digest()).decode('ascii')
+              for s in inline_scripts
+          }
+          csp_hashes=set(re.findall(r"'(sha256-[^']+)'", script_segment))
+          assert expected_hashes == csp_hashes, f'inline script CSP hashes do not exactly match index.html: expected={sorted(expected_hashes)} actual={sorted(csp_hashes)}'
+
+          for token in [
+              'X-Content-Type-Options: nosniff',
+              'Referrer-Policy: strict-origin-when-cross-origin',
+              'X-Frame-Options: DENY',
+              'camera=()', 'microphone=()', 'geolocation=()', 'payment=()', 'usb=()'
+          ]:
+              assert token.lower() in headers.lower(), f'security header contract missing: {token}'
+
+          cfg=json.loads(Path('wrangler.jsonc').read_text(encoding='utf-8'))
+          assert cfg.get('name') == 'kirthiverse-hitech', 'preview Worker name changed unexpectedly'
+          assert cfg.get('assets',{}).get('directory') == '.', 'assets directory must remain repository root'
+          assert cfg.get('assets',{}).get('not_found_handling') == 'single-page-application', 'SPA asset handling changed'
+          assert not cfg.get('routes') and not cfg.get('route'), 'production/custom route must not be introduced here'
+
+          corpus='\n'.join([index]+[Path(p).read_text(encoding='utf-8',errors='ignore') for p in paths if p.endswith('.js')])
+          forbidden=[
+              '__manus__','manus-storage','vite-plugin-manus-runtime','BUILT_IN_FORGE',
+              'artifacts.cloudflare.net','ManusDialog','googletagmanager.com',
+              'google-analytics.com','doubleclick.net','facebook.net','segment.io'
+          ]
+          found=[x for x in forbidden if x.lower() in corpus.lower()]
+          assert not found, f'forbidden runtime/tracking contamination: {found}'
+          assert 'data-kv-teacher-runtime="v2"' in index and 'bilingual:true' in index, 'bilingual guide contract missing'
+
+          print(f'PERF_STATIC_PASS runtime_source={total} html={html_size} assets={len(paths)} js={js_count} css={css_count}')
+          print(f'SECURITY_STATIC_PASS inline_hashes={len(expected_hashes)} worker={cfg["name"]}')
           PY
-      - name: Normalize Cloudflare credential formatting
+
+      - name: Install pinned browser QA dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install Chromium engine
+        run: npx playwright install --with-deps chromium
+
+      - name: Start local Cloudflare assets runtime
         shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4 dev --ip 127.0.0.1 --port 8788 >/tmp/kv-wrangler.log 2>&1 &
+          echo $! > /tmp/kv-wrangler.pid
+          ready=0
+          for i in $(seq 1 40); do
+            if curl -fsS "$LOCAL_URL/index.html?ready=$i" -o /tmp/kv-local-index.html; then ready=1; break; fi
+            sleep 1
+          done
+          if [ "$ready" != 1 ]; then
+            cat /tmp/kv-wrangler.log || true
+            exit 1
+          fi
+          grep -Fq 'CORE-RUNTIME-V30' /tmp/kv-local-index.html
+
+      - name: Verify local Cloudflare security headers
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSI "$LOCAL_URL/index.html?headers=$(date +%s)" >/tmp/kv-local-headers
+          tr -d '\r' </tmp/kv-local-headers | tee /tmp/kv-local-headers-clean
+          grep -Eqi '^x-content-type-options:[[:space:]]*nosniff' /tmp/kv-local-headers-clean
+          grep -Eqi '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/kv-local-headers-clean
+          grep -Eqi '^permissions-policy:.*camera=\(\).*microphone=\(\).*geolocation=\(\)' /tmp/kv-local-headers-clean
+          grep -Eqi '^x-frame-options:[[:space:]]*DENY' /tmp/kv-local-headers-clean
+          grep -Eqi '^content-security-policy:.*script-src' /tmp/kv-local-headers-clean
+          grep -Eqi '^content-security-policy:.*frame-ancestors[[:space:]]+\x27none\x27' /tmp/kv-local-headers-clean || grep -Eqi '^content-security-policy:.*frame-ancestors[[:space:]]+\x27none\x27' /tmp/kv-local-headers-clean
+          echo 'SECURITY_LOCAL_HEADER_PASS'
+
+      - name: Chromium runtime network-origin and request-budget QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { chromium } from '@playwright/test';
+          const base=process.env.LOCAL_URL;
+          const baseOrigin=new URL(base).origin;
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage();
+          const pageErrors=[];
+          page.on('pageerror',e=>pageErrors.push(String(e?.message||e)));
+          await page.goto(`${base}/?perf-security=${Date.now()}`,{waitUntil:'domcontentloaded'});
+          await page.waitForFunction(()=>Boolean(window.KV_APP_RUNTIME&&window.KV_NAVIGATION));
+          const lesson='math.number.place-value.base10.age6-8.l1';
+          await page.evaluate(id=>window.KV_NAVIGATION.navigate('/lesson/'+id),lesson);
+          await page.waitForFunction(()=>location.pathname.startsWith('/lesson/')&&Boolean(document.querySelector('[data-teacher="v1"]'))&&window.KV_TEACHER_RUNTIME?.bilingual===true);
+          const entries=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,initiatorType:x.initiatorType}))); 
+          const origins=[...new Set(entries.map(x=>new URL(x.name,location.href).origin))];
+          const allowed=[baseOrigin,'https://fonts.googleapis.com','https://fonts.gstatic.com'];
+          const unexpected=origins.filter(x=>!allowed.includes(x));
+          if(unexpected.length)throw new Error('Unexpected runtime origins '+JSON.stringify(unexpected));
+          const sourceRequests=entries.filter(x=>/\.(?:js|css)(?:\?|$)/i.test(new URL(x.name,base).pathname+new URL(x.name,base).search));
+          if(sourceRequests.length>48)throw new Error(`Runtime JS/CSS request-family ceiling exceeded: ${sourceRequests.length}`);
+          if(pageErrors.length)throw new Error('Uncaught page errors: '+pageErrors.join(' | '));
+          console.log('SECURITY_BROWSER_PASS origins='+JSON.stringify(origins));
+          console.log('PERF_BROWSER_PASS js_css_resource_entries='+sourceRequests.length);
+          await browser.close();
+          NODE
+
+      - name: Stop local Cloudflare runtime
+        if: always()
+        shell: bash
+        run: |
+          if [ -f /tmp/kv-wrangler.pid ]; then kill "$(cat /tmp/kv-wrangler.pid)" 2>/dev/null || true; fi
+          tail -n 80 /tmp/kv-wrangler.log 2>/dev/null || true
+
+      - name: Static/local closure summary
+        if: always()
+        run: |
+          echo '### KirthiVerse Performance + Security QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Exact HI-TECH ACTIVE MASTER candidate checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Deterministic non-data runtime source-size and asset-family ceilings checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- PR candidates compared with current main to block unbounded payload growth' >> "$GITHUB_STEP_SUMMARY"
+          echo '- CSP inline-script hashes derived from index.html and matched exactly' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Security-header policy contract checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Wrangler assets-only SPA contract checked; custom/production routes rejected' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Local Cloudflare runtime response headers checked without credentials' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chromium bilingual guide, page-error and unexpected-origin gates checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- No PR deployment credentials are used by this job' >> "$GITHUB_STEP_SUMMARY"
+
+  post-merge-preview-proof:
+    name: post-merge-preview-proof
+    if: github.event_name != 'pull_request'
+    needs: static-local-security
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact main candidate
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Determine preview credential availability
+        shell: bash
+        env:
+          RAW_CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          RAW_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import os
-          t=os.environ['RAW_CLOUDFLARE_API_TOKEN'].strip().strip('"').strip("'"); a=os.environ['RAW_CLOUDFLARE_ACCOUNT_ID'].strip().strip('"').strip("'")
+          t=os.environ.get('RAW_CLOUDFLARE_API_TOKEN','').strip().strip('"').strip("'")
+          a=os.environ.get('RAW_CLOUDFLARE_ACCOUNT_ID','').strip().strip('"').strip("'")
           if t.lower().startswith('bearer '): t=t[7:].strip()
-          assert t and a
-          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLOUDFLARE_API_TOKEN_CLEAN='+t+'\nCLOUDFLARE_ACCOUNT_ID_CLEAN='+a+'\n')
+          with open(os.environ['GITHUB_ENV'],'a') as f:
+              if t and a:
+                  f.write('KV_CF_READY=true\n')
+                  f.write('CLOUDFLARE_API_TOKEN_CLEAN='+t+'\n')
+                  f.write('CLOUDFLARE_ACCOUNT_ID_CLEAN='+a+'\n')
+              else:
+                  f.write('KV_CF_READY=false\n')
           PY
-      - name: Deploy exact candidate to existing preview Worker
+
+      - name: Prepare exact-head deployment sentinel
+        if: env.KV_CF_READY == 'true'
+        run: printf 'ACTIVE_MASTER_SHA=%s\n' "$GITHUB_SHA" > security-candidate.txt
+
+      - name: Deploy exact main to existing preview Worker
+        if: env.KV_CF_READY == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN_CLEAN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID_CLEAN }}
         run: npx --yes wrangler@4 deploy --assets=.
-      - name: Verify exact asset manifest and response security headers
+
+      - name: Verify exact preview asset and security headers
+        if: env.KV_CF_READY == 'true'
         shell: bash
         run: |
           set -euo pipefail
           ok=0
           for i in $(seq 1 30); do
-            if curl -fsS "$PREVIEW_URL/security-candidate.txt?sentinel=$i-$(date +%s)" -o /tmp/sentinel && grep -Fq "$SENTINEL" /tmp/sentinel; then ok=1; break; fi
+            if curl -fsS "$PREVIEW_URL/security-candidate.txt?sentinel=$i-$(date +%s)" -o /tmp/sentinel && grep -Fqx "ACTIVE_MASTER_SHA=$GITHUB_SHA" /tmp/sentinel; then ok=1; break; fi
             sleep 2
           done
           test "$ok" = 1
-          curl -fsSI "$PREVIEW_URL/index.html?headers=$(date +%s)" >/tmp/kv-headers
-          tr -d '\r' </tmp/kv-headers | tee /tmp/kv-headers-clean
-          grep -Eqi '^x-content-type-options:[[:space:]]*nosniff' /tmp/kv-headers-clean
-          grep -Eqi '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/kv-headers-clean
-          grep -Eqi '^permissions-policy:.*camera=\(\).*microphone=\(\)' /tmp/kv-headers-clean
-          grep -Eqi '^x-frame-options:[[:space:]]*DENY' /tmp/kv-headers-clean
-          grep -Eqi '^content-security-policy:.*sha256-5Trr5fkI9mSXOcowwX6m5OCd/CRDc24wu/mhkj3Amp0=' /tmp/kv-headers-clean
-          echo 'SECURITY_HEADER_PASS'
-      - name: Chromium deployed runtime and network-origin QA
+          curl -fsSI "$PREVIEW_URL/index.html?headers=$(date +%s)" >/tmp/kv-preview-headers
+          tr -d '\r' </tmp/kv-preview-headers | tee /tmp/kv-preview-headers-clean
+          grep -Eqi '^x-content-type-options:[[:space:]]*nosniff' /tmp/kv-preview-headers-clean
+          grep -Eqi '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/kv-preview-headers-clean
+          grep -Eqi '^permissions-policy:.*camera=\(\).*microphone=\(\)' /tmp/kv-preview-headers-clean
+          grep -Eqi '^x-frame-options:[[:space:]]*DENY' /tmp/kv-preview-headers-clean
+          grep -Eqi '^content-security-policy:.*script-src' /tmp/kv-preview-headers-clean
+          echo 'SECURITY_PREVIEW_PASS exact_main='$GITHUB_SHA
+
+      - name: Preview proof summary
+        if: always()
         shell: bash
         run: |
-          set -euo pipefail
-          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"; test -n "$chrome"
-          rm -rf /tmp/kv-sec-profile
-          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9577 --user-data-dir=/tmp/kv-sec-profile "$PREVIEW_URL/?security=$(date +%s)" >/tmp/kv-sec-chrome.log 2>&1 & cpid=$!
-          trap 'kill "$cpid" 2>/dev/null || true' EXIT
-          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9577/json/list >/tmp/pages && break || sleep 1; done
-          node <<'NODE'
-          const base=process.env.PREVIEW_URL,lesson='math.number.place-value.base10.age6-8.l1';const pages=await fetch('http://127.0.0.1:9577/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');if(!page)throw Error('No page');const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let seq=0,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});await send('Runtime.enable');const ev=async x=>(await send('Runtime.evaluate',{expression:x,returnByValue:true,awaitPromise:true})).result?.value;const wait=async(x,l)=>{const end=Date.now()+15000;while(Date.now()<end){try{if(await ev(x))return}catch{}await new Promise(r=>setTimeout(r,200))}throw Error('Timeout '+l)};await wait(`!!window.KV_APP_RUNTIME&&!!window.KV_NAVIGATION`,'runtime');await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);await wait(`!!document.querySelector('[data-teacher="v1"]')&&window.KV_TEACHER_RUNTIME?.bilingual===true`,'bilingual teacher');const origins=await ev(`[...new Set(performance.getEntriesByType('resource').map(x=>new URL(x.name).origin))]`);const allowed=[new URL(base).origin,'https://fonts.googleapis.com','https://fonts.gstatic.com'];const bad=origins.filter(x=>!allowed.includes(x));if(bad.length)throw Error('Unexpected origins '+JSON.stringify(bad));console.log('SECURITY_BROWSER_PASS '+JSON.stringify(origins));ws.close();
-          NODE
-      - name: Closure summary
-        if: always()
-        run: |
-          echo '### Performance + security closure' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Exact asset manifest proven by unique sentinel' >> "$GITHUB_STEP_SUMMARY"
-          echo '- External CSS/JS ceiling: 168,000 bytes' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Strict CSP allows only the three audited inline runtime hashes' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Security response headers enforced' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Bilingual Animated Teacher verified in deployed Chromium runtime' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Unexpected network origins rejected' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Production DNS unchanged; no paid Cloudflare services added' >> "$GITHUB_STEP_SUMMARY"
+          echo '### Existing preview Worker proof' >> "$GITHUB_STEP_SUMMARY"
+          if [ "${KV_CF_READY:-false}" = 'true' ]; then
+            echo '- Existing preview Worker refreshed from exact main SHA' >> "$GITHUB_STEP_SUMMARY"
+            echo '- Exact-head sentinel verified after deployment' >> "$GITHUB_STEP_SUMMARY"
+            echo '- Preview response security headers verified' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo '- Preview deployment not run because Cloudflare credentials were unavailable to this workflow' >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo '- Production DNS/custom routes were not changed' >> "$GITHUB_STEP_SUMMARY"

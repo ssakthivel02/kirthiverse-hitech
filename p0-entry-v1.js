@@ -2,7 +2,7 @@
    Loads Educator Pilot + Pilot Metrics + P4 Readiness + P5 Controlled Run modules without modifying app.js.
    Loads the CBSE Class 6 Mathematics pilot additively into the existing lesson/assessment arrays. */
 (()=>{
-  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function loadAddon({tag,css,js,version}){if(css&&!document.querySelector(`link[data-${tag}]`)){const l=document.createElement('link');l.rel='stylesheet';l.href=`/${css}?v=${version}`;l.setAttribute(`data-${tag}`,'style');document.head.appendChild(l)}if(js&&!document.querySelector(`script[data-${tag}]`)){const s=document.createElement('script');s.async=false;s.src=`/${js}?v=${version}`;s.setAttribute(`data-${tag}`,'script');document.body.appendChild(s)}}
   const loadEducatorPilot=()=>loadAddon({tag:'ep-pilot',css:'educator-pilot-v1.css',js:'educator-pilot-v1.js',version:'EDUCATOR-PILOT-1'});
   const loadPilotMetrics=()=>loadAddon({tag:'pm-pilot',css:'pilot-metrics-v1.css',js:'pilot-metrics-v1.js',version:'PILOT-METRICS-1'});
@@ -10,12 +10,12 @@
   const loadPilotRun=()=>loadAddon({tag:'run-pilot',css:'pilot-run-v1.css',js:'pilot-run-v1.js',version:'PILOT-RUN-1'});
   function loadClass6MathPilot(){
     const files=[['class6-math-lessons','data/class6-math-pilot.js'],['class6-math-assessments','data/class6-math-assessments.js']];
-    let pending=files.length;
-    const done=()=>{pending-=1;if(pending===0){document.documentElement.dataset.class6MathPilot='ready';dispatchEvent(new PopStateEvent('popstate'));dispatchEvent(new CustomEvent('kv:class6-pilot-ready',{detail:{subject:'Mathematics',classLevel:6,localOnly:true}}))}};
+    let pending=files.length,failed=false;
+    const done=ok=>{if(!ok)failed=true;pending-=1;if(pending===0){if(failed){document.documentElement.dataset.class6MathPilot='load-error';return}document.documentElement.dataset.class6MathPilot='ready';dispatchEvent(new PopStateEvent('popstate'));dispatchEvent(new CustomEvent('kv:class6-pilot-ready',{detail:{subject:'Mathematics',classLevel:6,localOnly:true}}))}};
     for(const [tag,src] of files){
       const existing=document.querySelector(`script[data-${tag}]`);
-      if(existing){done();continue}
-      const s=document.createElement('script');s.async=false;s.src=`/${src}?v=CBSE6-MATH-PILOT-1`;s.setAttribute(`data-${tag}`,'script');s.addEventListener('load',done,{once:true});s.addEventListener('error',()=>{document.documentElement.dataset.class6MathPilot='load-error';done()},{once:true});document.body.appendChild(s)
+      if(existing){done(existing.dataset.loadFailed!=='true');continue}
+      const s=document.createElement('script');s.async=false;s.src=`/${src}?v=CBSE6-MATH-PILOT-1`;s.setAttribute(`data-${tag}`,'script');s.addEventListener('load',()=>done(true),{once:true});s.addEventListener('error',()=>{s.dataset.loadFailed='true';done(false)},{once:true});document.body.appendChild(s)
     }
   }
   function addNavLinks(){const nav=document.querySelector('.topbar nav');if(!nav)return;const links=[['/diagnostic','◈','Diagnostic'],['/speedlab','⚡','Speed Lab'],['/parent','⚿','Parent Space']];for(const [href,icon,label] of links){let a=nav.querySelector(`a[href="${href}"]`);if(!a){a=document.createElement('a');a.href=href;a.dataset.link='';a.className='vm-nav-p0';a.innerHTML=`${icon} <span>${label}</span>`;nav.appendChild(a)}a.setAttribute('aria-label',label);a.setAttribute('title',label);if(location.pathname===href)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')}}

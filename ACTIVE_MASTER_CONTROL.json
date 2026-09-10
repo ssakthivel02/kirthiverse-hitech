@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "project": "KirthiVerse",
   "status": "HI-TECH — ACTIVE MASTER",
   "canonicalRepository": "ssakthivel02/kirthiverse-hitech",
@@ -20,12 +20,34 @@
     "requireBuildTestEvidenceBeforeNextTask": true,
     "clarifyIfActiveMasterUnknown": true
   },
+  "githubSafetyPolicy": {
+    "verifyCanonicalRepositoryBeforeWrite": true,
+    "verifyActiveBranchBeforeWrite": true,
+    "verifyCurrentMainShaBeforeWrite": true,
+    "inventoryOpenPullRequestsIssuesAndWorkflowsBeforeCreating": true,
+    "directWriteToProtectedMainProhibitedForNormalDevelopment": true,
+    "newTaskBranchMustStartFromExactCurrentMain": true,
+    "forcePushProhibited": true,
+    "destructiveRefMovementProhibited": true,
+    "requiredCiWeakeningProhibited": true,
+    "branchProtectionBypassProhibited": true,
+    "mergeOnlyAfterExactHeadRequiredChecksPass": true,
+    "apiMergeRequiresExpectedHeadShaGuard": true,
+    "postMergeMainShaAndProtectionReverificationRequired": true,
+    "preferSmallestEvidenceBackedChange": true,
+    "stopWhenOnlyManualOrExternalBlockersRemain": true
+  },
   "prohibitedActions": [
     "new development in OLD or LEGACY repositories",
     "fixes or redesigns in OLD or LEGACY repositories",
     "deployment or content updates in OLD or LEGACY repositories",
     "recreating already completed work without failure evidence",
     "creating duplicate repositories, previews, dashboards, folders or websites for completed scope",
-    "promoting an OLD or LEGACY branch to active source without explicit reconciliation into this master"
+    "promoting an OLD or LEGACY branch to active source without explicit reconciliation into this master",
+    "normal development writes directly to protected main",
+    "force-pushing or destructively moving protected refs",
+    "weakening required CI or repository protection to obtain a green result",
+    "merging before exact-head required checks pass",
+    "automated or API merge without an expected-head SHA guard"
   ]
 }

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "pilot": {
+    "board": "CBSE",
+    "class": 6,
+    "schoolValidationProfile": "SAN Academy Tambaram",
+    "canonicalRepository": "ssakthivel02/kirthiverse-hitech",
+    "status": "FOUNDATION_IN_PROGRESS",
+    "completionLabel": "COMPLETE_CBSE_CLASS6"
+  },
+  "completionRule": "No subject or whole-class completion claim is allowed until every applicable chapter has approved provenance, Kiki-teachable instruction, examples, guided practice, assessment, remediation, mastery evidence, accessibility review, and rights/source review.",
+  "subjects": [
+    {"id":"english","name":"English — Language and Literature","schoolRequired":true,"status":"BASELINE_TO_RECONCILE"},
+    {"id":"language-2","name":"Second Language — Tamil or Hindi","schoolRequired":true,"status":"VARIANT_REQUIRES_EXPLICIT_PROFILE"},
+    {"id":"language-3","name":"Third Language — Tamil or Hindi","schoolRequired":true,"status":"VARIANT_REQUIRES_EXPLICIT_PROFILE"},
+    {"id":"mathematics","name":"Mathematics","schoolRequired":true,"status":"DONOR_RESEARCH_IDENTIFIED","donorBaseline":"Ganita Prakash / prior Class 6 research"},
+    {"id":"science","name":"Science","schoolRequired":true,"status":"DONOR_RESEARCH_IDENTIFIED","donorBaseline":"Curiosity / prior Class 6 research"},
+    {"id":"social-science","name":"Social Science","schoolRequired":true,"status":"DONOR_RESEARCH_IDENTIFIED","donorBaseline":"Exploring Society / prior Class 6 research"},
+    {"id":"life-skills-aptitude","name":"Life Skills & Aptitude","schoolRequired":true,"status":"BASELINE_TO_RECONCILE"},
+    {"id":"computer-science","name":"Computer Science","schoolRequired":true,"status":"DONOR_RESEARCH_IDENTIFIED","donorBaseline":"CBSE CT & AI / computer-related prior research; school mapping pending"},
+    {"id":"health-physical-education","name":"Health and Physical Education","schoolRequired":true,"status":"BASELINE_TO_RECONCILE"},
+    {"id":"work-education","name":"Work Education","schoolRequired":true,"status":"BASELINE_TO_RECONCILE"},
+    {"id":"art-education","name":"Art Education","schoolRequired":true,"status":"BASELINE_TO_RECONCILE"}
+  ],
+  "kikiTeachingPath": [
+    "chapter-entry",
+    "animated-teaching",
+    "worked-example-or-demonstration",
+    "guided-practice",
+    "quiz-or-performance-check",
+    "remediation-if-needed",
+    "mastery-evidence"
+  ],
+  "safety": {
+    "unrestrictedChildChat": false,
+    "microphoneCapture": false,
+    "externalLearnerPrompts": false,
+    "childFacingCloudAI": false,
+    "realChildCloudPersistence": false
+  },
+  "legacyPolicy": {
+    "oldReposAreReadOnlyDonors": true,
+    "bulkCopyAllowed": false,
+    "reconcileOnlyIfMissing": true,
+    "sourceAndRightsReviewRequired": true
+  }
+}

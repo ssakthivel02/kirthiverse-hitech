@@ -1,4 +1,5 @@
-window.KV_LESSONS=(window.KV_LESSONS||[]).concat([{
+window.KV_LESSONS=window.KV_LESSONS||[];
+window.KV_LESSONS.push({
   "id":"math.cbse6.ganita-prakash.patterns.number-patterns.v1",
   "title":"Patterns in Mathematics — Number Patterns",
   "subject":"Mathematics",
@@ -34,4 +35,4 @@ window.KV_LESSONS=(window.KV_LESSONS||[]).concat([{
     "strategy":"Return to a concrete skip-counting pattern, mark the change between each pair, then retry with one visual square or triangular pattern.",
     "masteryEvidence":"Learner correctly extends two different patterns and explains a consistent rule for each without answer prompting."
   }
-}]);
+});

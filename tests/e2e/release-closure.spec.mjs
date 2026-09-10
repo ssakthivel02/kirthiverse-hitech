@@ -1,13 +1,11 @@
 import { test, expect } from '@playwright/test';
 
-const CLASS6_MATH_LESSON_ID = 'math.cbse6.ganita-prakash.patterns.number-patterns.v1';
-const CLASS6_MATH_ASSESSMENT_IDS = [
-  'KV-CBSE6-MATH-0001',
-  'KV-CBSE6-MATH-0002',
-  'KV-CBSE6-MATH-0003',
-  'KV-CBSE6-MATH-0004',
-  'KV-CBSE6-MATH-0005',
+const CLASS6_MATH_LESSON_IDS = [
+  'math.cbse6.ganita-prakash.patterns.number-patterns.v1',
+  'math.cbse6.ganita-prakash.patterns.shape-patterns.v1',
+  'math.cbse6.ganita-prakash.patterns.everyday-patterns.v1',
 ];
+const CLASS6_MATH_ASSESSMENT_IDS = Array.from({length:15},(_,i)=>`KV-CBSE6-MATH-${String(i+1).padStart(4,'0')}`);
 
 async function waitForRuntime(page) {
   await page.waitForFunction(() => Boolean(
@@ -26,20 +24,21 @@ test('ACTIVE MASTER release surface preserves canonical corpus and local-first i
   expect(response?.status()).toBe(200);
   await waitForRuntime(page);
   await page.waitForFunction(
-    lessonId => document.documentElement.dataset.class6MathPilot === 'ready' &&
-      window.KV_LESSONS?.some(lesson => lesson.id === lessonId),
-    CLASS6_MATH_LESSON_ID
+    lessonIds => document.documentElement.dataset.class6MathPilot === 'ready' &&
+      lessonIds.every(lessonId => window.KV_LESSONS?.some(lesson => lesson.id === lessonId)),
+    CLASS6_MATH_LESSON_IDS
   );
 
-  const corpus = await page.evaluate(({ lessonId, assessmentIds }) => {
+  const corpus = await page.evaluate(({ lessonIds, assessmentIds }) => {
     const lessons = window.KV_LESSONS || [];
     const assessments = window.KV_ASSESSMENTS || [];
-    const pilotLessons = lessons.filter(lesson => lesson.id === lessonId);
+    const pilotLessons = lessons.filter(lesson => lessonIds.includes(lesson.id));
     const pilotAssessments = assessments.filter(assessment => assessmentIds.includes(assessment.stableAssessmentId));
     return {
       lessons: lessons.length,
       coreLessons: lessons.length - pilotLessons.length,
       pilotLessons: pilotLessons.length,
+      pilotTopicIds: [...new Set(pilotLessons.map(lesson=>lesson.topicId))],
       assessments: assessments.length,
       coreAssessments: assessments.length - pilotAssessments.length,
       pilotAssessments: pilotAssessments.length,
@@ -47,17 +46,17 @@ test('ACTIVE MASTER release surface preserves canonical corpus and local-first i
       footer: document.querySelector('footer')?.innerText || '',
       runtime: document.querySelector('meta[name="kv-runtime-generation"]')?.content,
     };
-  }, { lessonId: CLASS6_MATH_LESSON_ID, assessmentIds: CLASS6_MATH_ASSESSMENT_IDS });
+  }, { lessonIds: CLASS6_MATH_LESSON_IDS, assessmentIds: CLASS6_MATH_ASSESSMENT_IDS });
 
-  // The canonical CORE-RUNTIME-V30 corpus remains intact. The controlled
-  // Class 6 pilot is additive and must be evidenced separately rather than
-  // silently changing the core baseline contract.
+  // CORE-RUNTIME-V30 stays invariant. Controlled curriculum slices are additive
+  // and evidenced independently so curriculum growth cannot conceal core drift.
   expect(corpus.coreLessons).toBe(135);
-  expect(corpus.pilotLessons).toBe(1);
-  expect(corpus.lessons).toBe(136);
+  expect(corpus.pilotLessons).toBe(3);
+  expect(corpus.pilotTopicIds).toHaveLength(3);
+  expect(corpus.lessons).toBe(138);
   expect(corpus.coreAssessments).toBe(72);
-  expect(corpus.pilotAssessments).toBe(5);
-  expect(corpus.assessments).toBe(77);
+  expect(corpus.pilotAssessments).toBe(15);
+  expect(corpus.assessments).toBe(87);
   expect(corpus.pilotState).toBe('ready');
   expect(corpus.footer).toContain('11 universes');
   expect(corpus.runtime).toBe('CORE-RUNTIME-V30');

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "pilot": "CBSE_CLASS6_SAN_TAMBARAM",
   "subject": "Mathematics",
   "board": "CBSE",
@@ -12,7 +12,7 @@
     "sourcePolicy": "Chapter titles/order only; KirthiVerse teaching text, examples, hints and assessments must be independently authored."
   },
   "chapters": [
-    {"chapter":1,"id":"CH-MATH6-01","title":"Patterns in Mathematics","status":"PILOT_IMPLEMENTING","sourceConfidence":"HIGH"},
+    {"chapter":1,"id":"CH-MATH6-01","title":"Patterns in Mathematics","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":2,"id":"CH-MATH6-02","title":"Lines and Angles","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":3,"id":"CH-MATH6-03","title":"Number Play","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":4,"id":"CH-MATH6-04","title":"Data Handling and Presentation","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
@@ -31,9 +31,32 @@
       "competencies":["identify a consistent pattern rule","extend a sequence","represent a pattern numerically or visually","explain reasoning in own words"],
       "misconceptions":["treating a coincidence between two terms as a valid rule","confusing a term position with its value"]
     },
-    {"id":"TOPIC-MATH6-01-02","title":"Patterns in shapes","status":"NEXT"},
-    {"id":"TOPIC-MATH6-01-03","title":"Patterns in nature and everyday life","status":"NEXT"}
+    {
+      "id":"TOPIC-MATH6-01-02",
+      "title":"Patterns in shapes",
+      "status":"END_TO_END_PILOT_IMPLEMENTED",
+      "competencies":["identify a visual construction rule","translate visual growth into counts","predict later stages","distinguish equal totals from equal constructions"],
+      "misconceptions":["using counts alone without describing the construction","copying a picture without identifying the repeatable transformation"]
+    },
+    {
+      "id":"TOPIC-MATH6-01-03",
+      "title":"Patterns in nature and everyday life",
+      "status":"END_TO_END_PILOT_IMPLEMENTED",
+      "competencies":["identify repeat units","distinguish repeating and growing patterns","model observations mathematically","test a proposed rule without overstating evidence"],
+      "misconceptions":["assuming every observed natural form follows an exact sequence","claiming a general rule from too few observations"]
+    }
   ],
+  "chapter1CompletionRule": "CHAPTER1_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped topics to have independently authored teaching content, worked examples, linked practice/assessment, misconception handling, remediation/mastery evidence, deterministic QA, offline coverage and release regression coverage.",
+  "chapter1CompletionEvidence": {
+    "topicCount": 3,
+    "lessonCount": 3,
+    "assessmentCount": 15,
+    "assessmentMinimumPerTopic": 5,
+    "offlineRequired": true,
+    "accessibilityRequired": true,
+    "releaseRegressionRequired": true,
+    "status": "CHAPTER1_KIKI_TEACHING_SLICE_COMPLETE"
+  },
   "completionRule": "MATHEMATICS_COMPLETE only after all ten chapters have Kiki-teachable lesson coverage, practice, assessment, remediation/mastery evidence, accessibility QA and source/provenance review.",
   "schoolOverlay": {
     "school":"SAN Academy Tambaram",

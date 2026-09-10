@@ -1,0 +1,88 @@
+name: KirthiVerse P11C Review Handoff Provenance QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'P11C_REVIEW_HANDOFF_PROVENANCE.md'
+      - 'scripts/validate-review-handoff-provenance.mjs'
+      - 'tests/review-handoff-provenance.test.mjs'
+      - '.github/workflows/p11c-review-handoff-provenance-qa.yml'
+      - 'scripts/external-review-handoff-integrity.mjs'
+      - 'scripts/validate-external-pilot-approval.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p11c-review-handoff-provenance:
+    name: p11c-review-handoff-provenance
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pinned Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+
+      - name: Static contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/validate-review-handoff-provenance.mjs
+          node --check tests/review-handoff-provenance.test.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          tool=Path('scripts/validate-review-handoff-provenance.mjs').read_text()
+          doc=Path('P11C_REVIEW_HANDOFF_PROVENANCE.md').read_text()
+          for p in [
+            'scripts/external-review-handoff-integrity.mjs',
+            'scripts/validate-external-pilot-approval.mjs'
+          ]:
+            assert Path(p).is_file(), p
+          for marker in [
+            'TRACEABLE_EXTERNAL_REFERENCE_SET',
+            'P11B_NOT_READY',
+            'P10_NOT_STRUCTURALLY_COMPLETE',
+            'PILOT_REFERENCE_MISMATCH',
+            'SCOPE_VERSION_MISMATCH',
+            'HANDOFF_BUNDLE_MISMATCH',
+            'HANDOFF_MANIFEST_HASH_MISMATCH',
+            'canClaimReviewerAuthenticity: false',
+            'canClaimExternalApproval: false',
+            'canClaimLegalCompliance: false',
+            'canClaimSafeguardingCertification: false',
+            'canStartParticipantPilot: false',
+            'canClaimProductionReadiness: false'
+          ]:
+            assert marker in tool, marker
+          for marker in [
+            'TRACEABILITY CONTROL — NOT AN APPROVAL',
+            'p11bBundleSha256',
+            'p11bManifestSha256',
+            'does **not** mean',
+            'tamper-evident audit logging'
+          ]:
+            assert marker in doc, marker
+          print('P11C_STATIC_CONTRACT_PASS')
+          PY
+
+      - name: Deterministic provenance tests
+        run: node tests/review-handoff-provenance.test.mjs
+
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### KirthiVerse P11C Review Handoff Provenance' >> "$GITHUB_STEP_SUMMARY"
+          echo '- exact P11B handoff identity is linked to a structurally complete P10 record' >> "$GITHUB_STEP_SUMMARY"
+          echo '- pilotReference and scopeVersion must match exactly' >> "$GITHUB_STEP_SUMMARY"
+          echo '- P11B bundle digest and exact manifest-byte digest must match the P10 provenance block' >> "$GITHUB_STEP_SUMMARY"
+          echo '- malformed/incomplete/mismatched records fail closed' >> "$GITHUB_STEP_SUMMARY"
+          echo '- reviewer authenticity and signatures are not verified by repository automation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- no legal, safeguarding, participant-pilot or production-readiness claim is created' >> "$GITHUB_STEP_SUMMARY"

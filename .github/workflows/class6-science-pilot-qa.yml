@@ -1,0 +1,44 @@
+name: Class 6 Science Pilot QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/class6-science-*.js'
+      - 'docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json'
+      - 'p0-entry-v1.js'
+      - 'sw-v30.js'
+      - 'tests/class6-science-pilot.test.mjs'
+      - 'tests/e2e/release-closure.spec.mjs'
+      - '.github/workflows/class6-science-pilot-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  class6-science-pilot:
+    name: class6-science-pilot
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v5
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Validate Class 6 Science Chapter 1 contract
+        run: node tests/class6-science-pilot.test.mjs
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### Class 6 Science Pilot QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- NCERT Curiosity 2026-27 12-chapter map' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 1 three-topic inquiry teaching slice' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 15 independently authored assessments including reasoning and mastery' >> "$GITHUB_STEP_SUMMARY"
+          echo '- observation vs explanation, fair investigation, honest evidence and bounded conclusion controls' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Kiki remediation/mastery evidence for every topic' >> "$GITHUB_STEP_SUMMARY"
+          echo '- additive local-first loader and offline precache assertions' >> "$GITHUB_STEP_SUMMARY"
+          echo '- no real child data, microphone, camera, recording or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
+          echo '- no claim that Science is complete beyond Chapter 1' >> "$GITHUB_STEP_SUMMARY"

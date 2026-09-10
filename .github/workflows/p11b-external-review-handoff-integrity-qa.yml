@@ -1,0 +1,112 @@
+name: KirthiVerse P11B External Review Handoff Integrity QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'P11B_EXTERNAL_REVIEW_HANDOFF_INTEGRITY.md'
+      - 'scripts/external-review-handoff-integrity.mjs'
+      - 'tests/external-review-handoff-integrity.test.mjs'
+      - '.github/workflows/p11b-external-review-handoff-integrity-qa.yml'
+      - 'P11A_EXTERNAL_REVIEW_EXECUTION_PACK.md'
+      - 'EXTERNAL_PILOT_REVIEW_PACK.md'
+      - 'PILOT_PARTICIPANT_INFORMATION_DRAFT.md'
+      - 'PILOT_DATA_MINIMISATION_RETENTION_DRAFT.md'
+      - 'PILOT_INCIDENT_ESCALATION_DRAFT.md'
+      - 'PILOT_STOPPING_CRITERIA_DRAFT.md'
+      - 'PILOT_METRICS_PROTOCOL_DRAFT.md'
+      - 'PILOT_SPECIALIST_REVIEW_CHECKLIST.md'
+      - 'PILOT_APPROVAL_REGISTER_TEMPLATE.md'
+      - 'P11A_UK_OFFICIAL_REFERENCE_GUIDE.md'
+      - 'scripts/validate-pilot-scope-freeze.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p11b-external-review-handoff-integrity:
+    name: p11b-external-review-handoff-integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Static contract and required files
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/external-review-handoff-integrity.mjs
+          node --check tests/external-review-handoff-integrity.test.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          tool=Path('scripts/external-review-handoff-integrity.mjs').read_text()
+          doc=Path('P11B_EXTERNAL_REVIEW_HANDOFF_INTEGRITY.md').read_text()
+          required=[
+            'P11A_EXTERNAL_REVIEW_EXECUTION_PACK.md',
+            'EXTERNAL_PILOT_REVIEW_PACK.md',
+            'PILOT_PARTICIPANT_INFORMATION_DRAFT.md',
+            'PILOT_DATA_MINIMISATION_RETENTION_DRAFT.md',
+            'PILOT_INCIDENT_ESCALATION_DRAFT.md',
+            'PILOT_STOPPING_CRITERIA_DRAFT.md',
+            'PILOT_METRICS_PROTOCOL_DRAFT.md',
+            'PILOT_SPECIALIST_REVIEW_CHECKLIST.md',
+            'PILOT_APPROVAL_REGISTER_TEMPLATE.md',
+            'P11A_UK_OFFICIAL_REFERENCE_GUIDE.md'
+          ]
+          for p in required:
+            assert Path(p).is_file(), f'missing required handoff file: {p}'
+            assert p in tool, f'tool does not bind required file: {p}'
+          for marker in [
+            'EXTERNAL_REVIEW_HANDOFF_INTEGRITY_READY',
+            'EXACT_EXTERNAL_REVIEW_HANDOFF_MATCH',
+            'SCOPE_HASH_MISMATCH',
+            'DOCUMENT_HASH_MISMATCH',
+            'canClaimExternallyApproved: false',
+            'canClaimLegalCompliance: false',
+            'canClaimSafeguardingCertification: false',
+            'canStartParticipantPilot: false',
+            'canClaimProductionReadiness: false'
+          ]:
+            assert marker in tool, marker
+          for marker in ['NOT AN APPROVAL','tamper-evident','participant pilot authorised','production ready']:
+            assert marker in doc, marker
+          print('P11B_STATIC_CONTRACT_PASS')
+          PY
+
+      - name: Existing blank P11A scope must still HOLD
+        shell: bash
+        run: |
+          set -euo pipefail
+          if node scripts/external-review-handoff-integrity.mjs create PILOT_SCOPE_FREEZE_TEMPLATE.json >/tmp/p11b-blank.json 2>/tmp/p11b-blank.err; then
+            echo 'Blank P11A scope unexpectedly produced a READY handoff manifest.' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/p11b-blank.json'))
+          assert r['status']=='HOLD'
+          assert r['claimGates']['canSendExactBundleToExternalReviewer'] is False
+          assert r['claimGates']['canStartParticipantPilot'] is False
+          assert r['claimGates']['canClaimProductionReadiness'] is False
+          assert any(e['code']=='SCOPE_NOT_STRUCTURALLY_FROZEN' for e in r['errors'])
+          print('P11B_BLANK_SCOPE_HOLD_PASS')
+          PY
+
+      - name: Deterministic create verify and drift tests
+        run: node tests/external-review-handoff-integrity.test.mjs
+
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### KirthiVerse P11B External Review Handoff Integrity' >> "$GITHUB_STEP_SUMMARY"
+          echo '- P11A frozen-scope validator remains authoritative' >> "$GITHUB_STEP_SUMMARY"
+          echo '- exact required reviewer-document inventory is bound by SHA-256 + byte length' >> "$GITHUB_STEP_SUMMARY"
+          echo '- deterministic bundle digest is created only from a structurally frozen scope' >> "$GITHUB_STEP_SUMMARY"
+          echo '- later scope/document drift fails closed' >> "$GITHUB_STEP_SUMMARY"
+          echo '- blank repository scope template remains HOLD' >> "$GITHUB_STEP_SUMMARY"
+          echo '- SHA-256 is traceability only, not claimed as tamper-evident logging' >> "$GITHUB_STEP_SUMMARY"
+          echo '- no approval, consent, safeguarding, pilot-start or production-readiness claim is created' >> "$GITHUB_STEP_SUMMARY"

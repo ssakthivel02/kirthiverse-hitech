@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-MATH-CH1-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Mathematics · Ganita Prakash · Chapter 1 · Patterns in Mathematics",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 1 topic, a Kiki misconception/remediation path, at least one linked reasoning or mastery assessment, a privacy-safe learner action, and an observable mastery criterion.",
+  "scenarios": [
+    {
+      "id": "SN-MATH6-CH1-001",
+      "need": "Learner can continue an easy number sequence but guesses the rule from only one transition.",
+      "topicId": "TOPIC-MATH6-01-01",
+      "expectedMisconception": "single-transition coincidence",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Explain the rule aloud or in writing and test it across at least three transitions.",
+      "masteryCriterion": "Extends two different sequences and justifies one consistent rule for each without answer prompting."
+    },
+    {
+      "id": "SN-MATH6-CH1-002",
+      "need": "Learner computes differences correctly but confuses a term's position with the term's value.",
+      "topicId": "TOPIC-MATH6-01-01",
+      "expectedMisconception": "position-value confusion",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Create a two-column table labelled position and value before extending the sequence.",
+      "masteryCriterion": "Correctly identifies positions and values in a new five-term sequence and predicts a later term from the stated rule."
+    },
+    {
+      "id": "SN-MATH6-CH1-003",
+      "need": "Learner can copy the next shape but cannot explain what changes from stage to stage.",
+      "topicId": "TOPIC-MATH6-01-02",
+      "expectedMisconception": "copying without construction rule",
+      "requiredAssessmentTypes": ["worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Build or sketch three small stages, circle only the newly added pieces, and describe the repeated construction change.",
+      "masteryCriterion": "Predicts two later stages and explains both the construction change and its numerical effect."
+    },
+    {
+      "id": "SN-MATH6-CH1-004",
+      "need": "Learner sees matching totals in two shape patterns and assumes the constructions must be identical.",
+      "topicId": "TOPIC-MATH6-01-02",
+      "expectedMisconception": "equal totals imply equal construction",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Compare arrangement, added pieces and transformations separately from the total count.",
+      "masteryCriterion": "Explains why equal stage totals do not prove identical visual construction and gives one counterexample."
+    },
+    {
+      "id": "SN-MATH6-CH1-005",
+      "need": "Learner recognises a repeated household or classroom motif but cannot identify the repeat unit.",
+      "topicId": "TOPIC-MATH6-01-03",
+      "expectedMisconception": "repeat unit not identified",
+      "requiredAssessmentTypes": ["multiple_choice", "worked_challenge"],
+      "safeLearnerAction": "Represent the motif with symbols or a drawing only; mark one complete repeat and use its length to predict a later position.",
+      "masteryCriterion": "Identifies a repeat unit and correctly predicts two later positions without needing a photo or personal information."
+    },
+    {
+      "id": "SN-MATH6-CH1-006",
+      "need": "Learner observes a few natural examples and overgeneralises that all future examples must follow the same exact numerical rule.",
+      "topicId": "TOPIC-MATH6-01-03",
+      "expectedMisconception": "natural observation treated as universal proof",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Record a small anonymous observation table or teacher-provided example, state a tentative model, and separate observation from prediction.",
+      "masteryCriterion": "States what the observations support, tests the proposed rule twice, and explicitly avoids claiming that the model proves all future natural growth."
+    },
+    {
+      "id": "SN-MATH6-CH1-007",
+      "need": "Learner understands the idea verbally but needs a low-bandwidth/offline path and cannot depend on video, microphone or cloud AI.",
+      "topicId": "TOPIC-MATH6-01-01",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Use cached text, a paper number line or counters, then submit a written or selected response locally.",
+      "masteryCriterion": "Completes the worked example and mastery check using only local text/visual resources with no network-dependent tutoring step."
+    },
+    {
+      "id": "SN-MATH6-CH1-008",
+      "need": "Learner needs concise language and repeated checking because long instructions cause task loss, while the mathematical target remains age-appropriate.",
+      "topicId": "TOPIC-MATH6-01-02",
+      "expectedMisconception": "instruction-load masks mathematical understanding",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Use the Kiki sequence: compare two stages, say what changed, write the count change, then test one more stage.",
+      "masteryCriterion": "Completes the four-step scaffold and independently explains the rule on a second pattern."
+    }
+  ]
+}

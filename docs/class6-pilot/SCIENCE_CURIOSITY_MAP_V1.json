@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0.0",
+  "pilot": "CBSE_CLASS6_SAN_TAMBARAM",
+  "subject": "Science",
+  "board": "CBSE",
+  "classLevel": 6,
+  "curriculumSession": "2026-27",
+  "book": {
+    "title": "Curiosity",
+    "publisher": "NCERT",
+    "officialStructureEvidence": "NCERT textbook portal lists Curiosity for Class VI Science with 12 chapter files; current 2026-27 index corroborates titles/order.",
+    "sourcePolicy": "Chapter titles/order are curriculum mapping metadata. KirthiVerse teaching text, examples, questions, hints and remediation are independently authored; no textbook prose, figures or exercise questions are reproduced."
+  },
+  "chapters": [
+    {"chapter":1,"id":"CH-SCI6-01","title":"The Wonderful World of Science","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
+    {"chapter":2,"id":"CH-SCI6-02","title":"Diversity in the Living World","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":3,"id":"CH-SCI6-03","title":"Mindful Eating: A Path to a Healthy Body","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":4,"id":"CH-SCI6-04","title":"Exploring Magnets","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":5,"id":"CH-SCI6-05","title":"Measurement of Length and Motion","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":6,"id":"CH-SCI6-06","title":"Materials Around Us","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":7,"id":"CH-SCI6-07","title":"Temperature and its Measurement","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":8,"id":"CH-SCI6-08","title":"A Journey through States of Water","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":9,"id":"CH-SCI6-09","title":"Methods of Separation in Everyday Life","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":10,"id":"CH-SCI6-10","title":"Living Creatures: Exploring their Characteristics","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":11,"id":"CH-SCI6-11","title":"Nature’s Treasures","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":12,"id":"CH-SCI6-12","title":"Beyond Earth","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"}
+  ],
+  "chapter1Topics": [
+    {
+      "id":"TOPIC-SCI6-01-01",
+      "title":"Curiosity, observation and scientific questions",
+      "status":"END_TO_END_PILOT_IMPLEMENTED",
+      "competencies":["distinguish observation from assumption","turn an observation into a useful question","identify questions that can be investigated with evidence"],
+      "misconceptions":["treating an opinion as an observation","assuming every why-question can be answered by one simple experiment"]
+    },
+    {
+      "id":"TOPIC-SCI6-01-02",
+      "title":"Testable explanations and fair investigations",
+      "status":"END_TO_END_PILOT_IMPLEMENTED",
+      "competencies":["propose a testable explanation","identify what to change and what to observe","keep important comparison conditions similar","recognise that a prediction can be wrong without the investigation being useless"],
+      "misconceptions":["changing several factors at once","treating a hypothesis as a proven fact"]
+    },
+    {
+      "id":"TOPIC-SCI6-01-03",
+      "title":"Recording evidence, analysing results and revising ideas",
+      "status":"END_TO_END_PILOT_IMPLEMENTED",
+      "competencies":["record results honestly","compare results with a prediction","draw a conclusion limited to the evidence","revise an explanation when evidence disagrees"],
+      "misconceptions":["changing results to match a prediction","calling an unexpected result a failed experiment"]
+    }
+  ],
+  "chapter1CompletionEvidence": {
+    "topicCount": 3,
+    "lessonCount": 3,
+    "assessmentCount": 15,
+    "assessmentMinimumPerTopic": 5,
+    "offlineRequired": true,
+    "accessibilityRequired": true,
+    "releaseRegressionRequired": true,
+    "status": "CHAPTER1_KIKI_TEACHING_SLICE_COMPLETE"
+  },
+  "chapter1CompletionRule": "CHAPTER1_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped inquiry topics to include independently authored teaching, a worked investigation, misconception handling, linked practice/assessment, remediation/mastery evidence, deterministic QA, offline coverage and release regression coverage.",
+  "completionRule": "SCIENCE_COMPLETE only after all twelve Curiosity chapters have Kiki-teachable coverage, age-appropriate investigations or evidence activities where applicable, practice, assessment, remediation/mastery evidence, accessibility QA and source/provenance review.",
+  "schoolOverlay": {
+    "school":"SAN Academy Tambaram",
+    "mappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
+    "note":"The school context is used only as a Class 6 validation overlay. Exact pacing, worksheets, tests or teacher methods must not be attributed to the school without direct evidence."
+  }
+}

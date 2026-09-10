@@ -41,6 +41,7 @@ jobs:
           assert path.is_file(), 'ACTIVE_MASTER_CONTROL.json is required'
           control = json.loads(path.read_text(encoding='utf-8'))
 
+          assert control.get('schemaVersion') == '1.1.0', 'active-master schemaVersion must remain 1.1.0'
           assert control.get('project') == 'KirthiVerse', 'wrong active-master project'
           assert control.get('status') == 'HI-TECH — ACTIVE MASTER', 'repository is not declared HI-TECH — ACTIVE MASTER'
           assert control.get('canonicalRepository') == 'ssakthivel02/kirthiverse-hitech', 'wrong canonical repository'
@@ -64,13 +65,39 @@ jobs:
               assert task.get(key) is True, f'active-master task rule must remain true: {key}'
           assert task.get('legacyReconciliation') == 'ONE_TIME_INTO_ACTIVE_MASTER_ONLY', 'legacy reconciliation policy changed'
 
+          safety = control.get('githubSafetyPolicy') or {}
+          safety_required_true = [
+              'verifyCanonicalRepositoryBeforeWrite',
+              'verifyActiveBranchBeforeWrite',
+              'verifyCurrentMainShaBeforeWrite',
+              'inventoryOpenPullRequestsIssuesAndWorkflowsBeforeCreating',
+              'directWriteToProtectedMainProhibitedForNormalDevelopment',
+              'newTaskBranchMustStartFromExactCurrentMain',
+              'forcePushProhibited',
+              'destructiveRefMovementProhibited',
+              'requiredCiWeakeningProhibited',
+              'branchProtectionBypassProhibited',
+              'mergeOnlyAfterExactHeadRequiredChecksPass',
+              'apiMergeRequiresExpectedHeadShaGuard',
+              'postMergeMainShaAndProtectionReverificationRequired',
+              'preferSmallestEvidenceBackedChange',
+              'stopWhenOnlyManualOrExternalBlockersRemain'
+          ]
+          for key in safety_required_true:
+              assert safety.get(key) is True, f'GitHub safety rule must remain true: {key}'
+
           runtime_repo = os.environ.get('GITHUB_REPOSITORY')
           assert runtime_repo == control['canonicalRepository'], f'workflow running in non-canonical repository: {runtime_repo}'
           base_ref = os.environ.get('GITHUB_BASE_REF')
           if base_ref:
               assert base_ref == control['activeBranch'], f'pull request must target active branch {control["activeBranch"]}'
 
-          print('ACTIVE_MASTER_CONTRACT_PASS project=KirthiVerse repo=ssakthivel02/kirthiverse-hitech branch=main')
+          event_name = os.environ.get('GITHUB_EVENT_NAME')
+          head_ref = os.environ.get('GITHUB_HEAD_REF')
+          if event_name == 'pull_request':
+              assert head_ref and head_ref != control['activeBranch'], 'normal development PR head must not be main'
+
+          print('ACTIVE_MASTER_CONTRACT_PASS project=KirthiVerse repo=ssakthivel02/kirthiverse-hitech branch=main githubSafetyPolicy=PASS')
           PY
 
       - name: Validate runtime architecture truth
@@ -166,6 +193,9 @@ jobs:
           echo '- HI-TECH — ACTIVE MASTER identity and canonical repository check' >> "$GITHUB_STEP_SUMMARY"
           echo '- OLD/LEGACY remains read-only reference' >> "$GITHUB_STEP_SUMMARY"
           echo '- completed-work duplication and evidence-first task rules enforced' >> "$GITHUB_STEP_SUMMARY"
+          echo '- strict GitHub safety policy is machine-enforced in ACTIVE_MASTER_CONTROL.json' >> "$GITHUB_STEP_SUMMARY"
+          echo '- direct main development, force pushes, destructive ref movement, CI weakening and protection bypass are prohibited by governance contract' >> "$GITHUB_STEP_SUMMARY"
+          echo '- exact-head checks, expected-head guarded API merge and post-merge main/protection verification remain mandatory process controls' >> "$GITHUB_STEP_SUMMARY"
           echo '- README runtime generation must match the live index.html runtime marker and asset' >> "$GITHUB_STEP_SUMMARY"
           echo '- cloud identity architecture remains fail-closed; P4/P10/local pilot cannot self-authorise real identity' >> "$GITHUB_STEP_SUMMARY"
           echo '- git diff whitespace/conflict check' >> "$GITHUB_STEP_SUMMARY"

@@ -1,4 +1,5 @@
-window.KV_ASSESSMENTS=(window.KV_ASSESSMENTS||[]).concat([
+window.KV_ASSESSMENTS=window.KV_ASSESSMENTS||[];
+window.KV_ASSESSMENTS.push(
   {
     "stableAssessmentId":"KV-CBSE6-MATH-0001",
     "lessonId":"math.cbse6.ganita-prakash.patterns.number-patterns.v1",
@@ -44,4 +45,4 @@ window.KV_ASSESSMENTS=(window.KV_ASSESSMENTS||[]).concat([
     "hint":"Choose a simple repeatable rule first, then generate the terms from it.",
     "explanation":"Creating and validating a pattern demonstrates stronger mastery than only continuing a supplied sequence."
   }
-]);
+);

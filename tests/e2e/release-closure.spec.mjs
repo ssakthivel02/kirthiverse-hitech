@@ -1,5 +1,14 @@
 import { test, expect } from '@playwright/test';
 
+const CLASS6_MATH_LESSON_ID = 'math.cbse6.ganita-prakash.patterns.number-patterns.v1';
+const CLASS6_MATH_ASSESSMENT_IDS = [
+  'KV-CBSE6-MATH-0001',
+  'KV-CBSE6-MATH-0002',
+  'KV-CBSE6-MATH-0003',
+  'KV-CBSE6-MATH-0004',
+  'KV-CBSE6-MATH-0005',
+];
+
 async function waitForRuntime(page) {
   await page.waitForFunction(() => Boolean(
     window.KV_NAVIGATION &&
@@ -16,15 +25,40 @@ test('ACTIVE MASTER release surface preserves canonical corpus and local-first i
   const response = await page.goto('/?release-closure=1');
   expect(response?.status()).toBe(200);
   await waitForRuntime(page);
+  await page.waitForFunction(
+    lessonId => document.documentElement.dataset.class6MathPilot === 'ready' &&
+      window.KV_LESSONS?.some(lesson => lesson.id === lessonId),
+    CLASS6_MATH_LESSON_ID
+  );
 
-  const corpus = await page.evaluate(() => ({
-    lessons: window.KV_LESSONS?.length,
-    assessments: window.KV_ASSESSMENTS?.length,
-    footer: document.querySelector('footer')?.innerText || '',
-    runtime: document.querySelector('meta[name="kv-runtime-generation"]')?.content,
-  }));
-  expect(corpus.lessons).toBe(135);
-  expect(corpus.assessments).toBe(72);
+  const corpus = await page.evaluate(({ lessonId, assessmentIds }) => {
+    const lessons = window.KV_LESSONS || [];
+    const assessments = window.KV_ASSESSMENTS || [];
+    const pilotLessons = lessons.filter(lesson => lesson.id === lessonId);
+    const pilotAssessments = assessments.filter(assessment => assessmentIds.includes(assessment.stableAssessmentId));
+    return {
+      lessons: lessons.length,
+      coreLessons: lessons.length - pilotLessons.length,
+      pilotLessons: pilotLessons.length,
+      assessments: assessments.length,
+      coreAssessments: assessments.length - pilotAssessments.length,
+      pilotAssessments: pilotAssessments.length,
+      pilotState: document.documentElement.dataset.class6MathPilot,
+      footer: document.querySelector('footer')?.innerText || '',
+      runtime: document.querySelector('meta[name="kv-runtime-generation"]')?.content,
+    };
+  }, { lessonId: CLASS6_MATH_LESSON_ID, assessmentIds: CLASS6_MATH_ASSESSMENT_IDS });
+
+  // The canonical CORE-RUNTIME-V30 corpus remains intact. The controlled
+  // Class 6 pilot is additive and must be evidenced separately rather than
+  // silently changing the core baseline contract.
+  expect(corpus.coreLessons).toBe(135);
+  expect(corpus.pilotLessons).toBe(1);
+  expect(corpus.lessons).toBe(136);
+  expect(corpus.coreAssessments).toBe(72);
+  expect(corpus.pilotAssessments).toBe(5);
+  expect(corpus.assessments).toBe(77);
+  expect(corpus.pilotState).toBe('ready');
   expect(corpus.footer).toContain('11 universes');
   expect(corpus.runtime).toBe('CORE-RUNTIME-V30');
 

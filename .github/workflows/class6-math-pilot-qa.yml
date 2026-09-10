@@ -1,0 +1,40 @@
+name: Class 6 Maths Pilot QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/class6-math-*.js'
+      - 'docs/class6-pilot/**'
+      - 'p0-entry-v1.js'
+      - 'sw-v30.js'
+      - 'tests/class6-math-pilot.test.mjs'
+      - '.github/workflows/class6-math-pilot-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  class6-math-pilot:
+    name: class6-math-pilot
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v5
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Validate Class 6 Mathematics pilot contract
+        run: node tests/class6-math-pilot.test.mjs
+      - name: QA summary
+        if: always()
+        run: |
+          echo '### Class 6 Mathematics Pilot QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- CBSE Class 6 Ganita Prakash 10-chapter mapping contract' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 1 Topic 1 KirthiVerse-original lesson integrity' >> "$GITHUB_STEP_SUMMARY"
+          echo '- five linked assessment records including reasoning and mastery' >> "$GITHUB_STEP_SUMMARY"
+          echo '- fail-closed add-on loading and offline precache coverage' >> "$GITHUB_STEP_SUMMARY"
+          echo '- canonical Kiki wording and no-microphone/no-recording safety assertions' >> "$GITHUB_STEP_SUMMARY"

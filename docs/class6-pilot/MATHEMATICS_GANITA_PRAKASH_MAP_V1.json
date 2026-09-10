@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "pilot": "CBSE_CLASS6_SAN_TAMBARAM",
+  "subject": "Mathematics",
+  "board": "CBSE",
+  "classLevel": 6,
+  "curriculumSession": "2026-27",
+  "book": {
+    "title": "Ganita Prakash",
+    "publisher": "NCERT",
+    "officialStructureEvidence": "NCERT textbook portal confirms 10 chapters",
+    "sourcePolicy": "Chapter titles/order only; KirthiVerse teaching text, examples, hints and assessments must be independently authored."
+  },
+  "chapters": [
+    {"chapter":1,"id":"CH-MATH6-01","title":"Patterns in Mathematics","status":"PILOT_IMPLEMENTING","sourceConfidence":"HIGH"},
+    {"chapter":2,"id":"CH-MATH6-02","title":"Lines and Angles","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":3,"id":"CH-MATH6-03","title":"Number Play","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":4,"id":"CH-MATH6-04","title":"Data Handling and Presentation","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":5,"id":"CH-MATH6-05","title":"Prime Time","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":6,"id":"CH-MATH6-06","title":"Perimeter and Area","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":7,"id":"CH-MATH6-07","title":"Fractions","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":8,"id":"CH-MATH6-08","title":"Playing with Constructions","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":9,"id":"CH-MATH6-09","title":"Symmetry","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":10,"id":"CH-MATH6-10","title":"The Other Side of Zero","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"}
+  ],
+  "chapter1Topics": [
+    {
+      "id":"TOPIC-MATH6-01-01",
+      "title":"Number patterns and sequences",
+      "status":"END_TO_END_PILOT_IMPLEMENTED",
+      "competencies":["identify a consistent pattern rule","extend a sequence","represent a pattern numerically or visually","explain reasoning in own words"],
+      "misconceptions":["treating a coincidence between two terms as a valid rule","confusing a term position with its value"]
+    },
+    {"id":"TOPIC-MATH6-01-02","title":"Patterns in shapes","status":"NEXT"},
+    {"id":"TOPIC-MATH6-01-03","title":"Patterns in nature and everyday life","status":"NEXT"}
+  ],
+  "completionRule": "MATHEMATICS_COMPLETE only after all ten chapters have Kiki-teachable lesson coverage, practice, assessment, remediation/mastery evidence, accessibility QA and source/provenance review.",
+  "schoolOverlay": {
+    "school":"SAN Academy Tambaram",
+    "mappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
+    "note":"The school publicly confirms Mathematics for Classes I-X; exact school pacing/order must not be claimed without school-specific evidence."
+  }
+}

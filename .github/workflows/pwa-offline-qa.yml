@@ -86,7 +86,7 @@ concurrency:
 
 env:
   LOCAL_URL: http://127.0.0.1:8765
-  EXPECTED_CACHE: kirthiverse-preview-v32
+  EXPECTED_CACHE: kirthiverse-preview-v33
 
 jobs:
   pwa-offline-qa:
@@ -131,8 +131,8 @@ jobs:
 
           assert m['start_url']=='/' and m['scope']=='/' and m['display']=='standalone'
           assert m['name'].startswith('KirthiVerse') and m['icons']
-          assert "CACHE='kirthiverse-preview-v32'" in sw, 'current v32 cache contract missing'
-          assert "VERSION='MANUS-VISUAL-MASTER-05-PWA-32'" in sw, 'current PWA version missing'
+          assert "CACHE='kirthiverse-preview-v33'" in sw, 'current v33 cache contract missing'
+          assert "VERSION='MANUS-VISUAL-MASTER-05-PWA-33'" in sw, 'current PWA version missing'
 
           block=re.search(r"PRECACHE=\[(.*?)\];self\.addEventListener\('install'", sw, re.S)
           assert block, 'PRECACHE block not found'
@@ -160,7 +160,7 @@ jobs:
           for marker in ["navigator.serviceWorker.register(SW", "updateViaCache:'none'", 'offlineCapable']:
             assert marker in core, marker
 
-          print(f'PWA_CONTRACT_PASS: manifest + v32 cache + {len(paths)} verified precache paths + bootstrap')
+          print(f'PWA_CONTRACT_PASS: manifest + v33 cache + {len(paths)} verified precache paths + bootstrap')
           PY
 
       - name: Browser cached-origin fallback and direct navigation
@@ -210,12 +210,12 @@ jobs:
           await wait(`document.readyState!=='loading'&&location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'origin-unavailable direct lesson navigation',20000);
           if(!(await ev(`window.KV_CORE_RUNTIME?.pwaBootstrap===true`)))throw Error('core runtime missing from cache');
           const dataCached=await ev(`fetch('/data/lessons-1.js').then(r=>r.ok).catch(()=>false)`);if(!dataCached)throw Error('canonical lesson data unavailable from cache');
-          const class6Cached=await ev(`Promise.all(['/data/class6-math-pilot.js','/data/class6-math-assessments.js'].map(u=>fetch(u).then(r=>r.ok).catch(()=>false))).then(x=>x.every(Boolean))`);if(!class6Cached)throw Error('Class 6 Mathematics pilot data unavailable from cache');
+          const class6Cached=await ev(`Promise.all(['/data/class6-math-pilot.js','/data/class6-math-assessments.js'].map(u=>fetch(u).then(r=>r.ok).catch(()=>false))).then(x=>x.every(Boolean))`);if(!class6Cached)throw Error('Class 6 Mathematics Chapter 1 data unavailable from cache');
           console.log('PWA_PASS: service worker installed and controlling page');
-          console.log('PWA_PASS: current v32 cache contains core + current pilot + Class 6 Mathematics assets');
+          console.log('PWA_PASS: current v33 cache contains core + pilot + complete Mathematics Chapter 1 assets');
           console.log('PWA_PASS: SPA lesson works with origin unavailable');
           console.log('PWA_PASS: direct canonical lesson navigation works with origin unavailable');
-          console.log('PWA_PASS: canonical and Class 6 lesson data served from cache');
+          console.log('PWA_PASS: canonical and Class 6 Mathematics data served from cache');
           ws.close();
           NODE
 
@@ -226,8 +226,8 @@ jobs:
           echo '- HI-TECH ACTIVE MASTER identity checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Pinned Node 22 QA runtime' >> "$GITHUB_STEP_SUMMARY"
           echo '- Manifest contract checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Current v32 cache and every repository precache path checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Current P0 / educator / pilot + Class 6 Mathematics cache assets checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Current v33 cache and every repository precache path checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Current P0 / educator / pilot + Class 6 Mathematics Chapter 1 cache assets checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Service worker install/control checked in Chromium localhost secure context' >> "$GITHUB_STEP_SUMMARY"
           echo '- SPA lesson checked with origin unavailable' >> "$GITHUB_STEP_SUMMARY"
           echo '- Direct canonical lesson navigation checked with origin unavailable' >> "$GITHUB_STEP_SUMMARY"

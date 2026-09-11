@@ -15,9 +15,12 @@ const CLASS6_SCIENCE_LESSON_IDS = [
   'science.cbse6.curiosity.ch3.food-diversity-nutrients.v1',
   'science.cbse6.curiosity.ch3.balanced-meals-routines.v1',
   'science.cbse6.curiosity.ch3.food-information-hygiene.v1',
+  'science.cbse6.curiosity.ch4.magnetic-materials-evidence.v1',
+  'science.cbse6.curiosity.ch4.poles-attraction-repulsion.v1',
+  'science.cbse6.curiosity.ch4.compass-direction-safe-investigation.v1',
 ];
 const CLASS6_MATH_ASSESSMENT_IDS = Array.from({length:15},(_,i)=>`KV-CBSE6-MATH-${String(i+1).padStart(4,'0')}`);
-const CLASS6_SCIENCE_ASSESSMENT_IDS = Array.from({length:45},(_,i)=>`KV-CBSE6-SCI-${String(i+1).padStart(4,'0')}`);
+const CLASS6_SCIENCE_ASSESSMENT_IDS = Array.from({length:60},(_,i)=>`KV-CBSE6-SCI-${String(i+1).padStart(4,'0')}`);
 
 async function waitForRuntime(page) {
   await page.waitForFunction(() => Boolean(window.KV_NAVIGATION && window.KV_APP_RUNTIME && window.KV_PROFILE_RUNTIME));
@@ -62,18 +65,16 @@ test('ACTIVE MASTER release surface preserves canonical corpus and local-first i
     };
   },{mathLessonIds:CLASS6_MATH_LESSON_IDS,scienceLessonIds:CLASS6_SCIENCE_LESSON_IDS,mathAssessmentIds:CLASS6_MATH_ASSESSMENT_IDS,scienceAssessmentIds:CLASS6_SCIENCE_ASSESSMENT_IDS});
 
-  // CORE-RUNTIME-V30 remains invariant. Controlled curriculum slices are additive
-  // and separately evidenced so subject growth cannot conceal canonical core drift.
   expect(corpus.coreLessons).toBe(135);
   expect(corpus.mathLessons).toBe(3);
-  expect(corpus.scienceLessons).toBe(9);
+  expect(corpus.scienceLessons).toBe(12);
   expect(corpus.mathTopicIds).toHaveLength(3);
-  expect(corpus.scienceTopicIds).toHaveLength(9);
-  expect(corpus.lessons).toBe(147);
+  expect(corpus.scienceTopicIds).toHaveLength(12);
+  expect(corpus.lessons).toBe(150);
   expect(corpus.coreAssessments).toBe(72);
   expect(corpus.mathAssessments).toBe(15);
-  expect(corpus.scienceAssessments).toBe(45);
-  expect(corpus.assessments).toBe(132);
+  expect(corpus.scienceAssessments).toBe(60);
+  expect(corpus.assessments).toBe(147);
   expect(corpus.mathState).toBe('ready');
   expect(corpus.scienceState).toBe('ready');
   expect(corpus.footer).toContain('11 universes');

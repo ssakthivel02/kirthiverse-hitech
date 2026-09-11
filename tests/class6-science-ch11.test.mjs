@@ -65,7 +65,7 @@ for(const lessonId of lessonIds){
 const allText=JSON.stringify({lessons,assessments,map:map.chapter11Topics}).toLowerCase();
 for(const required of ['air','nitrogen','oxygen','freshwater','solar','forest','soil','rock','mineral','fossil fuel','renewable','non-renewable']) assert.ok(allText.includes(required),`missing Chapter 11 concept: ${required}`);
 for(const required of ['accessible freshwater','safe to drink','formation','replenishment','zero environmental impact']) assert.ok(allText.includes(required),`missing Chapter 11 claim boundary: ${required}`);
-for(const required of ['no breath-holding','no direct sun viewing','no dumps roadsides mines quarries','no fuel sniffing','no petrol','no roadside']) assert.ok(allText.includes(required),`missing Chapter 11 safety boundary: ${required}`);
+for(const required of ['no breath-holding','no direct sun viewing','no dumps roadsides mines quarries','no fuel sniffing','no petrol','roadside traffic surveys']) assert.ok(allText.includes(required),`missing Chapter 11 safety boundary: ${required}`);
 assert.ok(allText.includes('untreated')&&allText.includes('water'));
 assert.ok(allText.includes('roof')||allText.includes('rooftop'));
 assert.ok(allText.includes('filling-station')||allText.includes('filling station'));

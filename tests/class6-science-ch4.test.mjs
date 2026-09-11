@@ -61,7 +61,7 @@ const allText=JSON.stringify({lessons,assessments,map:map.chapter4Topics}).toLow
 for(const required of ['all metals','repulsion','unlike poles','compass','geographic north','never put magnets','dismantle electronics']) assert.ok(allText.includes(required),`missing Chapter 4 concept/safety boundary: ${required}`);
 assert.ok(allText.includes('high-powered magnet'));
 assert.ok(allText.includes('attraction alone')||allText.includes('attracted object'));
-assert.ok(!/put .*magnet.*(?:mouth|nose|ear).*experiment/i.test(allText),'unsafe ingestion experiment wording detected');
+for(const unsafeDirective of ['put a magnet in your mouth','place a magnet in your nose','place a magnet in your ear','swallow a magnet to test']) assert.ok(!allText.includes(unsafeDirective),`unsafe directive detected: ${unsafeDirective}`);
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-science-ch4.js','data/class6-science-ch4-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);

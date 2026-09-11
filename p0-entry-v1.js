@@ -3,7 +3,7 @@
    Loads CBSE Class 6 Mathematics and Science slices additively into the existing lesson/assessment arrays.
    Migration history: CBSE6-SCI-CH7-1 used lazy ch(?:4|5|6|7); CBSE6-SCI-CH8-2 used lazy ch(?:3|4|5|6|7|8). */
 (()=>{
-  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function loadAddon({tag,css,js,version}){if(css&&!document.querySelector(`link[data-${tag}]`)){const l=document.createElement('link');l.rel='stylesheet';l.href=`/${css}?v=${version}`;l.setAttribute(`data-${tag}`,'style');document.head.appendChild(l)}if(js&&!document.querySelector(`script[data-${tag}]`)){const s=document.createElement('script');s.async=false;s.src=`/${js}?v=${version}`;s.setAttribute(`data-${tag}`,'script');document.body.appendChild(s)}}
   const loadEducatorPilot=()=>loadAddon({tag:'ep-pilot',css:'educator-pilot-v1.css',js:'educator-pilot-v1.js',version:'EDUCATOR-PILOT-1'});
   const loadPilotMetrics=()=>loadAddon({tag:'pm-pilot',css:'pilot-metrics-v1.css',js:'pilot-metrics-v1.js',version:'PILOT-METRICS-1'});

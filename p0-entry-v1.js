@@ -1,5 +1,5 @@
-/* KirthiVerse P0 entry points v9 — core funding-readiness extensions + controlled Class 6 curriculum pilots.
-   Loads Educator Pilot + Pilot Metrics + P4 Readiness + P5 Controlled Run modules without modifying app.js.
+/* KirthiVerse P0 entry points v10 — core funding-readiness extensions + controlled Class 6 curriculum pilots.
+   Keeps Pilot Metrics + P4 Readiness global; loads Educator Pilot and P5 Controlled Run only on their routes.
    Loads CBSE Class 6 Mathematics and Science slices additively into the existing lesson/assessment arrays.
    Migration history: CBSE6-SCI-CH7-1 used lazy ch(?:4|5|6|7); CBSE6-SCI-CH8-2 used lazy ch(?:3|4|5|6|7|8); CBSE6-SCI-CH9-1 used lazy ch(?:2|3|4|5|6|7|8|9). */
 (()=>{
@@ -9,6 +9,7 @@
   const loadPilotMetrics=()=>loadAddon({tag:'pm-pilot',css:'pilot-metrics-v1.css',js:'pilot-metrics-v1.js',version:'PILOT-METRICS-1'});
   const loadPilotReadiness=()=>loadAddon({tag:'pr-pilot',css:'pilot-readiness-v1.css',js:'pilot-readiness-v1.js',version:'PILOT-READINESS-1'});
   const loadPilotRun=()=>loadAddon({tag:'run-pilot',css:'pilot-run-v1.css',js:'pilot-run-v1.js',version:'PILOT-RUN-1'});
+  function loadRouteAddons(){if(location.pathname==='/educator')loadEducatorPilot();if(location.pathname==='/pilot-run')loadPilotRun()}
   function loadCurriculumPilot({datasetKey,subject,version,files}){
     let pending=files.length,failed=false;
     if(!pending){document.documentElement.dataset[datasetKey]='ready';return}
@@ -38,10 +39,10 @@
     deferredScienceLoadStarted=true;
     loadCurriculumPilot({datasetKey:'class6ScienceDeferredAssessments',subject:'Science',version:'CBSE6-SCI-CH10-1-A',files:deferredScienceAssessments});
   }
-  function addNavLinks(){const nav=document.querySelector('.topbar nav');if(!nav)return;const links=[['/diagnostic','◈','Diagnostic'],['/speedlab','⚡','Speed Lab'],['/parent','⚿','Parent Space']];for(const [href,icon,label] of links){let a=nav.querySelector(`a[href="${href}"]`);if(!a){a=document.createElement('a');a.href=href;a.dataset.link='';a.className='vm-nav-p0';a.innerHTML=`${icon} <span>${label}</span>`;nav.appendChild(a)}a.setAttribute('aria-label',label);a.setAttribute('title',label);if(location.pathname===href)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')}}
+  function addNavLinks(){const nav=document.querySelector('.topbar nav');if(!nav)return;const links=[['/diagnostic','◈','Diagnostic'],['/speedlab','⚡','Speed Lab'],['/parent','⚿','Parent Space'],['/educator','▦','Educator Pilot']];for(const [href,icon,label] of links){let a=nav.querySelector(`a[href="${href}"]`);if(!a){a=document.createElement('a');a.href=href;a.dataset.link='';a.className='vm-nav-p0';a.innerHTML=`${icon} <span>${label}</span>`;nav.appendChild(a)}a.setAttribute('aria-label',label);a.setAttribute('title',label);if(location.pathname===href)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')}}
   function addHomePanel(){if(location.pathname!=='/')return;const main=document.querySelector('main');if(!main||main.querySelector('.p0-panel'))return;const rec=window.KV_MASTERY?.recommend?.(),section=document.createElement('section');section.className='p0-panel section';section.setAttribute('aria-labelledby','p0-learning-loop-title');section.innerHTML=`<div class="section-head"><div><span>P0 LEARNING LOOP</span><h2 id="p0-learning-loop-title">Start today's maths session.</h2></div></div><div class="p0-cards"><a class="p0-card" data-link href="/diagnostic"><b>1</b><h3>Maths Diagnostic</h3><p>Find your starting point.</p></a><a class="p0-card" data-link href="/speedlab"><b>2</b><h3>Quick Skills</h3><p>Fast fluency practice.</p></a>${rec?`<a class="p0-card" data-link href="/lesson/${encodeURIComponent(rec.lesson.id)}"><b>3</b><h3>${esc(window.KV_MASTERY.title(rec.lesson))}</h3><p>${esc(rec.reason)}</p></a>`:''}<a class="p0-card" data-link href="/parent"><b>◈</b><h3>Parent Space</h3><p>Progress dashboard &amp; controls.</p></a><a class="p0-card" data-link href="/educator"><b>▦</b><h3>Educator Pilot</h3><p>Local roster, assignments &amp; evidence.</p></a><a class="p0-card" data-link href="/weekly-report"><b>▥</b><h3>Weekly Report</h3><p>Real local pilot activity from this point forward.</p></a><a class="p0-card" data-link href="/pilot-readiness"><b>✓</b><h3>Pilot Readiness</h3><p>P4 controlled launch prerequisites &amp; owner attestations.</p></a><a class="p0-card" data-link href="/pilot-run"><b>▶</b><h3>Controlled Pilot Run</h3><p>P5 can start only after P4 is READY.</p></a></div>`;const hero=main.querySelector('.hero');if(hero&&hero.parentNode)hero.parentNode.insertBefore(section,hero.nextSibling);else main.prepend(section)}
-  loadEducatorPilot();loadPilotMetrics();loadPilotReadiness();loadPilotRun();loadClass6MathPilot();loadClass6SciencePilot();
-  addEventListener('popstate',loadDeferredScienceAssessments);
-  addEventListener('kv:rendered',()=>{loadDeferredScienceAssessments();addNavLinks();addHomePanel()});
+  loadPilotMetrics();loadPilotReadiness();loadClass6MathPilot();loadClass6SciencePilot();loadRouteAddons();
+  addEventListener('popstate',()=>{loadRouteAddons();loadDeferredScienceAssessments()});
+  addEventListener('kv:rendered',()=>{loadRouteAddons();loadDeferredScienceAssessments();addNavLinks();addHomePanel()});
   addNavLinks();addHomePanel();loadDeferredScienceAssessments();
 })();

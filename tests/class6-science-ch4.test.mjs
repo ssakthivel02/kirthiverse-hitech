@@ -66,9 +66,9 @@ for(const unsafeDirective of ['put a magnet in your mouth','place a magnet in yo
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-science-ch4.js','data/class6-science-ch4-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.match(entry,/datasetKey:'class6SciencePilot'/);
-assert.match(entry,/CBSE6-SCI-CH4-1/);
+assert.match(entry,/CBSE6-SCI-CH5-1/);
 const sw=fs.readFileSync('sw-v30.js','utf8');
-assert.match(sw,/kirthiverse-preview-v37/);
+assert.match(sw,/kirthiverse-preview-v38/);
 for(const asset of ['/data/class6-science-ch4.js','/data/class6-science-ch4-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));

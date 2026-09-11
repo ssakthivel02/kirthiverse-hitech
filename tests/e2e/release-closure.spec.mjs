@@ -36,9 +36,12 @@ const CLASS6_SCIENCE_LESSON_IDS = [
   'science.cbse6.curiosity.ch10.living-characteristics-evidence.v1',
   'science.cbse6.curiosity.ch10.germination-plant-growth.v1',
   'science.cbse6.curiosity.ch10.life-cycles.v1',
+  'science.cbse6.curiosity.ch11.air-water-sun.v1',
+  'science.cbse6.curiosity.ch11.forests-soil-rocks-minerals.v1',
+  'science.cbse6.curiosity.ch11.renewable-nonrenewable-resources.v1',
 ];
 const CLASS6_MATH_ASSESSMENT_IDS = Array.from({length:15},(_,i)=>`KV-CBSE6-MATH-${String(i+1).padStart(4,'0')}`);
-const CLASS6_SCIENCE_ASSESSMENT_IDS = Array.from({length:150},(_,i)=>`KV-CBSE6-SCI-${String(i+1).padStart(4,'0')}`);
+const CLASS6_SCIENCE_ASSESSMENT_IDS = Array.from({length:165},(_,i)=>`KV-CBSE6-SCI-${String(i+1).padStart(4,'0')}`);
 
 async function waitForRuntime(page) {
   await page.waitForFunction(() => Boolean(window.KV_NAVIGATION && window.KV_APP_RUNTIME && window.KV_PROFILE_RUNTIME));
@@ -85,14 +88,14 @@ test('ACTIVE MASTER release surface preserves canonical corpus and local-first i
 
   expect(corpus.coreLessons).toBe(135);
   expect(corpus.mathLessons).toBe(3);
-  expect(corpus.scienceLessons).toBe(30);
+  expect(corpus.scienceLessons).toBe(33);
   expect(corpus.mathTopicIds).toHaveLength(3);
-  expect(corpus.scienceTopicIds).toHaveLength(30);
-  expect(corpus.lessons).toBe(168);
+  expect(corpus.scienceTopicIds).toHaveLength(33);
+  expect(corpus.lessons).toBe(171);
   expect(corpus.coreAssessments).toBe(72);
   expect(corpus.mathAssessments).toBe(15);
-  expect(corpus.scienceAssessments).toBe(150);
-  expect(corpus.assessments).toBe(237);
+  expect(corpus.scienceAssessments).toBe(165);
+  expect(corpus.assessments).toBe(252);
   expect(corpus.mathState).toBe('ready');
   expect(corpus.scienceState).toBe('ready');
   expect(corpus.footer).toContain('11 universes');

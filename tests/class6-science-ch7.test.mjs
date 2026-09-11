@@ -8,7 +8,7 @@ const lessonIds=[
   'science.cbse6.curiosity.ch7.safe-measurement-recording.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.9.0');
+assert.equal(map.schemaVersion,'1.10.0');
 assert.equal(map.chapters.length,12);
 assert.equal(map.chapters[6].title,'Temperature and its Measurement');
 assert.equal(map.chapters[6].status,'KIKI_TEACHING_SLICE_COMPLETE');
@@ -71,10 +71,11 @@ for(const unsafeDirective of ['touch the unknown hot','hold the broken thermomet
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-science-ch7.js','data/class6-science-ch7-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.match(entry,/datasetKey:'class6SciencePilot'/);
-assert.match(entry,/CBSE6-SCI-CH7-1/);
-assert.match(entry,/ch\(\?:4\|5\|6\|7\)/);
+assert.match(entry,/CBSE6-SCI-CH11-1/);
+assert.match(entry,/ch\(\?:2\|3\|4\|5\|6\|7\|8\|9\|10\|11\)/);
 const sw=fs.readFileSync('sw-v30.js','utf8');
-assert.match(sw,/kirthiverse-preview-v40/);
+assert.match(sw,/CACHE='kirthiverse-preview-v44'/);
+assert.match(sw,/VERSION='MANUS-VISUAL-MASTER-05-PWA-44'/);
 for(const asset of ['/data/class6-science-ch7.js','/data/class6-science-ch7-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));

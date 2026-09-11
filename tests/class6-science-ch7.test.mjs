@@ -8,7 +8,7 @@ const lessonIds=[
   'science.cbse6.curiosity.ch7.safe-measurement-recording.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.8.0');
+assert.equal(map.schemaVersion,'1.9.0');
 assert.equal(map.chapters.length,12);
 assert.equal(map.chapters[6].title,'Temperature and its Measurement');
 assert.equal(map.chapters[6].status,'KIKI_TEACHING_SLICE_COMPLETE');

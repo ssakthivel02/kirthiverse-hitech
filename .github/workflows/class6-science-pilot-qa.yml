@@ -13,6 +13,7 @@ on:
       - 'docs/class6-pilot/SCIENCE_CH5_SCHOOL_NEEDS_VALIDATION_V1.json'
       - 'docs/class6-pilot/SCIENCE_CH6_SCHOOL_NEEDS_VALIDATION_V1.json'
       - 'docs/class6-pilot/SCIENCE_CH7_SCHOOL_NEEDS_VALIDATION_V1.json'
+      - 'docs/class6-pilot/SCIENCE_CH8_SCHOOL_NEEDS_VALIDATION_V1.json'
       - 'p0-entry-v1.js'
       - 'sw-v30.js'
       - 'tests/class6-science-pilot.test.mjs'
@@ -30,6 +31,7 @@ on:
       - 'tests/class6-science-ch7.test.mjs'
       - 'tests/class6-science-ch7-school-needs.test.mjs'
       - 'tests/class6-science-ch8.test.mjs'
+      - 'tests/class6-science-ch8-school-needs.test.mjs'
       - 'tests/e2e/release-closure.spec.mjs'
       - '.github/workflows/class6-science-pilot-qa.yml'
   workflow_dispatch:
@@ -79,6 +81,8 @@ jobs:
         run: node tests/class6-science-ch7-school-needs.test.mjs
       - name: Validate Class 6 Science Chapter 8 water states and safety boundary
         run: node tests/class6-science-ch8.test.mjs
+      - name: Validate Chapter 8 synthetic school-learning needs and water-state/model-limit boundaries
+        run: node tests/class6-science-ch8-school-needs.test.mjs
       - name: QA summary
         if: always()
         run: |
@@ -86,10 +90,10 @@ jobs:
           echo '- NCERT Curiosity 2026-27 12-chapter map' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapters 1-8: twenty-four Kiki teaching topics / twenty-four lessons' >> "$GITHUB_STEP_SUMMARY"
           echo '- 120 independently authored assessments including reasoning and mastery' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-7 retain eight-scenario synthetic school-needs validation' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 8 covers water states, vapour-versus-visible-droplet distinction, melting/freezing/evaporation/condensation and evidence-limited environmental reasoning' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-8 retain eight-scenario synthetic school-needs validation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 8 readiness covers state/substance confusion, vapour-versus-mist, evaporation-versus-boiling, condensation-versus-leakage, fair comparison and model/forecast limits' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapter 8 safety rejects learner boiling/steam generation, kettle/flame/hot-plate/sealed-container heating, freezer experiments, unsafe outdoor collection/climbing and drinking test water' >> "$GITHUB_STEP_SUMMARY"
           echo '- privacy boundary: no real child data, microphone, camera, recording, remote monitoring or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
-          echo '- additive local-first loader and PWA v41 offline precache coverage required' >> "$GITHUB_STEP_SUMMARY"
-          echo '- synthetic readiness only; no live school pilot, efficacy, attainment or safety-certification claim' >> "$GITHUB_STEP_SUMMARY"
+          echo '- runtime/PWA/request-budget behavior unchanged by this evidence-only closure' >> "$GITHUB_STEP_SUMMARY"
+          echo '- synthetic readiness only; no live school pilot, efficacy, attainment, weather-forecast or safety-certification claim' >> "$GITHUB_STEP_SUMMARY"
           echo '- no claim that Science is complete beyond Chapters 1-8' >> "$GITHUB_STEP_SUMMARY"

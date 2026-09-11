@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-SCI-CH1-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Science · Curiosity · Chapter 1 · The Wonderful World of Science",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 1 topic, a Kiki misconception/remediation path, at least one linked reasoning or mastery assessment, a privacy-safe learner action, and an observable mastery criterion.",
+  "scenarios": [
+    {
+      "id": "SN-SCI6-CH1-001",
+      "need": "Learner mixes a plausible cause into an observation and treats the combined statement as direct evidence.",
+      "topicId": "TOPIC-SCI6-01-01",
+      "expectedMisconception": "explanation presented as observation",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Rewrite the statement into an observation-only sentence, label the possible explanation separately, then write one evidence-seeking question.",
+      "masteryCriterion": "Independently separates observation from explanation in two unfamiliar examples and identifies relevant evidence for each question."
+    },
+    {
+      "id": "SN-SCI6-CH1-002",
+      "need": "Learner is curious about an everyday change but asks a question that is subjective or too vague to identify what evidence should be collected.",
+      "topicId": "TOPIC-SCI6-01-01",
+      "expectedMisconception": "question is not operationalised for evidence",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Replace subjective words with an observable comparison or measurement and state one type of evidence that could answer the revised question.",
+      "masteryCriterion": "Converts two vague questions into investigable questions and correctly names the observation or measurement each would require."
+    },
+    {
+      "id": "SN-SCI6-CH1-003",
+      "need": "Learner states a hypothesis as though it is already proven because it sounds sensible.",
+      "topicId": "TOPIC-SCI6-01-02",
+      "expectedMisconception": "hypothesis treated as established fact",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Label the idea as a possible explanation, write a prediction that follows from it, and describe evidence that could support or challenge it.",
+      "masteryCriterion": "For two new questions, distinguishes explanation from prediction and identifies evidence that could challenge the proposed idea."
+    },
+    {
+      "id": "SN-SCI6-CH1-004",
+      "need": "Learner changes several important conditions at once and then attributes any result to only one of them.",
+      "topicId": "TOPIC-SCI6-01-02",
+      "expectedMisconception": "confounded comparison",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "List every condition that differs, select the intended changed factor, define the outcome, and redesign the comparison so other important conditions remain similar.",
+      "masteryCriterion": "Designs two safe fair comparisons that correctly identify the changed factor, observed outcome, and at least two conditions to keep similar."
+    },
+    {
+      "id": "SN-SCI6-CH1-005",
+      "need": "Learner believes a prediction must be confirmed and is tempted to ignore, alter, or remove an unexpected result.",
+      "topicId": "TOPIC-SCI6-01-03",
+      "expectedMisconception": "evidence should be changed to match prediction",
+      "requiredAssessmentTypes": ["multiple_choice", "mastery_check"],
+      "safeLearnerAction": "Keep the original result, compare it with the prediction, note possible method checks, and decide whether the explanation or next investigation should change.",
+      "masteryCriterion": "Preserves unexpected evidence in two unfamiliar result sets and explains a scientifically useful next step without changing the data."
+    },
+    {
+      "id": "SN-SCI6-CH1-006",
+      "need": "Learner uses one small comparison to make a universal claim about every material, place, season, or future trial.",
+      "topicId": "TOPIC-SCI6-01-03",
+      "expectedMisconception": "conclusion broader than evidence",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Write what the tested evidence supports, write one stronger claim it does not prove, and propose a repeat or changed-condition investigation.",
+      "masteryCriterion": "Produces bounded conclusions for two new data sets and explicitly distinguishes supported findings from unsupported universal claims."
+    },
+    {
+      "id": "SN-SCI6-CH1-007",
+      "need": "Learner requires a low-bandwidth or offline path and cannot depend on video, microphone, camera, cloud AI, or personal-data collection to complete the inquiry task.",
+      "topicId": "TOPIC-SCI6-01-01",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use cached text, a paper observation table, and teacher-provided or household-safe non-personal examples; record the response locally in writing or by selection.",
+      "masteryCriterion": "Completes an observation-to-question task and mastery check using only local text/visual resources with no network-dependent tutoring step."
+    },
+    {
+      "id": "SN-SCI6-CH1-008",
+      "need": "Learner understands the science concept but loses the task when instructions combine too many reasoning steps at once.",
+      "topicId": "TOPIC-SCI6-01-02",
+      "expectedMisconception": "instruction-load masks investigation reasoning",
+      "requiredAssessmentTypes": ["worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use the Kiki sequence: Question → Possible explanation → Prediction → Change one factor → Keep key conditions similar → Observe the outcome.",
+      "masteryCriterion": "Completes the scaffold once with support, then independently plans a second fair investigation using the same sequence."
+    }
+  ]
+}

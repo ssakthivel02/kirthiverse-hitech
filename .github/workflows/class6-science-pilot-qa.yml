@@ -10,6 +10,7 @@ on:
       - 'docs/class6-pilot/SCIENCE_CH2_SCHOOL_NEEDS_VALIDATION_V1.json'
       - 'docs/class6-pilot/SCIENCE_CH3_SCHOOL_NEEDS_VALIDATION_V1.json'
       - 'docs/class6-pilot/SCIENCE_CH4_SCHOOL_NEEDS_VALIDATION_V1.json'
+      - 'docs/class6-pilot/SCIENCE_CH5_SCHOOL_NEEDS_VALIDATION_V1.json'
       - 'p0-entry-v1.js'
       - 'sw-v30.js'
       - 'tests/class6-science-pilot.test.mjs'
@@ -21,6 +22,7 @@ on:
       - 'tests/class6-science-ch4.test.mjs'
       - 'tests/class6-science-ch4-school-needs.test.mjs'
       - 'tests/class6-science-ch5.test.mjs'
+      - 'tests/class6-science-ch5-school-needs.test.mjs'
       - 'tests/e2e/release-closure.spec.mjs'
       - '.github/workflows/class6-science-pilot-qa.yml'
   workflow_dispatch:
@@ -58,6 +60,8 @@ jobs:
         run: node tests/class6-science-ch4-school-needs.test.mjs
       - name: Validate Class 6 Science Chapter 5 measurement and motion boundary
         run: node tests/class6-science-ch5.test.mjs
+      - name: Validate Chapter 5 synthetic school-learning needs and measurement/motion safety boundary
+        run: node tests/class6-science-ch5-school-needs.test.mjs
       - name: QA summary
         if: always()
         run: |
@@ -65,9 +69,10 @@ jobs:
           echo '- NCERT Curiosity 2026-27 12-chapter map' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapters 1-5: fifteen Kiki teaching topics / fifteen lessons' >> "$GITHUB_STEP_SUMMARY"
           echo '- 75 independently authored assessments including reasoning and mastery' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-4 retain eight-scenario synthetic school-needs validation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-5 each retain eight-scenario synthetic school-needs validation' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapter 5 covers standard units/non-zero-start readings, curved-length method/uncertainty and reference-aware motion' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 5 safety blocks road/traffic, moving-vehicle, machinery, climbing and body-wrapping-cord activities' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 5 readiness rejects road/traffic, moving-vehicle, machinery, body-wrapping-cord and sensor/location-data collection plans' >> "$GITHUB_STEP_SUMMARY"
           echo '- privacy boundary: no real child data, microphone, camera, recording, remote monitoring or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
-          echo '- additive local-first loader and PWA v38 offline precache coverage required' >> "$GITHUB_STEP_SUMMARY"
+          echo '- additive local-first loader and PWA v38 offline precache coverage preserved' >> "$GITHUB_STEP_SUMMARY"
+          echo '- synthetic readiness only; no live school pilot, efficacy, attainment or safety-certification claim' >> "$GITHUB_STEP_SUMMARY"
           echo '- no claim that Science is complete beyond Chapters 1-5' >> "$GITHUB_STEP_SUMMARY"

@@ -1,5 +1,5 @@
 {
-  "schemaVersion":"1.3.0",
+  "schemaVersion":"1.4.0",
   "pilot":"CBSE_CLASS6_SAN_TAMBARAM",
   "subject":"Science","board":"CBSE","classLevel":6,"curriculumSession":"2026-27",
   "book":{"title":"Curiosity","publisher":"NCERT","officialStructureEvidence":"NCERT textbook portal lists Curiosity for Class VI Science with 12 chapter files; current 2026-27 index corroborates titles/order.","sourcePolicy":"Chapter titles/order are curriculum mapping metadata. KirthiVerse teaching text, examples, questions, hints and remediation are independently authored; no textbook prose, figures or exercise questions are reproduced."},
@@ -8,7 +8,7 @@
     {"chapter":2,"id":"CH-SCI6-02","title":"Diversity in the Living World","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":3,"id":"CH-SCI6-03","title":"Mindful Eating: A Path to a Healthy Body","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":4,"id":"CH-SCI6-04","title":"Exploring Magnets","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
-    {"chapter":5,"id":"CH-SCI6-05","title":"Measurement of Length and Motion","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":5,"id":"CH-SCI6-05","title":"Measurement of Length and Motion","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":6,"id":"CH-SCI6-06","title":"Materials Around Us","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":7,"id":"CH-SCI6-07","title":"Temperature and its Measurement","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":8,"id":"CH-SCI6-08","title":"A Journey through States of Water","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
@@ -45,6 +45,13 @@
   ],
   "chapter4CompletionEvidence":{"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"magnetSafetyRequired":true,"status":"CHAPTER4_KIKI_TEACHING_SLICE_COMPLETE"},
   "chapter4CompletionRule":"CHAPTER4_KIKI_TEACHING_SLICE_COMPLETE requires three evidence-led magnet topics covering magnetic-material testing, pole attraction/repulsion and compass/direction reasoning, with misconception handling, linked assessment, remediation/mastery evidence, explicit no-ingestion/no-dismantling/high-powered-magnet safety, deterministic QA, offline coverage and release regression coverage.",
+  "chapter5Topics":[
+    {"id":"TOPIC-SCI6-05-01","title":"Standard units and reliable length measurement","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["choose suitable metric units and instruments","align objects and scales correctly","read at eye level","calculate final minus initial for non-zero starts"],"misconceptions":["the final ruler mark is always the object length","units can be omitted","more decimal places always mean better measurement"],"safetyBoundary":["stable classroom/household objects only","no measurement near traffic or moving machinery","no hot/electrical equipment"]},
+    {"id":"TOPIC-SCI6-05-02","title":"Curved paths, flexible measures and estimation","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["choose a flexible method for curved lengths","avoid stretching measuring material","repeat and compare readings","report uncertainty without false precision"],"misconceptions":["a straight chord equals every curved path","repetition creates unlimited precision","an estimate is an exact measurement"],"safetyBoundary":["no cords around the body","no climbing or unstable surfaces","no reaching into moving equipment"]},
+    {"id":"TOPIC-SCI6-05-03","title":"Motion, reference points and patterns","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["state a reference point before deciding motion","identify rectilinear/circular/periodic patterns","recognise multiple motion descriptions can coexist","separate motion type from speed or cause"],"misconceptions":["motion is absolute and reference-independent","circular and periodic mean the same thing","motion type alone determines speed"],"safetyBoundary":["toy/tabletop/video observations only","no road or traffic experiments","no chasing/leaning from moving vehicles","no machinery or escalator investigation"]}
+  ],
+  "chapter5CompletionEvidence":{"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"measurementSafetyRequired":true,"status":"CHAPTER5_KIKI_TEACHING_SLICE_COMPLETE"},
+  "chapter5CompletionRule":"CHAPTER5_KIKI_TEACHING_SLICE_COMPLETE requires three evidence-led topics covering standard-unit/ruler measurement, curved-length method/uncertainty and reference-aware motion patterns, with misconception handling, linked assessment, remediation/mastery evidence, explicit safe tabletop/classroom measurement and motion boundaries, deterministic QA, offline coverage and release regression coverage.",
   "completionRule":"SCIENCE_COMPLETE only after all twelve Curiosity chapters have Kiki-teachable coverage, age-appropriate investigations or evidence activities where applicable, practice, assessment, remediation/mastery evidence, accessibility QA and source/provenance review.",
   "schoolOverlay":{"school":"SAN Academy Tambaram","mappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED","note":"The school context is used only as a Class 6 validation overlay. Exact pacing, worksheets, tests or teacher methods must not be attributed to the school without direct evidence."}
 }

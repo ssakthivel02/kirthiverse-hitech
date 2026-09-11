@@ -86,7 +86,7 @@ concurrency:
 
 env:
   LOCAL_URL: http://127.0.0.1:8765
-  EXPECTED_CACHE: kirthiverse-preview-v33
+  EXPECTED_CACHE: kirthiverse-preview-v34
 
 jobs:
   pwa-offline-qa:
@@ -124,16 +124,13 @@ jobs:
           python3 - <<'PY'
           import json, re
           from pathlib import Path
-
           m=json.loads(Path('manifest.webmanifest').read_text())
           sw=Path('sw-v30.js').read_text()
           core=Path('core-runtime-v30.js').read_text()
-
           assert m['start_url']=='/' and m['scope']=='/' and m['display']=='standalone'
           assert m['name'].startswith('KirthiVerse') and m['icons']
-          assert "CACHE='kirthiverse-preview-v33'" in sw, 'current v33 cache contract missing'
-          assert "VERSION='MANUS-VISUAL-MASTER-05-PWA-33'" in sw, 'current PWA version missing'
-
+          assert "CACHE='kirthiverse-preview-v34'" in sw, 'current v34 cache contract missing'
+          assert "VERSION='MANUS-VISUAL-MASTER-05-PWA-34'" in sw, 'current PWA version missing'
           block=re.search(r"PRECACHE=\[(.*?)\];self\.addEventListener\('install'", sw, re.S)
           assert block, 'PRECACHE block not found'
           paths=re.findall(r"'(/[^']*)'", block.group(1))
@@ -142,25 +139,17 @@ jobs:
             '/index.html','/core-runtime-v30.js','/p0-entry-v1.js','/educator-pilot-v1.js',
             '/pilot-metrics-v1.js','/pilot-readiness-v1.js','/pilot-run-v1.js',
             '/data/lessons-1.js','/data/assessments-1.js',
-            '/data/class6-math-pilot.js','/data/class6-math-assessments.js'
+            '/data/class6-math-pilot.js','/data/class6-math-assessments.js',
+            '/data/class6-science-pilot.js','/data/class6-science-assessments.js'
           ]
-          for marker in required:
-            assert marker in paths, f'current precache asset missing: {marker}'
-
+          for marker in required: assert marker in paths, f'current precache asset missing: {marker}'
           missing=[]
           for url in paths:
-            if url=='/':
-              target=Path('index.html')
-            else:
-              target=Path(url.lstrip('/'))
-            if not target.is_file():
-              missing.append(url)
+            target=Path('index.html') if url=='/' else Path(url.lstrip('/'))
+            if not target.is_file(): missing.append(url)
           assert not missing, f'PRECACHE references missing repository files: {missing}'
-
-          for marker in ["navigator.serviceWorker.register(SW", "updateViaCache:'none'", 'offlineCapable']:
-            assert marker in core, marker
-
-          print(f'PWA_CONTRACT_PASS: manifest + v33 cache + {len(paths)} verified precache paths + bootstrap')
+          for marker in ["navigator.serviceWorker.register(SW", "updateViaCache:'none'", 'offlineCapable']: assert marker in core, marker
+          print(f'PWA_CONTRACT_PASS: manifest + v34 cache + {len(paths)} verified precache paths + bootstrap')
           PY
 
       - name: Browser cached-origin fallback and direct navigation
@@ -196,7 +185,7 @@ jobs:
           await wait(`'serviceWorker' in navigator && !!window.KV_PWA`,'PWA bootstrap');
           await ev(`navigator.serviceWorker.register('/sw-v30.js',{updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);
           const cacheOk=await ev(`caches.keys().then(k=>k.includes(${JSON.stringify(cacheName)}))`);if(!cacheOk)throw Error('current cache not installed: '+cacheName);
-          const required=['/core-runtime-v30.js','/p0-entry-v1.js','/educator-pilot-v1.js','/pilot-metrics-v1.js','/pilot-readiness-v1.js','/pilot-run-v1.js','/data/lessons-1.js','/data/assessments-1.js','/data/class6-math-pilot.js','/data/class6-math-assessments.js'];
+          const required=['/core-runtime-v30.js','/p0-entry-v1.js','/educator-pilot-v1.js','/pilot-metrics-v1.js','/pilot-readiness-v1.js','/pilot-run-v1.js','/data/lessons-1.js','/data/assessments-1.js','/data/class6-math-pilot.js','/data/class6-math-assessments.js','/data/class6-science-pilot.js','/data/class6-science-assessments.js'];
           const missing=await ev(`caches.open(${JSON.stringify(cacheName)}).then(async c=>{const req=${JSON.stringify(required)};const out=[];for(const u of req){if(!(await c.match(u)))out.push(u)}return out})`);
           if(missing.length)throw Error('required current assets absent from cache: '+missing.join(', '));
           await send('Page.navigate',{url:base+'/?controlled=1'});await new Promise(r=>setTimeout(r,1600));
@@ -210,12 +199,12 @@ jobs:
           await wait(`document.readyState!=='loading'&&location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'origin-unavailable direct lesson navigation',20000);
           if(!(await ev(`window.KV_CORE_RUNTIME?.pwaBootstrap===true`)))throw Error('core runtime missing from cache');
           const dataCached=await ev(`fetch('/data/lessons-1.js').then(r=>r.ok).catch(()=>false)`);if(!dataCached)throw Error('canonical lesson data unavailable from cache');
-          const class6Cached=await ev(`Promise.all(['/data/class6-math-pilot.js','/data/class6-math-assessments.js'].map(u=>fetch(u).then(r=>r.ok).catch(()=>false))).then(x=>x.every(Boolean))`);if(!class6Cached)throw Error('Class 6 Mathematics Chapter 1 data unavailable from cache');
+          const curriculumCached=await ev(`Promise.all(['/data/class6-math-pilot.js','/data/class6-math-assessments.js','/data/class6-science-pilot.js','/data/class6-science-assessments.js'].map(u=>fetch(u).then(r=>r.ok).catch(()=>false))).then(x=>x.every(Boolean))`);if(!curriculumCached)throw Error('Class 6 curriculum data unavailable from cache');
           console.log('PWA_PASS: service worker installed and controlling page');
-          console.log('PWA_PASS: current v33 cache contains core + pilot + complete Mathematics Chapter 1 assets');
+          console.log('PWA_PASS: current v34 cache contains core + Mathematics + Science Chapter 1 assets');
           console.log('PWA_PASS: SPA lesson works with origin unavailable');
           console.log('PWA_PASS: direct canonical lesson navigation works with origin unavailable');
-          console.log('PWA_PASS: canonical and Class 6 Mathematics data served from cache');
+          console.log('PWA_PASS: canonical and controlled Class 6 curriculum data served from cache');
           ws.close();
           NODE
 
@@ -226,11 +215,10 @@ jobs:
           echo '- HI-TECH ACTIVE MASTER identity checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Pinned Node 22 QA runtime' >> "$GITHUB_STEP_SUMMARY"
           echo '- Manifest contract checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Current v33 cache and every repository precache path checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Current P0 / educator / pilot + Class 6 Mathematics Chapter 1 cache assets checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Current v34 cache and every repository precache path checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Class 6 Mathematics + Science Chapter 1 curriculum assets checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Service worker install/control checked in Chromium localhost secure context' >> "$GITHUB_STEP_SUMMARY"
-          echo '- SPA lesson checked with origin unavailable' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Direct canonical lesson navigation checked with origin unavailable' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Canonical + Class 6 Mathematics data cache fallback checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- SPA and direct canonical lesson navigation checked with origin unavailable' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Canonical + controlled Class 6 curriculum cache fallback checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- This is controlled localhost PWA evidence, not production-domain offline certification' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production DNS/deployment: unchanged' >> "$GITHUB_STEP_SUMMARY"

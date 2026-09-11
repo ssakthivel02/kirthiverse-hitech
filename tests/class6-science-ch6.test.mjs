@@ -68,9 +68,9 @@ for(const unsafeDirective of ['taste the unknown','drink the mixture','use a kni
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-science-ch6.js','data/class6-science-ch6-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.match(entry,/datasetKey:'class6SciencePilot'/);
-assert.match(entry,/CBSE6-SCI-CH6-1/);
+assert.match(entry,/CBSE6-SCI-CH7-1/);
 const sw=fs.readFileSync('sw-v30.js','utf8');
-assert.match(sw,/kirthiverse-preview-v39/);
+assert.match(sw,/kirthiverse-preview-v40/);
 for(const asset of ['/data/class6-science-ch6.js','/data/class6-science-ch6-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));

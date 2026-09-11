@@ -71,8 +71,8 @@ for(const unsafeDirective of ['boil the water yourself','put your hand in steam'
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-science-ch8.js','data/class6-science-ch8-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.match(entry,/datasetKey:'class6SciencePilot'/);
-assert.match(entry,/CBSE6-SCI-CH8-1/);
-assert.match(entry,/ch\(\?:4\|5\|6\|7\|8\)/);
+assert.match(entry,/CBSE6-SCI-CH8-2/);
+assert.match(entry,/ch\(\?:3\|4\|5\|6\|7\|8\)/);
 const sw=fs.readFileSync('sw-v30.js','utf8');
 assert.match(sw,/CACHE='kirthiverse-preview-v41'/);
 assert.match(sw,/VERSION='MANUS-VISUAL-MASTER-05-PWA-41'/);

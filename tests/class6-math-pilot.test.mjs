@@ -68,7 +68,7 @@ for(const asset of ['data/class6-math-pilot.js','data/class6-math-assessments.js
 assert.match(entry,/datasetKey:'class6MathPilot'/);
 assert.match(entry,/document\.documentElement\.dataset\[datasetKey\]='load-error'/);
 const sw=fs.readFileSync('sw-v30.js','utf8');
-assert.match(sw,/kirthiverse-preview-v37/);
+assert.match(sw,/kirthiverse-preview-v38/);
 for(const asset of ['/data/class6-math-pilot.js','/data/class6-math-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."),'canonical Kiki wording missing');

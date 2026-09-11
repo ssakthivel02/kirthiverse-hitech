@@ -1,5 +1,5 @@
 {
-  "schemaVersion":"1.2.0",
+  "schemaVersion":"1.3.0",
   "pilot":"CBSE_CLASS6_SAN_TAMBARAM",
   "subject":"Science","board":"CBSE","classLevel":6,"curriculumSession":"2026-27",
   "book":{"title":"Curiosity","publisher":"NCERT","officialStructureEvidence":"NCERT textbook portal lists Curiosity for Class VI Science with 12 chapter files; current 2026-27 index corroborates titles/order.","sourcePolicy":"Chapter titles/order are curriculum mapping metadata. KirthiVerse teaching text, examples, questions, hints and remediation are independently authored; no textbook prose, figures or exercise questions are reproduced."},
@@ -7,7 +7,7 @@
     {"chapter":1,"id":"CH-SCI6-01","title":"The Wonderful World of Science","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":2,"id":"CH-SCI6-02","title":"Diversity in the Living World","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":3,"id":"CH-SCI6-03","title":"Mindful Eating: A Path to a Healthy Body","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
-    {"chapter":4,"id":"CH-SCI6-04","title":"Exploring Magnets","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":4,"id":"CH-SCI6-04","title":"Exploring Magnets","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":5,"id":"CH-SCI6-05","title":"Measurement of Length and Motion","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":6,"id":"CH-SCI6-06","title":"Materials Around Us","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":7,"id":"CH-SCI6-07","title":"Temperature and its Measurement","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
@@ -38,6 +38,13 @@
   ],
   "chapter3CompletionEvidence":{"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"childNutritionSafetyRequired":true,"status":"CHAPTER3_KIKI_TEACHING_SLICE_COMPLETE"},
   "chapter3CompletionRule":"CHAPTER3_KIKI_TEACHING_SLICE_COMPLETE requires three age-appropriate nutrition-literacy topics with food diversity, balanced meal/hydration reasoning, evidence-aware food information and hygiene, misconception handling, assessment, remediation/mastery evidence, explicit child-safety exclusions for dieting/weight/calorie/diagnosis/supplements/allergy self-testing, deterministic QA, offline coverage and release regression coverage.",
+  "chapter4Topics":[
+    {"id":"TOPIC-SCI6-04-01","title":"Magnetic materials and evidence","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["test teacher-provided objects systematically","classify from observed magnetic attraction","distinguish material evidence from appearance","recognise mixed-material objects"],"misconceptions":["all metals are magnetic","shiny objects are magnetic","the outer material always explains attraction"],"safetyBoundary":["teacher/adult-provided classroom objects only","no dismantling powered devices","no high-powered loose magnets"]},
+    {"id":"TOPIC-SCI6-04-02","title":"Magnet poles, attraction and repulsion","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["identify two poles","predict like/unlike pole interactions","use repulsion as stronger evidence of two magnets than attraction alone"],"misconceptions":["magnets always attract","every attracted object is a magnet","one observation proves a general rule"],"safetyBoundary":["controlled handling","avoid finger pinch from snapping magnets","ordinary classroom-strength magnets"]},
+    {"id":"TOPIC-SCI6-04-03","title":"Compass direction, interference and safe investigation","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["describe roughly north-south settling of a freely rotating magnet","interpret compass deflection from nearby magnetic influence","identify confounding magnetic surroundings","state magnet safety rules"],"misconceptions":["a compass reading cannot be disturbed","nearby magnet movement means geographic north moved","electronics should be dismantled to find magnets"],"safetyBoundary":["never ingest or place magnets in mouth/nose/ears","keep small high-powered magnets away from children","do not dismantle electronics","follow manufacturer or qualified medical guidance around implanted medical devices"]}
+  ],
+  "chapter4CompletionEvidence":{"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"magnetSafetyRequired":true,"status":"CHAPTER4_KIKI_TEACHING_SLICE_COMPLETE"},
+  "chapter4CompletionRule":"CHAPTER4_KIKI_TEACHING_SLICE_COMPLETE requires three evidence-led magnet topics covering magnetic-material testing, pole attraction/repulsion and compass/direction reasoning, with misconception handling, linked assessment, remediation/mastery evidence, explicit no-ingestion/no-dismantling/high-powered-magnet safety, deterministic QA, offline coverage and release regression coverage.",
   "completionRule":"SCIENCE_COMPLETE only after all twelve Curiosity chapters have Kiki-teachable coverage, age-appropriate investigations or evidence activities where applicable, practice, assessment, remediation/mastery evidence, accessibility QA and source/provenance review.",
   "schoolOverlay":{"school":"SAN Academy Tambaram","mappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED","note":"The school context is used only as a Class 6 validation overlay. Exact pacing, worksheets, tests or teacher methods must not be attributed to the school without direct evidence."}
 }

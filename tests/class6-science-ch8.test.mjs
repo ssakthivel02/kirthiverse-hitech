@@ -8,7 +8,7 @@ const lessonIds=[
   'science.cbse6.curiosity.ch8.evaporation-condensation-cycle.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.8.0');
+assert.equal(map.schemaVersion,'1.9.0');
 assert.equal(map.chapters.length,12);
 assert.equal(map.chapters[7].title,'A Journey through States of Water');
 assert.equal(map.chapters[7].status,'KIKI_TEACHING_SLICE_COMPLETE');
@@ -71,11 +71,11 @@ for(const unsafeDirective of ['boil the water yourself','put your hand in steam'
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-science-ch8.js','data/class6-science-ch8-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.match(entry,/datasetKey:'class6SciencePilot'/);
-assert.match(entry,/CBSE6-SCI-CH9-1/);
-assert.match(entry,/ch\(\?:2\|3\|4\|5\|6\|7\|8\|9\)/);
+assert.match(entry,/CBSE6-SCI-CH10-1/);
+assert.match(entry,/ch\(\?:2\|3\|4\|5\|6\|7\|8\|9\|10\)/);
 const sw=fs.readFileSync('sw-v30.js','utf8');
-assert.match(sw,/CACHE='kirthiverse-preview-v42'/);
-assert.match(sw,/VERSION='MANUS-VISUAL-MASTER-05-PWA-42'/);
+assert.match(sw,/CACHE='kirthiverse-preview-v43'/);
+assert.match(sw,/VERSION='MANUS-VISUAL-MASTER-05-PWA-43'/);
 for(const asset of ['/data/class6-science-ch8.js','/data/class6-science-ch8-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));

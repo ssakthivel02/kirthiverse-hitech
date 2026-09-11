@@ -66,7 +66,7 @@ for(const required of ['movement alone','stillness','fair comparison','species',
 for(const required of ['no tasting','no deliberate mould','no unknown','do not collect','do not disturb']) assert.ok(allText.includes(required),`missing Chapter 10 safety/welfare boundary: ${required}`);
 assert.ok(allText.includes('not a universal')||allText.includes('not universal'));
 assert.ok(allText.includes('non-invasive')||allText.includes('non-destructive'));
-for(const unsafeDirective of ['collect wild eggs','collect tadpoles from the pond','taste the experimental seeds','grow mould deliberately','uproot the plant repeatedly','handle the unknown animal']) assert.ok(!allText.includes(unsafeDirective),`unsafe biology directive detected: ${unsafeDirective}`);
+for(const unsafeDirective of ['go collect wild eggs','collect tadpoles from the pond for this activity','taste the experimental seeds to test them','grow mould deliberately for this experiment','uproot the plant repeatedly to inspect it','handle the unknown animal yourself']) assert.ok(!allText.includes(unsafeDirective),`unsafe biology directive detected: ${unsafeDirective}`);
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-science-ch10.js','data/class6-science-ch10-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);

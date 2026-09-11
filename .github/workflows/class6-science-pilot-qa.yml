@@ -11,6 +11,7 @@ on:
       - 'sw-v30.js'
       - 'tests/class6-science-pilot.test.mjs'
       - 'tests/class6-science-school-needs.test.mjs'
+      - 'tests/class6-science-ch2.test.mjs'
       - 'tests/e2e/release-closure.spec.mjs'
       - '.github/workflows/class6-science-pilot-qa.yml'
   workflow_dispatch:
@@ -32,19 +33,19 @@ jobs:
           node-version: 22
       - name: Validate Class 6 Science Chapter 1 contract
         run: node tests/class6-science-pilot.test.mjs
-      - name: Validate synthetic school-learning needs coverage
+      - name: Validate Chapter 1 synthetic school-learning needs coverage
         run: node tests/class6-science-school-needs.test.mjs
+      - name: Validate Class 6 Science Chapter 2 contract
+        run: node tests/class6-science-ch2.test.mjs
       - name: QA summary
         if: always()
         run: |
           echo '### Class 6 Science Pilot QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- NCERT Curiosity 2026-27 12-chapter map' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 1 three-topic inquiry teaching slice' >> "$GITHUB_STEP_SUMMARY"
-          echo '- 15 independently authored assessments including reasoning and mastery' >> "$GITHUB_STEP_SUMMARY"
-          echo '- eight synthetic school-learning needs scenarios across all Chapter 1 topics' >> "$GITHUB_STEP_SUMMARY"
-          echo '- deterministic mapping from need → Kiki misconception/remediation → assessment → mastery evidence' >> "$GITHUB_STEP_SUMMARY"
-          echo '- observation vs explanation, fair investigation, honest evidence and bounded conclusion controls' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1 and 2: six Kiki teaching topics / six lessons' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 30 independently authored assessments including reasoning and mastery' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 1 eight-scenario synthetic school-learning needs validation retained' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 2 diversity, classification, branching-key and evidence-aware habitat controls' >> "$GITHUB_STEP_SUMMARY"
           echo '- privacy boundary: no real child data, photos, microphone, camera, recording, remote monitoring or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
-          echo '- synthetic readiness evidence only; no live school pilot or efficacy claim' >> "$GITHUB_STEP_SUMMARY"
-          echo '- additive local-first loader and offline precache assertions remain unchanged' >> "$GITHUB_STEP_SUMMARY"
-          echo '- no claim that Science is complete beyond Chapter 1' >> "$GITHUB_STEP_SUMMARY"
+          echo '- additive local-first loader and offline precache coverage required' >> "$GITHUB_STEP_SUMMARY"
+          echo '- no claim that Science is complete beyond Chapters 1-2' >> "$GITHUB_STEP_SUMMARY"

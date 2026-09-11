@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "pilot": "CBSE_CLASS6_SAN_TAMBARAM",
   "subject": "Science",
   "board": "CBSE",
@@ -13,7 +13,7 @@
   },
   "chapters": [
     {"chapter":1,"id":"CH-SCI6-01","title":"The Wonderful World of Science","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
-    {"chapter":2,"id":"CH-SCI6-02","title":"Diversity in the Living World","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":2,"id":"CH-SCI6-02","title":"Diversity in the Living World","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":3,"id":"CH-SCI6-03","title":"Mindful Eating: A Path to a Healthy Body","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":4,"id":"CH-SCI6-04","title":"Exploring Magnets","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":5,"id":"CH-SCI6-05","title":"Measurement of Length and Motion","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
@@ -26,43 +26,19 @@
     {"chapter":12,"id":"CH-SCI6-12","title":"Beyond Earth","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"}
   ],
   "chapter1Topics": [
-    {
-      "id":"TOPIC-SCI6-01-01",
-      "title":"Curiosity, observation and scientific questions",
-      "status":"END_TO_END_PILOT_IMPLEMENTED",
-      "competencies":["distinguish observation from assumption","turn an observation into a useful question","identify questions that can be investigated with evidence"],
-      "misconceptions":["treating an opinion as an observation","assuming every why-question can be answered by one simple experiment"]
-    },
-    {
-      "id":"TOPIC-SCI6-01-02",
-      "title":"Testable explanations and fair investigations",
-      "status":"END_TO_END_PILOT_IMPLEMENTED",
-      "competencies":["propose a testable explanation","identify what to change and what to observe","keep important comparison conditions similar","recognise that a prediction can be wrong without the investigation being useless"],
-      "misconceptions":["changing several factors at once","treating a hypothesis as a proven fact"]
-    },
-    {
-      "id":"TOPIC-SCI6-01-03",
-      "title":"Recording evidence, analysing results and revising ideas",
-      "status":"END_TO_END_PILOT_IMPLEMENTED",
-      "competencies":["record results honestly","compare results with a prediction","draw a conclusion limited to the evidence","revise an explanation when evidence disagrees"],
-      "misconceptions":["changing results to match a prediction","calling an unexpected result a failed experiment"]
-    }
+    {"id":"TOPIC-SCI6-01-01","title":"Curiosity, observation and scientific questions","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["distinguish observation from assumption","turn an observation into a useful question","identify questions that can be investigated with evidence"],"misconceptions":["treating an opinion as an observation","assuming every why-question can be answered by one simple experiment"]},
+    {"id":"TOPIC-SCI6-01-02","title":"Testable explanations and fair investigations","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["propose a testable explanation","identify what to change and what to observe","keep important comparison conditions similar","recognise that a prediction can be wrong without the investigation being useless"],"misconceptions":["changing several factors at once","treating a hypothesis as a proven fact"]},
+    {"id":"TOPIC-SCI6-01-03","title":"Recording evidence, analysing results and revising ideas","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["record results honestly","compare results with a prediction","draw a conclusion limited to the evidence","revise an explanation when evidence disagrees"],"misconceptions":["changing results to match a prediction","calling an unexpected result a failed experiment"]}
   ],
-  "chapter1CompletionEvidence": {
-    "topicCount": 3,
-    "lessonCount": 3,
-    "assessmentCount": 15,
-    "assessmentMinimumPerTopic": 5,
-    "offlineRequired": true,
-    "accessibilityRequired": true,
-    "releaseRegressionRequired": true,
-    "status": "CHAPTER1_KIKI_TEACHING_SLICE_COMPLETE"
-  },
+  "chapter1CompletionEvidence": {"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"status":"CHAPTER1_KIKI_TEACHING_SLICE_COMPLETE"},
   "chapter1CompletionRule": "CHAPTER1_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped inquiry topics to include independently authored teaching, a worked investigation, misconception handling, linked practice/assessment, remediation/mastery evidence, deterministic QA, offline coverage and release regression coverage.",
+  "chapter2Topics": [
+    {"id":"TOPIC-SCI6-02-01","title":"Observing diversity and describing variation","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["compare living things using multiple observable characteristics","record similarities and differences systematically","limit generalisations to the observed sample"],"misconceptions":["a few examples represent every member of a group","one obvious characteristic fully describes diversity"]},
+    {"id":"TOPIC-SCI6-02-02","title":"Classification and simple branching keys","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["group using stated observable criteria","apply one criterion consistently","follow and construct simple branching keys","recognise that different useful criteria can produce different groupings"],"misconceptions":["classification can use unstated preference","there is only one perfect grouping for every purpose"]},
+    {"id":"TOPIC-SCI6-02-03","title":"Organisms, habitats and evidence-aware adaptation reasoning","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["separate observed trait from inferred function","relate habitat evidence to cautious functional hypotheses","identify additional evidence needed","use privacy- and conservation-aware observation practices"],"misconceptions":["trait function is directly observed","trait plus habitat proves exact cause or evolutionary history"]}
+  ],
+  "chapter2CompletionEvidence": {"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"status":"CHAPTER2_KIKI_TEACHING_SLICE_COMPLETE"},
+  "chapter2CompletionRule": "CHAPTER2_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped diversity topics to include independently authored teaching, evidence-aware examples, misconception handling, linked practice/assessment, remediation/mastery evidence, deterministic QA, offline coverage and release regression coverage.",
   "completionRule": "SCIENCE_COMPLETE only after all twelve Curiosity chapters have Kiki-teachable coverage, age-appropriate investigations or evidence activities where applicable, practice, assessment, remediation/mastery evidence, accessibility QA and source/provenance review.",
-  "schoolOverlay": {
-    "school":"SAN Academy Tambaram",
-    "mappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
-    "note":"The school context is used only as a Class 6 validation overlay. Exact pacing, worksheets, tests or teacher methods must not be attributed to the school without direct evidence."
-  }
+  "schoolOverlay": {"school":"SAN Academy Tambaram","mappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED","note":"The school context is used only as a Class 6 validation overlay. Exact pacing, worksheets, tests or teacher methods must not be attributed to the school without direct evidence."}
 }

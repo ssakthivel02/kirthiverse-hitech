@@ -65,7 +65,7 @@ for(const asset of ['data/class6-science-pilot.js','data/class6-science-assessme
 assert.match(entry,/class6SciencePilot/);
 assert.match(entry,/load-error/);
 const sw=fs.readFileSync('sw-v30.js','utf8');
-assert.match(sw,/kirthiverse-preview-v34/);
+assert.match(sw,/kirthiverse-preview-v35/);
 for(const asset of ['/data/class6-science-pilot.js','/data/class6-science-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));

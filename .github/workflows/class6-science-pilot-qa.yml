@@ -23,6 +23,7 @@ on:
       - 'tests/class6-science-ch4-school-needs.test.mjs'
       - 'tests/class6-science-ch5.test.mjs'
       - 'tests/class6-science-ch5-school-needs.test.mjs'
+      - 'tests/class6-science-ch6.test.mjs'
       - 'tests/e2e/release-closure.spec.mjs'
       - '.github/workflows/class6-science-pilot-qa.yml'
   workflow_dispatch:
@@ -62,17 +63,19 @@ jobs:
         run: node tests/class6-science-ch5.test.mjs
       - name: Validate Chapter 5 synthetic school-learning needs and measurement/motion safety boundary
         run: node tests/class6-science-ch5-school-needs.test.mjs
+      - name: Validate Class 6 Science Chapter 6 materials properties and safety boundary
+        run: node tests/class6-science-ch6.test.mjs
       - name: QA summary
         if: always()
         run: |
           echo '### Class 6 Science Pilot QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- NCERT Curiosity 2026-27 12-chapter map' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-5: fifteen Kiki teaching topics / fifteen lessons' >> "$GITHUB_STEP_SUMMARY"
-          echo '- 75 independently authored assessments including reasoning and mastery' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-5 each retain eight-scenario synthetic school-needs validation' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 5 covers standard units/non-zero-start readings, curved-length method/uncertainty and reference-aware motion' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 5 readiness rejects road/traffic, moving-vehicle, machinery, body-wrapping-cord and sensor/location-data collection plans' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-6: eighteen Kiki teaching topics / eighteen lessons' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 90 independently authored assessments including reasoning and mastery' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-5 retain eight-scenario synthetic school-needs validation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 6 covers object/material classification, appearance/hardness/transparency, and solubility vs floating/sinking with purpose-based material choice' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 6 safety rejects tasting, unknown powders/medicines/cleaners/chemicals, destructive sharp-tool tests, broken glass, heat/flame and laser/eye exposure' >> "$GITHUB_STEP_SUMMARY"
           echo '- privacy boundary: no real child data, microphone, camera, recording, remote monitoring or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
-          echo '- additive local-first loader and PWA v38 offline precache coverage preserved' >> "$GITHUB_STEP_SUMMARY"
+          echo '- additive local-first loader and PWA v39 offline precache coverage required' >> "$GITHUB_STEP_SUMMARY"
           echo '- synthetic readiness only; no live school pilot, efficacy, attainment or safety-certification claim' >> "$GITHUB_STEP_SUMMARY"
-          echo '- no claim that Science is complete beyond Chapters 1-5' >> "$GITHUB_STEP_SUMMARY"
+          echo '- no claim that Science is complete beyond Chapters 1-6' >> "$GITHUB_STEP_SUMMARY"

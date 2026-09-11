@@ -29,6 +29,7 @@ on:
       - 'tests/class6-science-ch6-school-needs.test.mjs'
       - 'tests/class6-science-ch7.test.mjs'
       - 'tests/class6-science-ch7-school-needs.test.mjs'
+      - 'tests/class6-science-ch8.test.mjs'
       - 'tests/e2e/release-closure.spec.mjs'
       - '.github/workflows/class6-science-pilot-qa.yml'
   workflow_dispatch:
@@ -76,17 +77,19 @@ jobs:
         run: node tests/class6-science-ch7.test.mjs
       - name: Validate Chapter 7 synthetic school-learning needs and temperature/medical-claim boundaries
         run: node tests/class6-science-ch7-school-needs.test.mjs
+      - name: Validate Class 6 Science Chapter 8 water states and safety boundary
+        run: node tests/class6-science-ch8.test.mjs
       - name: QA summary
         if: always()
         run: |
           echo '### Class 6 Science Pilot QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- NCERT Curiosity 2026-27 12-chapter map' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-7: twenty-one Kiki teaching topics / twenty-one lessons' >> "$GITHUB_STEP_SUMMARY"
-          echo '- 105 independently authored assessments including reasoning and mastery' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-8: twenty-four Kiki teaching topics / twenty-four lessons' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 120 independently authored assessments including reasoning and mastery' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapters 1-7 retain eight-scenario synthetic school-needs validation' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 7 covers temperature versus sensation, Celsius scale/range/least count, safe thermometer use and evidence-limited recording/comparison' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 7 readiness rejects touch-testing unknown hot materials, mercury/broken-glass handling, boiling water, flame/hot-vessel/mains-heating experiments and diagnosis/treatment claims from classroom readings' >> "$GITHUB_STEP_SUMMARY"
-          echo '- privacy boundary: no real child data, body-temperature collection, medical-history collection, microphone, camera, recording, remote monitoring or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
-          echo '- additive local-first loader and PWA v40 offline precache coverage retained unchanged' >> "$GITHUB_STEP_SUMMARY"
-          echo '- synthetic readiness only; no live school pilot, efficacy, attainment, medical or safety-certification claim' >> "$GITHUB_STEP_SUMMARY"
-          echo '- no claim that Science is complete beyond Chapters 1-7' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 8 covers water states, vapour-versus-visible-droplet distinction, melting/freezing/evaporation/condensation and evidence-limited environmental reasoning' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 8 safety rejects learner boiling/steam generation, kettle/flame/hot-plate/sealed-container heating, freezer experiments, unsafe outdoor collection/climbing and drinking test water' >> "$GITHUB_STEP_SUMMARY"
+          echo '- privacy boundary: no real child data, microphone, camera, recording, remote monitoring or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
+          echo '- additive local-first loader and PWA v41 offline precache coverage required' >> "$GITHUB_STEP_SUMMARY"
+          echo '- synthetic readiness only; no live school pilot, efficacy, attainment or safety-certification claim' >> "$GITHUB_STEP_SUMMARY"
+          echo '- no claim that Science is complete beyond Chapters 1-8' >> "$GITHUB_STEP_SUMMARY"

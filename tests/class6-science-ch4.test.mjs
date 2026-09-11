@@ -61,14 +61,14 @@ const allText=JSON.stringify({lessons,assessments,map:map.chapter4Topics}).toLow
 for(const required of ['all metals','repulsion','unlike poles','compass','geographic north','never put magnets','dismantle electronics']) assert.ok(allText.includes(required),`missing Chapter 4 concept/safety boundary: ${required}`);
 assert.ok(allText.includes('high-powered magnet'));
 assert.ok(allText.includes('attraction alone')||allText.includes('attracted object'));
-for(const unsafeDirective of ['put a magnet in your mouth','place a magnet in your nose','place a magnet in your ear','swallow a magnet to test']) assert.ok(!allText.includes(unsafeDirective),`unsafe directive detected: ${unsafeDirective}`);
+for(const unsafeDirective of ['put a magnet in your mouth','place a magnet in your nose','place a magnet in your ear','swallow a magnet to test']) assert.ok(!allText.includes(unsafeDirective),`unsafe motion directive detected: ${unsafeDirective}`);
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-science-ch4.js','data/class6-science-ch4-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.match(entry,/datasetKey:'class6SciencePilot'/);
-assert.match(entry,/CBSE6-SCI-CH5-1/);
+assert.match(entry,/CBSE6-SCI-CH6-1/);
 const sw=fs.readFileSync('sw-v30.js','utf8');
-assert.match(sw,/kirthiverse-preview-v38/);
+assert.match(sw,/kirthiverse-preview-v39/);
 for(const asset of ['/data/class6-science-ch4.js','/data/class6-science-ch4-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));

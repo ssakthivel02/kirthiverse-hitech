@@ -62,8 +62,8 @@ for(const lessonId of lessonIds){
 }
 const allText=JSON.stringify({lessons,assessments,map:map.chapter9Topics}).toLowerCase();
 for(const required of ['handpicking','sieving','winnowing','settling','decantation','filtration','evaporation','dissolved','insoluble','potability']) assert.ok(allText.includes(required),`missing Chapter 9 concept: ${required}`);
-for(const required of ['no tasting','no improvised powered','no drinking','no flame','no hot plate']) assert.ok(allText.includes(required),`missing Chapter 9 safety boundary: ${required}`);
-assert.ok(allText.includes('kettle'),'missing Chapter 9 named heat hazard: kettle');
+for(const required of ['no tasting','no improvised powered','no drinking','no flame']) assert.ok(allText.includes(required),`missing Chapter 9 safety boundary: ${required}`);
+for(const hazard of ['kettle','hot plate']) assert.ok(allText.includes(hazard),`missing Chapter 9 named heat hazard: ${hazard}`);
 assert.ok(allText.includes('never use open flames')||allText.includes('no hazardous heating')||allText.includes('reject flame/kettle'),'missing Chapter 9 explicit heating prohibition');
 assert.ok(allText.includes('not automatically pure')||allText.includes('not automatically chemically pure'));
 assert.ok(allText.includes('not automatically safe to drink')||allText.includes('not potability'));

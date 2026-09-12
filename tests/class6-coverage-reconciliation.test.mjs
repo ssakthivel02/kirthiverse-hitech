@@ -8,11 +8,11 @@ const mathCh2Needs=readJson('docs/class6-pilot/MATH_CH2_SCHOOL_NEEDS_VALIDATION_
 const scienceMap=readJson('docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json');
 const scienceAudit=readJson('docs/class6-pilot/SCIENCE_COMPLETION_AUDIT_V1.json');
 
-assert.equal(manifest.schemaVersion,'1.2.0');
+assert.equal(manifest.schemaVersion,'1.3.0');
 assert.equal(manifest.pilot.board,'CBSE');
 assert.equal(manifest.pilot.class,6);
 assert.equal(manifest.pilot.canonicalRepository,'ssakthivel02/kirthiverse-hitech');
-assert.equal(manifest.pilot.lastReconciledMain,'01473b650e95439aac1aaccddcf1f9603f472871');
+assert.equal(manifest.pilot.lastReconciledMain,'364a3cdccaa29d9965c6389aa3c9e02043894893');
 
 const byId=Object.fromEntries(manifest.subjects.map(x=>[x.id,x]));
 assert.equal(manifest.subjects.length,11);
@@ -32,21 +32,22 @@ assert.match(science.completionBoundary,/not live-school efficacy/i);
 const mathematics=byId.mathematics;
 assert.equal(mathematics.status,'IMPLEMENTATION_IN_PROGRESS');
 assert.equal(mathematics.completionClaim,false);
+assert.equal(maths.schemaVersion,'1.3.0');
 assert.equal(maths.chapters.length,10);
 const implementedMath=maths.chapters.filter(x=>x.status==='KIKI_TEACHING_SLICE_COMPLETE');
 const pendingMath=maths.chapters.filter(x=>x.status==='MAPPED_NOT_YET_IMPLEMENTED');
-assert.deepEqual(implementedMath.map(x=>x.chapter),[1,2]);
-assert.equal(pendingMath.length,8);
-assert.equal(pendingMath[0].chapter,3);
-assert.equal(pendingMath[0].title,'Number Play');
+assert.deepEqual(implementedMath.map(x=>x.chapter),[1,2,3]);
+assert.equal(pendingMath.length,7);
+assert.equal(pendingMath[0].chapter,4);
+assert.equal(pendingMath[0].title,'Data Handling and Presentation');
 assert.equal(mathematics.mappedChapterCount,maths.chapters.length);
 assert.equal(mathematics.implementedChapterCount,implementedMath.length);
 assert.equal(mathematics.remainingMappedChapterCount,pendingMath.length);
 assert.equal(mathematics.schoolNeedsValidatedChapterCount,2);
-assert.equal(mathematics.nextLargestGap,'Chapter 3 — Number Play teaching slice');
-assert.equal(maths.chapter2CompletionEvidence?.schoolNeedsValidationRequired,true);
+assert.equal(mathematics.nextLargestGap,'Chapter 3 — School Needs Validation');
 assert.equal(maths.chapter2CompletionEvidence?.schoolNeedsValidationPresent,true);
-assert.equal(maths.chapter2CompletionEvidence?.schoolNeedsValidationArtifact,'docs/class6-pilot/MATH_CH2_SCHOOL_NEEDS_VALIDATION_V1.json');
+assert.equal(maths.chapter3CompletionEvidence?.schoolNeedsValidationRequired,true);
+assert.equal(maths.chapter3CompletionEvidence?.schoolNeedsValidationPresent,false);
 assert.equal(mathCh2Needs.validationType,'SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS');
 assert.equal(mathCh2Needs.schoolOverlay.liveSchoolEvidenceCollected,false);
 assert.equal(mathCh2Needs.scenarios.length,8);
@@ -54,7 +55,7 @@ assert.equal(mathCh2Needs.scenarios.length,8);
 assert.equal(manifest.priorityDecision.selectedLane,'mathematics');
 assert.equal(manifest.priorityDecision.selectedNextChapter,3);
 assert.equal(manifest.priorityDecision.selectedNextChapterTitle,'Number Play');
-assert.equal(manifest.priorityDecision.selectedNextTask,'Chapter 3 Kiki Teaching Slice');
+assert.equal(manifest.priorityDecision.selectedNextTask,'Chapter 3 School Needs Validation');
 assert.equal(manifest.priorityDecision.requiresFreshConcurrencyCheckBeforeWrite,true);
 
 for(const id of ['english','language-2','language-3','social-science','life-skills-aptitude','computer-science','health-physical-education','work-education','art-education']){

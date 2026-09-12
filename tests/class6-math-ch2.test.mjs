@@ -8,7 +8,7 @@ const lessonIds=[
   'math.cbse6.ganita-prakash.ch2.measure-draw-angles.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.2.0');
+assert.equal(map.schemaVersion,'1.3.0');
 assert.equal(map.chapters[1].chapter,2);
 assert.equal(map.chapters[1].title,'Lines and Angles');
 assert.equal(map.chapters[1].status,'KIKI_TEACHING_SLICE_COMPLETE');
@@ -70,11 +70,14 @@ assert.ok(assessments.some(x=>/42°/.test(x.correctAnswer)&&/bisector/i.test(x.e
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-math-ch2.js','data/class6-math-ch2-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.match(entry,/class6MathDeferredAssessments/);
-assert.ok(entry.includes('math\\.cbse6\\.ganita-prakash\\.ch2'),'Chapter 2 lesson-route matcher missing');
+assert.ok(entry.includes('math\\.cbse6\\.ganita-prakash'),'Ganita Prakash deferred-assessment route scope missing');
+assert.ok(entry.includes('patterns\\.')&&entry.includes('ch(?:2|3)\\.'),'Chapter 1-3 deferred-assessment route coverage missing');
+assert.ok(!entry.includes("/^\\/lesson\\/math\\./"),'generic Mathematics lessons must not trigger Class 6 assessment bundles');
 assert.match(entry,/release-closure/);
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
 assert.ok(baseChunk.includes('data/class6-math-ch2.js'),'Chapter 2 lesson must load in Mathematics base slice');
 assert.ok(baseChunk.includes('deferredMathAssessments'),'release-closure must be able to load Chapter 2 assessments with base readiness');
+assert.ok(!baseChunk.includes("['class6-math-ch1-assessments','data/class6-math-assessments.js']"),'Chapter 1 assessments must not be an unconditional startup request');
 
 const sw=fs.readFileSync('sw-v30.js','utf8');
 assert.match(sw,/kirthiverse-preview-v45/);

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.2.0",
+  "schemaVersion": "1.3.0",
   "pilot": "CBSE_CLASS6_SAN_TAMBARAM",
   "subject": "Mathematics",
   "board": "CBSE",
@@ -14,7 +14,7 @@
   "chapters": [
     {"chapter":1,"id":"CH-MATH6-01","title":"Patterns in Mathematics","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":2,"id":"CH-MATH6-02","title":"Lines and Angles","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
-    {"chapter":3,"id":"CH-MATH6-03","title":"Number Play","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":3,"id":"CH-MATH6-03","title":"Number Play","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":4,"id":"CH-MATH6-04","title":"Data Handling and Presentation","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":5,"id":"CH-MATH6-05","title":"Prime Time","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":6,"id":"CH-MATH6-06","title":"Perimeter and Area","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
@@ -37,6 +37,13 @@
   ],
   "chapter2CompletionRule": "CHAPTER2_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped topics to have independently authored teaching content, worked examples, linked practice/assessment, misconception handling, remediation/mastery evidence, deterministic QA, lazy runtime integration, offline coverage, release regression coverage and a separate synthetic school-needs validation artifact. The school-needs artifact is deterministic readiness evidence only and does not establish live-school efficacy, attainment or school-specific pacing.",
   "chapter2CompletionEvidence": {"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"lazyAssessmentLoadingRequired":true,"schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":true,"schoolNeedsValidationArtifact":"docs/class6-pilot/MATH_CH2_SCHOOL_NEEDS_VALIDATION_V1.json","status":"CHAPTER2_KIKI_TEACHING_SLICE_COMPLETE"},
+  "chapter3Topics": [
+    {"id":"TOPIC-MATH6-03-01","title":"Number relationships, comparison and number-line structure","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["compare large numbers from place value","reason from stated local-neighbour conditions","derive equal number-line interval values from labelled anchors","place and estimate large values on a number line"],"misconceptions":["comparing numbers from visual digit appearance rather than place value","ignoring which neighbours are included in a local comparison rule","assuming every equally spaced number-line mark increases by one"]},
+    {"id":"TOPIC-MATH6-03-02","title":"Digit sums, reversals, palindromes and repeatable number processes","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["analyse place value while rearranging digits","calculate and compare digit sums","recognise palindromes","execute a fixed digit algorithm accurately","separate observed patterns from universal proof"],"misconceptions":["digit sum uniquely identifies a number","leading zeroes create new place value after reversal","many successful examples prove a rule for every starting number"]},
+    {"id":"TOPIC-MATH6-03-03","title":"Mental computation, numerical patterns, estimation and conjectures","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["decompose and compensate for mental calculation","explain useful numerical patterns","make and check reasonable estimates","distinguish conjecture from theorem","describe repeatable game strategies rather than lucky moves"],"misconceptions":["an estimate must equal the exact answer","a shortcut needs no mathematical explanation","extensive testing automatically proves a conjecture","one successful move is a winning strategy"]}
+  ],
+  "chapter3CompletionRule": "CHAPTER3_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped strands to have independently authored teaching content, worked examples, five linked assessments per lesson, misconception handling, remediation/mastery evidence, deterministic QA, lazy assessment loading, offline precache coverage and release-regression coverage. Separate synthetic school-needs validation remains required before Chapter 3's evidence contract is closed.",
+  "chapter3CompletionEvidence": {"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"lazyAssessmentLoadingRequired":true,"schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":false,"status":"CHAPTER3_KIKI_TEACHING_SLICE_COMPLETE"},
   "completionRule": "MATHEMATICS_COMPLETE only after all ten chapters have Kiki-teachable lesson coverage, practice, assessment, remediation/mastery evidence, separate synthetic school-needs validation, accessibility QA and source/provenance review.",
   "schoolOverlay": {"school":"SAN Academy Tambaram","mappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED","note":"The school publicly confirms Mathematics for Classes I-X; exact school pacing/order must not be claimed without school-specific evidence."}
 }

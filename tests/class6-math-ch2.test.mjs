@@ -70,11 +70,12 @@ assert.ok(assessments.some(x=>/42°/.test(x.correctAnswer)&&/bisector/i.test(x.e
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-math-ch2.js','data/class6-math-ch2-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.match(entry,/class6MathDeferredAssessments/);
-assert.ok(entry.includes('math\\.cbse6\\.ganita-prakash\\.ch(?:2|3)'),'Chapter 2-3 lesson-route matcher missing');
+assert.ok(entry.includes("/^\\/lesson\\/math\\./"),'all-Mathematics lesson-route matcher missing');
 assert.match(entry,/release-closure/);
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
 assert.ok(baseChunk.includes('data/class6-math-ch2.js'),'Chapter 2 lesson must load in Mathematics base slice');
 assert.ok(baseChunk.includes('deferredMathAssessments'),'release-closure must be able to load Chapter 2 assessments with base readiness');
+assert.ok(!baseChunk.includes("['class6-math-ch1-assessments','data/class6-math-assessments.js']"),'Chapter 1 assessments must not be an unconditional startup request');
 
 const sw=fs.readFileSync('sw-v30.js','utf8');
 assert.match(sw,/kirthiverse-preview-v45/);

@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-MATH-CH2-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Mathematics · Ganita Prakash · Chapter 2 · Lines and Angles",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 2 topic, a Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action, and an observable mastery criterion. Geometry-tool activities must remain ordinary classroom-paper tasks and must not require camera capture, location, cloud AI, or remote monitoring.",
+  "scenarios": [
+    {
+      "id": "SN-MATH6-CH2-001",
+      "need": "Learner classifies a drawn object by how long it looks on the page instead of using endpoint and extension properties.",
+      "topicId": "TOPIC-MATH6-02-01",
+      "expectedMisconception": "classifying by drawn length instead of defining properties",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Mark endpoints and arrow directions on a small paper sketch, then state whether each object is a segment, line or ray and justify the choice from those properties.",
+      "masteryCriterion": "Correctly classifies a new mixed set of segments, lines and rays and explains each answer using endpoints and extension rather than apparent length."
+    },
+    {
+      "id": "SN-MATH6-CH2-002",
+      "need": "Learner understands that a ray has one endpoint but reverses the ray name without noticing that the starting point changes.",
+      "topicId": "TOPIC-MATH6-02-01",
+      "expectedMisconception": "reversing ray names without changing the endpoint",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Underline the first letter in each ray name, identify it as the endpoint, and compare two labelled paper diagrams before answering.",
+      "masteryCriterion": "Names three new rays correctly, identifies each endpoint, and explains why ray AB and ray BA are generally different rays."
+    },
+    {
+      "id": "SN-MATH6-CH2-003",
+      "need": "Learner assumes that a visibly longer pair of angle arms creates a larger angle even when the amount of turn is unchanged.",
+      "topicId": "TOPIC-MATH6-02-02",
+      "expectedMisconception": "longer arms make a larger angle",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Trace or redraw two angles with different arm lengths but the same opening, then compare only the amount of turn from one arm to the other.",
+      "masteryCriterion": "Correctly compares a new pair of equal-opening angles with different arm lengths and states that arm length does not determine angle size."
+    },
+    {
+      "id": "SN-MATH6-CH2-004",
+      "need": "Learner recognises a right angle only when it is drawn in a familiar upright orientation and misclassifies the same angle after rotation.",
+      "topicId": "TOPIC-MATH6-02-02",
+      "expectedMisconception": "a tilted right angle stops being right",
+      "requiredAssessmentTypes": ["multiple_choice", "mastery_check"],
+      "safeLearnerAction": "Rotate the paper or compare the angle against a paper-corner right-angle benchmark without photographing or uploading the work.",
+      "masteryCriterion": "Identifies right angles correctly across at least four orientations and explains that rotation changes orientation, not the 90-degree turn."
+    },
+    {
+      "id": "SN-MATH6-CH2-005",
+      "need": "Learner places a protractor near the angle but does not align its centre with the vertex, producing a plausible-looking but invalid reading.",
+      "topicId": "TOPIC-MATH6-02-03",
+      "expectedMisconception": "ignoring vertex-centre alignment",
+      "requiredAssessmentTypes": ["worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use a standard classroom protractor on a printed or hand-drawn angle: align the centre mark with the vertex, place one arm on the zero baseline, then read the intersected scale.",
+      "masteryCriterion": "Measures two new angles within the expected classroom tolerance while explicitly demonstrating centre, baseline and scale alignment before recording each value."
+    },
+    {
+      "id": "SN-MATH6-CH2-006",
+      "need": "Learner aligns a protractor correctly but always reads the same printed scale, including when the starting arm uses the opposite zero.",
+      "topicId": "TOPIC-MATH6-02-03",
+      "expectedMisconception": "always reading one printed protractor scale",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Circle the zero used by the starting arm before reading the scale and estimate whether the angle should be acute or obtuse as a reasonableness check.",
+      "masteryCriterion": "Reads three mixed-orientation protractor diagrams from the correct zero and rejects an opposite-scale answer that conflicts with the angle classification."
+    },
+    {
+      "id": "SN-MATH6-CH2-007",
+      "need": "Learner needs a fully offline route for geometry practice and cannot depend on video, microphone, camera, cloud AI or remote teacher monitoring.",
+      "topicId": "TOPIC-MATH6-02-02",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Use cached Kiki text, locally rendered diagrams, paper and pencil, plus a paper corner if helpful; submit a selected or written response locally with no network-dependent tutoring step.",
+      "masteryCriterion": "Completes the comparison/classification worked example and mastery check using only offline local resources and gives a correct reason for each classification."
+    },
+    {
+      "id": "SN-MATH6-CH2-008",
+      "need": "Learner can draw two roughly equal smaller angles inside a larger angle but treats visual appearance alone as proof that a bisector has been constructed.",
+      "topicId": "TOPIC-MATH6-02-03",
+      "expectedMisconception": "treating a visual midpoint as proof of an angle bisector",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Measure both resulting angles with a classroom protractor and record the two degree values; use equality of measured angle sizes as the verification rather than a photo or visual guess.",
+      "masteryCriterion": "Verifies a new proposed angle bisector by measuring both parts, reports equal measures within ordinary classroom-tool tolerance, and explains why appearance alone is insufficient evidence."
+    }
+  ]
+}

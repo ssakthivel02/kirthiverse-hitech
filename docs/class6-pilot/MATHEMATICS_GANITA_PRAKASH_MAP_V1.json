@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.4.0",
+  "schemaVersion": "1.5.0",
   "pilot": "CBSE_CLASS6_SAN_TAMBARAM",
   "subject": "Mathematics",
   "board": "CBSE",
@@ -15,7 +15,7 @@
     {"chapter":1,"id":"CH-MATH6-01","title":"Patterns in Mathematics","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":2,"id":"CH-MATH6-02","title":"Lines and Angles","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":3,"id":"CH-MATH6-03","title":"Number Play","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
-    {"chapter":4,"id":"CH-MATH6-04","title":"Data Handling and Presentation","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":4,"id":"CH-MATH6-04","title":"Data Handling and Presentation","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":5,"id":"CH-MATH6-05","title":"Prime Time","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":6,"id":"CH-MATH6-06","title":"Perimeter and Area","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":7,"id":"CH-MATH6-07","title":"Fractions","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
@@ -44,6 +44,13 @@
   ],
   "chapter3CompletionRule": "CHAPTER3_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped strands to have independently authored teaching content, worked examples, five linked assessments per lesson, misconception handling, remediation/mastery evidence, deterministic QA, lazy assessment loading, offline precache coverage, release-regression coverage and a separate synthetic school-needs validation artifact. The school-needs artifact is deterministic readiness evidence only and does not establish live-school efficacy, attainment or school-specific pacing.",
   "chapter3CompletionEvidence": {"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"lazyAssessmentLoadingRequired":true,"schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":true,"schoolNeedsValidationArtifact":"docs/class6-pilot/MATH_CH3_SCHOOL_NEEDS_VALIDATION_V1.json","status":"CHAPTER3_KIKI_TEACHING_SLICE_COMPLETE"},
+  "chapter4Topics": [
+    {"id":"TOPIC-MATH6-04-01","title":"Collecting, organising and counting data","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["frame a clear data question","organise raw observations with tally marks","construct and verify frequency tables","make conclusions bounded to the collected dataset"],"misconceptions":["confusing a data value with its frequency","losing or double-counting observations","assuming the largest-looking category label has the largest frequency","generalising a small dataset to everyone"]},
+    {"id":"TOPIC-MATH6-04-02","title":"Pictographs and representation keys","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["read a pictograph key before interpreting symbols","convert symbol counts to frequencies","choose a practical symbol value","verify a pictograph against its source table"],"misconceptions":["assuming one symbol always means one item","treating decorative symbol size as quantity","changing the key between categories","ignoring the meaning of a partial symbol"]},
+    {"id":"TOPIC-MATH6-04-03","title":"Bar graphs, scale and fair visual comparison","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["read and choose a consistent numerical scale","calculate bar height from value and scale","construct labelled zero-based bar graphs","detect misleading baselines or inconsistent axis intervals"],"misconceptions":["reading grid-square count as the frequency regardless of scale","changing scale midway","drawing bars from different baselines","trusting apparent bar size without checking axis labels"]}
+  ],
+  "chapter4CompletionRule": "CHAPTER4_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped strands to have independently authored teaching content, worked examples, five linked assessments per lesson, misconception handling, remediation/mastery evidence, deterministic QA, bounded runtime integration that preserves the existing startup request ceiling, offline precache coverage and release-regression coverage. Separate synthetic school-needs validation remains required before Chapter 4's evidence contract is closed.",
+  "chapter4CompletionEvidence": {"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"lazyAssessmentLoadingRequired":true,"startupRequestCeilingPreserved":true,"schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":false,"status":"CHAPTER4_KIKI_TEACHING_SLICE_COMPLETE"},
   "completionRule": "MATHEMATICS_COMPLETE only after all ten chapters have Kiki-teachable lesson coverage, practice, assessment, remediation/mastery evidence, separate synthetic school-needs validation, accessibility QA and source/provenance review.",
   "schoolOverlay": {"school":"SAN Academy Tambaram","mappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED","note":"The school publicly confirms Mathematics for Classes I-X; exact school pacing/order must not be claimed without school-specific evidence."}
 }

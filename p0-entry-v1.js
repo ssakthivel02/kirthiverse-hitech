@@ -1,7 +1,7 @@
 /* KirthiVerse P0 entry points v13 — core funding-readiness extensions + controlled Class 6 curriculum pilots.
    Keeps Pilot Metrics + P4 Readiness global; loads Educator Pilot and P5 Controlled Run only on their routes.
    Loads CBSE Class 6 Mathematics and Science slices additively into the existing lesson/assessment arrays.
-   Migration history: CBSE6-MATH-CH2-1 adds immediate Chapter 2 lesson discovery with lazy Chapter 2 assessment loading; CBSE6-SCI-CH7-1 used lazy ch(?:4|5|6|7); CBSE6-SCI-CH8-2 used lazy ch(?:3|4|5|6|7|8); CBSE6-SCI-CH9-1 used lazy ch(?:2|3|4|5|6|7|8|9); CBSE6-SCI-CH10-1 introduced route-only pilot addon loading; CBSE6-SCI-CH11-1 extended lazy loading through ch(?:2|3|4|5|6|7|8|9|10|11); CBSE6-SCI-CH12-1 extends it through Chapter 12. */
+   Migration history: CBSE6-MATH-CH3-1 adds immediate Chapter 3 lesson discovery with lazy Chapter 2-3 assessment loading; CBSE6-MATH-CH2-1 introduced immediate Chapter 2 lesson discovery with lazy Chapter 2 assessment loading; CBSE6-SCI-CH7-1 used lazy ch(?:4|5|6|7); CBSE6-SCI-CH8-2 used lazy ch(?:3|4|5|6|7|8); CBSE6-SCI-CH9-1 used lazy ch(?:2|3|4|5|6|7|8|9); CBSE6-SCI-CH10-1 introduced route-only pilot addon loading; CBSE6-SCI-CH11-1 extended lazy loading through ch(?:2|3|4|5|6|7|8|9|10|11); CBSE6-SCI-CH12-1 extends it through Chapter 12. */
 (()=>{
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function loadAddon({tag,css,js,version}){if(css&&!document.querySelector(`link[data-${tag}]`)){const l=document.createElement('link');l.rel='stylesheet';l.href=`/${css}?v=${version}`;l.setAttribute(`data-${tag}`,'style');document.head.appendChild(l)}if(js&&!document.querySelector(`script[data-${tag}]`)){const s=document.createElement('script');s.async=false;s.src=`/${js}?v=${version}`;s.setAttribute(`data-${tag}`,'script');document.body.appendChild(s)}}
@@ -21,22 +21,22 @@
     }
   }
   const needsReleaseClosure=()=>new URLSearchParams(location.search).has('release-closure');
-  const deferredMathAssessments=[['class6-math-ch2-assessments','data/class6-math-ch2-assessments.js']];
+  const deferredMathAssessments=[['class6-math-ch2-assessments','data/class6-math-ch2-assessments.js'],['class6-math-ch3-assessments','data/class6-math-ch3-assessments.js']];
   const mathBaseFiles=()=>[
     ['class6-math-ch1-lessons','data/class6-math-pilot.js'],['class6-math-ch1-assessments','data/class6-math-assessments.js'],
-    ['class6-math-ch2-lessons','data/class6-math-ch2.js'],
+    ['class6-math-ch2-lessons','data/class6-math-ch2.js'],['class6-math-ch3-lessons','data/class6-math-ch3.js'],
     ...(needsReleaseClosure()?deferredMathAssessments:[])
   ];
-  const loadClass6MathPilot=()=>loadCurriculumPilot({datasetKey:'class6MathPilot',subject:'Mathematics',version:'CBSE6-MATH-CH2-1',files:mathBaseFiles()});
+  const loadClass6MathPilot=()=>loadCurriculumPilot({datasetKey:'class6MathPilot',subject:'Mathematics',version:'CBSE6-MATH-CH3-1',files:mathBaseFiles()});
   let deferredMathLoadStarted=false;
   function needsDeferredMathAssessments(){
     const p=location.pathname;
-    return needsReleaseClosure()||/^\/lesson\/math\.cbse6\.ganita-prakash\.ch2\./.test(p)||['/practice','/practice-arena','/diagnostic'].includes(p);
+    return needsReleaseClosure()||/^\/lesson\/math\.cbse6\.ganita-prakash\.ch(?:2|3)\./.test(p)||['/practice','/practice-arena','/diagnostic'].includes(p);
   }
   function loadDeferredMathAssessments(){
     if(deferredMathLoadStarted||!needsDeferredMathAssessments()||needsReleaseClosure())return;
     deferredMathLoadStarted=true;
-    loadCurriculumPilot({datasetKey:'class6MathDeferredAssessments',subject:'Mathematics',version:'CBSE6-MATH-CH2-1-A',files:deferredMathAssessments});
+    loadCurriculumPilot({datasetKey:'class6MathDeferredAssessments',subject:'Mathematics',version:'CBSE6-MATH-CH3-1-A',files:deferredMathAssessments});
   }
   const deferredScienceAssessments=[['class6-science-ch2-assessments','data/class6-science-ch2-assessments.js'],['class6-science-ch3-assessments','data/class6-science-ch3-assessments.js'],['class6-science-ch4-assessments','data/class6-science-ch4-assessments.js'],['class6-science-ch5-assessments','data/class6-science-ch5-assessments.js'],['class6-science-ch6-assessments','data/class6-science-ch6-assessments.js'],['class6-science-ch7-assessments','data/class6-science-ch7-assessments.js'],['class6-science-ch8-assessments','data/class6-science-ch8-assessments.js'],['class6-science-ch9-assessments','data/class6-science-ch9-assessments.js'],['class6-science-ch10-assessments','data/class6-science-ch10-assessments.js'],['class6-science-ch11-assessments','data/class6-science-ch11-assessments.js'],['class6-science-ch12-assessments','data/class6-science-ch12-assessments.js']];
   const needsAllScienceAssessments=()=>needsReleaseClosure();

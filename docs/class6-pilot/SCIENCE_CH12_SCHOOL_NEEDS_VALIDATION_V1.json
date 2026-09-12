@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-SCI-CH12-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Science · Curiosity · Chapter 12 · Beyond Earth",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "Deterministic readiness validation using synthetic learner scenarios only. This is not a live student study, school pilot, efficacy trial, attainment claim, astronomy-observation safety certification, solar-viewing certification, extraterrestrial-life finding, model-scale certification or school-specific pacing proof. No scenario requires direct Sun viewing, ordinary optical solar viewing, laser use, rooftop or roadside observation, isolated or unsupervised night travel, precise child location, camera, microphone, recording or child-facing cloud AI.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "preciseLocation": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to one implemented Chapter 12 topic, an existing Kiki misconception/remediation path, at least reasoning and mastery-check assessment evidence, a privacy-safe learner action and an observable mastery criterion while preserving direct-Sun, ordinary-optical solar viewing, laser/aircraft, rooftop/roadside/isolated-night, model-scale, precise-location, recording and extraterrestrial-claim boundaries.",
+  "scenarios": [
+    {
+      "id": "SN-SCI6-CH12-001",
+      "need": "Learner confuses stars, planets and moving sky objects, for example assuming that every bright point is a star or that any object changing position must be a planet.",
+      "topicId": "TOPIC-SCI6-12-01",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Classify supplied sky-map and observation cards using stated evidence such as apparent motion, self-luminous versus reflected-light descriptions and labelled reference data; do not use a camera, microphone, precise location or unsupervised outdoor observation.",
+      "masteryCriterion": "Distinguishes a star from a planet or other moving sky object using evidence and explicitly states that apparent motion or brightness alone is insufficient for certain identification."
+    },
+    {
+      "id": "SN-SCI6-CH12-002",
+      "need": "Learner treats a constellation drawing as a physical cluster whose stars are joined together, equally distant from Earth or necessarily close neighbours in three-dimensional space.",
+      "topicId": "TOPIC-SCI6-12-01",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Compare a supplied flat constellation pattern with a side-view distance model and mark which statements describe apparent pattern versus real spatial distance; use only supplied diagrams or adult-supervised safe ground-level evidence.",
+      "masteryCriterion": "Explains that a constellation is an apparent sky pattern or sky region and that stars appearing close together can lie at very different distances."
+    },
+    {
+      "id": "SN-SCI6-CH12-003",
+      "need": "Learner infers that a brighter-looking or larger-looking celestial object must be physically bigger, intrinsically brighter or closer, without considering distance and other observational limits.",
+      "topicId": "TOPIC-SCI6-12-01",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Use supplied comparison cards showing apparent brightness, labelled distances and model limitations to separate observation from inference, without photographing the real sky or disclosing where the child lives or studies.",
+      "masteryCriterion": "States that naked-eye appearance alone cannot establish physical size, intrinsic luminosity or distance and identifies at least one additional evidence variable needed."
+    },
+    {
+      "id": "SN-SCI6-CH12-004",
+      "need": "Learner confuses Solar System object classes by calling the Sun a planet, the Moon a star, or planets miniature stars that produce visible light in the same way as the Sun.",
+      "topicId": "TOPIC-SCI6-12-02",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Sort supplied Sun, planet, natural-satellite, asteroid and comet cards by object type, orbit relationship and light evidence, using supplied imagery and data rather than direct solar observation.",
+      "masteryCriterion": "Correctly classifies the Sun as a star, planets as orbiting the Sun, natural satellites as orbiting larger bodies, and explains that planets are commonly seen by reflected sunlight."
+    },
+    {
+      "id": "SN-SCI6-CH12-005",
+      "need": "Learner assumes that a Solar System poster is automatically a true scale model and concludes that planet sizes, orbit sizes and gaps are proportionally represented because they fit on one page.",
+      "topicId": "TOPIC-SCI6-12-02",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Compare supplied schematic, size-scale and distance-scale representations, inspect whether a scale is explicitly stated and identify what each model preserves or distorts; no physical solar observation is required.",
+      "masteryCriterion": "Explains that many classroom Solar System diagrams compress distance or enlarge objects, and refuses to infer equal spacing or true proportions unless an explicit valid scale supports the claim."
+    },
+    {
+      "id": "SN-SCI6-CH12-006",
+      "need": "Learner proposes looking directly at the Sun, viewing it through ordinary sunglasses, binoculars, a telescope or camera, focusing sunlight with a lens, or pointing a laser into the sky as an astronomy activity.",
+      "topicId": "TOPIC-SCI6-12-02",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Reject the unsafe proposal and complete the task with supplied solar imagery, simulations and datasets only; never look directly at the Sun, never use ordinary optical devices for solar viewing and never point lasers toward the sky or aircraft.",
+      "masteryCriterion": "Explicitly rejects direct Sun viewing, ordinary-optical solar viewing, improvised filters, focused sunlight and laser pointing, and selects a supplied-evidence alternative."
+    },
+    {
+      "id": "SN-SCI6-CH12-007",
+      "need": "Learner confuses the nesting of Earth, the Solar System, the Milky Way and the Universe, or assumes a single page diagram preserves one physical scale across all four levels.",
+      "topicId": "TOPIC-SCI6-12-03",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Arrange supplied nested-structure cards from Earth to Solar System to Milky Way to Universe and annotate where diagram scale changes, using cached diagrams and text with no location, camera, microphone or travel requirement.",
+      "masteryCriterion": "Orders Earth, Solar System, Milky Way and Universe correctly and states that nested astronomy diagrams often change scale rather than preserving one literal physical scale."
+    },
+    {
+      "id": "SN-SCI6-CH12-008",
+      "need": "Learner concludes that an unidentified or unusual sky light proves an alien spacecraft, or proposes rooftop, roadside, isolated or unsupervised late-night observation to collect stronger evidence.",
+      "topicId": "TOPIC-SCI6-12-03",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Apply an observation-versus-inference checklist to supplied images or synthetic motion/brightness data, list ordinary candidate explanations and keep the object unidentified when evidence is insufficient; use offline supplied evidence instead of rooftop, roadside, isolated or unsupervised night observing.",
+      "masteryCriterion": "Separates measured observation from interpretation, refuses to infer extraterrestrial life or spacecraft from an unidentified light alone, and chooses a safe privacy-preserving evidence source."
+    }
+  ]
+}

@@ -49,7 +49,7 @@ jobs:
               assert marker in entry, marker
           for marker in ['/pilot-readiness-v1.js','/pilot-readiness-v1.css']:
               assert marker in sw, marker
-          assert "CACHE='kirthiverse-preview-v44'" in sw
+          assert "CACHE='kirthiverse-preview-v45'" in sw
           print('PILOT_READINESS_STATIC_PASS')
           PY
 
@@ -86,5 +86,5 @@ jobs:
           echo '- owner-attested ready requires all structured fields + attestations' >> "$GITHUB_STEP_SUMMARY"
           echo '- legal certification / production-ready / external self-verification remain false' >> "$GITHUB_STEP_SUMMARY"
           echo '- export excludes Parent PIN material' >> "$GITHUB_STEP_SUMMARY"
-          echo '- mobile overflow + active v44 PWA cache checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- mobile overflow + active v45 PWA cache checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- software gate only; specialist/legal review remains external' >> "$GITHUB_STEP_SUMMARY"

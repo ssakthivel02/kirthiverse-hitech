@@ -8,7 +8,7 @@ const lessonIds=[
   'math.cbse6.ganita-prakash.ch2.measure-draw-angles.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.2.0');
+assert.equal(map.schemaVersion,'1.3.0');
 assert.equal(map.chapters[1].chapter,2);
 assert.equal(map.chapters[1].title,'Lines and Angles');
 assert.equal(map.chapters[1].status,'KIKI_TEACHING_SLICE_COMPLETE');

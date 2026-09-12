@@ -8,7 +8,7 @@ const lessonIds=[
   'math.cbse6.ganita-prakash.ch4.bar-graphs-scale.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.5.0');
+assert.equal(map.schemaVersion,'1.6.0');
 assert.equal(map.chapters[3].chapter,4);
 assert.equal(map.chapters[3].title,'Data Handling and Presentation');
 assert.equal(map.chapters[3].status,'KIKI_TEACHING_SLICE_COMPLETE');
@@ -68,16 +68,16 @@ assert.ok(allText.includes('misleading')||allText.includes('exaggerat'),'fair-vi
 const runtimeSandbox={window:{KV_LESSONS:[]}};
 vm.createContext(runtimeSandbox);
 vm.runInContext(fs.readFileSync('data/class6-math-ch3-4-runtime.js','utf8'),runtimeSandbox,{filename:'class6-math-ch3-4-runtime.js'});
-assert.equal(runtimeSandbox.window.KV_LESSONS.length,6,'consolidated Chapters 3-4 runtime bundle must expose six lessons');
+assert.equal(runtimeSandbox.window.KV_LESSONS.length,9,'consolidated Chapters 3-5 runtime bundle must expose nine lessons');
 assert.ok(lessonIds.every(id=>runtimeSandbox.window.KV_LESSONS.some(x=>x.id===id)),'runtime bundle missing Chapter 4 lesson');
-assert.equal(new Set(runtimeSandbox.window.KV_LESSONS.map(x=>x.id)).size,6,'runtime bundle lesson IDs must remain unique');
+assert.equal(new Set(runtimeSandbox.window.KV_LESSONS.map(x=>x.id)).size,9,'runtime bundle lesson IDs must remain unique');
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch4-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
-assert.ok(entry.includes('ch(?:2|3|4)\\.'),'Chapter 1-4 deferred-assessment route coverage missing');
+assert.ok(entry.includes('ch(?:2|3|4|5)\\.'),'Chapter 1-5 deferred-assessment route coverage missing');
 assert.ok(!entry.includes("/^\\/lesson\\/math\\./"),'generic Mathematics lessons must not trigger Class 6 assessment bundles');
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
-assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'combined Chapter 3-4 lesson runtime must load in base slice');
+assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'combined Chapter 3-5 lesson runtime must load in base slice');
 assert.ok(!baseChunk.includes('data/class6-math-ch4.js'),'standalone Chapter 4 source module must not add a startup request');
 assert.ok(!baseChunk.includes('data/class6-math-ch4-assessments.js'),'Chapter 4 assessments must remain deferred');
 

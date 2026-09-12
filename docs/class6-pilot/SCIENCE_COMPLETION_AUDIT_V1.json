@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "KVS-CBSE6-SCIENCE-COMPLETION-AUDIT-V1",
+  "scope": "CBSE Class 6 Science · Curiosity · Chapters 1-12",
+  "auditedBaseCommit": "c84d62f1607d72436432b9e4351ceb6b2df86fcc",
+  "decision": "SCIENCE_COMPLETE",
+  "decisionBoundary": "SCIENCE_COMPLETE means the repository contains the currently mapped Class 6 Curiosity Chapters 1-12 with Kiki-teachable instruction, independently authored examples/content, linked assessments, remediation/mastery evidence, deterministic chapter QA, separate synthetic school-learning-needs validation, local-first/offline integration evidence, rights/source boundaries and child-safety/privacy controls. It is not a live-school efficacy claim, attainment claim, accreditation, accessibility certification, medical/safety certification or proof of school-specific pacing.",
+  "evidenceSummary": {
+    "chapterCount": 12,
+    "topicCount": 36,
+    "lessonCount": 36,
+    "assessmentCount": 180,
+    "syntheticSchoolNeedsScenarioCount": 96,
+    "schoolNeedsScenariosPerChapter": 8,
+    "allChapterTeachingSlicesComplete": true,
+    "allChapterSchoolNeedsSlicesPresent": true,
+    "offlineIntegrationRequired": true,
+    "accessibilityContractRequired": true,
+    "releaseRegressionRequired": true,
+    "rightsAndSourceBoundaryRequired": true,
+    "childSafetyPrivacyBoundaryRequired": true
+  },
+  "requiredEvidence": [
+    "docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json",
+    "data/class6-science-ch1.js through data/class6-science-ch12.js",
+    "data/class6-science-ch1-assessments.js through data/class6-science-ch12-assessments.js",
+    "docs/class6-pilot/SCIENCE_CH1_SCHOOL_NEEDS_VALIDATION_V1.json through docs/class6-pilot/SCIENCE_CH12_SCHOOL_NEEDS_VALIDATION_V1.json",
+    "tests/class6-science-pilot.test.mjs plus Chapter 2-12 chapter-contract validators",
+    "tests/class6-science-school-needs.test.mjs plus Chapter 2-12 school-needs validators",
+    ".github/workflows/class6-science-pilot-qa.yml",
+    "p0-entry-v1.js",
+    "sw-v30.js",
+    "index.html"
+  ],
+  "privacyBoundary": {
+    "realChildCloudPersistence": false,
+    "microphoneCapture": false,
+    "cameraCapture": false,
+    "recording": false,
+    "preciseLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "unrestrictedChildChat": false
+  },
+  "rightsBoundary": "Curriculum/book chapter structure is mapping metadata. KirthiVerse teaching text, examples, questions, hints, explanations and remediation are independently authored; the completion decision does not authorise reproduction of textbook prose, figures or exercises.",
+  "schoolBoundary": "SAN Academy Tambaram is a validation-context overlay. This audit does not claim school attestation, live student evidence, efficacy, attainment or school-specific pacing.",
+  "accessibilityBoundary": "The audit verifies repository accessibility contracts and existing deterministic/release checks where encoded. It is not a human WCAG conformance certification or assistive-technology lab certification.",
+  "governanceRule": "Any future change to mapped Science curriculum structure, learner runtime, assessment contracts, privacy/safety controls, rights/source policy, offline integration or completion criteria must preserve or explicitly supersede this audit through reviewed repository evidence and regression testing."
+}

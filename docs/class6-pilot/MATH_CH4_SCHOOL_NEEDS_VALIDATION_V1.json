@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-MATH-CH4-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Mathematics · Ganita Prakash · Chapter 4 · Data Handling and Presentation",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 4 topic, a Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action, and an observable mastery criterion. Data-collection activities must use harmless synthetic or local paper examples, conclusions must remain bounded to the observed dataset, and graph/pictograph interpretation must use explicit keys, scales and baselines rather than visual impression alone.",
+  "scenarios": [
+    {
+      "id": "SN-MATH6-CH4-001",
+      "need": "Learner treats a data value as its frequency, for example saying the frequency of value 4 is 4 even when 4 appears only three times.",
+      "topicId": "TOPIC-MATH6-04-01",
+      "expectedMisconception": "confusing a data value with its frequency",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Use a short synthetic number list on paper, underline each occurrence of the target value, count those occurrences separately from the value itself, and label the result as frequency.",
+      "masteryCriterion": "Correctly distinguishes value from frequency in two new datasets and explains that frequency is the count of occurrences rather than the observed value."
+    },
+    {
+      "id": "SN-MATH6-CH4-002",
+      "need": "Learner loses or double-counts observations while converting an untidy raw list into tally marks and a frequency table.",
+      "topicId": "TOPIC-MATH6-04-01",
+      "expectedMisconception": "losing or double-counting observations",
+      "requiredAssessmentTypes": ["worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Number each synthetic raw observation, cross it off exactly once while adding a tally, group tally marks in fives, then compare total frequency with the original observation count.",
+      "masteryCriterion": "Builds two new tally/frequency tables with every observation counted exactly once and verifies that total frequency equals the raw observation count."
+    },
+    {
+      "id": "SN-MATH6-CH4-003",
+      "need": "Learner observes one category with the highest count and generalises the result to all Class 6 learners rather than limiting the conclusion to the sampled dataset.",
+      "topicId": "TOPIC-MATH6-04-01",
+      "expectedMisconception": "generalising a small dataset to everyone",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Read a small fictional frequency table and write two sentences: one statement supported by that dataset and one stronger population claim that the data do not justify.",
+      "masteryCriterion": "States a correct highest/lowest-frequency conclusion using bounded language such as 'in this dataset' and rejects an unsupported universal claim."
+    },
+    {
+      "id": "SN-MATH6-CH4-004",
+      "need": "Learner counts pictograph symbols as one item each even when the displayed key assigns several items to one symbol.",
+      "topicId": "TOPIC-MATH6-04-02",
+      "expectedMisconception": "assuming one symbol always means one item",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Box the pictograph key first, write 'number of symbols × value per symbol' beside each category, and convert every row into a numerical frequency before comparing categories.",
+      "masteryCriterion": "Correctly decodes two new pictographs with different keys and explains why symbol count alone is not the frequency when one symbol represents multiple items."
+    },
+    {
+      "id": "SN-MATH6-CH4-005",
+      "need": "Learner changes the pictograph key between rows or interprets a half-symbol without applying half of the stated full-symbol value.",
+      "topicId": "TOPIC-MATH6-04-02",
+      "expectedMisconception": "changing the key between categories",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Use one written key for the whole pictograph, convert each full or allowed partial symbol numerically, then reconstruct the original frequency table as a reverse check without uploading any image.",
+      "masteryCriterion": "Creates or verifies a new pictograph using one consistent key, handles an allowed half-symbol correctly, and reproduces every source frequency exactly."
+    },
+    {
+      "id": "SN-MATH6-CH4-006",
+      "need": "Learner reads the number of grid squares in a bar as the frequency even though each grid interval represents more than one unit.",
+      "topicId": "TOPIC-MATH6-04-03",
+      "expectedMisconception": "reading grid-square count as the frequency regardless of scale",
+      "requiredAssessmentTypes": ["multiple_choice", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Write the numerical value of one equal grid interval beside the axis, calculate bar value as grid steps multiplied by scale, and check the result against a small source table.",
+      "masteryCriterion": "Reads three new scaled bars correctly and constructs a bar height from a given frequency by applying one consistent numerical scale."
+    },
+    {
+      "id": "SN-MATH6-CH4-007",
+      "need": "Learner trusts dramatic visual differences between bars without checking that the graph uses a common baseline and equally spaced numerical intervals.",
+      "topicId": "TOPIC-MATH6-04-03",
+      "expectedMisconception": "trusting apparent bar size without checking axis labels",
+      "requiredAssessmentTypes": ["reasoning", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Compare two paper graphs of the same synthetic values, inspect baseline and axis labels, calculate the actual numerical difference, and state which display gives the fairer visual comparison and why.",
+      "masteryCriterion": "Identifies a truncated or inconsistent axis presentation in a new example and explains the distortion using the underlying numerical values rather than visual impression alone."
+    },
+    {
+      "id": "SN-MATH6-CH4-008",
+      "need": "Learner needs a fully offline route for data-handling practice and cannot depend on cloud charts, photo upload, microphone, camera, telemetry or remote teacher monitoring.",
+      "topicId": "TOPIC-MATH6-04-03",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Use cached Kiki text, locally rendered lesson content, a small fictional frequency table, paper and pencil to choose a scale and describe or draw a bar graph, with no network-dependent tutoring or submission step.",
+      "masteryCriterion": "Completes the scale calculation, graph interpretation and mastery check using only offline local resources and gives a numerically correct explanation of the chosen scale and baseline."
+    }
+  ]
+}

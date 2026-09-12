@@ -12,10 +12,10 @@ const nav=async path=>{await ev(`window.KV_NAVIGATION.navigate(${JSON.stringify(
 const lesson='math.number.place-value.base10.age6-8.l1';
 
 await wait(`!!window.KV_NAVIGATION&&!!window.KV_MASTERY`,'core + mastery');
-await wait(`!!document.querySelector('script[data-ep-pilot]')`,'educator module loader');
 await wait(`!!document.querySelector('.topbar nav a[href="/educator"]')`,'educator nav');
-
-await nav('/educator');await wait(`document.querySelector('main')?.textContent.includes('Unlock Parent Space first')`,'locked educator state');
+await nav('/educator');
+await wait(`!!document.querySelector('script[data-ep-pilot]')`,'route-only educator module loader');
+await wait(`document.querySelector('main')?.textContent.includes('Unlock Parent Space first')`,'locked educator state');
 await nav('/parent');await wait(`!!document.getElementById('pv-setup')`,'parent setup');
 await ev(`document.getElementById('pv-child').value='Pilot Learner';document.getElementById('pv-pin').value='4826';document.getElementById('pv-setup').requestSubmit();true`);
 await wait(`!!document.getElementById('pv-export')`,'parent unlocked');
@@ -38,7 +38,7 @@ if(exported.includes('pinHash')||exported.includes('pinSalt')||exported.includes
 const payload=JSON.parse(exported);if(payload.localOnly!==true||payload.notSchoolAccount!==true||payload.assignments.length!==1)throw Error('educator export contract invalid');
 
 await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await new Promise(r=>setTimeout(r,250));if(await ev(`document.documentElement.scrollWidth>document.documentElement.clientWidth+2`))throw Error('mobile horizontal overflow');
-await ev(`navigator.serviceWorker.register('/sw-v30.js',{scope:'/',updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);await wait(`caches.keys().then(k=>k.includes('kirthiverse-preview-v31'))`,'v31 cache');
-const cached=await ev(`caches.open('kirthiverse-preview-v31').then(async c=>(await Promise.all(['/educator-pilot-v1.js','/educator-pilot-v1.css'].map(x=>c.match(x).then(Boolean)))).every(Boolean))`);if(!cached)throw Error('educator assets missing from PWA cache');
+await ev(`navigator.serviceWorker.register('/sw-v30.js',{scope:'/',updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);await wait(`caches.keys().then(k=>k.includes('kirthiverse-preview-v44'))`,'v44 cache');
+const cached=await ev(`caches.open('kirthiverse-preview-v44').then(async c=>(await Promise.all(['/educator-pilot-v1.js','/educator-pilot-v1.css'].map(x=>c.match(x).then(Boolean)))).every(Boolean))`);if(!cached)throw Error('educator assets missing from active PWA cache');
 
 console.log('EDUCATOR_PILOT_BROWSER_PASS');ws.close();

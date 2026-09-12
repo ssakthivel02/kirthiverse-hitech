@@ -15,24 +15,17 @@ const METRICS='kirthiverse.hitech.pilot.metrics.v1',SPEED='kirthiverse.hitech.sp
 await wait(`!!window.KV_NAVIGATION&&!!window.KV_MASTERY&&!!window.KV_PILOT_METRICS`,'metrics runtime');
 if(!(await ev(`window.KV_PILOT_METRICS.version==='v1'&&window.KV_PILOT_METRICS.localOnly===true&&window.KV_PILOT_METRICS.tamperEvident===false&&window.KV_PILOT_METRICS.backfillsHistory===false`)))throw Error('metrics evidence boundary mismatch');
 
-// Prove pre-existing local evidence is baselined rather than backfilled as new pilot activity.
 const old=new Date(Date.now()-3600000).toISOString();
 await ev(`localStorage.setItem(${JSON.stringify(SPEED)},JSON.stringify({history:[{at:${JSON.stringify(old)},skill:'multiplication',duration:60,correct:8,accuracy:80}],bestByKey:{},levelBySkill:{}}));localStorage.setItem(${JSON.stringify(DIAG)},JSON.stringify({completedAt:${JSON.stringify(old)},overallAccuracy:70,totalQuestions:10,correct:7}));localStorage.setItem(${JSON.stringify(CHECK)},JSON.stringify({[${JSON.stringify(lesson)}]:{at:${JSON.stringify(old)},correct:true,attempts:1}}));localStorage.removeItem(${JSON.stringify(METRICS)});location.reload();true`);
 await wait(`!!window.KV_PILOT_METRICS`,'metrics runtime after baseline reload');
 let summary=await ev(`window.KV_PILOT_METRICS.summary()`);
 if(summary.quickSkillsSessions!==0||summary.diagnosticCompletions!==0||summary.answerChecks!==0)throw Error('historical source evidence was backfilled');
 
-// Weekly report stays behind Parent Space session gate.
 await nav('/weekly-report');await wait(`document.querySelector('main')?.textContent.includes('Unlock Parent Space first')`,'weekly report parent gate');
-
-// QA-only local parent fixture; no real identity claim.
 await ev(`localStorage.setItem(${JSON.stringify(GATE)},JSON.stringify({pinHash:'QA_ONLY_HASH',pinSalt:'QA_ONLY_SALT',pinIterations:120000,childName:'QA Learner',assistanceEnabled:true,createdAt:new Date().toISOString()}));sessionStorage.setItem(${JSON.stringify(UNLOCK)},'1');true`);
-
-// Add genuinely new source evidence after the metrics baseline and force a normal render/sync cycle.
 await ev(`(()=>{const at=new Date().toISOString();const s=JSON.parse(localStorage.getItem(${JSON.stringify(SPEED)}));s.history.push({at,skill:'multiplication',duration:60,correct:9,accuracy:90});localStorage.setItem(${JSON.stringify(SPEED)},JSON.stringify(s));localStorage.setItem(${JSON.stringify(DIAG)},JSON.stringify({completedAt:at,overallAccuracy:90,totalQuestions:10,correct:9}));localStorage.setItem(${JSON.stringify(CHECK)},JSON.stringify({[${JSON.stringify(lesson)}]:{at,correct:true,attempts:1}}));dispatchEvent(new Event('kv:rendered'));return true})()`);
 await wait(`window.KV_PILOT_METRICS.summary().quickSkillsSessions===1&&window.KV_PILOT_METRICS.summary().diagnosticCompletions===1&&window.KV_PILOT_METRICS.summary().answerChecks===1`,'new evidence sync');
 
-// Conservative active-time measurement: one real heartbeat while visible/recently interactive on a lesson route.
 await nav('/lesson/'+lesson);await wait(`!!document.getElementById('complete')`,'lesson route');
 await ev(`document.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}));true`);
 await new Promise(r=>setTimeout(r,16500));
@@ -46,8 +39,6 @@ if(summary.evidenceBoundary.tamperEvident!==false||summary.evidenceBoundary.back
 
 await nav('/weekly-report');await wait(`document.querySelector('main')?.textContent.includes('Early pilot window')`,'weekly report early-window warning');
 if(!(await ev(`document.querySelector('main').textContent.includes('ACTIVE LEARNING')&&document.querySelector('main').textContent.includes('EVIDENCE BOUNDARY')`)))throw Error('weekly report metrics/evidence sections missing');
-
-// Export must contain only metrics evidence and explicitly state its local/non-tamper-evident boundary.
 const exported=await ev(`(async()=>{window.__pmBlob=null;const old=URL.createObjectURL;URL.createObjectURL=b=>{window.__pmBlob=b;return 'blob:qa'};const click=HTMLAnchorElement.prototype.click;HTMLAnchorElement.prototype.click=function(){};document.getElementById('pm-export').click();const text=await window.__pmBlob.text();URL.createObjectURL=old;HTMLAnchorElement.prototype.click=click;return text})()`);
 const payload=JSON.parse(exported);if(payload.claim!=='LOCAL_PILOT_EVIDENCE_ONLY'||payload.evidenceBoundary.tamperEvident!==false||payload.evidenceBoundary.networkTelemetry!==false)throw Error('weekly evidence export contract invalid');
 if(exported.includes('QA_ONLY_HASH')||exported.includes('QA_ONLY_SALT')||exported.includes('pinHash')||exported.includes('pinSalt')||exported.includes('childName'))throw Error('weekly evidence export leaked parent identity/gate material');
@@ -55,12 +46,10 @@ if(exported.includes('QA_ONLY_HASH')||exported.includes('QA_ONLY_SALT')||exporte
 await nav('/parent');await wait(`!!document.querySelector('.pm-parent-card')`,'parent weekly card');
 await nav('/educator');await wait(`!!document.querySelector('.pm-educator-card')`,'educator weekly card');
 if(!(await ev(`document.querySelector('.pm-educator-card').textContent.includes('linked learner')||document.querySelector('.pm-educator-card').textContent.includes('LINKED LEARNER')`)))throw Error('educator linked-learner boundary missing');
-
 await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await new Promise(r=>setTimeout(r,250));
 await nav('/weekly-report');if(await ev(`document.documentElement.scrollWidth>document.documentElement.clientWidth+2`))throw Error('weekly report mobile horizontal overflow');
-
-await ev(`navigator.serviceWorker.register('/sw-v30.js',{scope:'/',updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);await wait(`caches.keys().then(k=>k.includes('kirthiverse-preview-v31'))`,'v31 cache');
-const cached=await ev(`caches.open('kirthiverse-preview-v31').then(async c=>(await Promise.all(['/pilot-metrics-v1.js','/pilot-metrics-v1.css'].map(x=>c.match(x).then(Boolean)))).every(Boolean))`);if(!cached)throw Error('pilot metrics assets missing from PWA cache');
+await ev(`navigator.serviceWorker.register('/sw-v30.js',{scope:'/',updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);await wait(`caches.keys().then(k=>k.includes('kirthiverse-preview-v44'))`,'v44 cache');
+const cached=await ev(`caches.open('kirthiverse-preview-v44').then(async c=>(await Promise.all(['/pilot-metrics-v1.js','/pilot-metrics-v1.css'].map(x=>c.match(x).then(Boolean)))).every(Boolean))`);if(!cached)throw Error('pilot metrics assets missing from active PWA cache');
 
 console.log('PILOT_METRICS_BROWSER_PASS');
 console.log(JSON.stringify({activeSeconds:summary.activeSeconds,activeDays:summary.activeDays,quickSkillsSessions:summary.quickSkillsSessions,diagnosticCompletions:summary.diagnosticCompletions,answerChecks:summary.answerChecks,uniqueLessonsStarted:summary.uniqueLessonsStarted,uniqueLessonsCompleted:summary.uniqueLessonsCompleted,completeSevenDayWindow:summary.completeSevenDayWindow},null,2));

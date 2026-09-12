@@ -51,7 +51,7 @@ assert.equal(manifest.priorityDecision.selectedNextChapterTitle,'Lines and Angle
 assert.equal(manifest.priorityDecision.requiresFreshConcurrencyCheckBeforeWrite,true);
 
 for(const id of ['english','language-2','language-3','social-science','life-skills-aptitude','computer-science','health-physical-education','work-education','art-education']){
-  assert.equal(byId[id].completionClaim,true,`${id} must not claim completion`);
+  assert.notEqual(byId[id].completionClaim,true,`${id} must not claim completion`);
 }
 
 assert.equal(manifest.safety.unrestrictedChildChat,false);

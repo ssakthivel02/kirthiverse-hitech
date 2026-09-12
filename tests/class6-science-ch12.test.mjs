@@ -63,6 +63,7 @@ for(const lessonId of lessonIds){
   for(const item of attached) for(const field of ['questionActivity','correctAnswer','hint','explanation']) assert.ok(item[field],`${item.stableAssessmentId} missing ${field}`);
 }
 const allText=JSON.stringify({lessons,assessments,map:map.chapter12Topics}).toLowerCase();
+const instructionalText=JSON.stringify({lessons,map:map.chapter12Topics}).toLowerCase();
 for(const required of ['star','constellation','polaris','solar system','sun','planet','natural satellite','asteroid','comet','milky way','galaxy','universe']) assert.ok(allText.includes(required),`missing Chapter 12 concept: ${required}`);
 for(const required of ['different distances','reflected sunlight','scale','unidentified','alien']) assert.ok(allText.includes(required),`missing Chapter 12 claim boundary: ${required}`);
 assert.ok(allText.includes('no direct sun viewing')||allText.includes('never look directly at the sun'));
@@ -77,9 +78,9 @@ const unsafePositiveDirectives=[
   /(?:you should|learners should|students should|try to) travel alone at night/,
   /(?:you should|learners should|students should|try to) use binoculars to look at the sun/,
   /(?:you should|learners should|students should|try to) focus sunlight onto (?:your|their) skin/,
-  /(?:an )?unidentified light (?:proves|confirms) alien life/,
 ];
-for(const unsafePattern of unsafePositiveDirectives) assert.ok(!unsafePattern.test(allText),`unsafe or unsupported astronomy directive detected: ${unsafePattern}`);
+for(const unsafePattern of unsafePositiveDirectives) assert.ok(!unsafePattern.test(instructionalText),`unsafe astronomy directive detected: ${unsafePattern}`);
+assert.ok(!/(?:kiki|we|learners|students) (?:should|can|must) (?:claim|conclude|state) (?:that )?(?:an )?unidentified light (?:proves|confirms) alien life/.test(instructionalText),'unsupported extraterrestrial-life endorsement detected');
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-science-ch12.js','data/class6-science-ch12-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);

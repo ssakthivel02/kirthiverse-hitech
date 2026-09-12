@@ -8,6 +8,7 @@ const mathCh2Needs=readJson('docs/class6-pilot/MATH_CH2_SCHOOL_NEEDS_VALIDATION_
 const mathCh3Needs=readJson('docs/class6-pilot/MATH_CH3_SCHOOL_NEEDS_VALIDATION_V1.json');
 const mathCh4Needs=readJson('docs/class6-pilot/MATH_CH4_SCHOOL_NEEDS_VALIDATION_V1.json');
 const mathCh5Needs=readJson('docs/class6-pilot/MATH_CH5_SCHOOL_NEEDS_VALIDATION_V1.json');
+const mathCh6Needs=readJson('docs/class6-pilot/MATH_CH6_SCHOOL_NEEDS_VALIDATION_V1.json');
 const scienceMap=readJson('docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json');
 const scienceAudit=readJson('docs/class6-pilot/SCIENCE_COMPLETION_AUDIT_V1.json');
 
@@ -15,7 +16,7 @@ assert.equal(manifest.schemaVersion,'1.5.0');
 assert.equal(manifest.pilot.board,'CBSE');
 assert.equal(manifest.pilot.class,6);
 assert.equal(manifest.pilot.canonicalRepository,'ssakthivel02/kirthiverse-hitech');
-assert.equal(manifest.pilot.lastReconciledMain,'83a36bd613e39325626022427109a267f3229533');
+assert.equal(manifest.pilot.lastReconciledMain,'831080b08ea483e0283bace2dea01991def19662');
 
 const byId=Object.fromEntries(manifest.subjects.map(x=>[x.id,x]));
 assert.equal(manifest.subjects.length,11);
@@ -46,27 +47,22 @@ assert.equal(pendingMath[0].title,'Fractions');
 assert.equal(mathematics.mappedChapterCount,maths.chapters.length);
 assert.equal(mathematics.implementedChapterCount,implementedMath.length);
 assert.equal(mathematics.remainingMappedChapterCount,pendingMath.length);
-assert.equal(mathematics.schoolNeedsValidatedChapterCount,5);
-assert.equal(mathematics.nextLargestGap,'Chapter 6 — School Needs Validation');
-assert.equal(maths.chapter2CompletionEvidence?.schoolNeedsValidationPresent,true);
-assert.equal(maths.chapter3CompletionEvidence?.schoolNeedsValidationPresent,true);
-assert.equal(maths.chapter4CompletionEvidence?.schoolNeedsValidationPresent,true);
-assert.equal(maths.chapter5CompletionEvidence?.schoolNeedsValidationPresent,true);
-assert.equal(maths.chapter5CompletionEvidence?.schoolNeedsValidationArtifact,'docs/class6-pilot/MATH_CH5_SCHOOL_NEEDS_VALIDATION_V1.json');
-assert.equal(maths.chapter6CompletionEvidence?.schoolNeedsValidationRequired,true);
-assert.equal(maths.chapter6CompletionEvidence?.schoolNeedsValidationPresent,false);
+assert.equal(mathematics.schoolNeedsValidatedChapterCount,6);
+assert.equal(mathematics.nextLargestGap,'Chapter 7 — Fractions teaching slice');
+for(const chapter of [2,3,4,5,6]) assert.equal(maths[`chapter${chapter}CompletionEvidence`]?.schoolNeedsValidationPresent,true,`Chapter ${chapter} school-needs evidence must be present`);
+assert.equal(maths.chapter6CompletionEvidence?.schoolNeedsValidationArtifact,'docs/class6-pilot/MATH_CH6_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(maths.chapter6CompletionEvidence?.startupRequestCeilingPreserved,true);
-for(const artifact of [mathCh2Needs,mathCh3Needs,mathCh4Needs,mathCh5Needs]){
+for(const artifact of [mathCh2Needs,mathCh3Needs,mathCh4Needs,mathCh5Needs,mathCh6Needs]){
   assert.equal(artifact.validationType,'SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS');
   assert.equal(artifact.schoolOverlay.liveSchoolEvidenceCollected,false);
   assert.equal(artifact.scenarios.length,8);
 }
-assert.equal(mathCh5Needs.validationId,'KVS-CBSE6-MATH-CH5-SCHOOL-NEEDS-V1');
+assert.equal(mathCh6Needs.validationId,'KVS-CBSE6-MATH-CH6-SCHOOL-NEEDS-V1');
 
 assert.equal(manifest.priorityDecision.selectedLane,'mathematics');
-assert.equal(manifest.priorityDecision.selectedNextChapter,6);
-assert.equal(manifest.priorityDecision.selectedNextChapterTitle,'Perimeter and Area');
-assert.equal(manifest.priorityDecision.selectedNextTask,'Chapter 6 School Needs Validation');
+assert.equal(manifest.priorityDecision.selectedNextChapter,7);
+assert.equal(manifest.priorityDecision.selectedNextChapterTitle,'Fractions');
+assert.equal(manifest.priorityDecision.selectedNextTask,'Chapter 7 Kiki Teaching Slice');
 assert.equal(manifest.priorityDecision.requiresFreshConcurrencyCheckBeforeWrite,true);
 
 for(const id of ['english','language-2','language-3','social-science','life-skills-aptitude','computer-science','health-physical-education','work-education','art-education']){

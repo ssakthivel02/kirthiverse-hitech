@@ -12,6 +12,7 @@ on:
       - 'tests/class6-math-ch2.test.mjs'
       - 'tests/class6-math-ch3.test.mjs'
       - 'tests/class6-math-ch4.test.mjs'
+      - 'tests/class6-math-ch5.test.mjs'
       - 'tests/class6-math-school-needs.test.mjs'
       - 'tests/class6-math-ch2-school-needs.test.mjs'
       - 'tests/class6-math-ch3-school-needs.test.mjs'
@@ -52,6 +53,8 @@ jobs:
         run: node tests/class6-math-ch4.test.mjs
       - name: Validate Chapter 4 synthetic school-learning needs coverage
         run: node tests/class6-math-ch4-school-needs.test.mjs
+      - name: Validate Class 6 Mathematics Chapter 5 teaching slice
+        run: node tests/class6-math-ch5.test.mjs
       - name: Validate reconciled Class 6 coverage decision
         run: node tests/class6-coverage-reconciliation.test.mjs
       - name: QA summary
@@ -59,13 +62,14 @@ jobs:
         run: |
           echo '### Class 6 Mathematics Pilot QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- CBSE Class 6 Ganita Prakash 10-chapter mapping contract' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-4: twelve KirthiVerse-original Kiki lessons / 60 linked assessments' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-4 each retain separate eight-scenario synthetic school-learning-needs validation' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 4 validation covers frequency/tally audit and bounded inference, pictograph keys/partial symbols, bar-graph scale/baseline fairness and offline access' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 3-4 lesson runtime remains consolidated and the existing 48-request startup ceiling remains unchanged' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-5: fifteen KirthiVerse-original Kiki lessons / 75 linked assessments' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-4 retain separate eight-scenario synthetic school-learning-needs validation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 5 covers factors/common factors, multiples/common multiples, prime/composite/co-prime, prime factorisation and bounded divisibility tests for 2/4/5/8/10' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 5 deliberately does not claim HCF/LCM or broader divisibility-rule coverage without stronger scope evidence' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 3-5 lesson runtime remains consolidated and the existing 48-request startup ceiling remains unchanged' >> "$GITHUB_STEP_SUMMARY"
           echo '- Mathematics assessment loading remains deferred on bounded Class 6 lesson/practice/diagnostic/release-closure surfaces' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 5 Prime Time is the next mapped implementation gap; no Chapter 5 content is fabricated here' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 5 school-needs validation remains the separate next evidence task' >> "$GITHUB_STEP_SUMMARY"
           echo '- privacy boundary: no real child data, photos, microphone, camera, recording, precise location, remote monitoring or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
           echo '- school overlay is validation context only; no school-specific pacing, efficacy or attainment claim' >> "$GITHUB_STEP_SUMMARY"
-          echo '- runtime, PWA v45 cache generation, DNS, database and deployment remain unchanged by this evidence lane' >> "$GITHUB_STEP_SUMMARY"
+          echo '- active PWA v45 cache generation is retained; Chapter 5 assessment asset is additive only' >> "$GITHUB_STEP_SUMMARY"
           echo '- canonical Kiki wording and no-microphone/no-recording safety assertions retained' >> "$GITHUB_STEP_SUMMARY"

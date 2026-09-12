@@ -17,7 +17,10 @@ assert.ok(map.chapter2Topics.every(x=>x.status==='END_TO_END_PILOT_IMPLEMENTED')
 assert.equal(map.chapter2CompletionEvidence.lessonCount,3);
 assert.equal(map.chapter2CompletionEvidence.assessmentCount,15);
 assert.equal(map.chapter2CompletionEvidence.lazyAssessmentLoadingRequired,true);
-assert.equal(map.chapter2CompletionEvidence.schoolNeedsValidationPresent,false);
+assert.equal(map.chapter2CompletionEvidence.schoolNeedsValidationRequired,true);
+assert.equal(map.chapter2CompletionEvidence.schoolNeedsValidationPresent,true);
+assert.equal(map.chapter2CompletionEvidence.schoolNeedsValidationArtifact,'docs/class6-pilot/MATH_CH2_SCHOOL_NEEDS_VALIDATION_V1.json');
+assert.ok(fs.existsSync(map.chapter2CompletionEvidence.schoolNeedsValidationArtifact),'Chapter 2 school-needs artifact missing');
 
 const sandbox={window:{KV_LESSONS:[],KV_ASSESSMENTS:[]}};
 vm.createContext(sandbox);
@@ -84,4 +87,4 @@ assert.ok(index.includes('microphone:false'),'Kiki microphone safety assertion m
 assert.ok(index.includes('recording:false'),'Kiki recording safety assertion missing');
 assert.ok(index.includes('speechRecognition:false'),'Kiki speech-recognition safety assertion missing');
 
-console.log(`CLASS6_MATH_CH2_PASS topics=${map.chapter2Topics.length} lessons=${lessons.length} assessments=${assessments.length}`);
+console.log(`CLASS6_MATH_CH2_PASS topics=${map.chapter2Topics.length} lessons=${lessons.length} assessments=${assessments.length} schoolNeeds=${map.chapter2CompletionEvidence.schoolNeedsValidationPresent}`);

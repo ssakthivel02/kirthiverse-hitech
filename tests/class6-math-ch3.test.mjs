@@ -8,7 +8,7 @@ const lessonIds=[
   'math.cbse6.ganita-prakash.ch3.mental-pattern-estimation.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.5.0');
+assert.equal(map.schemaVersion,'1.6.0');
 assert.equal(map.chapters[2].chapter,3);
 assert.equal(map.chapters[2].title,'Number Play');
 assert.equal(map.chapters[2].status,'KIKI_TEACHING_SLICE_COMPLETE');
@@ -63,13 +63,14 @@ for(const required of ['number line','interval','place value','digit sum','palin
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch3-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
-assert.ok(entry.includes('ch(?:2|3|4)\\.'),'Chapter 1-4 deferred-assessment route coverage missing');
+assert.ok(entry.includes('ch(?:2|3|4|5)\\.'),'Chapter 1-5 deferred-assessment route coverage missing');
 assert.ok(!entry.includes("/^\\/lesson\\/math\\./"),'generic Mathematics lessons must not trigger Class 6 assessment bundles');
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
 assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'Chapter 3 must remain in consolidated base runtime');
 assert.ok(baseChunk.includes('deferredMathAssessments'),'release-closure must load deferred Mathematics assessments');
 
 const runtimeSandbox={window:{KV_LESSONS:[]}};vm.createContext(runtimeSandbox);vm.runInContext(fs.readFileSync('data/class6-math-ch3-4-runtime.js','utf8'),runtimeSandbox);
+assert.equal(runtimeSandbox.window.KV_LESSONS.length,9,'consolidated Chapters 3-5 runtime must expose nine lessons');
 assert.ok(lessonIds.every(id=>runtimeSandbox.window.KV_LESSONS.some(x=>x.id===id)),'consolidated runtime missing Chapter 3 lesson');
 
 const sw=fs.readFileSync('sw-v30.js','utf8');

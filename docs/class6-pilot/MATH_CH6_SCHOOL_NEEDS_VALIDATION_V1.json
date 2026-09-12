@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-MATH-CH6-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Mathematics · Ganita Prakash · Chapter 6 · Perimeter and Area",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 6 topic, an existing Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action, and an observable mastery criterion. Perimeter must be treated as boundary length with linear units; area must be treated as covered surface with square units; triangle height must be perpendicular to the chosen base; and composite-area decompositions must account for the original region exactly once without gaps or overlaps.",
+  "scenarios": [
+    {
+      "id": "SN-MATH6-CH6-001",
+      "need": "Learner multiplies length by breadth when a problem asks for fencing or another outside-boundary measure, then labels the result as a perimeter.",
+      "topicId": "TOPIC-MATH6-06-01",
+      "expectedMisconception": "using area multiplication for a perimeter question",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Trace the outside boundary of a synthetic rectangle on paper, write the four side lengths in order, add them, then compare that repeated addition with 2 × (length + breadth) and label the answer with a linear unit.",
+      "masteryCriterion": "Correctly solves two new boundary-length problems, distinguishes the perimeter method from length × breadth, and reports centimetres or metres rather than square units."
+    },
+    {
+      "id": "SN-MATH6-CH6-002",
+      "need": "Learner includes decorative or construction lines inside a figure when calculating the outside perimeter, or misses one required boundary side.",
+      "topicId": "TOPIC-MATH6-06-01",
+      "expectedMisconception": "including internal lines in the outside perimeter",
+      "requiredAssessmentTypes": ["worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use a fictional polygon with one internal segment, highlight only the requested outer boundary, tick each outer side exactly once while adding its length, and leave the internal segment uncounted unless the question explicitly asks for it.",
+      "masteryCriterion": "Identifies every required outer side exactly once in two new figures, excludes irrelevant internal segments, and verifies the boundary total by recounting the highlighted path."
+    },
+    {
+      "id": "SN-MATH6-CH6-003",
+      "need": "Learner adds side lengths for an area problem or writes a surface answer in linear units because perimeter and area formulas are being used interchangeably.",
+      "topicId": "TOPIC-MATH6-06-02",
+      "expectedMisconception": "adding side lengths for area",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Cover a drawn rectangle with a labelled array of 1-by-1 unit squares, count rows and columns, multiply them to obtain the covered surface, and explicitly contrast the square-unit area with the separately traced linear perimeter.",
+      "masteryCriterion": "Correctly chooses area versus perimeter methods in three mixed prompts and reports square units for surface measure and linear units for boundary measure without prompting."
+    },
+    {
+      "id": "SN-MATH6-CH6-004",
+      "need": "Learner counts grid lines instead of grid cells or handles partial grid squares inconsistently when estimating or calculating area.",
+      "topicId": "TOPIC-MATH6-06-02",
+      "expectedMisconception": "counting grid lines instead of cells",
+      "requiredAssessmentTypes": ["short_answer", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Shade full unit cells in a synthetic paper grid, mark exact half-cells separately, state the rule used for partial cells before counting, and combine two halves into one square unit rather than counting boundary lines.",
+      "masteryCriterion": "Finds the area of two new gridded regions by counting cells rather than lines and applies one stated partial-cell convention consistently with a correct square-unit result."
+    },
+    {
+      "id": "SN-MATH6-CH6-005",
+      "need": "Learner assumes that two shapes with the same area must also have the same perimeter, or treats a rearrangement of unit squares as changing the covered area.",
+      "topicId": "TOPIC-MATH6-06-02",
+      "expectedMisconception": "assuming equal area implies equal perimeter",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Arrange the same fictional set of 12 unit squares as a 3-by-4 rectangle and a 1-by-12 strip on paper, calculate both areas and both perimeters, and compare which quantity stays fixed after rearrangement.",
+      "masteryCriterion": "Provides a new pair of equal-area rectangles with different perimeters, verifies both calculations numerically, and explains why equal surface does not force equal boundary length."
+    },
+    {
+      "id": "SN-MATH6-CH6-006",
+      "need": "Learner chooses a sloping side as the height of a triangle without checking whether it is perpendicular to the selected base.",
+      "topicId": "TOPIC-MATH6-06-03",
+      "expectedMisconception": "using a sloping side as height without perpendicularity",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "On a synthetic triangle diagram, choose a base, draw or identify the segment from the opposite vertex that meets the base line at a right angle, mark the right angle, and use only that perpendicular distance as the corresponding height.",
+      "masteryCriterion": "Identifies a valid base-perpendicular-height pair in three new triangles and rejects a non-perpendicular side as the height with an explicit right-angle explanation."
+    },
+    {
+      "id": "SN-MATH6-CH6-007",
+      "need": "Learner calculates base × height for a triangle but forgets that the triangle occupies half of the matching rectangle.",
+      "topicId": "TOPIC-MATH6-06-03",
+      "expectedMisconception": "forgetting the one-half factor",
+      "requiredAssessmentTypes": ["multiple_choice", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Draw a rectangle around a synthetic triangle with the same base and perpendicular height, calculate the rectangle area, split it along a diagonal into two equal-area triangles, and halve the rectangle area before writing the triangle result in square units.",
+      "masteryCriterion": "Solves three new triangle-area problems using 1/2 × base × perpendicular height and explains the half factor through the matching-rectangle relationship rather than memorisation alone."
+    },
+    {
+      "id": "SN-MATH6-CH6-008",
+      "need": "Learner double-counts overlapping pieces or leaves a gap when decomposing a composite figure, and also needs a fully offline route that does not depend on cloud drawing, image upload or remote tutoring.",
+      "topicId": "TOPIC-MATH6-06-03",
+      "expectedMisconception": "double-counting overlapping pieces",
+      "requiredAssessmentTypes": ["worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use cached Kiki text plus a fictional paper composite figure, colour each non-overlapping rectangle or triangle exactly once, verify the coloured pieces reconstruct the original region with no gap or overlap, calculate each area locally, and add or subtract the pieces without any network-dependent tutoring or submission step.",
+      "masteryCriterion": "Completes a new composite-area problem fully offline, accounts for every region exactly once, obtains the correct square-unit total, and explains how the decomposition check prevents gaps or double counting."
+    }
+  ]
+}

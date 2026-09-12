@@ -66,9 +66,20 @@ assert.ok(!allText.includes('hcf')&&!allText.includes('lcm'),'HCF/LCM must not b
 const runtimeSandbox={window:{KV_LESSONS:[]}};
 vm.createContext(runtimeSandbox);
 vm.runInContext(fs.readFileSync('data/class6-math-ch3-4-runtime.js','utf8'),runtimeSandbox,{filename:'class6-math-ch3-4-runtime.js'});
-assert.equal(runtimeSandbox.window.KV_LESSONS.length,9,'consolidated Chapters 3-5 runtime bundle must expose nine lessons');
-assert.ok(lessonIds.every(id=>runtimeSandbox.window.KV_LESSONS.some(x=>x.id===id)),'runtime bundle missing Chapter 5 lesson');
-assert.equal(new Set(runtimeSandbox.window.KV_LESSONS.map(x=>x.id)).size,9,'runtime bundle lesson IDs must remain unique');
+const runtimeLessons=runtimeSandbox.window.KV_LESSONS;
+assert.equal(runtimeLessons.length,9,'consolidated Chapters 3-5 runtime bundle must expose nine lessons');
+assert.ok(lessonIds.every(id=>runtimeLessons.some(x=>x.id===id)),'runtime bundle missing Chapter 5 lesson');
+assert.equal(new Set(runtimeLessons.map(x=>x.id)).size,9,'runtime bundle lesson IDs must remain unique');
+
+const sourceSandbox={window:{KV_LESSONS:[]}};
+vm.createContext(sourceSandbox);
+for(const file of ['data/class6-math-ch3.js','data/class6-math-ch4.js','data/class6-math-ch5.js']) vm.runInContext(fs.readFileSync(file,'utf8'),sourceSandbox,{filename:file});
+assert.equal(sourceSandbox.window.KV_LESSONS.length,9,'source-of-truth Chapters 3-5 must expose nine lessons');
+const sourceById=new Map(sourceSandbox.window.KV_LESSONS.map(x=>[x.id,x]));
+for(const runtimeLesson of runtimeLessons){
+  assert.ok(sourceById.has(runtimeLesson.id),`runtime lesson ${runtimeLesson.id} missing from source-of-truth modules`);
+  assert.deepEqual(JSON.parse(JSON.stringify(runtimeLesson)),JSON.parse(JSON.stringify(sourceById.get(runtimeLesson.id))),`runtime drift detected for ${runtimeLesson.id}`);
+}
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch5-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
@@ -88,4 +99,4 @@ assert.ok(index.includes('microphone:false'));
 assert.ok(index.includes('recording:false'));
 assert.ok(index.includes('speechRecognition:false'));
 
-console.log(`CLASS6_MATH_CH5_PASS topics=${map.chapter5Topics.length} lessons=${lessons.length} assessments=${assessments.length} startupCeiling=${map.chapter5CompletionEvidence.startupRequestCeilingPreserved}`);
+console.log(`CLASS6_MATH_CH5_PASS topics=${map.chapter5Topics.length} lessons=${lessons.length} assessments=${assessments.length} runtimeParity=${runtimeLessons.length} startupCeiling=${map.chapter5CompletionEvidence.startupRequestCeilingPreserved}`);

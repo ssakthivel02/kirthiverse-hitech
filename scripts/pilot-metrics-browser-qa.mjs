@@ -48,8 +48,8 @@ await nav('/educator');await wait(`!!document.querySelector('.pm-educator-card')
 if(!(await ev(`document.querySelector('.pm-educator-card').textContent.includes('linked learner')||document.querySelector('.pm-educator-card').textContent.includes('LINKED LEARNER')`)))throw Error('educator linked-learner boundary missing');
 await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await new Promise(r=>setTimeout(r,250));
 await nav('/weekly-report');if(await ev(`document.documentElement.scrollWidth>document.documentElement.clientWidth+2`))throw Error('weekly report mobile horizontal overflow');
-await ev(`navigator.serviceWorker.register('/sw-v30.js',{scope:'/',updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);await wait(`caches.keys().then(k=>k.includes('kirthiverse-preview-v44'))`,'v44 cache');
-const cached=await ev(`caches.open('kirthiverse-preview-v44').then(async c=>(await Promise.all(['/pilot-metrics-v1.js','/pilot-metrics-v1.css'].map(x=>c.match(x).then(Boolean)))).every(Boolean))`);if(!cached)throw Error('pilot metrics assets missing from active PWA cache');
+await ev(`navigator.serviceWorker.register('/sw-v30.js',{scope:'/',updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);await wait(`caches.keys().then(k=>k.includes('kirthiverse-preview-v45'))`,'v45 cache');
+const cached=await ev(`caches.open('kirthiverse-preview-v45').then(async c=>(await Promise.all(['/pilot-metrics-v1.js','/pilot-metrics-v1.css'].map(x=>c.match(x).then(Boolean)))).every(Boolean))`);if(!cached)throw Error('pilot metrics assets missing from active PWA cache');
 
 console.log('PILOT_METRICS_BROWSER_PASS');
 console.log(JSON.stringify({activeSeconds:summary.activeSeconds,activeDays:summary.activeDays,quickSkillsSessions:summary.quickSkillsSessions,diagnosticCompletions:summary.diagnosticCompletions,answerChecks:summary.answerChecks,uniqueLessonsStarted:summary.uniqueLessonsStarted,uniqueLessonsCompleted:summary.uniqueLessonsCompleted,completeSevenDayWindow:summary.completeSevenDayWindow},null,2));

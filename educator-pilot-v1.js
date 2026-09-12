@@ -111,4 +111,5 @@
     addNav();if(location.pathname!=='/educator')return;const main=document.querySelector('main');if(!main)return;main.innerHTML=localUnlocked()?dashboardView():lockedView();if(localUnlocked())bind();
   }
   addEventListener('kv:rendered',render);render();
+  queueMicrotask(()=>dispatchEvent(new CustomEvent('kv:rendered')));
 })();

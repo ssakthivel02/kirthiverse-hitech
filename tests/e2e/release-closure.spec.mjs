@@ -4,6 +4,9 @@ const CLASS6_MATH_LESSON_IDS = [
   'math.cbse6.ganita-prakash.patterns.number-patterns.v1',
   'math.cbse6.ganita-prakash.patterns.shape-patterns.v1',
   'math.cbse6.ganita-prakash.patterns.everyday-patterns.v1',
+  'math.cbse6.ganita-prakash.ch2.geometry-primitives.v1',
+  'math.cbse6.ganita-prakash.ch2.angle-compare-classify.v1',
+  'math.cbse6.ganita-prakash.ch2.measure-draw-angles.v1',
 ];
 const CLASS6_SCIENCE_LESSON_IDS = [
   'science.cbse6.curiosity.ch1.observation-questions.v1',
@@ -43,7 +46,7 @@ const CLASS6_SCIENCE_LESSON_IDS = [
   'science.cbse6.curiosity.ch12.solar-system.v1',
   'science.cbse6.curiosity.ch12.milky-way-universe-scale.v1',
 ];
-const CLASS6_MATH_ASSESSMENT_IDS = Array.from({length:15},(_,i)=>`KV-CBSE6-MATH-${String(i+1).padStart(4,'0')}`);
+const CLASS6_MATH_ASSESSMENT_IDS = Array.from({length:30},(_,i)=>`KV-CBSE6-MATH-${String(i+1).padStart(4,'0')}`);
 const CLASS6_SCIENCE_ASSESSMENT_IDS = Array.from({length:180},(_,i)=>`KV-CBSE6-SCI-${String(i+1).padStart(4,'0')}`);
 
 async function waitForRuntime(page) {
@@ -90,15 +93,15 @@ test('ACTIVE MASTER release surface preserves canonical corpus and local-first i
   },{mathLessonIds:CLASS6_MATH_LESSON_IDS,scienceLessonIds:CLASS6_SCIENCE_LESSON_IDS,mathAssessmentIds:CLASS6_MATH_ASSESSMENT_IDS,scienceAssessmentIds:CLASS6_SCIENCE_ASSESSMENT_IDS});
 
   expect(corpus.coreLessons).toBe(135);
-  expect(corpus.mathLessons).toBe(3);
+  expect(corpus.mathLessons).toBe(6);
   expect(corpus.scienceLessons).toBe(36);
-  expect(corpus.mathTopicIds).toHaveLength(3);
+  expect(corpus.mathTopicIds).toHaveLength(6);
   expect(corpus.scienceTopicIds).toHaveLength(36);
-  expect(corpus.lessons).toBe(174);
+  expect(corpus.lessons).toBe(177);
   expect(corpus.coreAssessments).toBe(72);
-  expect(corpus.mathAssessments).toBe(15);
+  expect(corpus.mathAssessments).toBe(30);
   expect(corpus.scienceAssessments).toBe(180);
-  expect(corpus.assessments).toBe(267);
+  expect(corpus.assessments).toBe(282);
   expect(corpus.mathState).toBe('ready');
   expect(corpus.scienceState).toBe('ready');
   expect(corpus.footer).toContain('11 universes');

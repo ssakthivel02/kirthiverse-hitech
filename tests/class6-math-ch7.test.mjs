@@ -19,7 +19,9 @@ assert.equal(map.chapter7CompletionEvidence.assessmentCount,15);
 assert.equal(map.chapter7CompletionEvidence.lazyAssessmentLoadingRequired,true);
 assert.equal(map.chapter7CompletionEvidence.startupRequestCeilingPreserved,true);
 assert.equal(map.chapter7CompletionEvidence.schoolNeedsValidationRequired,true);
-assert.equal(map.chapter7CompletionEvidence.schoolNeedsValidationPresent,false);
+assert.equal(map.chapter7CompletionEvidence.schoolNeedsValidationPresent,true);
+assert.equal(map.chapter7CompletionEvidence.schoolNeedsValidationArtifact,'docs/class6-pilot/MATH_CH7_SCHOOL_NEEDS_VALIDATION_V1.json');
+assert.ok(fs.existsSync(map.chapter7CompletionEvidence.schoolNeedsValidationArtifact),'Chapter 7 school-needs artifact missing');
 
 const sandbox={window:{KV_LESSONS:[],KV_ASSESSMENTS:[]}};
 vm.createContext(sandbox);
@@ -58,7 +60,6 @@ for(const lessonId of lessonIds){
   for(const type of ['multiple_choice','reasoning','worked_challenge','short_answer','mastery_check']) assert.ok(attached.some(x=>x.assessmentType===type),`${lessonId} missing ${type}`);
   for(const item of attached) for(const field of ['questionActivity','correctAnswer','hint','explanation']) assert.ok(item[field],`${item.stableAssessmentId} missing ${field}`);
 }
-
 const allText=JSON.stringify({lessons,assessments,map:map.chapter7Topics}).toLowerCase();
 for(const required of ['equal parts','fractional unit','number line','mixed number','improper fraction','equivalent fraction','simplest form','common denominator','addition','subtraction','reasonableness']) assert.ok(allText.includes(required),`missing Chapter 7 concept: ${required}`);
 assert.ok(allText.includes('numerator')&&allText.includes('denominator'),'numerator/denominator meaning missing');
@@ -71,7 +72,6 @@ const runtimeLessons=runtimeSandbox.window.KV_LESSONS;
 assert.equal(runtimeLessons.length,15,'consolidated Chapters 3-7 runtime bundle must expose fifteen lessons');
 assert.ok(lessonIds.every(id=>runtimeLessons.some(x=>x.id===id)),'runtime bundle missing Chapter 7 lesson');
 assert.equal(new Set(runtimeLessons.map(x=>x.id)).size,15,'runtime bundle lesson IDs must remain unique');
-
 const sourceSandbox={window:{KV_LESSONS:[]}};
 vm.createContext(sourceSandbox);
 for(const file of ['data/class6-math-ch3.js','data/class6-math-ch4.js','data/class6-math-ch5.js','data/class6-math-ch6.js','data/class6-math-ch7.js']) vm.runInContext(fs.readFileSync(file,'utf8'),sourceSandbox,{filename:file});
@@ -81,7 +81,6 @@ for(const runtimeLesson of runtimeLessons){
   assert.ok(sourceById.has(runtimeLesson.id),`runtime lesson ${runtimeLesson.id} missing from source-of-truth modules`);
   assert.deepEqual(JSON.parse(JSON.stringify(runtimeLesson)),JSON.parse(JSON.stringify(sourceById.get(runtimeLesson.id))),`runtime drift detected for ${runtimeLesson.id}`);
 }
-
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch7-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.ok(entry.includes('ch(?:2|3|4|5|6|7)\\.'),'Chapter 1-7 deferred-assessment route coverage missing');
@@ -89,7 +88,6 @@ const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('
 assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'combined Chapter 3-7 runtime must load in base slice');
 assert.ok(!baseChunk.includes('data/class6-math-ch7.js'),'standalone Chapter 7 source module must not add a startup request');
 assert.ok(!baseChunk.includes('data/class6-math-ch7-assessments.js'),'Chapter 7 assessments must remain deferred');
-
 const sw=fs.readFileSync('sw-v30.js','utf8');
 assert.match(sw,/kirthiverse-preview-v45/);
 for(const asset of ['/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch7-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
@@ -98,5 +96,4 @@ assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));
 assert.ok(index.includes('microphone:false'));
 assert.ok(index.includes('recording:false'));
 assert.ok(index.includes('speechRecognition:false'));
-
-console.log(`CLASS6_MATH_CH7_PASS topics=${map.chapter7Topics.length} lessons=${lessons.length} assessments=${assessments.length} runtimeParity=${runtimeLessons.length} startupCeiling=${map.chapter7CompletionEvidence.startupRequestCeilingPreserved}`);
+console.log(`CLASS6_MATH_CH7_PASS topics=${map.chapter7Topics.length} lessons=${lessons.length} assessments=${assessments.length} runtimeParity=${runtimeLessons.length} schoolNeeds=${map.chapter7CompletionEvidence.schoolNeedsValidationPresent}`);

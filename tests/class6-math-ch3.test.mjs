@@ -66,7 +66,9 @@ assert.ok(allText.includes('not')&&allText.includes('proof'),'proof boundary mis
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-math-ch3.js','data/class6-math-ch3-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.match(entry,/class6MathDeferredAssessments/);
-assert.ok(entry.includes("/^\\/lesson\\/math\\./"),'all-Mathematics lesson-route matcher missing');
+assert.ok(entry.includes('math\\.cbse6\\.ganita-prakash'),'Ganita Prakash deferred-assessment route scope missing');
+assert.ok(entry.includes('patterns\\.')&&entry.includes('ch(?:2|3)\\.'),'Chapter 1-3 deferred-assessment route coverage missing');
+assert.ok(!entry.includes("/^\\/lesson\\/math\\./"),'generic Mathematics lessons must not trigger Class 6 assessment bundles');
 assert.match(entry,/release-closure/);
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
 assert.ok(baseChunk.includes('data/class6-math-ch3.js'),'Chapter 3 lesson must load in Mathematics base slice');

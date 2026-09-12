@@ -51,7 +51,7 @@ assert.ok((topicCoverage.get('TOPIC-MATH6-06-02')||0)>=3,'area topic should cove
 assert.ok((topicCoverage.get('TOPIC-MATH6-06-03')||0)>=3,'triangle/composite topic should cover perpendicular height, half factor and decomposition/offline needs');
 
 const allText=JSON.stringify(validation).toLowerCase();
-for(const required of ['perimeter','outside boundary','linear unit','area','square unit','grid lines','equal-area','perpendicular','right angle','one-half','no gap or overlap','offline','no network-dependent tutoring']){
+for(const required of ['perimeter','outer boundary','linear unit','area','square unit','grid lines','equal-area','perpendicular','right angle','one-half','no gap or overlap','offline','no network-dependent tutoring']){
   assert.ok(allText.includes(required),`missing Chapter 6 school-needs boundary: ${required}`);
 }
 for(const forbidden of ['real child data collected','remote teacher monitoring enabled','child-facing cloud ai enabled','school-specific pacing verified','photo upload required','camera required']){

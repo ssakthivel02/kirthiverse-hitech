@@ -8,7 +8,7 @@ const lessonIds=[
   'math.cbse6.ganita-prakash.ch6.triangles-composite-area.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.7.0');
+assert.equal(map.schemaVersion,'1.8.0');
 assert.equal(map.chapters[5].chapter,6);
 assert.equal(map.chapters[5].title,'Perimeter and Area');
 assert.equal(map.chapters[5].status,'KIKI_TEACHING_SLICE_COMPLETE');
@@ -69,14 +69,14 @@ const runtimeSandbox={window:{KV_LESSONS:[]}};
 vm.createContext(runtimeSandbox);
 vm.runInContext(fs.readFileSync('data/class6-math-ch3-4-runtime.js','utf8'),runtimeSandbox,{filename:'class6-math-ch3-4-runtime.js'});
 const runtimeLessons=runtimeSandbox.window.KV_LESSONS;
-assert.equal(runtimeLessons.length,12,'consolidated Chapters 3-6 runtime bundle must expose twelve lessons');
+assert.equal(runtimeLessons.length,15,'consolidated Chapters 3-7 runtime bundle must expose fifteen lessons');
 assert.ok(lessonIds.every(id=>runtimeLessons.some(x=>x.id===id)),'runtime bundle missing Chapter 6 lesson');
-assert.equal(new Set(runtimeLessons.map(x=>x.id)).size,12,'runtime bundle lesson IDs must remain unique');
+assert.equal(new Set(runtimeLessons.map(x=>x.id)).size,15,'runtime bundle lesson IDs must remain unique');
 
 const sourceSandbox={window:{KV_LESSONS:[]}};
 vm.createContext(sourceSandbox);
-for(const file of ['data/class6-math-ch3.js','data/class6-math-ch4.js','data/class6-math-ch5.js','data/class6-math-ch6.js']) vm.runInContext(fs.readFileSync(file,'utf8'),sourceSandbox,{filename:file});
-assert.equal(sourceSandbox.window.KV_LESSONS.length,12,'source-of-truth Chapters 3-6 must expose twelve lessons');
+for(const file of ['data/class6-math-ch3.js','data/class6-math-ch4.js','data/class6-math-ch5.js','data/class6-math-ch6.js','data/class6-math-ch7.js']) vm.runInContext(fs.readFileSync(file,'utf8'),sourceSandbox,{filename:file});
+assert.equal(sourceSandbox.window.KV_LESSONS.length,15,'source-of-truth Chapters 3-7 must expose fifteen lessons');
 const sourceById=new Map(sourceSandbox.window.KV_LESSONS.map(x=>[x.id,x]));
 for(const runtimeLesson of runtimeLessons){
   assert.ok(sourceById.has(runtimeLesson.id),`runtime lesson ${runtimeLesson.id} missing from source-of-truth modules`);
@@ -84,17 +84,19 @@ for(const runtimeLesson of runtimeLessons){
 }
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
-for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch6-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
-assert.ok(entry.includes('ch(?:2|3|4|5|6)\\.'),'Chapter 1-6 deferred-assessment route coverage missing');
+for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch6-assessments.js','data/class6-math-ch7-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
+assert.ok(entry.includes('ch(?:2|3|4|5|6|7)\\.'),'Chapter 1-7 deferred-assessment route coverage missing');
 assert.ok(!entry.includes("/^\\/lesson\\/math\\./"),'generic Mathematics lessons must not trigger Class 6 assessment bundles');
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
-assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'combined Chapter 3-6 runtime must load in base slice');
+assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'combined Chapter 3-7 runtime must load in base slice');
 assert.ok(!baseChunk.includes('data/class6-math-ch6.js'),'standalone Chapter 6 source module must not add a startup request');
+assert.ok(!baseChunk.includes('data/class6-math-ch7.js'),'standalone Chapter 7 source module must not add a startup request');
 assert.ok(!baseChunk.includes('data/class6-math-ch6-assessments.js'),'Chapter 6 assessments must remain deferred');
+assert.ok(!baseChunk.includes('data/class6-math-ch7-assessments.js'),'Chapter 7 assessments must remain deferred');
 
 const sw=fs.readFileSync('sw-v30.js','utf8');
 assert.match(sw,/kirthiverse-preview-v45/);
-for(const asset of ['/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch6-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
+for(const asset of ['/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch6-assessments.js','/data/class6-math-ch7-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));
 assert.ok(index.includes('microphone:false'));

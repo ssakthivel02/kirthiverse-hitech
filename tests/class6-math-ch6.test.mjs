@@ -19,7 +19,9 @@ assert.equal(map.chapter6CompletionEvidence.assessmentCount,15);
 assert.equal(map.chapter6CompletionEvidence.lazyAssessmentLoadingRequired,true);
 assert.equal(map.chapter6CompletionEvidence.startupRequestCeilingPreserved,true);
 assert.equal(map.chapter6CompletionEvidence.schoolNeedsValidationRequired,true);
-assert.equal(map.chapter6CompletionEvidence.schoolNeedsValidationPresent,false);
+assert.equal(map.chapter6CompletionEvidence.schoolNeedsValidationPresent,true);
+assert.equal(map.chapter6CompletionEvidence.schoolNeedsValidationArtifact,'docs/class6-pilot/MATH_CH6_SCHOOL_NEEDS_VALIDATION_V1.json');
+assert.ok(fs.existsSync(map.chapter6CompletionEvidence.schoolNeedsValidationArtifact),'Chapter 6 school-needs artifact missing');
 
 const sandbox={window:{KV_LESSONS:[],KV_ASSESSMENTS:[]}};
 vm.createContext(sandbox);
@@ -99,4 +101,4 @@ assert.ok(index.includes('microphone:false'));
 assert.ok(index.includes('recording:false'));
 assert.ok(index.includes('speechRecognition:false'));
 
-console.log(`CLASS6_MATH_CH6_PASS topics=${map.chapter6Topics.length} lessons=${lessons.length} assessments=${assessments.length} runtimeParity=${runtimeLessons.length} startupCeiling=${map.chapter6CompletionEvidence.startupRequestCeilingPreserved}`);
+console.log(`CLASS6_MATH_CH6_PASS topics=${map.chapter6Topics.length} lessons=${lessons.length} assessments=${assessments.length} runtimeParity=${runtimeLessons.length} schoolNeeds=${map.chapter6CompletionEvidence.schoolNeedsValidationPresent}`);

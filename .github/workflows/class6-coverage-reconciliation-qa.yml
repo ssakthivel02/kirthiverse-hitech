@@ -1,0 +1,35 @@
+name: Class 6 Coverage Reconciliation QA
+
+on:
+  pull_request:
+    paths:
+      - 'docs/class6-pilot/CLASS6_COVERAGE_MANIFEST_V1.json'
+      - 'docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json'
+      - 'docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json'
+      - 'docs/class6-pilot/SCIENCE_COMPLETION_AUDIT_V1.json'
+      - 'tests/class6-coverage-reconciliation.test.mjs'
+      - '.github/workflows/class6-coverage-reconciliation-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  class6-coverage-reconciliation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate reconciled Class 6 coverage and next-lane decision
+        run: node tests/class6-coverage-reconciliation.test.mjs
+      - name: QA summary
+        if: always()
+        run: |
+          echo '## Class 6 Coverage Reconciliation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Science: bounded SCIENCE_COMPLETE repository curriculum-implementation decision' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Mathematics: Chapter 1 implemented/validated; Chapters 2-10 remain mapped gaps' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Next selected lane: Mathematics Chapter 2 — Lines and Angles, subject to a fresh concurrency check before implementation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- No whole-Class-6 completion claim is made' >> "$GITHUB_STEP_SUMMARY"

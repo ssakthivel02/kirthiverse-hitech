@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-MATH-CH5-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Mathematics · Ganita Prakash · Chapter 5 · Prime Time",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 5 topic, an existing Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action, and an observable mastery criterion. Factor and multiple claims must be justified by exact division or multiplication; prime/composite/co-prime claims must use factor evidence; prime factorisation must finish at prime leaves; divisibility claims must apply only the implemented tests for 2, 4, 5, 8 and 10 and may be verified by exact division.",
+  "scenarios": [
+    {
+      "id": "SN-MATH6-CH5-001",
+      "need": "Learner swaps factor and multiple language, for example calling 42 a factor of 6 because 42 is larger and related to 6.",
+      "topicId": "TOPIC-MATH6-05-01",
+      "expectedMisconception": "swapping factor and multiple language",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Use a paper two-column check: write exact division for factor claims and multiplication by a whole number for multiple claims, then rewrite each relationship in both directions without entering personal data.",
+      "masteryCriterion": "Correctly classifies and justifies at least four new factor/multiple relationships using exact division or multiplication and explains the direction of each relationship."
+    },
+    {
+      "id": "SN-MATH6-CH5-002",
+      "need": "Learner misses factor pairs or confuses common factors with values appearing only in one number's factor set.",
+      "topicId": "TOPIC-MATH6-05-01",
+      "expectedMisconception": "missing factor pairs",
+      "requiredAssessmentTypes": ["worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Build complete factor-pair lists for two synthetic numbers on paper, stop only when pairs begin to repeat, then circle the intersection and separately list several common multiples.",
+      "masteryCriterion": "Produces complete factor sets for two new numbers, identifies their common factors without omissions, and gives valid common multiples with multiplication evidence."
+    },
+    {
+      "id": "SN-MATH6-CH5-003",
+      "need": "Learner labels 1 as prime or assumes an odd number must be prime without checking its complete positive factor set.",
+      "topicId": "TOPIC-MATH6-05-02",
+      "expectedMisconception": "calling 1 prime",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "List positive factors for a small synthetic set containing 1, 2, an odd composite and an odd prime, count the factors, and classify each number from the definition rather than appearance.",
+      "masteryCriterion": "States that 1 is neither prime nor composite, identifies 2 as prime, and correctly classifies new odd prime/composite examples with explicit factor evidence."
+    },
+    {
+      "id": "SN-MATH6-CH5-004",
+      "need": "Learner thinks two numbers can be co-prime only when both numbers are prime.",
+      "topicId": "TOPIC-MATH6-05-02",
+      "expectedMisconception": "assuming co-prime means both numbers are prime",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Write complete factor sets for two synthetic pairs, including one composite co-prime pair, intersect each pair of sets and decide co-prime status from whether the only common factor is 1.",
+      "masteryCriterion": "Correctly identifies a new composite co-prime pair and a non-co-prime pair, giving the common-factor evidence that distinguishes them."
+    },
+    {
+      "id": "SN-MATH6-CH5-005",
+      "need": "Learner stops a factor tree at composite leaves and calls the unfinished product a prime factorisation.",
+      "topicId": "TOPIC-MATH6-05-02",
+      "expectedMisconception": "stopping a factor tree at composite leaves",
+      "requiredAssessmentTypes": ["worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Construct a factor tree for a synthetic composite number, circle each leaf, continue splitting every composite leaf until all leaves are prime, then multiply the prime leaves to verify the original number.",
+      "masteryCriterion": "Completes and verifies two new prime factorisations with every final factor prime, including one number reached through a different first factor pair."
+    },
+    {
+      "id": "SN-MATH6-CH5-006",
+      "need": "Learner applies the even-last-digit test as if it proved divisibility by 4 or 8, instead of checking the correct two- or three-digit suffix.",
+      "topicId": "TOPIC-MATH6-05-03",
+      "expectedMisconception": "using the even-number test as proof for divisibility by 4 or 8",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Cover all irrelevant digits in several synthetic numbers, expose only the last digit for 2/5/10, last two digits for 4, or last three digits for 8, then apply the corresponding implemented test.",
+      "masteryCriterion": "Correctly applies the appropriate suffix rule for 2, 4, 5, 8 and 10 across six new numbers and explains why evenness alone is insufficient for 4 or 8."
+    },
+    {
+      "id": "SN-MATH6-CH5-007",
+      "need": "Learner states a divisibility answer from visual impression or a memorised rule but cannot verify the conclusion when challenged.",
+      "topicId": "TOPIC-MATH6-05-03",
+      "expectedMisconception": "stating divisibility from appearance alone",
+      "requiredAssessmentTypes": ["short_answer", "reasoning", "mastery_check"],
+      "safeLearnerAction": "For each synthetic divisibility claim, name the implemented test, identify the relevant digit or suffix, then verify selected cases by exact division and remainder zero without using an online calculator.",
+      "masteryCriterion": "Explains the rule and independently verifies at least two new divisibility conclusions by exact division, rejecting a plausible-looking claim that leaves a non-zero remainder."
+    },
+    {
+      "id": "SN-MATH6-CH5-008",
+      "need": "Learner needs a fully offline route for Prime Time practice and cannot depend on cloud calculators, microphone, camera, photo upload, telemetry or remote teacher monitoring.",
+      "topicId": "TOPIC-MATH6-05-03",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Use cached Kiki lesson text, locally rendered Chapter 5 practice, paper and pencil to complete factor, prime-factorisation and divisibility reasoning with no network-dependent tutoring, submission or personal-data step.",
+      "masteryCriterion": "Completes a mixed Chapter 5 mastery check using only offline local resources, giving correct numerical justification for factors, a finished prime factorisation and at least two implemented divisibility tests."
+    }
+  ]
+}

@@ -7,14 +7,14 @@
     "canonicalRepository": "ssakthivel02/kirthiverse-hitech",
     "status": "CURRICULUM_IMPLEMENTATION_IN_PROGRESS",
     "completionLabel": "COMPLETE_CBSE_CLASS6",
-    "lastReconciledMain": "ff9850812fa0414667ec86df670cd1fbbe57b409"
+    "lastReconciledMain": "01473b650e95439aac1aaccddcf1f9603f472871"
   },
   "completionRule": "No subject or whole-class completion claim is allowed until every applicable chapter has approved provenance, Kiki-teachable instruction, examples, guided practice, assessment, remediation, mastery evidence, separate school-needs validation where required, accessibility review, and rights/source review.",
   "subjects": [
     {"id":"english","name":"English — Language and Literature","schoolRequired":true,"status":"BASELINE_TO_RECONCILE"},
     {"id":"language-2","name":"Second Language — Tamil or Hindi","schoolRequired":true,"status":"VARIANT_REQUIRES_EXPLICIT_PROFILE"},
     {"id":"language-3","name":"Third Language — Tamil or Hindi","schoolRequired":true,"status":"VARIANT_REQUIRES_EXPLICIT_PROFILE"},
-    {"id":"mathematics","name":"Mathematics","schoolRequired":true,"status":"IMPLEMENTATION_IN_PROGRESS","curriculumMap":"docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json","mappedChapterCount":10,"implementedChapterCount":2,"remainingMappedChapterCount":8,"schoolNeedsValidatedChapterCount":1,"nextLargestGap":"Chapter 2 — School Needs Validation","completionClaim":false},
+    {"id":"mathematics","name":"Mathematics","schoolRequired":true,"status":"IMPLEMENTATION_IN_PROGRESS","curriculumMap":"docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json","mappedChapterCount":10,"implementedChapterCount":2,"remainingMappedChapterCount":8,"schoolNeedsValidatedChapterCount":2,"nextLargestGap":"Chapter 3 — Number Play teaching slice","completionClaim":false},
     {"id":"science","name":"Science","schoolRequired":true,"status":"SCIENCE_COMPLETE","curriculumMap":"docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json","completionAudit":"docs/class6-pilot/SCIENCE_COMPLETION_AUDIT_V1.json","mappedChapterCount":12,"implementedChapterCount":12,"schoolNeedsValidatedChapterCount":12,"completionClaim":true,"completionBoundary":"Repository curriculum-implementation completion only; not live-school efficacy, attainment, accreditation, accessibility certification, safety certification or school-specific pacing."},
     {"id":"social-science","name":"Social Science","schoolRequired":true,"status":"DONOR_RESEARCH_IDENTIFIED","donorBaseline":"Exploring Society / prior Class 6 research"},
     {"id":"life-skills-aptitude","name":"Life Skills & Aptitude","schoolRequired":true,"status":"BASELINE_TO_RECONCILE"},
@@ -24,12 +24,12 @@
     {"id":"art-education","name":"Art Education","schoolRequired":true,"status":"BASELINE_TO_RECONCILE"}
   ],
   "priorityDecision": {
-    "basis": "Finish the evidence contract for the newest implemented chapter before advancing to the next mapped chapter, while avoiding overlapping agent work.",
+    "basis": "Finish each implemented Mathematics chapter's evidence contract before advancing to the next mapped chapter, while avoiding overlapping agent work.",
     "selectedLane": "mathematics",
-    "selectedNextChapter": 2,
-    "selectedNextChapterTitle": "Lines and Angles",
-    "selectedNextTask": "Chapter 2 School Needs Validation",
-    "reason": "Science is formally complete within its bounded repository contract. Mathematics Chapters 1-2 now have Kiki teaching slices; Chapter 1 has separate school-needs validation while Chapter 2 does not. The strongest next task is therefore the narrow Chapter 2 evidence slice before beginning Chapter 3.",
+    "selectedNextChapter": 3,
+    "selectedNextChapterTitle": "Number Play",
+    "selectedNextTask": "Chapter 3 Kiki Teaching Slice",
+    "reason": "Science is formally complete within its bounded repository contract. Mathematics Chapters 1-2 now each have Kiki teaching slices and separate synthetic school-needs validation. The strongest next gap is therefore the mapped but unimplemented Chapter 3 teaching slice, subject to a fresh concurrency check before any write.",
     "requiresFreshConcurrencyCheckBeforeWrite": true
   },
   "kikiTeachingPath": ["chapter-entry","animated-teaching","worked-example-or-demonstration","guided-practice","quiz-or-performance-check","remediation-if-needed","mastery-evidence"],

@@ -18,6 +18,7 @@ on:
       - 'docs/class6-pilot/SCIENCE_CH10_SCHOOL_NEEDS_VALIDATION_V1.json'
       - 'docs/class6-pilot/SCIENCE_CH11_SCHOOL_NEEDS_VALIDATION_V1.json'
       - 'docs/class6-pilot/SCIENCE_CH12_SCHOOL_NEEDS_VALIDATION_V1.json'
+      - 'docs/class6-pilot/SCIENCE_COMPLETION_AUDIT_V1.json'
       - 'p0-entry-v1.js'
       - 'sw-v30.js'
       - 'tests/class6-science-pilot.test.mjs'
@@ -44,6 +45,7 @@ on:
       - 'tests/class6-science-ch11-school-needs.test.mjs'
       - 'tests/class6-science-ch12.test.mjs'
       - 'tests/class6-science-ch12-school-needs.test.mjs'
+      - 'tests/class6-science-completion-audit.test.mjs'
       - 'tests/e2e/release-closure.spec.mjs'
       - '.github/workflows/class6-science-pilot-qa.yml'
   workflow_dispatch:
@@ -111,6 +113,8 @@ jobs:
         run: node tests/class6-science-ch12.test.mjs
       - name: Validate Chapter 12 synthetic school-learning needs and astronomy/model/claim-safety boundaries
         run: node tests/class6-science-ch12-school-needs.test.mjs
+      - name: Validate aggregate Class 6 Science completion evidence
+        run: node tests/class6-science-completion-audit.test.mjs
       - name: QA summary
         if: always()
         run: |
@@ -119,10 +123,8 @@ jobs:
           echo '- Chapters 1-12: thirty-six Kiki teaching topics / thirty-six lessons' >> "$GITHUB_STEP_SUMMARY"
           echo '- 180 independently authored Science assessments including reasoning and mastery' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapters 1-12 each retain separate eight-scenario synthetic school-needs validation' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 12 covers stars/constellations/night-sky evidence, Solar System classification and Milky-Way/Universe nested scale' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 12 school-needs evidence validates star/planet/object confusion, constellation depth, appearance overclaims, object classification, scale-model limits, solar/laser safety, cosmic nesting and unidentified-light claim discipline' >> "$GITHUB_STEP_SUMMARY"
+          echo '- aggregate completion audit validates 12 chapters / 36 lessons / 180 assessments / 96 synthetic school-needs scenarios plus loader, offline, rights, remediation, mastery and privacy contracts' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapter 12 rejects direct-Sun/ordinary-optical solar viewing, lasers, rooftop/roadside/unsupervised night observing, scale-model overclaims and alien-life conclusions from unidentified lights' >> "$GITHUB_STEP_SUMMARY"
           echo '- privacy boundary: no real child data, microphone, camera, recording, precise location, remote monitoring or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
           echo '- additive local-first loader and existing PWA v44 offline precache coverage required' >> "$GITHUB_STEP_SUMMARY"
-          echo '- synthetic curriculum readiness only; no live school pilot, efficacy, attainment, astronomy-safety certification, extraterrestrial-life finding or school-pacing claim' >> "$GITHUB_STEP_SUMMARY"
-          echo '- SCIENCE_COMPLETE is not claimed by this evidence PR; formal completion still requires a separate auditable governance/evidence assessment after exact-head and exact-main verification' >> "$GITHUB_STEP_SUMMARY"
+          echo '- SCIENCE_COMPLETE is a repository curriculum-implementation decision only; no live school pilot, efficacy, attainment, accreditation, accessibility certification, safety certification or school-pacing claim' >> "$GITHUB_STEP_SUMMARY"

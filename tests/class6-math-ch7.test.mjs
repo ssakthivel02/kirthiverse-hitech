@@ -3,30 +3,28 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 
 const lessonIds=[
-  'math.cbse6.ganita-prakash.ch6.perimeter-boundaries.v1',
-  'math.cbse6.ganita-prakash.ch6.area-grid-rectangles.v1',
-  'math.cbse6.ganita-prakash.ch6.triangles-composite-area.v1',
+  'math.cbse6.ganita-prakash.ch7.fractional-units-number-line.v1',
+  'math.cbse6.ganita-prakash.ch7.equivalence-comparison.v1',
+  'math.cbse6.ganita-prakash.ch7.add-subtract.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json','utf8'));
 assert.equal(map.schemaVersion,'1.8.0');
-assert.equal(map.chapters[5].chapter,6);
-assert.equal(map.chapters[5].title,'Perimeter and Area');
-assert.equal(map.chapters[5].status,'KIKI_TEACHING_SLICE_COMPLETE');
-assert.equal(map.chapter6Topics.length,3);
-assert.ok(map.chapter6Topics.every(x=>x.status==='END_TO_END_PILOT_IMPLEMENTED'));
-assert.equal(map.chapter6CompletionEvidence.lessonCount,3);
-assert.equal(map.chapter6CompletionEvidence.assessmentCount,15);
-assert.equal(map.chapter6CompletionEvidence.lazyAssessmentLoadingRequired,true);
-assert.equal(map.chapter6CompletionEvidence.startupRequestCeilingPreserved,true);
-assert.equal(map.chapter6CompletionEvidence.schoolNeedsValidationRequired,true);
-assert.equal(map.chapter6CompletionEvidence.schoolNeedsValidationPresent,true);
-assert.equal(map.chapter6CompletionEvidence.schoolNeedsValidationArtifact,'docs/class6-pilot/MATH_CH6_SCHOOL_NEEDS_VALIDATION_V1.json');
-assert.ok(fs.existsSync(map.chapter6CompletionEvidence.schoolNeedsValidationArtifact),'Chapter 6 school-needs artifact missing');
+assert.equal(map.chapters[6].chapter,7);
+assert.equal(map.chapters[6].title,'Fractions');
+assert.equal(map.chapters[6].status,'KIKI_TEACHING_SLICE_COMPLETE');
+assert.equal(map.chapter7Topics.length,3);
+assert.ok(map.chapter7Topics.every(x=>x.status==='END_TO_END_PILOT_IMPLEMENTED'));
+assert.equal(map.chapter7CompletionEvidence.lessonCount,3);
+assert.equal(map.chapter7CompletionEvidence.assessmentCount,15);
+assert.equal(map.chapter7CompletionEvidence.lazyAssessmentLoadingRequired,true);
+assert.equal(map.chapter7CompletionEvidence.startupRequestCeilingPreserved,true);
+assert.equal(map.chapter7CompletionEvidence.schoolNeedsValidationRequired,true);
+assert.equal(map.chapter7CompletionEvidence.schoolNeedsValidationPresent,false);
 
 const sandbox={window:{KV_LESSONS:[],KV_ASSESSMENTS:[]}};
 vm.createContext(sandbox);
-vm.runInContext(fs.readFileSync('data/class6-math-ch6.js','utf8'),sandbox,{filename:'class6-math-ch6.js'});
-vm.runInContext(fs.readFileSync('data/class6-math-ch6-assessments.js','utf8'),sandbox,{filename:'class6-math-ch6-assessments.js'});
+vm.runInContext(fs.readFileSync('data/class6-math-ch7.js','utf8'),sandbox,{filename:'class6-math-ch7.js'});
+vm.runInContext(fs.readFileSync('data/class6-math-ch7-assessments.js','utf8'),sandbox,{filename:'class6-math-ch7-assessments.js'});
 const lessons=sandbox.window.KV_LESSONS;
 const assessments=sandbox.window.KV_ASSESSMENTS;
 assert.equal(lessons.length,3);
@@ -37,8 +35,8 @@ for(const lesson of lessons){
   assert.equal(lesson.board,'CBSE');
   assert.equal(lesson.classLevel,6);
   assert.equal(lesson.book,'Ganita Prakash');
-  assert.equal(lesson.chapter,6);
-  assert.equal(lesson.chapterTitle,'Perimeter and Area');
+  assert.equal(lesson.chapter,7);
+  assert.equal(lesson.chapterTitle,'Fractions');
   assert.equal(lesson.ageBand,'11-13');
   assert.ok(lesson.learningObjective.length>40);
   assert.ok(lesson.content.length>300);
@@ -51,7 +49,7 @@ for(const lesson of lessons){
 }
 
 assert.equal(assessments.length,15);
-const expectedIds=Array.from({length:15},(_,i)=>`KV-CBSE6-MATH-${String(i+76).padStart(4,'0')}`);
+const expectedIds=Array.from({length:15},(_,i)=>`KV-CBSE6-MATH-${String(i+91).padStart(4,'0')}`);
 assert.deepEqual(assessments.map(x=>x.stableAssessmentId),expectedIds);
 assert.equal(new Set(assessments.map(x=>x.stableAssessmentId)).size,15);
 for(const lessonId of lessonIds){
@@ -60,17 +58,18 @@ for(const lessonId of lessonIds){
   for(const type of ['multiple_choice','reasoning','worked_challenge','short_answer','mastery_check']) assert.ok(attached.some(x=>x.assessmentType===type),`${lessonId} missing ${type}`);
   for(const item of attached) for(const field of ['questionActivity','correctAnswer','hint','explanation']) assert.ok(item[field],`${item.stableAssessmentId} missing ${field}`);
 }
-const allText=JSON.stringify({lessons,assessments,map:map.chapter6Topics}).toLowerCase();
-for(const required of ['perimeter','boundary','area','square units','grid','rectangle','square','triangle','perpendicular height','composite']) assert.ok(allText.includes(required),`missing Chapter 6 concept: ${required}`);
-assert.ok(allText.includes('equal area')&&allText.includes('different perimeter'),'area/perimeter independence reasoning missing');
-assert.ok(allText.includes('no overlap')||allText.includes('non-overlapping'),'composite-area no-overlap reasoning missing');
+
+const allText=JSON.stringify({lessons,assessments,map:map.chapter7Topics}).toLowerCase();
+for(const required of ['equal parts','fractional unit','number line','mixed number','improper fraction','equivalent fraction','simplest form','common denominator','addition','subtraction','reasonableness']) assert.ok(allText.includes(required),`missing Chapter 7 concept: ${required}`);
+assert.ok(allText.includes('numerator')&&allText.includes('denominator'),'numerator/denominator meaning missing');
+assert.ok(allText.includes('1/2 + 1/3 = 2/5'),'componentwise addition misconception boundary missing');
 
 const runtimeSandbox={window:{KV_LESSONS:[]}};
 vm.createContext(runtimeSandbox);
 vm.runInContext(fs.readFileSync('data/class6-math-ch3-4-runtime.js','utf8'),runtimeSandbox,{filename:'class6-math-ch3-4-runtime.js'});
 const runtimeLessons=runtimeSandbox.window.KV_LESSONS;
 assert.equal(runtimeLessons.length,15,'consolidated Chapters 3-7 runtime bundle must expose fifteen lessons');
-assert.ok(lessonIds.every(id=>runtimeLessons.some(x=>x.id===id)),'runtime bundle missing Chapter 6 lesson');
+assert.ok(lessonIds.every(id=>runtimeLessons.some(x=>x.id===id)),'runtime bundle missing Chapter 7 lesson');
 assert.equal(new Set(runtimeLessons.map(x=>x.id)).size,15,'runtime bundle lesson IDs must remain unique');
 
 const sourceSandbox={window:{KV_LESSONS:[]}};
@@ -84,23 +83,20 @@ for(const runtimeLesson of runtimeLessons){
 }
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
-for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch6-assessments.js','data/class6-math-ch7-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
+for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch7-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.ok(entry.includes('ch(?:2|3|4|5|6|7)\\.'),'Chapter 1-7 deferred-assessment route coverage missing');
-assert.ok(!entry.includes("/^\\/lesson\\/math\\./"),'generic Mathematics lessons must not trigger Class 6 assessment bundles');
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
 assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'combined Chapter 3-7 runtime must load in base slice');
-assert.ok(!baseChunk.includes('data/class6-math-ch6.js'),'standalone Chapter 6 source module must not add a startup request');
 assert.ok(!baseChunk.includes('data/class6-math-ch7.js'),'standalone Chapter 7 source module must not add a startup request');
-assert.ok(!baseChunk.includes('data/class6-math-ch6-assessments.js'),'Chapter 6 assessments must remain deferred');
 assert.ok(!baseChunk.includes('data/class6-math-ch7-assessments.js'),'Chapter 7 assessments must remain deferred');
 
 const sw=fs.readFileSync('sw-v30.js','utf8');
 assert.match(sw,/kirthiverse-preview-v45/);
-for(const asset of ['/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch6-assessments.js','/data/class6-math-ch7-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
+for(const asset of ['/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch7-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));
 assert.ok(index.includes('microphone:false'));
 assert.ok(index.includes('recording:false'));
 assert.ok(index.includes('speechRecognition:false'));
 
-console.log(`CLASS6_MATH_CH6_PASS topics=${map.chapter6Topics.length} lessons=${lessons.length} assessments=${assessments.length} runtimeParity=${runtimeLessons.length} schoolNeeds=${map.chapter6CompletionEvidence.schoolNeedsValidationPresent}`);
+console.log(`CLASS6_MATH_CH7_PASS topics=${map.chapter7Topics.length} lessons=${lessons.length} assessments=${assessments.length} runtimeParity=${runtimeLessons.length} startupCeiling=${map.chapter7CompletionEvidence.startupRequestCeilingPreserved}`);

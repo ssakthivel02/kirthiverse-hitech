@@ -7,11 +7,11 @@ const maths=readJson('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json')
 const scienceMap=readJson('docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json');
 const scienceAudit=readJson('docs/class6-pilot/SCIENCE_COMPLETION_AUDIT_V1.json');
 
-assert.equal(manifest.schemaVersion,'1.1.0');
+assert.equal(manifest.schemaVersion,'1.2.0');
 assert.equal(manifest.pilot.board,'CBSE');
 assert.equal(manifest.pilot.class,6);
 assert.equal(manifest.pilot.canonicalRepository,'ssakthivel02/kirthiverse-hitech');
-assert.equal(manifest.pilot.lastReconciledMain,'5477a0c5022942d1ac00573f6bb897a22078e2f5');
+assert.equal(manifest.pilot.lastReconciledMain,'ff9850812fa0414667ec86df670cd1fbbe57b409');
 
 const byId=Object.fromEntries(manifest.subjects.map(x=>[x.id,x]));
 assert.equal(manifest.subjects.length,11);
@@ -34,20 +34,22 @@ assert.equal(mathematics.completionClaim,false);
 assert.equal(maths.chapters.length,10);
 const implementedMath=maths.chapters.filter(x=>x.status==='KIKI_TEACHING_SLICE_COMPLETE');
 const pendingMath=maths.chapters.filter(x=>x.status==='MAPPED_NOT_YET_IMPLEMENTED');
-assert.equal(implementedMath.length,1);
-assert.equal(pendingMath.length,9);
-assert.equal(implementedMath[0].chapter,1);
-assert.equal(pendingMath[0].chapter,2);
-assert.equal(pendingMath[0].title,'Lines and Angles');
+assert.deepEqual(implementedMath.map(x=>x.chapter),[1,2]);
+assert.equal(pendingMath.length,8);
+assert.equal(pendingMath[0].chapter,3);
+assert.equal(pendingMath[0].title,'Number Play');
 assert.equal(mathematics.mappedChapterCount,maths.chapters.length);
 assert.equal(mathematics.implementedChapterCount,implementedMath.length);
 assert.equal(mathematics.remainingMappedChapterCount,pendingMath.length);
 assert.equal(mathematics.schoolNeedsValidatedChapterCount,1);
-assert.equal(mathematics.nextLargestGap,'Chapter 2 — Lines and Angles');
+assert.equal(mathematics.nextLargestGap,'Chapter 2 — School Needs Validation');
+assert.equal(maths.chapter2CompletionEvidence?.schoolNeedsValidationRequired,true);
+assert.equal(maths.chapter2CompletionEvidence?.schoolNeedsValidationPresent,false);
 
 assert.equal(manifest.priorityDecision.selectedLane,'mathematics');
 assert.equal(manifest.priorityDecision.selectedNextChapter,2);
 assert.equal(manifest.priorityDecision.selectedNextChapterTitle,'Lines and Angles');
+assert.equal(manifest.priorityDecision.selectedNextTask,'Chapter 2 School Needs Validation');
 assert.equal(manifest.priorityDecision.requiresFreshConcurrencyCheckBeforeWrite,true);
 
 for(const id of ['english','language-2','language-3','social-science','life-skills-aptitude','computer-science','health-physical-education','work-education','art-education']){

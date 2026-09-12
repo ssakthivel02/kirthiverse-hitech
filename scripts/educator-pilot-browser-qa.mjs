@@ -12,10 +12,10 @@ const nav=async path=>{await ev(`window.KV_NAVIGATION.navigate(${JSON.stringify(
 const lesson='math.number.place-value.base10.age6-8.l1';
 
 await wait(`!!window.KV_NAVIGATION&&!!window.KV_MASTERY`,'core + mastery');
-await wait(`!!document.querySelector('script[data-ep-pilot]')`,'educator module loader');
 await wait(`!!document.querySelector('.topbar nav a[href="/educator"]')`,'educator nav');
-
-await nav('/educator');await wait(`document.querySelector('main')?.textContent.includes('Unlock Parent Space first')`,'locked educator state');
+await nav('/educator');
+await wait(`!!document.querySelector('script[data-ep-pilot]')`,'route-only educator module loader');
+await wait(`document.querySelector('main')?.textContent.includes('Unlock Parent Space first')`,'locked educator state');
 await nav('/parent');await wait(`!!document.getElementById('pv-setup')`,'parent setup');
 await ev(`document.getElementById('pv-child').value='Pilot Learner';document.getElementById('pv-pin').value='4826';document.getElementById('pv-setup').requestSubmit();true`);
 await wait(`!!document.getElementById('pv-export')`,'parent unlocked');

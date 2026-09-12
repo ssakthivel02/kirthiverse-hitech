@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.5.0",
+  "schemaVersion": "1.6.0",
   "pilot": "CBSE_CLASS6_SAN_TAMBARAM",
   "subject": "Mathematics",
   "board": "CBSE",
@@ -16,7 +16,7 @@
     {"chapter":2,"id":"CH-MATH6-02","title":"Lines and Angles","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":3,"id":"CH-MATH6-03","title":"Number Play","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":4,"id":"CH-MATH6-04","title":"Data Handling and Presentation","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
-    {"chapter":5,"id":"CH-MATH6-05","title":"Prime Time","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":5,"id":"CH-MATH6-05","title":"Prime Time","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":6,"id":"CH-MATH6-06","title":"Perimeter and Area","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":7,"id":"CH-MATH6-07","title":"Fractions","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
     {"chapter":8,"id":"CH-MATH6-08","title":"Playing with Constructions","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
@@ -51,6 +51,13 @@
   ],
   "chapter4CompletionRule": "CHAPTER4_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped strands to have independently authored teaching content, worked examples, five linked assessments per lesson, misconception handling, remediation/mastery evidence, deterministic QA, bounded runtime integration that preserves the existing startup request ceiling, offline precache coverage, release-regression coverage and a separate synthetic school-needs validation artifact. The school-needs artifact is deterministic readiness evidence only and does not establish live-school efficacy, attainment or school-specific pacing.",
   "chapter4CompletionEvidence": {"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"lazyAssessmentLoadingRequired":true,"startupRequestCeilingPreserved":true,"schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":true,"schoolNeedsValidationArtifact":"docs/class6-pilot/MATH_CH4_SCHOOL_NEEDS_VALIDATION_V1.json","status":"CHAPTER4_KIKI_TEACHING_SLICE_COMPLETE"},
+  "chapter5Topics": [
+    {"id":"TOPIC-MATH6-05-01","title":"Factors, multiples and common structure","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["distinguish factors from multiples","find complete factor pairs systematically","identify common factors","identify common multiples","justify factor/multiple claims numerically"],"misconceptions":["swapping factor and multiple language","assuming every larger number is a multiple","missing factor pairs","treating the finite factor set like an endless multiple list"]},
+    {"id":"TOPIC-MATH6-05-02","title":"Prime, composite, co-prime and prime factorisation","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["classify prime and composite numbers from factor evidence","explain why 1 is neither prime nor composite","identify co-prime pairs","complete and verify prime factorisations"],"misconceptions":["calling 1 prime","assuming every odd number is prime","assuming co-prime means both numbers are prime","stopping a factor tree at composite leaves"]},
+    {"id":"TOPIC-MATH6-05-03","title":"Divisibility tests with reasons","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["apply divisibility tests for 2,4,5,8 and 10","select the correct digit suffix for each test","verify divisibility by exact division","explain why a quick test supports the conclusion"],"misconceptions":["using the even-number test as proof for divisibility by 4 or 8","checking arbitrary digits instead of the relevant suffix","stating divisibility from appearance alone"]}
+  ],
+  "chapter5CompletionRule": "CHAPTER5_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped strands to have independently authored teaching content, worked examples, five linked assessments per lesson, misconception handling, remediation/mastery evidence, deterministic QA, bounded runtime integration that preserves the existing startup request ceiling, deferred assessment loading, offline precache coverage and release-regression coverage. Separate synthetic school-needs validation remains required before Chapter 5's evidence contract is closed.",
+  "chapter5CompletionEvidence": {"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"lazyAssessmentLoadingRequired":true,"startupRequestCeilingPreserved":true,"schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":false,"status":"CHAPTER5_KIKI_TEACHING_SLICE_COMPLETE"},
   "completionRule": "MATHEMATICS_COMPLETE only after all ten chapters have Kiki-teachable lesson coverage, practice, assessment, remediation/mastery evidence, separate synthetic school-needs validation, accessibility QA and source/provenance review.",
   "schoolOverlay": {"school":"SAN Academy Tambaram","mappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED","note":"The school publicly confirms Mathematics for Classes I-X; exact school pacing/order must not be claimed without school-specific evidence."}
 }

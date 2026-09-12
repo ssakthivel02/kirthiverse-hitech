@@ -7,14 +7,14 @@
     "canonicalRepository": "ssakthivel02/kirthiverse-hitech",
     "status": "CURRICULUM_IMPLEMENTATION_IN_PROGRESS",
     "completionLabel": "COMPLETE_CBSE_CLASS6",
-    "lastReconciledMain": "f86ef1bb47dc4466101b4977ea471a9290402d02"
+    "lastReconciledMain": "c787769ac34674f87992183f4b3df11eb9c665ba"
   },
   "completionRule": "No subject or whole-class completion claim is allowed until every applicable chapter has approved provenance, Kiki-teachable instruction, examples, guided practice, assessment, remediation, mastery evidence, separate school-needs validation where required, accessibility review, and rights/source review.",
   "subjects": [
     {"id":"english","name":"English — Language and Literature","schoolRequired":true,"status":"BASELINE_TO_RECONCILE"},
     {"id":"language-2","name":"Second Language — Tamil or Hindi","schoolRequired":true,"status":"VARIANT_REQUIRES_EXPLICIT_PROFILE"},
     {"id":"language-3","name":"Third Language — Tamil or Hindi","schoolRequired":true,"status":"VARIANT_REQUIRES_EXPLICIT_PROFILE"},
-    {"id":"mathematics","name":"Mathematics","schoolRequired":true,"status":"IMPLEMENTATION_IN_PROGRESS","curriculumMap":"docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json","mappedChapterCount":10,"implementedChapterCount":4,"remainingMappedChapterCount":6,"schoolNeedsValidatedChapterCount":4,"nextLargestGap":"Chapter 5 — Prime Time teaching slice","completionClaim":false},
+    {"id":"mathematics","name":"Mathematics","schoolRequired":true,"status":"IMPLEMENTATION_IN_PROGRESS","curriculumMap":"docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json","mappedChapterCount":10,"implementedChapterCount":5,"remainingMappedChapterCount":5,"schoolNeedsValidatedChapterCount":4,"nextLargestGap":"Chapter 5 — School Needs Validation","completionClaim":false},
     {"id":"science","name":"Science","schoolRequired":true,"status":"SCIENCE_COMPLETE","curriculumMap":"docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json","completionAudit":"docs/class6-pilot/SCIENCE_COMPLETION_AUDIT_V1.json","mappedChapterCount":12,"implementedChapterCount":12,"schoolNeedsValidatedChapterCount":12,"completionClaim":true,"completionBoundary":"Repository curriculum-implementation completion only; not live-school efficacy, attainment, accreditation, accessibility certification, safety certification or school-specific pacing."},
     {"id":"social-science","name":"Social Science","schoolRequired":true,"status":"DONOR_RESEARCH_IDENTIFIED","donorBaseline":"Exploring Society / prior Class 6 research"},
     {"id":"life-skills-aptitude","name":"Life Skills & Aptitude","schoolRequired":true,"status":"BASELINE_TO_RECONCILE"},
@@ -28,8 +28,8 @@
     "selectedLane": "mathematics",
     "selectedNextChapter": 5,
     "selectedNextChapterTitle": "Prime Time",
-    "selectedNextTask": "Chapter 5 Kiki Teaching Slice",
-    "reason": "Science is formally complete within its bounded repository contract. Mathematics Chapters 1-4 now each have a bounded Kiki teaching/runtime slice and separate synthetic school-needs validation. The strongest next gap is therefore mapped but unimplemented Chapter 5, subject to a fresh concurrency check before any write.",
+    "selectedNextTask": "Chapter 5 School Needs Validation",
+    "reason": "Science is formally complete within its bounded repository contract. Mathematics Chapters 1-4 have teaching plus separate synthetic school-needs validation, and Chapter 5 now has its bounded Kiki teaching/runtime slice. The strongest next task is therefore Chapter 5 synthetic school-needs validation before beginning Chapter 6.",
     "requiresFreshConcurrencyCheckBeforeWrite": true
   },
   "kikiTeachingPath": ["chapter-entry","animated-teaching","worked-example-or-demonstration","guided-practice","quiz-or-performance-check","remediation-if-needed","mastery-evidence"],

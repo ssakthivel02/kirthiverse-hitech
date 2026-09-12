@@ -13,6 +13,7 @@ on:
       - 'tests/class6-math-ch3.test.mjs'
       - 'tests/class6-math-school-needs.test.mjs'
       - 'tests/class6-math-ch2-school-needs.test.mjs'
+      - 'tests/class6-math-ch3-school-needs.test.mjs'
       - 'tests/class6-coverage-reconciliation.test.mjs'
       - 'tests/e2e/release-closure.spec.mjs'
       - '.github/workflows/class6-math-pilot-qa.yml'
@@ -43,6 +44,8 @@ jobs:
         run: node tests/class6-math-ch2-school-needs.test.mjs
       - name: Validate Class 6 Mathematics Chapter 3 teaching slice
         run: node tests/class6-math-ch3.test.mjs
+      - name: Validate Chapter 3 synthetic school-learning needs coverage
+        run: node tests/class6-math-ch3-school-needs.test.mjs
       - name: Validate reconciled Class 6 coverage decision
         run: node tests/class6-coverage-reconciliation.test.mjs
       - name: QA summary
@@ -51,11 +54,11 @@ jobs:
           echo '### Class 6 Mathematics Pilot QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- CBSE Class 6 Ganita Prakash 10-chapter mapping contract' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapters 1-3: nine KirthiVerse-original Kiki lessons / 45 linked assessments' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-2 retain separate eight-scenario synthetic school-learning-needs validation' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 3 covers number relations/number-line structure, digit processes/palindromes, and mental maths/patterns/estimation/conjectures' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 2-3 assessment loading remains lazy outside release-closure while lesson discovery remains immediate' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 3 school-needs validation remains the separate next evidence task; it is not fabricated by this teaching-slice PR' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-3 each retain separate eight-scenario synthetic school-learning-needs validation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 3 validation covers place-value/number-line reasoning, digit-process/proof discipline, mental maths/estimation/strategy and offline access' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Mathematics assessment loading remains deferred on bounded Class 6 lesson/practice/diagnostic/release-closure surfaces while lesson discovery remains immediate' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 4 Data Handling and Presentation is the next mapped implementation gap; no Chapter 4 content is fabricated here' >> "$GITHUB_STEP_SUMMARY"
           echo '- privacy boundary: no real child data, photos, microphone, camera, recording, precise location, remote monitoring or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
           echo '- school overlay is validation context only; no school-specific pacing, efficacy or attainment claim' >> "$GITHUB_STEP_SUMMARY"
-          echo '- active PWA v45 cache additively precaches Chapter 3 assets; no cosmetic cache-generation bump' >> "$GITHUB_STEP_SUMMARY"
+          echo '- active PWA v45 cache and existing release regression contracts remain unchanged' >> "$GITHUB_STEP_SUMMARY"
           echo '- canonical Kiki wording and no-microphone/no-recording safety assertions retained' >> "$GITHUB_STEP_SUMMARY"

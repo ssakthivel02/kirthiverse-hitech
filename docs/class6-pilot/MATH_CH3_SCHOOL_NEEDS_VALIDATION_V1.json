@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-MATH-CH3-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Mathematics · Ganita Prakash · Chapter 3 · Number Play",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 3 topic, a Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action, and an observable mastery criterion. Number-process and conjecture activities must distinguish evidence from proof, and all learner work must remain possible without camera, microphone, cloud AI, precise location, remote monitoring, or live-school data collection.",
+  "scenarios": [
+    {
+      "id": "SN-MATH6-CH3-001",
+      "need": "Learner compares large numbers by how the digit strings look rather than by the highest place at which the numbers differ.",
+      "topicId": "TOPIC-MATH6-03-01",
+      "expectedMisconception": "comparing numbers from visual digit appearance rather than place value",
+      "requiredAssessmentTypes": ["multiple_choice", "mastery_check"],
+      "safeLearnerAction": "Write the two numbers in aligned place-value columns, mark the first position where they differ, and justify the comparison from that place without uploading the work.",
+      "masteryCriterion": "Correctly compares three new five- or six-digit pairs and explains each decision from the highest differing place value rather than visual appearance."
+    },
+    {
+      "id": "SN-MATH6-CH3-002",
+      "need": "Learner assumes equally spaced number-line marks always increase by one and ignores the values of the labelled anchors.",
+      "topicId": "TOPIC-MATH6-03-01",
+      "expectedMisconception": "assuming every equally spaced number-line mark increases by one",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Subtract two labelled anchor values, count the equal numerical intervals between them, divide to find the interval value, and place new values on a hand-drawn line.",
+      "masteryCriterion": "Derives the correct interval value and places at least three new values correctly on a different equally spaced number line while explaining why physical spacing alone does not set the numerical interval."
+    },
+    {
+      "id": "SN-MATH6-CH3-003",
+      "need": "Learner thinks the digit sum identifies a unique number and therefore expects different numbers to have different digit sums.",
+      "topicId": "TOPIC-MATH6-03-02",
+      "expectedMisconception": "digit sum uniquely identifies a number",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Compute digit sums for several rearrangements of the same digits on paper, then compare the resulting numbers and digit sums as separate properties.",
+      "masteryCriterion": "Produces two different numbers with the same digit sum, calculates both sums correctly, and explains why place value can change while the digit sum stays unchanged."
+    },
+    {
+      "id": "SN-MATH6-CH3-004",
+      "need": "Learner treats a leading zero created by digit reversal as a new place-value position and records an incorrect numerical value.",
+      "topicId": "TOPIC-MATH6-03-02",
+      "expectedMisconception": "leading zeroes create new place value after reversal",
+      "requiredAssessmentTypes": ["multiple_choice", "mastery_check"],
+      "safeLearnerAction": "Reverse several three-digit numerals including one ending in zero, write both the reversed digit string and its numerical value, and explain the role of a leading zero.",
+      "masteryCriterion": "Correctly handles at least three reversal cases including an ending-zero case and states that a leading zero does not create extra numerical place value."
+    },
+    {
+      "id": "SN-MATH6-CH3-005",
+      "need": "Learner generalises from many successful trials of a number process and calls the resulting universal statement proved.",
+      "topicId": "TOPIC-MATH6-03-02",
+      "expectedMisconception": "many successful examples prove a rule for every starting number",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Run a fixed number process on a small paper table of examples, record the observations, and label any unsupported universal statement as an observation or conjecture rather than a theorem.",
+      "masteryCriterion": "Given a fresh finite-testing example, distinguishes observed evidence from universal proof and uses the terms observation, conjecture and proven fact appropriately."
+    },
+    {
+      "id": "SN-MATH6-CH3-006",
+      "need": "Learner rejects a useful estimate because it does not equal the exact answer.",
+      "topicId": "TOPIC-MATH6-03-03",
+      "expectedMisconception": "an estimate must equal the exact answer",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Round two calculation problems to friendly values, record an estimate, then calculate exactly and compare the two results as a reasonableness check.",
+      "masteryCriterion": "Produces reasonable estimates for three new calculations, obtains the exact answers separately, and explains why a useful estimate may differ from the exact value."
+    },
+    {
+      "id": "SN-MATH6-CH3-007",
+      "need": "Learner finds a successful move once in a number game and describes that single outcome as a winning strategy without a repeatable rule.",
+      "topicId": "TOPIC-MATH6-03-03",
+      "expectedMisconception": "one successful move is a winning strategy",
+      "requiredAssessmentTypes": ["short_answer", "mastery_check"],
+      "safeLearnerAction": "Describe the rule that would be repeated on later turns, test it on several synthetic game states, and separate a repeatable strategy from a lucky one-off result.",
+      "masteryCriterion": "Explains a repeatable rule for a fresh synthetic number-game situation and correctly distinguishes strategy evidence from one isolated successful move."
+    },
+    {
+      "id": "SN-MATH6-CH3-008",
+      "need": "Learner needs a fully offline route for Number Play and cannot depend on video, microphone, camera, cloud AI, precise location, telemetry, or remote teacher monitoring.",
+      "topicId": "TOPIC-MATH6-03-03",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["multiple_choice", "mastery_check"],
+      "safeLearnerAction": "Use cached Kiki text, locally rendered number examples, paper and pencil, and locally available assessment interactions; no network-dependent tutoring step or media capture is required.",
+      "masteryCriterion": "Completes a mental-method example, an estimation check and the mastery task using only offline local resources, with correct reasoning and no network-dependent tutoring step."
+    }
+  ]
+}

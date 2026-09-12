@@ -8,7 +8,7 @@ const lessonIds=[
   'math.cbse6.ganita-prakash.ch3.mental-pattern-estimation.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.3.0');
+assert.equal(map.schemaVersion,'1.4.0');
 assert.equal(map.chapters[2].chapter,3);
 assert.equal(map.chapters[2].title,'Number Play');
 assert.equal(map.chapters[2].status,'KIKI_TEACHING_SLICE_COMPLETE');
@@ -18,7 +18,9 @@ assert.equal(map.chapter3CompletionEvidence.lessonCount,3);
 assert.equal(map.chapter3CompletionEvidence.assessmentCount,15);
 assert.equal(map.chapter3CompletionEvidence.lazyAssessmentLoadingRequired,true);
 assert.equal(map.chapter3CompletionEvidence.schoolNeedsValidationRequired,true);
-assert.equal(map.chapter3CompletionEvidence.schoolNeedsValidationPresent,false);
+assert.equal(map.chapter3CompletionEvidence.schoolNeedsValidationPresent,true);
+assert.equal(map.chapter3CompletionEvidence.schoolNeedsValidationArtifact,'docs/class6-pilot/MATH_CH3_SCHOOL_NEEDS_VALIDATION_V1.json');
+assert.ok(fs.existsSync(map.chapter3CompletionEvidence.schoolNeedsValidationArtifact),'Chapter 3 school-needs artifact missing');
 
 const sandbox={window:{KV_LESSONS:[],KV_ASSESSMENTS:[]}};
 vm.createContext(sandbox);
@@ -84,4 +86,4 @@ assert.ok(index.includes('microphone:false'));
 assert.ok(index.includes('recording:false'));
 assert.ok(index.includes('speechRecognition:false'));
 
-console.log(`CLASS6_MATH_CH3_PASS topics=${map.chapter3Topics.length} lessons=${lessons.length} assessments=${assessments.length}`);
+console.log(`CLASS6_MATH_CH3_PASS topics=${map.chapter3Topics.length} lessons=${lessons.length} assessments=${assessments.length} schoolNeeds=${map.chapter3CompletionEvidence.schoolNeedsValidationPresent}`);

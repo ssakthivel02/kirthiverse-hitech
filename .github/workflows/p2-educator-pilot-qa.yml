@@ -43,13 +43,11 @@ jobs:
               assert marker in js, marker
           for forbidden in ['teacherEmail','studentEmail','schoolId','manualGrade']:
               assert forbidden not in js, forbidden
-          # Loader may use a relative filename inside the generic add-on helper;
-          # the service worker must still cache the canonical root asset path.
           for marker in ['educator-pilot-v1.js','educator-pilot-v1.css']:
               assert marker in entry, marker
               assert f'/{marker}' in sw, marker
           assert 'loadEducatorPilot' in entry and 'loadAddon' in entry
-          assert "CACHE='kirthiverse-preview-v31'" in sw
+          assert "CACHE='kirthiverse-preview-v44'" in sw
           print('EDUCATOR_PILOT_STATIC_PASS')
           PY
 
@@ -87,5 +85,5 @@ jobs:
           echo '- linked learner real completion evidence checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- unlinked learner no-evidence state checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- export excludes Parent PIN material' >> "$GITHUB_STEP_SUMMARY"
-          echo '- mobile overflow + PWA cache checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- mobile overflow + active v44 PWA cache checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- funding-readiness pilot only; not production school identity/SIS' >> "$GITHUB_STEP_SUMMARY"

@@ -88,7 +88,7 @@ assert.match(entry,/datasetKey:'class6SciencePilot'/);
 assert.match(entry,/CBSE6-SCI-CH12-1/);
 assert.match(entry,/ch\(\?:2\|3\|4\|5\|6\|7\|8\|9\|10\|11\|12\)/);
 const sw=fs.readFileSync('sw-v30.js','utf8');
-assert.match(sw,/CACHE='kirthiverse-preview-v44'/);
+assert.match(sw,/CACHE='kirthiverse-preview-v45'/);
 for(const asset of ['/data/class6-science-ch12.js','/data/class6-science-ch12-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));

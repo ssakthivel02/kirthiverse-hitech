@@ -8,7 +8,7 @@ const lessonIds=[
   'math.cbse6.ganita-prakash.ch5.divisibility.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.6.0');
+assert.equal(map.schemaVersion,'1.7.0');
 assert.equal(map.chapters[4].chapter,5);
 assert.equal(map.chapters[4].title,'Prime Time');
 assert.equal(map.chapters[4].status,'KIKI_TEACHING_SLICE_COMPLETE');
@@ -69,14 +69,14 @@ const runtimeSandbox={window:{KV_LESSONS:[]}};
 vm.createContext(runtimeSandbox);
 vm.runInContext(fs.readFileSync('data/class6-math-ch3-4-runtime.js','utf8'),runtimeSandbox,{filename:'class6-math-ch3-4-runtime.js'});
 const runtimeLessons=runtimeSandbox.window.KV_LESSONS;
-assert.equal(runtimeLessons.length,9,'consolidated Chapters 3-5 runtime bundle must expose nine lessons');
+assert.equal(runtimeLessons.length,12,'consolidated Chapters 3-6 runtime bundle must expose twelve lessons');
 assert.ok(lessonIds.every(id=>runtimeLessons.some(x=>x.id===id)),'runtime bundle missing Chapter 5 lesson');
-assert.equal(new Set(runtimeLessons.map(x=>x.id)).size,9,'runtime bundle lesson IDs must remain unique');
+assert.equal(new Set(runtimeLessons.map(x=>x.id)).size,12,'runtime bundle lesson IDs must remain unique');
 
 const sourceSandbox={window:{KV_LESSONS:[]}};
 vm.createContext(sourceSandbox);
-for(const file of ['data/class6-math-ch3.js','data/class6-math-ch4.js','data/class6-math-ch5.js']) vm.runInContext(fs.readFileSync(file,'utf8'),sourceSandbox,{filename:file});
-assert.equal(sourceSandbox.window.KV_LESSONS.length,9,'source-of-truth Chapters 3-5 must expose nine lessons');
+for(const file of ['data/class6-math-ch3.js','data/class6-math-ch4.js','data/class6-math-ch5.js','data/class6-math-ch6.js']) vm.runInContext(fs.readFileSync(file,'utf8'),sourceSandbox,{filename:file});
+assert.equal(sourceSandbox.window.KV_LESSONS.length,12,'source-of-truth Chapters 3-6 must expose twelve lessons');
 const sourceById=new Map(sourceSandbox.window.KV_LESSONS.map(x=>[x.id,x]));
 for(const runtimeLesson of runtimeLessons){
   assert.ok(sourceById.has(runtimeLesson.id),`runtime lesson ${runtimeLesson.id} missing from source-of-truth modules`);
@@ -85,10 +85,10 @@ for(const runtimeLesson of runtimeLessons){
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch5-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
-assert.ok(entry.includes('ch(?:2|3|4|5)\\.'),'Chapter 1-5 deferred-assessment route coverage missing');
+assert.ok(entry.includes('ch(?:2|3|4|5|6)\\.'),'Chapter 1-6 deferred-assessment route coverage missing');
 assert.ok(!entry.includes("/^\\/lesson\\/math\\./"),'generic Mathematics lessons must not trigger Class 6 assessment bundles');
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
-assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'combined Chapter 3-5 runtime must load in base slice');
+assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'combined Chapter 3-6 runtime must load in base slice');
 assert.ok(!baseChunk.includes('data/class6-math-ch5.js'),'standalone Chapter 5 source module must not add a startup request');
 assert.ok(!baseChunk.includes('data/class6-math-ch5-assessments.js'),'Chapter 5 assessments must remain deferred');
 

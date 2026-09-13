@@ -19,7 +19,9 @@ assert.equal(map.chapter9CompletionEvidence.assessmentCount,15);
 assert.equal(map.chapter9CompletionEvidence.lazyAssessmentLoadingRequired,true);
 assert.equal(map.chapter9CompletionEvidence.startupRequestCeilingPreserved,true);
 assert.equal(map.chapter9CompletionEvidence.schoolNeedsValidationRequired,true);
-assert.equal(map.chapter9CompletionEvidence.schoolNeedsValidationPresent,false);
+assert.equal(map.chapter9CompletionEvidence.schoolNeedsValidationPresent,true);
+assert.equal(map.chapter9CompletionEvidence.schoolNeedsValidationArtifact,'docs/class6-pilot/MATH_CH9_SCHOOL_NEEDS_VALIDATION_V1.json');
+assert.ok(fs.existsSync(map.chapter9CompletionEvidence.schoolNeedsValidationArtifact));
 assert.equal(map.chapter9CompletionEvidence.runtimeCarrier,'data/class6-math-pilot.js');
 assert.equal(map.chapter9CompletionEvidence.sourceOfTruth,'data/class6-math-ch9.js');
 

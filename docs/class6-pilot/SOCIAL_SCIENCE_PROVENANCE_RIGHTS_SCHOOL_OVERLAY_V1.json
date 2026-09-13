@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0.0",
+  "subject": "Social Science",
+  "class": 6,
+  "board": "CBSE",
+  "curriculumSession": "2026-27",
+  "baselineTitle": "Exploring Society: India and Beyond",
+  "decision": "SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_RECONCILED",
+  "scopeBoundary": "Evidence and authoring-boundary reconciliation only. No textbook prose, exercises, lesson content, assessments, live-school data, runtime changes or completion claim are included.",
+  "canonicalSourceHierarchy": {
+    "primary": {
+      "provider": "NCERT",
+      "role": "canonical publisher/source authority",
+      "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
+      "publicationList": "https://www.ncert.nic.in/division/pd/pdf/list_of_publication.pdf",
+      "verifiedTitle": "Exploring Society: India and Beyond",
+      "verifiedClass": "VI",
+      "publicationCode": "0681"
+    },
+    "corroborating": [
+      {
+        "sourceType": "current chapter index",
+        "role": "structure corroboration only",
+        "finding": "The current 2026-27 structure is 14 chapters, including The Value of Work and Economic Activities Around Us as Chapters 13 and 14.",
+        "authority": "not a replacement for NCERT"
+      }
+    ],
+    "discrepancy": {
+      "earlierObservation": "The rendered NCERT textbook shelf exposed 12 chapter links during the first reconciliation.",
+      "currentMappingDecision": "Use the corroborated 14-chapter structure as the working 2026-27 mapping baseline and retain the 12-link observation as a provenance discrepancy requiring future source-version verification.",
+      "silentAssumptionProhibited": true
+    }
+  },
+  "rightsSafeAuthoringBoundary": {
+    "allowedMappingMetadata": [
+      "chapter number",
+      "chapter title",
+      "theme grouping",
+      "source identifiers",
+      "curriculum structure"
+    ],
+    "mustBeIndependentlyAuthored": [
+      "Kiki explanations",
+      "worked examples",
+      "guided practice",
+      "assessment items",
+      "hints",
+      "misconception explanations",
+      "remediation",
+      "mastery evidence"
+    ],
+    "prohibited": [
+      "reproducing NCERT textbook prose",
+      "copying NCERT exercise questions",
+      "copying textbook illustrations or page layouts",
+      "representing third-party notes as canonical curriculum content",
+      "claiming permission or licence not actually verified"
+    ]
+  },
+  "schoolValidationOverlay": {
+    "profile": "SAN Academy Tambaram",
+    "status": "VALIDATION_CONTEXT_ONLY",
+    "liveSchoolEvidenceCollected": false,
+    "schoolTextbookEditionDirectlyVerified": false,
+    "schoolSpecificPacingClaimed": false,
+    "schoolSpecificChapterOrderClaimed": false,
+    "schoolTeacherInputCollected": false,
+    "realChildDataCollected": false,
+    "decision": "Use the SAN Academy profile only as a validation context. Do not infer textbook edition, chapter order, assessment calendar, teaching hours or school policy without direct evidence."
+  },
+  "implementationGates": [
+    "Keep 14 chapters as the current mapping baseline while preserving the 12-link discrepancy record.",
+    "Create independently authored content rather than adapting textbook prose.",
+    "Before each chapter implementation, identify the source/version boundary used for factual curriculum alignment.",
+    "Perform chapter-level rights/source review before lesson generation.",
+    "Use synthetic school-needs validation only; do not collect or infer real child records.",
+    "Do not claim SAN Academy pacing or school-specific textbook alignment without direct evidence.",
+    "Fresh-check main, open PRs and competing work before every implementation write."
+  ],
+  "implementationStatus": {
+    "mappedChapterCount": 14,
+    "implementedChapterCount": 0,
+    "schoolNeedsValidatedChapterCount": 0,
+    "completionClaim": false,
+    "nextBoundedTask": "Begin one independently authored Social Science Kiki teaching slice only after this reconciliation is merged and concurrency is rechecked."
+  }
+}

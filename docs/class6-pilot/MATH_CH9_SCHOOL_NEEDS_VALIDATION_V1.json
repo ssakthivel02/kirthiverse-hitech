@@ -1,0 +1,84 @@
+{
+  "schemaVersion":"1.0.0",
+  "validationId":"KVS-CBSE6-MATH-CH9-SCHOOL-NEEDS-V1",
+  "scope":"CBSE Class 6 Mathematics · Ganita Prakash · Chapter 9 · Symmetry",
+  "validationType":"SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary":"This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary":{"realChildData":false,"names":false,"emails":false,"photos":false,"microphone":false,"camera":false,"recording":false,"preciseLocation":false,"remoteTeacherMonitoring":false,"childFacingCloudAI":false,"telemetryRequired":false},
+  "schoolOverlay":{"school":"SAN Academy Tambaram","use":"validation-context overlay only","schoolSpecificPacingClaimed":false,"liveSchoolEvidenceCollected":false},
+  "passRule":"Every scenario must map to an implemented Chapter 9 topic, an existing Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action and an observable mastery criterion. Reflection claims must be verified by exact point correspondence and equal perpendicular distances rather than visual balance; multi-axis constructions must satisfy every required mirror axis independently; and rotational symmetry must exclude 360 degrees as sole evidence, use an exact centre and full-figure overlap, distinguish order from mirror-line count, and compute the smallest positive angle correctly when repeated positions are equally spaced.",
+  "scenarios":[
+    {
+      "id":"SN-MATH6-CH9-001",
+      "need":"Learner accepts a proposed line of symmetry because two regions look balanced or have similar area, without testing exact point correspondence.",
+      "topicId":"TOPIC-MATH6-09-01",
+      "expectedMisconception":"accepting equal-looking regions as proof of symmetry",
+      "requiredAssessmentTypes":["multiple_choice","worked_challenge","mastery_check"],
+      "safeLearnerAction":"Inspect fictional polygons with proposed mirror lines, choose two or more defining point pairs for each candidate, and test whether reflection places every partner at the same perpendicular distance on the opposite side.",
+      "masteryCriterion":"Correctly accepts or rejects five new candidate mirror lines using exact reflected point correspondence and explains why equal-looking regions alone are insufficient."
+    },
+    {
+      "id":"SN-MATH6-CH9-002",
+      "need":"Learner places a reflected point at an unequal distance from the mirror line or does not recognise the perpendicular-bisector relationship.",
+      "topicId":"TOPIC-MATH6-09-01",
+      "expectedMisconception":"placing reflected points at unequal distances",
+      "requiredAssessmentTypes":["reasoning","short_answer","mastery_check"],
+      "safeLearnerAction":"On a paper grid, reflect fictional labelled points across horizontal, vertical and slanted lines by constructing perpendiculars and matching the original point-to-line distance on the opposite side.",
+      "masteryCriterion":"Reflects six new labelled points accurately across mixed mirror-line orientations and states that the mirror line perpendicularly bisects every point-image segment."
+    },
+    {
+      "id":"SN-MATH6-CH9-003",
+      "need":"Learner assumes any line through the visual centre of a figure is a symmetry line or believes rotating the page changes whether line symmetry exists.",
+      "topicId":"TOPIC-MATH6-09-01",
+      "expectedMisconception":"assuming any line through a visual centre is a symmetry line",
+      "requiredAssessmentTypes":["reasoning","mastery_check"],
+      "safeLearnerAction":"Test several fictional upright and rotated figures with multiple centre-crossing candidate axes, using fold-or-reflection logic for the whole boundary rather than orientation on the page.",
+      "masteryCriterion":"Finds all valid symmetry axes for four new figures, rejects invalid centre-crossing lines, and explains that rotating a figure rotates its symmetry axes without changing the symmetry relationship."
+    },
+    {
+      "id":"SN-MATH6-CH9-004",
+      "need":"Learner copies a missing mirror half freehand instead of reflecting defining points at equal perpendicular distances.",
+      "topicId":"TOPIC-MATH6-09-02",
+      "expectedMisconception":"copying a mirror half freehand without point correspondence",
+      "requiredAssessmentTypes":["multiple_choice","worked_challenge","mastery_check"],
+      "safeLearnerAction":"Complete three fictional partial motifs by reflecting labelled vertices across a specified axis first, then reconnect the reflected points in the corresponding order and verify matching distances and segments.",
+      "masteryCriterion":"Completes three new one-axis symmetric figures with every defining vertex correctly reflected and rejects a visually similar freehand completion containing an unequal-distance point."
+    },
+    {
+      "id":"SN-MATH6-CH9-005",
+      "need":"Learner satisfies one symmetry axis and assumes a second required axis automatically works, without independently verifying the whole figure under both reflections.",
+      "topicId":"TOPIC-MATH6-09-02",
+      "expectedMisconception":"satisfying one symmetry axis and assuming another automatically works",
+      "requiredAssessmentTypes":["reasoning","worked_challenge","mastery_check"],
+      "safeLearnerAction":"Start from a fictional motif in one quadrant, reflect it across one specified axis, then across a second perpendicular axis, and independently verify point correspondence under each mirror line; compare with a circle whose diameters are valid reflection axes.",
+      "masteryCriterion":"Builds and verifies two new two-axis designs, identifies an error that preserves only one axis, and explains why every diameter of a circle is a valid reflection line."
+    },
+    {
+      "id":"SN-MATH6-CH9-006",
+      "need":"Learner calls every figure rotationally symmetric because a full 360-degree turn returns it to the starting position.",
+      "topicId":"TOPIC-MATH6-09-03",
+      "expectedMisconception":"calling every figure rotationally symmetric because 360 degrees works",
+      "requiredAssessmentTypes":["multiple_choice","reasoning","mastery_check"],
+      "safeLearnerAction":"Use fictional traced outlines to test rotations strictly greater than 0 degrees and less than 360 degrees around a marked centre, recording only angles where the whole figure overlaps exactly.",
+      "masteryCriterion":"Correctly separates six new figures into non-trivial rotational-symmetry and no-non-trivial-rotation cases without using 360 degrees as sole evidence."
+    },
+    {
+      "id":"SN-MATH6-CH9-007",
+      "need":"Learner counts partial visual overlap as a rotational match, confuses rotational order with the number of mirror lines, or cannot derive the smallest positive repeat angle.",
+      "topicId":"TOPIC-MATH6-09-03",
+      "expectedMisconception":"confusing rotational order with number of mirror lines",
+      "requiredAssessmentTypes":["worked_challenge","short_answer","mastery_check"],
+      "safeLearnerAction":"For fictional figures with stated exact matching positions, mark the rotation centre, list every exact match in one full turn, determine rotational order, calculate 360 degrees divided by the order where repeats are equally spaced, and test mirror symmetry separately.",
+      "masteryCriterion":"Determines centre, rotational order and smallest positive angle correctly for four new figures and separately reports reflection symmetry without substituting mirror-line count for rotational order."
+    },
+    {
+      "id":"SN-MATH6-CH9-008",
+      "need":"Learner needs to complete the full symmetry-reasoning loop without cloud tutoring, image upload, microphone use or remote monitoring while still verifying both reflection and rotation claims exactly.",
+      "topicId":"TOPIC-MATH6-09-03",
+      "expectedMisconception":"assuming rotational symmetry always implies reflection symmetry",
+      "requiredAssessmentTypes":["reasoning","mastery_check"],
+      "safeLearnerAction":"Use cached Kiki text, locally available Chapter 9 prompts, paper and a pencil to verify one reflection-symmetry case and one rotational-symmetry case, then classify a fictional handed pinwheel by testing rotation and reflection separately without any network-dependent tutoring or submission step.",
+      "masteryCriterion":"Completes a new Chapter 9 symmetry sequence fully offline, verifies exact reflection correspondence, identifies rotational order and smallest positive angle, distinguishes rotation-only from reflection symmetry, and requires no real-child data or external communication."
+    }
+  ]
+}

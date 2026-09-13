@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.0.0",
+  "subject": "Social Science",
+  "class": 6,
+  "board": "CBSE",
+  "curriculumSession": "2026-27",
+  "baselineTitle": "Exploring Society: India and Beyond",
+  "mappingDate": "2026-09-13",
+  "decision": "SOCIAL_SCIENCE_14_CHAPTER_MAPPING_BASELINE",
+  "scopeBoundary": "Curriculum structure and provenance mapping only. No textbook prose, exercises, lesson generation, assessment generation, school-needs validation, runtime change or completion claim is included.",
+  "officialSource": {
+    "provider": "NCERT",
+    "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
+    "publicationList": "https://www.ncert.nic.in/division/pd/pdf/list_of_publication.pdf",
+    "officialPortalCurrentObservation": "The NCERT textbook portal currently exposes the title and chapter links in its rendered Class VI shelf; the portal rendering observed during reconciliation showed twelve chapter links.",
+    "publicationListEvidence": "The NCERT publication list identifies Exploring Society: India and Beyond as Social Science Textbook for Class VI (code 0681).",
+    "currentChapterCountForMapping": 14,
+    "chapterCountDiscrepancy": "The rendered NCERT portal shelf observed during the earlier reconciliation exposed 12 chapter links, while current 2026-27 chapter-index evidence identifies 14 chapters. The mapping therefore treats 14 as the working current textbook structure and records the portal discrepancy rather than silently assuming 12.",
+    "chapterContentCopied": false
+  },
+  "corroboratingCurrentStructure": {
+    "source": "NCERT-aligned current 2026-27 chapter index/search evidence",
+    "chapterCount": 14,
+    "use": "Corroboration only; NCERT remains the canonical publisher/source authority."
+  },
+  "chapters": [
+    {"chapter":1,"title":"Locating Places on the Earth","theme":"Theme A — India and the World: Land and the People"},
+    {"chapter":2,"title":"Oceans and Continents","theme":"Theme A — India and the World: Land and the People"},
+    {"chapter":3,"title":"Landforms and Life","theme":"Theme A — India and the World: Land and the People"},
+    {"chapter":4,"title":"Timeline and Sources of History","theme":"Theme B — Tapestry of the Past"},
+    {"chapter":5,"title":"India, That Is Bharat","theme":"Theme B — Tapestry of the Past"},
+    {"chapter":6,"title":"The Beginnings of Indian Civilisation","theme":"Theme B — Tapestry of the Past"},
+    {"chapter":7,"title":"India’s Cultural Roots","theme":"Theme C — Our Cultural Heritage and Knowledge Traditions"},
+    {"chapter":8,"title":"Unity in Diversity, or ‘Many in the One’","theme":"Theme C — Our Cultural Heritage and Knowledge Traditions"},
+    {"chapter":9,"title":"Family and Community","theme":"Theme D — Governance and Democracy"},
+    {"chapter":10,"title":"Grassroots Democracy — Part 1: Governance","theme":"Theme D — Governance and Democracy"},
+    {"chapter":11,"title":"Grassroots Democracy — Part 2: Local Government in Rural Areas","theme":"Theme D — Governance and Democracy"},
+    {"chapter":12,"title":"Grassroots Democracy — Part 3: Local Government in Urban Areas","theme":"Theme D — Governance and Democracy"},
+    {"chapter":13,"title":"The Value of Work","theme":"Theme E — Economic Life Around Us"},
+    {"chapter":14,"title":"Economic Activities Around Us","theme":"Theme E — Economic Life Around Us"}
+  ],
+  "implementationStatus": {
+    "mappedChapterCount": 14,
+    "implementedChapterCount": 0,
+    "schoolNeedsValidatedChapterCount": 0,
+    "completionClaim": false,
+    "nextBoundedTask": "Provenance/rights and school-overlay reconciliation before independently authored Kiki teaching content."
+  },
+  "rightsAndSafetyBoundary": [
+    "Use chapter titles and structural metadata for mapping only.",
+    "Do not reproduce NCERT textbook prose or exercise questions.",
+    "Create independently authored teaching explanations and examples after provenance/rights review.",
+    "Do not claim SAN Academy-specific textbook alignment without direct evidence.",
+    "Do not claim whole-Class-6 completion."
+  ]
+}

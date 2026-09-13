@@ -31,16 +31,18 @@ jobs:
         run: node tests/class6-social-science-ch1.test.mjs
       - name: Validate Social Science Chapter 1 school-needs evidence
         run: node tests/class6-social-science-ch1-school-needs.test.mjs
+      - name: Validate Social Science Chapter 2 source and topic boundary
+        run: node tests/class6-social-science-ch2-reconciliation.test.mjs
       - name: Validate Class 6 coverage transition
         run: node tests/class6-coverage-reconciliation.test.mjs
       - name: QA summary
         if: always()
         run: |
-          echo '## Class 6 Social Science Chapter 1' >> "$GITHUB_STEP_SUMMARY"
-          echo '- 3 independently authored Kiki lessons' >> "$GITHUB_STEP_SUMMARY"
-          echo '- 15 deterministic assessments' >> "$GITHUB_STEP_SUMMARY"
-          echo '- 8 synthetic school-needs scenarios linked to implemented topics and assessments' >> "$GITHUB_STEP_SUMMARY"
-          echo '- privacy-safe validation: no real child data, live location, camera, microphone or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
+          echo '## Class 6 Social Science' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 1: 3 independently authored Kiki lessons, 15 deterministic assessments, 8 synthetic school-needs scenarios' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 2: source/topic boundary reconciled across 4 independently authorable topics; no teaching content yet' >> "$GITHUB_STEP_SUMMARY"
+          echo '- NCERT remains canonical source authority; textbook prose, exercises, maps and figures are not copied' >> "$GITHUB_STEP_SUMMARY"
+          echo '- privacy-safe boundary: no real child data, live location, camera, microphone or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
           echo '- SAN Academy remains validation context only; no live-school, efficacy, attainment or pacing claim' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 1 implemented + school-needs validated; Social Science remains incomplete' >> "$GITHUB_STEP_SUMMARY"
-          echo '- next bounded task requires fresh concurrency check before Chapter 2 source/topic reconciliation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Social Science and whole Class 6 remain incomplete' >> "$GITHUB_STEP_SUMMARY"
+          echo '- next bounded task requires fresh concurrency check before Chapter 2 Kiki teaching implementation' >> "$GITHUB_STEP_SUMMARY"

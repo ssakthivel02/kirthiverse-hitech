@@ -1,46 +1,44 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "subject": "Social Science",
   "class": 6,
   "board": "CBSE",
   "curriculumSession": "2026-27",
   "baselineTitle": "Exploring Society: India and Beyond",
   "reconciliationDate": "2026-09-13",
-  "decision": "SOCIAL_SCIENCE_NEXT_RECONCILIATION_LANE",
+  "decision": "SOCIAL_SCIENCE_MAPPING_REQUIRES_14_CHAPTER_BASELINE",
   "scopeBoundary": "Source and curriculum-baseline reconciliation only. No lesson, assessment, school-needs, runtime, PWA, deployment or completion claim is created by this artifact.",
   "officialSource": {
     "provider": "NCERT",
-    "sourceType": "official textbook portal",
-    "url": "https://ncert.nic.in/textbook.php?fees1=8-12",
+    "sourceType": "official textbook portal and publication list",
+    "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
+    "publicationList": "https://www.ncert.nic.in/division/pd/pdf/list_of_publication.pdf",
     "titleVerified": true,
-    "chapterLinkCountVerified": 12,
+    "publicationClassVerified": "VI",
+    "publicationCode": "0681",
+    "earlierRenderedChapterLinkCount": 12,
+    "currentWorkingChapterCount": 14,
     "chapterContentExtracted": false,
-    "chapterTitlesVerified": false,
-    "publicationListCrossCheck": {
-      "url": "https://www.ncert.nic.in/division/pd/pdf/list_of_publication.pdf",
-      "titleVerified": true,
-      "classVerified": "VI"
-    }
+    "chapterTitlesVerified": true,
+    "discrepancy": "The NCERT portal rendering observed during the earlier reconciliation exposed twelve chapter links, but current 2026-27 chapter-index evidence identifies fourteen chapters. The implementation baseline is therefore corrected to fourteen chapters, with the discrepancy explicitly preserved for provenance review rather than silently discarded."
   },
   "priorDonorResearch": {
     "status": "IDENTIFIED_READ_ONLY",
     "baseline": "Exploring Society / prior Class 6 research",
-    "priorEvidenceState": "Earlier research identified the title through catalogue evidence but had not directly verified the canonical NCERT textbook page/PDF.",
     "legacyPolicy": "Read-only donor evidence only; no bulk copy and no legacy development."
   },
-  "whySelectedNext": [
-    "Mathematics and Science now satisfy their bounded repository completion contracts.",
-    "Social Science already has an identified Class 6 donor baseline in the coverage manifest.",
-    "The current NCERT official textbook portal now directly verifies the Class 6 Exploring Society title and exposes twelve chapter links.",
-    "English/Poorvi remains a baseline candidate, but the available prior evidence only records catalogue-level identification and no comparable direct source reconciliation was established in this pass.",
-    "Computer Science/CT-AI has an official framework and handbook baseline, but its school mapping remains explicitly pending in the manifest.",
-    "Selecting Social Science therefore minimizes unsupported assumptions while creating a clean evidence-backed next lane."
-  ],
+  "mappingArtifact": "docs/class6-pilot/SOCIAL_SCIENCE_CURRICULUM_MAPPING_V1.json",
+  "mappingStatus": {
+    "chapterCount": 14,
+    "chapterTitlesVerified": true,
+    "implementedChapterCount": 0,
+    "completionClaim": false
+  },
   "gatesBeforeImplementation": [
-    "Extract and verify the twelve chapter titles from the canonical NCERT source without reproducing textbook prose.",
+    "Resolve provenance/source-version boundaries for the fourteen-chapter structure.",
     "Record curriculum structure as mapping metadata only.",
     "Resolve school-validation overlay without inventing SAN Academy textbook mapping.",
-    "Perform rights/provenance review before creating Kiki teaching content.",
+    "Perform rights/source review before creating Kiki teaching content.",
     "Create independently authored Kiki lessons, examples, practice, assessments, remediation and mastery evidence only after mapping is locked.",
     "Create separate synthetic school-needs validation for each implemented chapter where required.",
     "Fresh-check GitHub concurrency immediately before every implementation write."
@@ -57,9 +55,10 @@
   "externalVerification": {
     "verifiedAgainst": [
       "NCERT official textbook portal",
-      "NCERT official publication list"
+      "NCERT official publication list",
+      "current 2026-27 chapter-index corroboration"
     ],
-    "verificationResult": "The official NCERT portal lists Exploring Society India and Beyond and provides Chapter 1 through Chapter 12 links; the official publication list identifies it as the Social Science Textbook for Class VI.",
-    "notYetVerified": "Exact chapter titles/content and school-specific textbook alignment remain pending."
+    "verificationResult": "The official NCERT publication list verifies the Class VI title. The current 2026-27 structure is corroborated as fourteen chapters: Chapters 1-12 followed by The Value of Work and Economic Activities Around Us.",
+    "notYetVerified": "School-specific textbook alignment and final rights/source boundaries for each independently authored implementation slice remain pending."
   }
 }

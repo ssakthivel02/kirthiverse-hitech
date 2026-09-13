@@ -64,40 +64,43 @@ for(const required of ['compass','circle','centre','radius','fixed distance','ar
 assert.ok(allText.includes('orientation'),'rotation/orientation invariance must be explicit');
 assert.ok(allText.includes('one diagonal length alone')||allText.includes('one diagonal'),'insufficient diagonal-only constraint boundary missing');
 
-const runtimeSandbox={window:{KV_LESSONS:[]}};
-vm.createContext(runtimeSandbox);
-vm.runInContext(fs.readFileSync('data/class6-math-ch3-4-runtime.js','utf8'),runtimeSandbox,{filename:'class6-math-ch3-4-runtime.js'});
-const runtimeLessons=runtimeSandbox.window.KV_LESSONS;
-assert.equal(runtimeLessons.length,18,'consolidated Chapters 3-8 runtime bundle must expose eighteen lessons');
-assert.ok(lessonIds.every(id=>runtimeLessons.some(x=>x.id===id)),'runtime bundle missing Chapter 8 lesson');
-assert.equal(new Set(runtimeLessons.map(x=>x.id)).size,18,'runtime bundle lesson IDs must remain unique');
-
-const sourceSandbox={window:{KV_LESSONS:[]}};
-vm.createContext(sourceSandbox);
-for(const file of ['data/class6-math-ch3.js','data/class6-math-ch4.js','data/class6-math-ch5.js','data/class6-math-ch6.js','data/class6-math-ch7.js','data/class6-math-ch8.js']) vm.runInContext(fs.readFileSync(file,'utf8'),sourceSandbox,{filename:file});
-assert.equal(sourceSandbox.window.KV_LESSONS.length,18,'source-of-truth Chapters 3-8 must expose eighteen lessons');
-const sourceById=new Map(sourceSandbox.window.KV_LESSONS.map(x=>[x.id,x]));
-for(const runtimeLesson of runtimeLessons){
-  assert.ok(sourceById.has(runtimeLesson.id),`runtime lesson ${runtimeLesson.id} missing from source-of-truth modules`);
-  assert.deepEqual(JSON.parse(JSON.stringify(runtimeLesson)),JSON.parse(JSON.stringify(sourceById.get(runtimeLesson.id))),`runtime drift detected for ${runtimeLesson.id}`);
+const carrierSandbox={window:{KV_LESSONS:[]}};
+vm.createContext(carrierSandbox);
+vm.runInContext(fs.readFileSync('data/class6-math-ch2.js','utf8'),carrierSandbox,{filename:'class6-math-ch2.js'});
+const carrierLessons=carrierSandbox.window.KV_LESSONS;
+const carrierChapter2=carrierLessons.filter(x=>x.chapter===2);
+const runtimeChapter8=carrierLessons.filter(x=>x.chapter===8);
+assert.equal(carrierChapter2.length,3,'historical Chapter 2 startup carrier must retain exactly three Chapter 2 lessons');
+assert.equal(runtimeChapter8.length,3,'historical Chapter 2 startup carrier must append exactly three Chapter 8 runtime lessons');
+assert.equal(new Set(carrierLessons.map(x=>x.id)).size,6,'startup carrier lesson IDs must remain unique');
+assert.deepEqual([...runtimeChapter8.map(x=>x.id)].sort(),[...lessonIds].sort(),'startup carrier missing Chapter 8 lesson');
+const sourceById=new Map(lessons.map(x=>[x.id,x]));
+for(const runtimeLesson of runtimeChapter8){
+  assert.deepEqual(JSON.parse(JSON.stringify(runtimeLesson)),JSON.parse(JSON.stringify(sourceById.get(runtimeLesson.id))),`Chapter 8 runtime drift detected for ${runtimeLesson.id}`);
 }
 
+const establishedRuntime={window:{KV_LESSONS:[]}};
+vm.createContext(establishedRuntime);
+vm.runInContext(fs.readFileSync('data/class6-math-ch3-4-runtime.js','utf8'),establishedRuntime,{filename:'class6-math-ch3-4-runtime.js'});
+assert.equal(establishedRuntime.window.KV_LESSONS.length,15,'approved Chapters 3-7 runtime bundle must remain fifteen lessons');
+
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
-for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch8-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
+for(const asset of ['data/class6-math-ch2.js','data/class6-math-ch3-4-runtime.js','data/class6-math-ch8-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.ok(entry.includes('ch(?:2|3|4|5|6|7|8)\\.'),'Chapter 1-8 deferred-assessment route coverage missing');
 assert.ok(!entry.includes("/^\\/lesson\\/math\\./"),'generic Mathematics lessons must not trigger Class 6 assessment bundles');
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
-assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'combined Chapter 3-8 runtime must load in base slice');
+assert.ok(baseChunk.includes('data/class6-math-ch2.js'),'existing Chapter 2 startup request must remain the Chapter 8 runtime carrier');
+assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'approved Chapter 3-7 runtime must remain in base slice');
 assert.ok(!baseChunk.includes('data/class6-math-ch8.js'),'standalone Chapter 8 source module must not add a startup request');
 assert.ok(!baseChunk.includes('data/class6-math-ch8-assessments.js'),'Chapter 8 assessments must remain deferred');
 
 const sw=fs.readFileSync('sw-v30.js','utf8');
 assert.match(sw,/kirthiverse-preview-v45/);
-for(const asset of ['/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch8-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
+for(const asset of ['/data/class6-math-ch2.js','/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch8-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));
 assert.ok(index.includes('microphone:false'));
 assert.ok(index.includes('recording:false'));
 assert.ok(index.includes('speechRecognition:false'));
 
-console.log(`CLASS6_MATH_CH8_PASS topics=${map.chapter8Topics.length} lessons=${lessons.length} assessments=${assessments.length} runtimeParity=${runtimeLessons.length} startupCeiling=${map.chapter8CompletionEvidence.startupRequestCeilingPreserved}`);
+console.log(`CLASS6_MATH_CH8_PASS topics=${map.chapter8Topics.length} lessons=${lessons.length} assessments=${assessments.length} runtimeParity=${runtimeChapter8.length} startupCeiling=${map.chapter8CompletionEvidence.startupRequestCeilingPreserved}`);

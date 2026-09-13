@@ -1,0 +1,84 @@
+{
+  "schemaVersion":"1.0.0",
+  "validationId":"KVS-CBSE6-MATH-CH7-SCHOOL-NEEDS-V1",
+  "scope":"CBSE Class 6 Mathematics · Ganita Prakash · Chapter 7 · Fractions",
+  "validationType":"SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary":"This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary":{"realChildData":false,"names":false,"emails":false,"photos":false,"microphone":false,"camera":false,"recording":false,"preciseLocation":false,"remoteTeacherMonitoring":false,"childFacingCloudAI":false,"telemetryRequired":false},
+  "schoolOverlay":{"school":"SAN Academy Tambaram","use":"validation-context overlay only","schoolSpecificPacingClaimed":false,"liveSchoolEvidenceCollected":false},
+  "passRule":"Every scenario must map to an implemented Chapter 7 topic, an existing Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action and an observable mastery criterion. Fractional units must come from equal parts of a stated whole; numerator and denominator roles must remain distinct; equivalent fractions must preserve value by scaling numerator and denominator together; comparisons must reason about whole-fraction value; and addition/subtraction must use compatible fractional units before numerator counts are combined.",
+  "scenarios":[
+    {
+      "id":"SN-MATH6-CH7-001",
+      "need":"Learner treats any four pieces as quarters even when the pieces are unequal, or reverses numerator and denominator meaning when interpreting a fraction.",
+      "topicId":"TOPIC-MATH6-07-01",
+      "expectedMisconception":"counting unequal pieces as one fractional unit",
+      "requiredAssessmentTypes":["reasoning","mastery_check"],
+      "safeLearnerAction":"Use a fictional paper strip as one whole, partition it into equal parts, label the denominator as the number of equal parts in the whole and the numerator as the count of those units, then reject a second strip whose pieces are visibly unequal as evidence for the same fractional unit.",
+      "masteryCriterion":"Correctly interprets four new proper fractions from equal partitions, explains numerator and denominator roles in words, and rejects an unequal-parts representation without prompting."
+    },
+    {
+      "id":"SN-MATH6-CH7-002",
+      "need":"Learner assumes every fraction is less than one or converts between improper fractions and mixed numbers without grouping complete denominator-sized wholes correctly.",
+      "topicId":"TOPIC-MATH6-07-01",
+      "expectedMisconception":"assuming every fraction is less than one",
+      "requiredAssessmentTypes":["worked_challenge","short_answer","mastery_check"],
+      "safeLearnerAction":"Represent a fictional quantity such as 13 fifths using groups of five equal fifth-units, circle each complete group as one whole, record the remaining units, and convert between 13/5 and 2 3/5 in both directions.",
+      "masteryCriterion":"Converts four new improper fractions to mixed numbers and back, identifies values greater than one, and explains the regrouping using denominator-sized whole groups."
+    },
+    {
+      "id":"SN-MATH6-CH7-003",
+      "need":"Learner places a fraction on a number line by counting tick marks rather than equal intervals or changes the fractional unit between adjacent whole-number intervals.",
+      "topicId":"TOPIC-MATH6-07-01",
+      "expectedMisconception":"converting mixed numbers without preserving the denominator-sized unit",
+      "requiredAssessmentTypes":["multiple_choice","worked_challenge","mastery_check"],
+      "safeLearnerAction":"Draw a number line from 0 to 3, partition every whole interval into the same number of equal parts, name the fractional unit, and place proper, improper and mixed fractions by counting equal intervals from zero rather than counting printed tick marks.",
+      "masteryCriterion":"Places five new fractions including values above one on equally partitioned number lines and states the fixed fractional unit used across every whole interval."
+    },
+    {
+      "id":"SN-MATH6-CH7-004",
+      "need":"Learner doubles only the numerator or only the denominator and calls the result equivalent, or simplifies numerator and denominator by different factors.",
+      "topicId":"TOPIC-MATH6-07-02",
+      "expectedMisconception":"changing only numerator or denominator and calling the result equivalent",
+      "requiredAssessmentTypes":["reasoning","short_answer","mastery_check"],
+      "safeLearnerAction":"Use aligned fictional fraction strips to show one value such as 2/3 reaching the same endpoint as 4/6, then write the same multiplication or division factor beside both numerator and denominator and verify the endpoint stays fixed.",
+      "masteryCriterion":"Generates and justifies two equivalent forms for each of three new fractions, reduces three fractions correctly, and rejects one-sided numerator or denominator changes as value-changing transformations."
+    },
+    {
+      "id":"SN-MATH6-CH7-005",
+      "need":"Learner decides that the fraction with the larger denominator must be larger, or compares unlike fractions by looking at only one symbol.",
+      "topicId":"TOPIC-MATH6-07-02",
+      "expectedMisconception":"assuming a larger denominator always means a larger fraction",
+      "requiredAssessmentTypes":["reasoning","worked_challenge","mastery_check"],
+      "safeLearnerAction":"Compare fictional fraction pairs by rewriting them with one common denominator or locating both on the same number line, then use benchmarks such as 1/2 or 1 only when they give enough evidence for the ordering.",
+      "masteryCriterion":"Orders four new unlike-denominator pairs correctly, supplies a common-unit, number-line or valid benchmark justification, and does not infer order from denominator size alone."
+    },
+    {
+      "id":"SN-MATH6-CH7-006",
+      "need":"Learner adds numerator and denominator separately, for example claiming 1/2 + 1/3 = 2/5, because the fractional units are not being made compatible first.",
+      "topicId":"TOPIC-MATH6-07-03",
+      "expectedMisconception":"adding numerators and denominators componentwise",
+      "requiredAssessmentTypes":["reasoning","multiple_choice","mastery_check"],
+      "safeLearnerAction":"Name the units aloud as halves and thirds, rewrite both quantities as sixths using equivalent fractions, combine only the sixth-unit counts, and compare the result with the original addends to check that the sum is larger than either positive addend.",
+      "masteryCriterion":"Correctly solves three new unlike-denominator additions, explicitly identifies the common fractional unit before combining numerators, and diagnoses a componentwise numerator-denominator addition error."
+    },
+    {
+      "id":"SN-MATH6-CH7-007",
+      "need":"Learner subtracts unlike fractions without constructing a common unit or accepts an answer whose size contradicts subtracting a smaller positive amount from a larger fraction.",
+      "topicId":"TOPIC-MATH6-07-03",
+      "expectedMisconception":"combining unlike fractional units before conversion",
+      "requiredAssessmentTypes":["worked_challenge","short_answer","mastery_check"],
+      "safeLearnerAction":"Rewrite a fictional subtraction such as 5/6 minus 1/4 using twelfths, subtract the compatible numerator counts, simplify if possible, then locate the result approximately on a 0-to-1 number line to verify that it is smaller than the starting fraction but non-negative.",
+      "masteryCriterion":"Solves three new unlike-denominator subtractions through explicit common units and rejects at least one deliberately unreasonable result using operation direction or number-line magnitude."
+    },
+    {
+      "id":"SN-MATH6-CH7-008",
+      "need":"Learner needs to complete the full Fractions reasoning loop without cloud tutoring, image upload, microphone use or remote monitoring, while preserving common-unit reasoning rather than relying on an online calculator.",
+      "topicId":"TOPIC-MATH6-07-03",
+      "expectedMisconception":"accepting results whose magnitude contradicts the operation",
+      "requiredAssessmentTypes":["reasoning","mastery_check"],
+      "safeLearnerAction":"Use cached Kiki text, locally available Chapter 7 assessment prompts and a paper number line to solve one equivalence/comparison task and one fraction addition or subtraction task, state the common fractional unit, and perform a benchmark reasonableness check without any network-dependent tutoring or submission step.",
+      "masteryCriterion":"Completes a new Chapter 7 reasoning sequence fully offline, preserves equivalent-value transformations and compatible fractional units, catches an unreasonable result, and requires no real-child data or external communication."
+    }
+  ]
+}

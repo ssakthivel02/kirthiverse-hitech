@@ -9,6 +9,7 @@ const mathCh3Needs=readJson('docs/class6-pilot/MATH_CH3_SCHOOL_NEEDS_VALIDATION_
 const mathCh4Needs=readJson('docs/class6-pilot/MATH_CH4_SCHOOL_NEEDS_VALIDATION_V1.json');
 const mathCh5Needs=readJson('docs/class6-pilot/MATH_CH5_SCHOOL_NEEDS_VALIDATION_V1.json');
 const mathCh6Needs=readJson('docs/class6-pilot/MATH_CH6_SCHOOL_NEEDS_VALIDATION_V1.json');
+const mathCh7Needs=readJson('docs/class6-pilot/MATH_CH7_SCHOOL_NEEDS_VALIDATION_V1.json');
 const scienceMap=readJson('docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json');
 const scienceAudit=readJson('docs/class6-pilot/SCIENCE_COMPLETION_AUDIT_V1.json');
 
@@ -16,8 +17,7 @@ assert.equal(manifest.schemaVersion,'1.5.0');
 assert.equal(manifest.pilot.board,'CBSE');
 assert.equal(manifest.pilot.class,6);
 assert.equal(manifest.pilot.canonicalRepository,'ssakthivel02/kirthiverse-hitech');
-assert.equal(manifest.pilot.lastReconciledMain,'29a80d01124359289403bd2370348674ca4fe3f2');
-
+assert.equal(manifest.pilot.lastReconciledMain,'6578dbdf77a6bf6a4f2f7563715e51b035e50fad');
 const byId=Object.fromEntries(manifest.subjects.map(x=>[x.id,x]));
 assert.equal(manifest.subjects.length,11);
 assert.equal(Object.keys(byId).length,11,'subject IDs must be unique');
@@ -47,30 +47,24 @@ assert.equal(pendingMath[0].title,'Playing with Constructions');
 assert.equal(mathematics.mappedChapterCount,maths.chapters.length);
 assert.equal(mathematics.implementedChapterCount,implementedMath.length);
 assert.equal(mathematics.remainingMappedChapterCount,pendingMath.length);
-assert.equal(mathematics.schoolNeedsValidatedChapterCount,6);
-assert.equal(mathematics.nextLargestGap,'Chapter 7 — School Needs Validation');
-for(const chapter of [2,3,4,5,6]) assert.equal(maths[`chapter${chapter}CompletionEvidence`]?.schoolNeedsValidationPresent,true,`Chapter ${chapter} school-needs evidence must be present`);
-assert.equal(maths.chapter7CompletionEvidence?.schoolNeedsValidationRequired,true);
-assert.equal(maths.chapter7CompletionEvidence?.schoolNeedsValidationPresent,false);
+assert.equal(mathematics.schoolNeedsValidatedChapterCount,7);
+assert.equal(mathematics.nextLargestGap,'Chapter 8 — Playing with Constructions teaching slice');
+for(const chapter of [2,3,4,5,6,7]) assert.equal(maths[`chapter${chapter}CompletionEvidence`]?.schoolNeedsValidationPresent,true,`Chapter ${chapter} school-needs evidence must be present`);
+assert.equal(maths.chapter7CompletionEvidence?.schoolNeedsValidationArtifact,'docs/class6-pilot/MATH_CH7_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(maths.chapter7CompletionEvidence?.startupRequestCeilingPreserved,true);
-assert.equal(maths.chapter6CompletionEvidence?.schoolNeedsValidationArtifact,'docs/class6-pilot/MATH_CH6_SCHOOL_NEEDS_VALIDATION_V1.json');
-for(const artifact of [mathCh2Needs,mathCh3Needs,mathCh4Needs,mathCh5Needs,mathCh6Needs]){
+for(const artifact of [mathCh2Needs,mathCh3Needs,mathCh4Needs,mathCh5Needs,mathCh6Needs,mathCh7Needs]){
   assert.equal(artifact.validationType,'SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS');
   assert.equal(artifact.schoolOverlay.liveSchoolEvidenceCollected,false);
   assert.equal(artifact.scenarios.length,8);
 }
-assert.equal(mathCh6Needs.validationId,'KVS-CBSE6-MATH-CH6-SCHOOL-NEEDS-V1');
+assert.equal(mathCh7Needs.validationId,'KVS-CBSE6-MATH-CH7-SCHOOL-NEEDS-V1');
 
 assert.equal(manifest.priorityDecision.selectedLane,'mathematics');
-assert.equal(manifest.priorityDecision.selectedNextChapter,7);
-assert.equal(manifest.priorityDecision.selectedNextChapterTitle,'Fractions');
-assert.equal(manifest.priorityDecision.selectedNextTask,'Chapter 7 School Needs Validation');
+assert.equal(manifest.priorityDecision.selectedNextChapter,8);
+assert.equal(manifest.priorityDecision.selectedNextChapterTitle,'Playing with Constructions');
+assert.equal(manifest.priorityDecision.selectedNextTask,'Chapter 8 Kiki Teaching Slice');
 assert.equal(manifest.priorityDecision.requiresFreshConcurrencyCheckBeforeWrite,true);
-
-for(const id of ['english','language-2','language-3','social-science','life-skills-aptitude','computer-science','health-physical-education','work-education','art-education']){
-  assert.notEqual(byId[id].completionClaim,true,`${id} must not claim completion`);
-}
-
+for(const id of ['english','language-2','language-3','social-science','life-skills-aptitude','computer-science','health-physical-education','work-education','art-education']) assert.notEqual(byId[id].completionClaim,true,`${id} must not claim completion`);
 assert.equal(manifest.safety.unrestrictedChildChat,false);
 assert.equal(manifest.safety.microphoneCapture,false);
 assert.equal(manifest.safety.externalLearnerPrompts,false);
@@ -80,5 +74,4 @@ assert.equal(manifest.legacyPolicy.oldReposAreReadOnlyDonors,true);
 assert.equal(manifest.legacyPolicy.bulkCopyAllowed,false);
 assert.equal(manifest.legacyPolicy.reconcileOnlyIfMissing,true);
 assert.equal(manifest.legacyPolicy.sourceAndRightsReviewRequired,true);
-
 console.log('Class 6 coverage reconciliation: PASS');

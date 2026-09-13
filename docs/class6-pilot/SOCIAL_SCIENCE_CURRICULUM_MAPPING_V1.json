@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.3.0",
+  "schemaVersion": "1.4.0",
   "subject": "Social Science",
   "class": 6,
   "board": "CBSE",
@@ -7,7 +7,7 @@
   "baselineTitle": "Exploring Society: India and Beyond",
   "mappingDate": "2026-09-13",
   "decision": "SOCIAL_SCIENCE_14_CHAPTER_MAPPING_BASELINE",
-  "scopeBoundary": "Fourteen-chapter curriculum mapping with independently authored Chapter 1 Kiki teaching implementation and separate synthetic school-needs validation; Chapter 2 source/topic boundaries are reconciled but no Chapter 2 teaching content is implemented. No NCERT textbook prose, exercises, live-school evidence or subject-completion claim is included.",
+  "scopeBoundary": "Fourteen-chapter curriculum mapping with independently authored Chapter 1 and Chapter 2 Kiki teaching implementation. Chapter 1 has separate synthetic school-needs validation; Chapter 2 school-needs validation remains pending. No NCERT textbook prose, exercises, live-school evidence or subject-completion claim is included.",
   "officialSource": {
     "provider": "NCERT",
     "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
@@ -25,7 +25,7 @@
   },
   "chapters": [
     {"chapter":1,"title":"Locating Places on the Earth","theme":"Theme A — India and the World: Land and the People","status":"KIKI_TEACHING_SLICE_COMPLETE","topicCount":3,"lessonDataset":"data/class6-social-science-pilot.js","assessmentDataset":"data/class6-social-science-assessments.js","assessmentCount":15,"rightsReviewArtifact":"docs/class6-pilot/SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_V1.json","schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":true,"schoolNeedsValidationArtifact":"docs/class6-pilot/SOCIAL_SCIENCE_CH1_SCHOOL_NEEDS_VALIDATION_V1.json","implementationBoundary":"Independently authored map components, latitude/longitude coordinates, and longitude/time concepts; no textbook prose or exercises reproduced."},
-    {"chapter":2,"title":"Oceans and Continents","theme":"Theme A — India and the World: Land and the People","status":"SOURCE_TOPIC_BOUNDARY_RECONCILED_NOT_IMPLEMENTED","topicCount":4,"sourceTopicReconciliationArtifact":"docs/class6-pilot/SOCIAL_SCIENCE_CH2_SOURCE_TOPIC_RECONCILIATION_V1.json","schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":false,"implementationBoundary":"Land/water distribution; five interconnected oceans; continents/islands and counting conventions; oceans' importance, human impact and protection. No Chapter 2 lesson or assessment content yet."},
+    {"chapter":2,"title":"Oceans and Continents","theme":"Theme A — India and the World: Land and the People","status":"KIKI_TEACHING_SLICE_COMPLETE","topicCount":4,"lessonDataset":"data/class6-social-science-pilot.js","assessmentDataset":"data/class6-social-science-assessments.js","assessmentCount":20,"sourceTopicReconciliationArtifact":"docs/class6-pilot/SOCIAL_SCIENCE_CH2_SOURCE_TOPIC_RECONCILIATION_V1.json","schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":false,"implementationBoundary":"Independently authored land/water distribution; five interconnected oceans; continents/islands and counting conventions; and oceans' importance, human impact and protection. No copied textbook prose, exercises, maps or figures."},
     {"chapter":3,"title":"Landforms and Life","theme":"Theme A — India and the World: Land and the People","status":"MAPPED_NOT_YET_IMPLEMENTED"},
     {"chapter":4,"title":"Timeline and Sources of History","theme":"Theme B — Tapestry of the Past","status":"MAPPED_NOT_YET_IMPLEMENTED"},
     {"chapter":5,"title":"India, That Is Bharat","theme":"Theme B — Tapestry of the Past","status":"MAPPED_NOT_YET_IMPLEMENTED"},
@@ -41,10 +41,10 @@
   ],
   "implementationStatus": {
     "mappedChapterCount": 14,
-    "implementedChapterCount": 1,
+    "implementedChapterCount": 2,
     "schoolNeedsValidatedChapterCount": 1,
     "completionClaim": false,
-    "nextBoundedTask": "After Chapter 2 reconciliation passes exact-head CI and merges, fresh concurrency check then implement one bounded independently authored Chapter 2 Kiki teaching slice across the four reconciled topics."
+    "nextBoundedTask": "After Chapter 2 teaching slice passes exact-head CI and merges, fresh concurrency check then perform separate Chapter 2 synthetic school-needs validation."
   },
   "rightsAndSafetyBoundary": [
     "Use chapter titles and structural metadata for mapping only.",

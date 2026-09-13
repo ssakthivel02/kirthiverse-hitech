@@ -134,5 +134,185 @@ window.KV_ASSESSMENTS.push(
   "correctAnswer":"Answers vary with the supplied longitudes. Correct work must calculate longitude difference, convert it consistently, apply east/west direction correctly, and distinguish local solar time from official standard time.",
   "hint":"Geography explains the approximate local-time relationship; governments define official time zones.",
   "explanation":"Mastery combines calculation with the conceptual distinction between local solar time and standard time."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0016",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which statement best describes Earth's surface? A) Land covers most of it. B) Water covers much more area than land. C) Land and water cover exactly equal areas. D) The Southern Hemisphere contains no land.",
+  "correctAnswer":"B) Water covers much more area than land.",
+  "hint":"Think of why Earth is often called the blue planet.",
+  "explanation":"Water dominates Earth's surface, while land occupies a smaller share."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0017",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why is it inaccurate to say the Northern Hemisphere is land and the Southern Hemisphere is water?",
+  "correctAnswer":"Both hemispheres contain both land and water. The difference is in broad proportions, not absolute categories.",
+  "hint":"Avoid all-or-nothing statements.",
+  "explanation":"Hemisphere comparison is about relative distribution."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0018",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Two simplified hemisphere diagrams show more visible land in one and more visible ocean in the other. Write two careful comparison sentences without claiming exact percentages.",
+  "correctAnswer":"A valid response states that one view has relatively more land while the other has relatively more water, and confirms both still contain land and water.",
+  "hint":"Use words such as more, less, mostly and relative.",
+  "explanation":"Qualitative map comparison should not invent precision."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0019",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"What is the main land-water pattern a Class 6 learner should remember?",
+  "correctAnswer":"Water covers most of Earth's surface, land covers less, and the two hemispheres have different broad proportions of land and water.",
+  "hint":"State the global pattern first, then the hemisphere comparison.",
+  "explanation":"This captures the chapter-level concept without unnecessary memorisation."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0020",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Given three unfamiliar simplified world or hemisphere maps, identify land and water dominance and justify each comparison using cautious geographic language.",
+  "correctAnswer":"Answers depend on the maps; each justification must distinguish broad visual pattern from exact measurement and avoid absolute claims.",
+  "hint":"Describe what the map supports, not more than it supports.",
+  "explanation":"Mastery requires accurate interpretation and evidence discipline."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0021",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which list contains all five commonly named oceans? A) Pacific, Atlantic, Indian, Southern, Arctic B) Pacific, Atlantic, Mediterranean, Baltic, Arctic C) Indian, Arabian, Pacific, Southern, Arctic D) Atlantic, Red, Black, Pacific, Indian",
+  "correctAnswer":"A) Pacific, Atlantic, Indian, Southern, Arctic",
+  "hint":"Separate oceans from smaller seas.",
+  "explanation":"Those five names are the commonly recognised ocean regions."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0022",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why can we name five oceans even though seawater is physically connected around the planet?",
+  "correctAnswer":"The names divide one connected global ocean into useful geographic regions. The boundaries are conventions, not walls in the water.",
+  "hint":"Think about labels versus physical barriers.",
+  "explanation":"Geographic names organise a connected system."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0023",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"On a blank world outline, place five ocean labels approximately and draw two arrows crossing named ocean boundaries to show interconnection.",
+  "correctAnswer":"A valid solution places all five oceans in broadly correct positions and uses arrows to show that adjacent named oceans connect.",
+  "hint":"Use continents as anchors for ocean positions.",
+  "explanation":"Location plus interconnection demonstrates conceptual understanding."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0024",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"What is the difference between saying oceans have names and saying oceans are sealed apart?",
+  "correctAnswer":"Names identify geographic regions; they do not create physical barriers between connected bodies of seawater.",
+  "hint":"One is a human label, the other would be a physical separation.",
+  "explanation":"The distinction prevents a common misconception."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0025",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Label all five oceans on an unfamiliar simplified world map and explain in two sentences how named regions can still form one connected global ocean.",
+  "correctAnswer":"All five labels must be placed broadly correctly and the explanation must distinguish naming convention from physical connection.",
+  "hint":"Use surrounding continents to orient yourself.",
+  "explanation":"Mastery combines map location with system understanding."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0026",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which statement is best? A) Every source must count exactly seven continents. B) Seven is a widely used school convention, but other conventions exist. C) Every island is a continent. D) Europe and Asia are always treated as one continent.",
+  "correctAnswer":"B) Seven is a widely used school convention, but other conventions exist.",
+  "hint":"Think about geographic conventions.",
+  "explanation":"Continent counts can vary depending on naming tradition."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0027",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why might one atlas show seven continents while another uses a different number without either map necessarily being geographically wrong?",
+  "correctAnswer":"They may use different conventions, such as combining Europe and Asia or treating the Americas differently.",
+  "hint":"Separate land geography from naming convention.",
+  "explanation":"Counting systems reflect classification choices."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0028",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Sort ten land-region cards into seven-continent labels, island examples and alternative-convention notes, then explain one borderline or convention-dependent case.",
+  "correctAnswer":"A valid response correctly separates the categories and explains that continent count can depend on convention while islands remain land surrounded by water.",
+  "hint":"Classify physical category and naming convention separately.",
+  "explanation":"The task checks both geographic category and convention awareness."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0029",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"How does an island differ from a continent in this Class 6 lesson?",
+  "correctAnswer":"An island is land surrounded by water and is generally much smaller; a continent is one of Earth's very large named land regions under a chosen convention.",
+  "hint":"Mention both physical form and scale/classification.",
+  "explanation":"The categories differ in scale and conventional geographic classification."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0030",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Label the seven commonly taught continents, classify three unfamiliar island examples, and explain why another source might legitimately use a different continent count.",
+  "correctAnswer":"The seven labels and island classifications must be correct, and the explanation must identify convention as the reason counts can differ.",
+  "hint":"Do not confuse classification convention with map accuracy.",
+  "explanation":"Mastery integrates map knowledge, categories and conventions."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0031",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which response best protects oceans? A) Clean a beach once and ignore future waste. B) Prevent pollution, improve waste systems and protect habitats. C) Move litter from one shore to another. D) Assume oceans are too large to be harmed.",
+  "correctAnswer":"B) Prevent pollution, improve waste systems and protect habitats.",
+  "hint":"Look for prevention plus shared action.",
+  "explanation":"Effective protection combines prevention, management and habitat care."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0032",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why is beach clean-up alone not enough to solve ocean pollution?",
+  "correctAnswer":"Clean-up removes some existing waste, but pollution continues unless sources are reduced, waste systems improve and harmful practices are prevented.",
+  "hint":"Think upstream as well as downstream.",
+  "explanation":"Prevention addresses causes, while clean-up mainly addresses effects."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0033",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"A fictional coastal town has plastic entering the sea after rain. Design a four-part response covering household behaviour, community infrastructure, enforcement and habitat care.",
+  "correctAnswer":"A valid plan includes source reduction, better collection or drainage controls, rules/enforcement and measures that protect affected habitats.",
+  "hint":"Address more than one stage of the problem.",
+  "explanation":"Layered responses are stronger than one-off clean-up actions."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0034",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"Name two important roles oceans play in Earth's systems.",
+  "correctAnswer":"Examples include providing habitats for marine life, supporting food webs and livelihoods, influencing climate, storing heat and participating in the water cycle.",
+  "hint":"Choose one ecological role and one broader Earth-system or human role.",
+  "explanation":"Oceans support both living systems and wider planetary processes."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0035",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"For two unfamiliar ocean-impact scenarios, explain the ocean role affected, the human pressure, one likely consequence, one prevention action and one collective response.",
+  "correctAnswer":"Answers vary; each must form a coherent cause-effect chain and include both prevention and shared action without unsupported advanced science.",
+  "hint":"Use the chain: role → pressure → consequence → prevention → collective response.",
+  "explanation":"Mastery links ocean importance to evidence-based protection choices."
 }
 );

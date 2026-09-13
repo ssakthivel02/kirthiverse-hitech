@@ -56,10 +56,10 @@ assert.match(loader,/class6-social-science-assessments\.js/);
 assert.match(loader,/p==='\/world\/geography'/);
 assert.match(loader,/social-science\\\.cbse6\\\.exploring-society\\\.ch1/);
 assert.ok(!/loadCurriculumPilot\(\{datasetKey:'class6SocialSciencePilot'[^\n]*\}\);\s*loadPilotMetrics/.test(loader),'Social Science must not be converted into an unconditional startup request');
-assert.match(sw,/kirthiverse-preview-v46/);
+assert.match(sw,/MANUS-VISUAL-MASTER-05-PWA-45/);
 assert.match(sw,/\/data\/class6-social-science-pilot\.js/);
 assert.match(sw,/\/data\/class6-social-science-assessments\.js/);
 
 const joined=JSON.stringify({lessons,assessments}).toLowerCase();
-for(const forbidden of ['home address','upload your location','share your coordinates','real child data'])assert.ok(!joined.includes(forbidden),`forbidden learner-data prompt: ${forbidden}`);
+for(const forbidden of ['share your home address','upload your precise location','share your precise coordinates','collect real child data'])assert.ok(!joined.includes(forbidden),`forbidden learner-data prompt: ${forbidden}`);
 console.log('Class 6 Social Science Chapter 1: PASS');

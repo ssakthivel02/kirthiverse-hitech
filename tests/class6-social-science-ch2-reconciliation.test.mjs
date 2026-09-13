@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+
+const artifact=JSON.parse(fs.readFileSync('docs/class6-pilot/SOCIAL_SCIENCE_CH2_SOURCE_TOPIC_RECONCILIATION_V1.json','utf8'));
+
+assert.equal(artifact.schemaVersion,'1.0.0');
+assert.equal(artifact.reconciliationId,'KVS-CBSE6-SOC-CH2-SOURCE-TOPIC-V1');
+assert.equal(artifact.decision,'CHAPTER_2_SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(artifact.chapter,2);
+assert.equal(artifact.chapterTitle,'Oceans and Continents');
+assert.equal(artifact.canonicalSource.provider,'NCERT');
+assert.equal(artifact.canonicalSource.publicationCode,'0681');
+assert.equal(artifact.canonicalSource.officialPortalChapterLinkObserved,true);
+assert.equal(artifact.canonicalSource.chapterTextCopied,false);
+assert.equal(artifact.canonicalSource.exerciseQuestionsCopied,false);
+assert.equal(artifact.canonicalSource.illustrationsCopied,false);
+assert.equal(artifact.currentStructureCorroboration.chapterCount,14);
+assert.match(artifact.learningOutcomeAlignment.relevantOutcome,/continents, oceans and seas/i);
+assert.equal(artifact.reconciledTopicBoundary.length,4);
+assert.deepEqual(artifact.reconciledTopicBoundary.map(x=>x.topicId),['TOPIC-SOC6-02-01','TOPIC-SOC6-02-02','TOPIC-SOC6-02-03','TOPIC-SOC6-02-04']);
+assert.equal(new Set(artifact.reconciledTopicBoundary.map(x=>x.topicId)).size,4);
+assert.ok(artifact.reconciledTopicBoundary.every(x=>x.independentAuthoringAllowed===true&&x.implementationStatus==='BOUNDARY_RECONCILED_NOT_IMPLEMENTED'));
+const allText=JSON.stringify(artifact).toLowerCase();
+for(const required of ['land and water','five oceans','interconnected','continents','island','climate','marine life','protection']) assert.ok(allText.includes(required),`missing Chapter 2 boundary: ${required}`);
+for(const forbidden of ['textbook prose copied','exercise questions copied','live school evidence collected','school-specific pacing verified','real child data collected','ocean currents required']) assert.ok(!allText.includes(forbidden),`forbidden claim: ${forbidden}`);
+assert.equal(artifact.rightsAndSchoolBoundary.schoolValidationProfile,'SAN Academy Tambaram');
+assert.equal(artifact.rightsAndSchoolBoundary.schoolSpecificPacingClaimed,false);
+assert.equal(artifact.rightsAndSchoolBoundary.liveSchoolEvidenceCollected,false);
+assert.equal(artifact.rightsAndSchoolBoundary.realChildDataCollected,false);
+assert.equal(artifact.implementationGate.topicCount,4);
+assert.equal(artifact.implementationGate.runtimeChangeRequiredByThisReconciliation,false);
+assert.equal(artifact.implementationGate.completionClaim,false);
+assert.match(artifact.claimBoundary,/does not implement lessons or assessments/i);
+console.log('CLASS6_SOCIAL_SCIENCE_CH2_RECONCILIATION_PASS topics=4');

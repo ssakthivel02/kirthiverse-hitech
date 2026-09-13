@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-SOC-CH2-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Social Science · Exploring Society: India and Beyond · Chapter 2 · Oceans and Continents",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseHomeLocation": false,
+    "liveDeviceLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "schoolTextbookEditionDirectlyVerified": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 2 topic, a Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action, and an observable mastery criterion.",
+  "scenarios": [
+    {
+      "id": "SN-SOC6-CH2-001",
+      "need": "Learner overgeneralises the global land-water pattern and states that one hemisphere is entirely land or entirely ocean.",
+      "topicId": "TOPIC-SOC6-02-01",
+      "expectedMisconception": "hemisphere pattern turned into an absolute claim",
+      "requiredAssessmentTypes": ["reasoning", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Compare two simplified offline hemisphere diagrams, identify land and water in both, and write a cautious comparison using words such as more, less and mostly.",
+      "masteryCriterion": "Independently makes two accurate hemisphere comparisons without claiming that either hemisphere contains only land or only water."
+    },
+    {
+      "id": "SN-SOC6-CH2-002",
+      "need": "Learner treats a visual world map as an exact percentage measuring tool and memorises an unsupported land-water percentage instead of describing the broad pattern.",
+      "topicId": "TOPIC-SOC6-02-01",
+      "expectedMisconception": "visual area treated as exact numerical measurement",
+      "requiredAssessmentTypes": ["multiple_choice", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use a fictional equal-area comparison task to separate qualitative map evidence from exact numerical measurement and explain what conclusion the diagram actually supports.",
+      "masteryCriterion": "Correctly distinguishes broad geographic pattern evidence from exact measurement in two unfamiliar land-water examples."
+    },
+    {
+      "id": "SN-SOC6-CH2-003",
+      "need": "Learner omits one of the five named oceans or places an ocean on the wrong side of a continent.",
+      "topicId": "TOPIC-SOC6-02-02",
+      "expectedMisconception": "ocean names or relative locations incomplete",
+      "requiredAssessmentTypes": ["multiple_choice", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Use an offline blank world outline with movable labels for Pacific, Atlantic, Indian, Southern and Arctic, placing each relative to major continents.",
+      "masteryCriterion": "Correctly identifies and broadly locates all five named oceans on two unfamiliar simplified world maps."
+    },
+    {
+      "id": "SN-SOC6-CH2-004",
+      "need": "Learner treats named ocean boundaries as physical walls and assumes water or ships cannot pass between named oceans.",
+      "topicId": "TOPIC-SOC6-02-02",
+      "expectedMisconception": "named ocean boundaries treated as sealed barriers",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Trace fictional sea routes across named ocean regions on a public or offline world outline and explain why the labels change without a physical wall in the water.",
+      "masteryCriterion": "Explains the interconnection of the global ocean in two new route examples while still naming the relevant ocean regions correctly."
+    },
+    {
+      "id": "SN-SOC6-CH2-005",
+      "need": "Learner confuses islands with continents or assumes size alone is enough to classify every land area.",
+      "topicId": "TOPIC-SOC6-02-03",
+      "expectedMisconception": "island and continent categories conflated",
+      "requiredAssessmentTypes": ["reasoning", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Sort fictional and public land-region examples into continent, island or needs-more-context categories, using surrounding water and the working school convention rather than personal-location information.",
+      "masteryCriterion": "Correctly classifies unfamiliar island examples and distinguishes them from the seven working-continent labels with a clear reason."
+    },
+    {
+      "id": "SN-SOC6-CH2-006",
+      "need": "Learner assumes every source must use exactly seven continents and treats an alternative counting convention as automatically wrong.",
+      "topicId": "TOPIC-SOC6-02-03",
+      "expectedMisconception": "geographic convention mistaken for a single universal count",
+      "requiredAssessmentTypes": ["multiple_choice", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Compare two fictional atlas legends, one using seven continents and one combining a land region, then identify the convention before comparing the counts.",
+      "masteryCriterion": "Uses seven as the working school convention while accurately explaining in two examples why another source may use a different continent count."
+    },
+    {
+      "id": "SN-SOC6-CH2-007",
+      "need": "Learner lists ocean benefits or environmental problems without connecting cause, consequence and an appropriate prevention or shared-action response.",
+      "topicId": "TOPIC-SOC6-02-04",
+      "expectedMisconception": "ocean role and protection actions listed without causal reasoning",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use three fictional ocean-impact scenarios and complete a four-step chain: ocean role, human pressure, likely consequence, then prevention plus community or policy response.",
+      "masteryCriterion": "Explains at least two ocean roles and designs balanced responses for two unfamiliar impact scenarios without unsupported advanced scientific claims."
+    },
+    {
+      "id": "SN-SOC6-CH2-008",
+      "need": "Learner needs a low-bandwidth, offline and instruction-light path that does not depend on video, live maps, GPS, microphone, camera, cloud AI or personal-data collection.",
+      "topicId": "TOPIC-SOC6-02-04",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["short_answer", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use cached text, a printed or locally drawn world outline and local assessment prompts; complete one Kiki step at a time without network-dependent tutoring or location disclosure.",
+      "masteryCriterion": "Completes one ocean-protection reasoning task and its mastery check using local resources only, with no personal data, live location or remote service dependency."
+    }
+  ]
+}

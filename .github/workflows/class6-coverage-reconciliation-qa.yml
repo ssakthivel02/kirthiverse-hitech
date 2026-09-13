@@ -5,8 +5,10 @@ on:
     paths:
       - 'docs/class6-pilot/CLASS6_COVERAGE_MANIFEST_V1.json'
       - 'docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json'
+      - 'docs/class6-pilot/MATHEMATICS_COMPLETION_AUDIT_V1.json'
       - 'docs/class6-pilot/SCIENCE_CURIOSITY_MAP_V1.json'
       - 'docs/class6-pilot/SCIENCE_COMPLETION_AUDIT_V1.json'
+      - 'docs/class6-pilot/SOCIAL_SCIENCE_SOURCE_RECONCILIATION_V1.json'
       - 'tests/class6-coverage-reconciliation.test.mjs'
       - '.github/workflows/class6-coverage-reconciliation-qa.yml'
   workflow_dispatch:
@@ -30,6 +32,8 @@ jobs:
         run: |
           echo '## Class 6 Coverage Reconciliation' >> "$GITHUB_STEP_SUMMARY"
           echo '- Science: bounded SCIENCE_COMPLETE repository curriculum-implementation decision' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Mathematics: Chapter 1 implemented/validated; Chapters 2-10 remain mapped gaps' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Next selected lane: Mathematics Chapter 2 — Lines and Angles, subject to a fresh concurrency check before implementation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Mathematics: bounded MATHEMATICS_COMPLETE repository curriculum-implementation decision' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Social Science: official NCERT source baseline reconciled; twelve chapter links verified; chapter titles/content mapping remains the next bounded task' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Next selected lane: Social Science Source & Curriculum Mapping, subject to a fresh concurrency check before implementation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- No Social Science lesson, assessment, school-needs or completion claim is made by this reconciliation' >> "$GITHUB_STEP_SUMMARY"
           echo '- No whole-Class-6 completion claim is made' >> "$GITHUB_STEP_SUMMARY"

@@ -8,7 +8,7 @@ const lessonIds=[
   'math.cbse6.ganita-prakash.ch9.rotational-symmetry.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.10.0');
+assert.equal(map.schemaVersion,'1.11.0');
 assert.equal(map.chapters[8].chapter,9);
 assert.equal(map.chapters[8].title,'Symmetry');
 assert.equal(map.chapters[8].status,'KIKI_TEACHING_SLICE_COMPLETE');
@@ -72,9 +72,12 @@ vm.runInContext(fs.readFileSync('data/class6-math-pilot.js','utf8'),carrierSandb
 const carrierLessons=carrierSandbox.window.KV_LESSONS;
 const carrierChapter1=carrierLessons.filter(x=>x.chapter===1);
 const runtimeChapter9=carrierLessons.filter(x=>x.chapter===9);
+const runtimeChapter10=carrierLessons.filter(x=>x.chapter===10);
 assert.equal(carrierChapter1.length,3,'historical Chapter 1 startup carrier must retain exactly three Chapter 1 lessons');
-assert.equal(runtimeChapter9.length,3,'historical Chapter 1 startup carrier must append exactly three Chapter 9 runtime lessons');
-assert.equal(new Set(carrierLessons.map(x=>x.id)).size,6,'startup carrier lesson IDs must remain unique');
+assert.equal(runtimeChapter9.length,3,'historical Chapter 1 startup carrier must retain exactly three Chapter 9 runtime lessons');
+assert.equal(runtimeChapter10.length,3,'historical Chapter 1 startup carrier must append exactly three Chapter 10 runtime lessons');
+assert.equal(carrierLessons.length,9,'startup carrier must contain only Chapters 1, 9 and 10');
+assert.equal(new Set(carrierLessons.map(x=>x.id)).size,9,'startup carrier lesson IDs must remain unique');
 assert.deepEqual([...runtimeChapter9.map(x=>x.id)].sort(),[...lessonIds].sort(),'startup carrier missing Chapter 9 lesson');
 const sourceById=new Map(lessons.map(x=>[x.id,x]));
 for(const runtimeLesson of runtimeChapter9){
@@ -82,17 +85,19 @@ for(const runtimeLesson of runtimeChapter9){
 }
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
-for(const asset of ['data/class6-math-pilot.js','data/class6-math-ch9-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
-assert.ok(entry.includes('ch(?:2|3|4|5|6|7|8|9)\\.'),'Chapter 1-9 deferred-assessment route coverage missing');
+for(const asset of ['data/class6-math-pilot.js','data/class6-math-ch9-assessments.js','data/class6-math-ch10-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
+assert.ok(entry.includes('ch(?:2|3|4|5|6|7|8|9|10)\\.'),'Chapter 1-10 deferred-assessment route coverage missing');
 assert.ok(!entry.includes("/^\\/lesson\\/math\\./"),'generic Mathematics lessons must not trigger Class 6 assessment bundles');
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
-assert.ok(baseChunk.includes('data/class6-math-pilot.js'),'existing Chapter 1 startup request must remain the Chapter 9 runtime carrier');
+assert.ok(baseChunk.includes('data/class6-math-pilot.js'),'existing Chapter 1 startup request must remain the Chapter 9/10 runtime carrier');
 assert.ok(!baseChunk.includes('data/class6-math-ch9.js'),'standalone Chapter 9 source module must not add a startup request');
+assert.ok(!baseChunk.includes('data/class6-math-ch10.js'),'standalone Chapter 10 source module must not add a startup request');
 assert.ok(!baseChunk.includes('data/class6-math-ch9-assessments.js'),'Chapter 9 assessments must remain deferred');
+assert.ok(!baseChunk.includes('data/class6-math-ch10-assessments.js'),'Chapter 10 assessments must remain deferred');
 
 const sw=fs.readFileSync('sw-v30.js','utf8');
 assert.match(sw,/kirthiverse-preview-v45/);
-for(const asset of ['/data/class6-math-pilot.js','/data/class6-math-ch9-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
+for(const asset of ['/data/class6-math-pilot.js','/data/class6-math-ch9-assessments.js','/data/class6-math-ch10-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));
 assert.ok(index.includes('microphone:false'));

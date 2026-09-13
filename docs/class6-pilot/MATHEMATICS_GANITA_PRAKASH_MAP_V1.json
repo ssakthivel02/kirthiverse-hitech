@@ -1,5 +1,5 @@
 {
-  "schemaVersion":"1.9.0",
+  "schemaVersion":"1.10.0",
   "pilot":"CBSE_CLASS6_SAN_TAMBARAM",
   "subject":"Mathematics",
   "board":"CBSE",
@@ -15,7 +15,7 @@
     {"chapter":6,"id":"CH-MATH6-06","title":"Perimeter and Area","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":7,"id":"CH-MATH6-07","title":"Fractions","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":8,"id":"CH-MATH6-08","title":"Playing with Constructions","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
-    {"chapter":9,"id":"CH-MATH6-09","title":"Symmetry","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"},
+    {"chapter":9,"id":"CH-MATH6-09","title":"Symmetry","status":"KIKI_TEACHING_SLICE_COMPLETE","sourceConfidence":"HIGH"},
     {"chapter":10,"id":"CH-MATH6-10","title":"The Other Side of Zero","status":"MAPPED_NOT_YET_IMPLEMENTED","sourceConfidence":"HIGH"}
   ],
   "chapter1Topics":[
@@ -74,6 +74,13 @@
   ],
   "chapter8CompletionRule":"CHAPTER8_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped strands to have independently authored teaching content, worked examples, five linked assessments per lesson, misconception handling, remediation/mastery evidence, deterministic source-to-runtime-carrier parity QA, bounded runtime integration that preserves the existing total startup request ceiling, deferred assessment loading, offline precache coverage, release-regression coverage and a separate synthetic school-needs validation artifact. The school-needs artifact is deterministic readiness evidence only and does not establish live-school efficacy, attainment or school-specific pacing.",
   "chapter8CompletionEvidence":{"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"lazyAssessmentLoadingRequired":true,"startupRequestCeilingPreserved":true,"runtimeCarrier":"data/class6-math-ch2.js","sourceOfTruth":"data/class6-math-ch8.js","schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":true,"schoolNeedsValidationArtifact":"docs/class6-pilot/MATH_CH8_SCHOOL_NEEDS_VALIDATION_V1.json","status":"CHAPTER8_KIKI_TEACHING_SLICE_COMPLETE"},
+  "chapter9Topics":[
+    {"id":"TOPIC-MATH6-09-01","title":"Line and reflection symmetry","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["identify and verify lines of symmetry","use equal perpendicular distances for reflected point pairs","distinguish exact reflection from visual balance","count multiple symmetry axes","reflect points across horizontal vertical or slanted lines"],"misconceptions":["accepting equal-looking regions as proof of symmetry","assuming any line through a visual centre is a symmetry line","placing reflected points at unequal distances","believing figure orientation changes whether line symmetry exists"]},
+    {"id":"TOPIC-MATH6-09-02","title":"Generating and completing symmetric figures","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["complete a partial figure from a specified reflection axis","construct reflected partner points and segments","satisfy more than one symmetry axis","verify repeated motifs under every required reflection","recognise diameter reflection symmetry of a circle"],"misconceptions":["copying a mirror half freehand without point correspondence","satisfying one symmetry axis and assuming another automatically works","changing reflected distances","treating decorative resemblance as exact symmetry"]},
+    {"id":"TOPIC-MATH6-09-03","title":"Rotational symmetry, order and angle","status":"END_TO_END_PILOT_IMPLEMENTED","competencies":["identify non-trivial rotational symmetry","locate or reason about a centre of rotation","determine rotational order","calculate the smallest positive angle for equally spaced repeats","distinguish rotational and reflection symmetry"],"misconceptions":["calling every figure rotationally symmetric because 360 degrees works","counting partial visual overlap as an exact rotational match","confusing rotational order with number of mirror lines","assuming rotational symmetry always implies reflection symmetry"]}
+  ],
+  "chapter9CompletionRule":"CHAPTER9_KIKI_TEACHING_SLICE_COMPLETE requires all three mapped strands to have independently authored teaching content, worked examples, five linked assessments per lesson, misconception handling, remediation/mastery evidence, deterministic source-to-runtime-carrier parity QA, bounded runtime integration that preserves the existing total startup request ceiling, deferred assessment loading, offline precache coverage and release-regression coverage. Separate synthetic school-needs validation remains required before Chapter 9's evidence contract is closed.",
+  "chapter9CompletionEvidence":{"topicCount":3,"lessonCount":3,"assessmentCount":15,"assessmentMinimumPerTopic":5,"offlineRequired":true,"accessibilityRequired":true,"releaseRegressionRequired":true,"lazyAssessmentLoadingRequired":true,"startupRequestCeilingPreserved":true,"runtimeCarrier":"data/class6-math-pilot.js","sourceOfTruth":"data/class6-math-ch9.js","schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":false,"status":"CHAPTER9_KIKI_TEACHING_SLICE_COMPLETE"},
   "completionRule":"MATHEMATICS_COMPLETE only after all ten chapters have Kiki-teachable lesson coverage, practice, assessment, remediation/mastery evidence, separate synthetic school-needs validation, accessibility QA and source/provenance review.",
   "schoolOverlay":{"school":"SAN Academy Tambaram","mappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED","note":"The school publicly confirms Mathematics for Classes I-X; exact school pacing/order must not be claimed without school-specific evidence."}
 }

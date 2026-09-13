@@ -27,9 +27,9 @@ const CLASS6_SCIENCE_LESSON_IDS = [
   'science.cbse6.curiosity.ch12.stars-constellations-night-sky.v1','science.cbse6.curiosity.ch12.solar-system.v1','science.cbse6.curiosity.ch12.milky-way-universe-scale.v1',
 ];
 const CLASS6_SOCIAL_SCIENCE_LESSON_IDS = [
-  'social-science.cbse6.exploring-society.ch1.maps-scale-direction-symbols.v1',
-  'social-science.cbse6.exploring-society.ch1.latitude-longitude.v1',
-  'social-science.cbse6.exploring-society.ch1.longitude-time.v1',
+  'social-science.cbse6.exploring-society.ch1.maps-components.v1',
+  'social-science.cbse6.exploring-society.ch1.coordinates.v1',
+  'social-science.cbse6.exploring-society.ch1.time-longitude.v1',
 ];
 const CLASS6_MATH_ASSESSMENT_IDS = Array.from({length:150},(_,i)=>`KV-CBSE6-MATH-${String(i+1).padStart(4,'0')}`);
 const CLASS6_SCIENCE_ASSESSMENT_IDS = Array.from({length:180},(_,i)=>`KV-CBSE6-SCI-${String(i+1).padStart(4,'0')}`);

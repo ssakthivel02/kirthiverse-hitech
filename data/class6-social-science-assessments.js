@@ -1,38 +1,318 @@
 window.KV_ASSESSMENTS=window.KV_ASSESSMENTS||[];
 window.KV_ASSESSMENTS.push(
-{"stableAssessmentId":"KV-CBSE6-SOC-0001","lessonId":"social-science.cbse6.exploring-society.ch1.maps-components.v1","assessmentType":"multiple_choice","questionActivity":"A fictional map shows a clinic 4 cm north of a bus stop. Its scale is 1 cm = 250 m. Which statement is correct? A) The clinic is 250 m east. B) The clinic is 1 km north. C) The clinic is 4 km south. D) The real distance cannot be estimated.","correctAnswer":"B) The clinic is 1 km north.","hint":"Use the compass direction and multiply the map distance by the scale.","explanation":"4 × 250 m = 1,000 m = 1 km, and the map says north."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0002","lessonId":"social-science.cbse6.exploring-society.ch1.maps-components.v1","assessmentType":"reasoning","questionActivity":"Why is it unsafe to judge real distance only by how long a road looks on two different maps?","correctAnswer":"Different maps can use different scales. The same visual length can represent different real distances, so the scale must be checked before comparing distance.","hint":"Ask what connects centimetres on the map to distance in the real world.","explanation":"Scale converts representation distance into real-world distance."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0003","lessonId":"social-science.cbse6.exploring-society.ch1.maps-components.v1","assessmentType":"worked_challenge","questionActivity":"Create a tiny fictional map with three places. Include a north arrow, a scale and a legend, then write one route statement that uses all three components.","correctAnswer":"Answers vary. A valid response must include a clear direction, a scale-based distance and correctly decoded map symbols.","hint":"Your explanation should answer what the place is, which way it lies and how far away it is.","explanation":"Map interpretation is strongest when scale, direction and symbols are combined."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0004","lessonId":"social-science.cbse6.exploring-society.ch1.maps-components.v1","assessmentType":"short_answer","questionActivity":"What different jobs do a map scale and a map legend perform?","correctAnswer":"The scale relates map distance to real distance, while the legend explains what symbols on the map represent.","hint":"One answers how far; the other answers what a sign means.","explanation":"Scale and legend are complementary but not interchangeable map components."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0005","lessonId":"social-science.cbse6.exploring-society.ch1.maps-components.v1","assessmentType":"mastery_check","questionActivity":"On an unfamiliar fictional map, identify one symbol using the legend, state the direction from A to B, and calculate the real distance when 2.5 cm represents 500 m per cm.","correctAnswer":"The symbol and direction depend on the supplied map; the real distance is 1,250 m or 1.25 km.","hint":"2.5 × 500 = 1,250.","explanation":"Mastery requires coordinated use of legend, compass direction and scale."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0006","lessonId":"social-science.cbse6.exploring-society.ch1.coordinates.v1","assessmentType":"multiple_choice","questionActivity":"Which statement is correct? A) Latitude measures east or west of the Prime Meridian. B) Longitude measures north or south of the Equator. C) Latitude measures north or south of the Equator. D) One longitude alone gives a unique global position.","correctAnswer":"C) Latitude measures north or south of the Equator.","hint":"Think about the reference line used for north-south position.","explanation":"Latitude is measured from the Equator; longitude is measured east or west from the Prime Meridian."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0007","lessonId":"social-science.cbse6.exploring-society.ch1.coordinates.v1","assessmentType":"reasoning","questionActivity":"Point A is at 25°N, 70°E and point B is at 25°S, 70°E. What stays the same and what changes?","correctAnswer":"Longitude stays the same at 70°E. Latitude changes from north to south of the Equator, so the two points lie on opposite sides of the Equator.","hint":"Compare the first coordinate and then the second coordinate separately.","explanation":"Holding one coordinate constant makes the effect of changing the other easy to see."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0008","lessonId":"social-science.cbse6.exploring-society.ch1.coordinates.v1","assessmentType":"worked_challenge","questionActivity":"Place three points on an imaginary latitude-longitude grid: P 10°N, 20°E; Q 10°N, 20°W; R 10°S, 20°E. Explain one relationship between each pair.","correctAnswer":"P and Q share latitude but are east/west of the Prime Meridian; P and R share longitude but are north/south of the Equator; Q and R differ in both coordinates.","hint":"Look for equal first values and equal second values before comparing hemispheres.","explanation":"Coordinate pairs support precise comparison of north-south and east-west position."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0009","lessonId":"social-science.cbse6.exploring-society.ch1.coordinates.v1","assessmentType":"short_answer","questionActivity":"Why are both latitude and longitude normally needed to describe a precise location on Earth?","correctAnswer":"Latitude identifies a north-south position and longitude identifies an east-west position. Their intersection identifies a much more precise point than either value alone.","hint":"Think of a row and a column on a grid.","explanation":"A two-coordinate system fixes position in two directions."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0010","lessonId":"social-science.cbse6.exploring-society.ch1.coordinates.v1","assessmentType":"mastery_check","questionActivity":"For four unfamiliar coordinate pairs, label the north/south and east/west hemispheres and identify which pairs share a latitude or longitude. Do not use or reveal your real location.","correctAnswer":"Answers depend on the supplied coordinates. Each label must follow N/S from latitude and E/W from longitude, and shared values must be identified correctly.","hint":"First coordinate: latitude. Second coordinate: longitude.","explanation":"Mastery means transferring the coordinate rules accurately without relying on memorised place names."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0011","lessonId":"social-science.cbse6.exploring-society.ch1.time-longitude.v1","assessmentType":"multiple_choice","questionActivity":"Two fictional places differ by 30° of longitude. About how much local solar time difference does that represent? A) 30 minutes B) 1 hour C) 2 hours D) 12 hours","correctAnswer":"C) 2 hours","hint":"About 15° of longitude corresponds to one hour.","explanation":"30° ÷ 15° per hour = about 2 hours."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0012","lessonId":"social-science.cbse6.exploring-society.ch1.time-longitude.v1","assessmentType":"reasoning","questionActivity":"Why can a country's official clock time differ from the exact local solar time at many places inside that country?","correctAnswer":"Governments adopt standard time zones for practical coordination. A whole region may use one official time even though local solar time varies gradually with longitude.","hint":"Separate Earth's rotation from the human system used for shared schedules.","explanation":"Standard time simplifies coordination across many longitudes."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0013","lessonId":"social-science.cbse6.exploring-society.ch1.time-longitude.v1","assessmentType":"worked_challenge","questionActivity":"Place A is at 15°E and place B at 60°E. Estimate the local solar-time difference and state which place is ahead.","correctAnswer":"The difference is 45°. At about 15° per hour, that is about 3 hours. Place B at 60°E is ahead of place A at 15°E.","hint":"Subtract the longitudes, divide by 15, then apply the east-ahead rule.","explanation":"Longitude difference provides an approximate local-time difference because of Earth's rotation."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0014","lessonId":"social-science.cbse6.exploring-society.ch1.time-longitude.v1","assessmentType":"short_answer","questionActivity":"Why do some very wide countries use more than one time zone?","correctAnswer":"They span such a large range of longitudes that a single official time can be impractical. Multiple time zones keep official clock time closer to regional day-night patterns and support coordination.","hint":"Think about how much local solar time can change across a very large east-west distance.","explanation":"Large longitude ranges can produce substantial time differences."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0015","lessonId":"social-science.cbse6.exploring-society.ch1.time-longitude.v1","assessmentType":"mastery_check","questionActivity":"Solve three fictional longitude comparisons, estimate each local-time difference using 15° ≈ 1 hour, identify which place is ahead, and explain why the result is not automatically the official legal time-zone difference.","correctAnswer":"Answers vary with the supplied longitudes. Correct work must calculate longitude difference, convert it consistently, apply east/west direction correctly, and distinguish local solar time from official standard time.","hint":"Geography explains the approximate local-time relationship; governments define official time zones.","explanation":"Mastery combines calculation with the conceptual distinction between local solar time and standard time."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0016","lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1","assessmentType":"multiple_choice","questionActivity":"Which statement best describes Earth's surface? A) Land covers most of it. B) Water covers much more area than land. C) Land and water cover exactly equal areas. D) The Southern Hemisphere contains no land.","correctAnswer":"B) Water covers much more area than land.","hint":"Think of why Earth is often called the blue planet.","explanation":"Water dominates Earth's surface, while land occupies a smaller share."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0017","lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1","assessmentType":"reasoning","questionActivity":"Why is it inaccurate to say the Northern Hemisphere is land and the Southern Hemisphere is water?","correctAnswer":"Both hemispheres contain both land and water. The difference is in broad proportions, not absolute categories.","hint":"Avoid all-or-nothing statements.","explanation":"Hemisphere comparison is about relative distribution."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0018","lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1","assessmentType":"worked_challenge","questionActivity":"Two simplified hemisphere diagrams show more visible land in one and more visible ocean in the other. Write two careful comparison sentences without claiming exact percentages.","correctAnswer":"A valid response states that one view has relatively more land while the other has relatively more water, and confirms both still contain land and water.","hint":"Use words such as more, less, mostly and relative.","explanation":"Qualitative map comparison should not invent precision."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0019","lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1","assessmentType":"short_answer","questionActivity":"What is the main land-water pattern a Class 6 learner should remember?","correctAnswer":"Water covers most of Earth's surface, land covers less, and the two hemispheres have different broad proportions of land and water.","hint":"State the global pattern first, then the hemisphere comparison.","explanation":"This captures the chapter-level concept without unnecessary memorisation."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0020","lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1","assessmentType":"mastery_check","questionActivity":"Given three unfamiliar simplified world or hemisphere maps, identify land and water dominance and justify each comparison using cautious geographic language.","correctAnswer":"Answers depend on the maps; each justification must distinguish broad visual pattern from exact measurement and avoid absolute claims.","hint":"Describe what the map supports, not more than it supports.","explanation":"Mastery requires accurate interpretation and evidence discipline."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0021","lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1","assessmentType":"multiple_choice","questionActivity":"Which list contains all five commonly named oceans? A) Pacific, Atlantic, Indian, Southern, Arctic B) Pacific, Atlantic, Mediterranean, Baltic, Arctic C) Indian, Arabian, Pacific, Southern, Arctic D) Atlantic, Red, Black, Pacific, Indian","correctAnswer":"A) Pacific, Atlantic, Indian, Southern, Arctic","hint":"Separate oceans from smaller seas.","explanation":"Those five names are the commonly recognised ocean regions."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0022","lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1","assessmentType":"reasoning","questionActivity":"Why can we name five oceans even though seawater is physically connected around the planet?","correctAnswer":"The names divide one connected global ocean into useful geographic regions. The boundaries are conventions, not walls in the water.","hint":"Think about labels versus physical barriers.","explanation":"Geographic names organise a connected system."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0023","lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1","assessmentType":"worked_challenge","questionActivity":"On a blank world outline, place five ocean labels approximately and draw two arrows crossing named ocean boundaries to show interconnection.","correctAnswer":"A valid solution places all five oceans in broadly correct positions and uses arrows to show that adjacent named oceans connect.","hint":"Use continents as anchors for ocean positions.","explanation":"Location plus interconnection demonstrates conceptual understanding."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0024","lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1","assessmentType":"short_answer","questionActivity":"What is the difference between saying oceans have names and saying oceans are sealed apart?","correctAnswer":"Names identify geographic regions; they do not create physical barriers between connected bodies of seawater.","hint":"One is a human label, the other would be a physical separation.","explanation":"The distinction prevents a common misconception."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0025","lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1","assessmentType":"mastery_check","questionActivity":"Label all five oceans on an unfamiliar simplified world map and explain in two sentences how named regions can still form one connected global ocean.","correctAnswer":"All five labels must be placed broadly correctly and the explanation must distinguish naming convention from physical connection.","hint":"Use surrounding continents to orient yourself.","explanation":"Mastery combines map location with system understanding."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0026","lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1","assessmentType":"multiple_choice","questionActivity":"Which statement is best? A) Every source must count exactly seven continents. B) Seven is a widely used school convention, but other conventions exist. C) Every island is a continent. D) Europe and Asia are always treated as one continent.","correctAnswer":"B) Seven is a widely used school convention, but other conventions exist.","hint":"Think about geographic conventions.","explanation":"Continent counts can vary depending on naming tradition."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0027","lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1","assessmentType":"reasoning","questionActivity":"Why might one atlas show seven continents while another uses a different number without either map necessarily being geographically wrong?","correctAnswer":"They may use different conventions, such as combining Europe and Asia or treating the Americas differently.","hint":"Separate land geography from naming convention.","explanation":"Counting systems reflect classification choices."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0028","lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1","assessmentType":"worked_challenge","questionActivity":"Sort ten land-region cards into seven-continent labels, island examples and alternative-convention notes, then explain one borderline or convention-dependent case.","correctAnswer":"A valid response correctly separates the categories and explains that continent count can depend on convention while islands remain land surrounded by water.","hint":"Classify physical category and naming convention separately.","explanation":"The task checks both geographic category and convention awareness."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0029","lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1","assessmentType":"short_answer","questionActivity":"How does an island differ from a continent in this Class 6 lesson?","correctAnswer":"An island is land surrounded by water and is generally much smaller; a continent is one of Earth's very large named land regions under a chosen convention.","hint":"Mention both physical form and scale/classification.","explanation":"The categories differ in scale and conventional geographic classification."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0030","lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1","assessmentType":"mastery_check","questionActivity":"Label the seven commonly taught continents, classify three unfamiliar island examples, and explain why another source might legitimately use a different continent count.","correctAnswer":"The seven labels and island classifications must be correct, and the explanation must identify convention as the reason counts can differ.","hint":"Do not confuse classification convention with map accuracy.","explanation":"Mastery integrates map knowledge, categories and conventions."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0031","lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1","assessmentType":"multiple_choice","questionActivity":"Which response best protects oceans? A) Clean a beach once and ignore future waste. B) Prevent pollution, improve waste systems and protect habitats. C) Move litter from one shore to another. D) Assume oceans are too large to be harmed.","correctAnswer":"B) Prevent pollution, improve waste systems and protect habitats.","hint":"Look for prevention plus shared action.","explanation":"Effective protection combines prevention, management and habitat care."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0032","lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1","assessmentType":"reasoning","questionActivity":"Why is beach clean-up alone not enough to solve ocean pollution?","correctAnswer":"Clean-up removes some existing waste, but pollution continues unless sources are reduced, waste systems improve and harmful practices are prevented.","hint":"Think upstream as well as downstream.","explanation":"Prevention addresses causes, while clean-up mainly addresses effects."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0033","lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1","assessmentType":"worked_challenge","questionActivity":"A fictional coastal town has plastic entering the sea after rain. Design a four-part response covering household behaviour, community infrastructure, enforcement and habitat care.","correctAnswer":"A valid plan includes source reduction, better collection or drainage controls, rules/enforcement and measures that protect affected habitats.","hint":"Address more than one stage of the problem.","explanation":"Layered responses are stronger than one-off clean-up actions."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0034","lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1","assessmentType":"short_answer","questionActivity":"Name two important roles oceans play in Earth's systems.","correctAnswer":"Examples include providing habitats for marine life, supporting food webs and livelihoods, influencing climate, storing heat and participating in the water cycle.","hint":"Choose one ecological role and one broader Earth-system or human role.","explanation":"Oceans support both living systems and wider planetary processes."},
-{"stableAssessmentId":"KV-CBSE6-SOC-0035","lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1","assessmentType":"mastery_check","questionActivity":"For two unfamiliar ocean-impact scenarios, explain the ocean role affected, the human pressure, one likely consequence, one prevention action and one collective response.","correctAnswer":"Answers vary; each must form a coherent cause-effect chain and include both prevention and shared action without unsupported advanced science.","hint":"Use the chain: role → pressure → consequence → prevention → collective response.","explanation":"Mastery links ocean importance to evidence-based protection choices."}
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0001",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.maps-components.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"A fictional map shows a clinic 4 cm north of a bus stop. Its scale is 1 cm = 250 m. Which statement is correct? A) The clinic is 250 m east. B) The clinic is 1 km north. C) The clinic is 4 km south. D) The real distance cannot be estimated.",
+  "correctAnswer":"B) The clinic is 1 km north.",
+  "hint":"Use the compass direction and multiply the map distance by the scale.",
+  "explanation":"4 × 250 m = 1,000 m = 1 km, and the map says north."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0002",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.maps-components.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why is it unsafe to judge real distance only by how long a road looks on two different maps?",
+  "correctAnswer":"Different maps can use different scales. The same visual length can represent different real distances, so the scale must be checked before comparing distance.",
+  "hint":"Ask what connects centimetres on the map to distance in the real world.",
+  "explanation":"Scale converts representation distance into real-world distance."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0003",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.maps-components.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Create a tiny fictional map with three places. Include a north arrow, a scale and a legend, then write one route statement that uses all three components.",
+  "correctAnswer":"Answers vary. A valid response must include a clear direction, a scale-based distance and correctly decoded map symbols.",
+  "hint":"Your explanation should answer what the place is, which way it lies and how far away it is.",
+  "explanation":"Map interpretation is strongest when scale, direction and symbols are combined."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0004",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.maps-components.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"What different jobs do a map scale and a map legend perform?",
+  "correctAnswer":"The scale relates map distance to real distance, while the legend explains what symbols on the map represent.",
+  "hint":"One answers 'how far'; the other answers 'what does this sign mean?'.",
+  "explanation":"Scale and legend are complementary but not interchangeable map components."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0005",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.maps-components.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"On an unfamiliar fictional map, identify one symbol using the legend, state the direction from A to B, and calculate the real distance when 2.5 cm represents 500 m per cm.",
+  "correctAnswer":"The symbol and direction depend on the supplied map; the real distance is 1,250 m or 1.25 km.",
+  "hint":"2.5 × 500 = 1,250.",
+  "explanation":"Mastery requires coordinated use of legend, compass direction and scale."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0006",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.coordinates.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which statement is correct? A) Latitude measures east or west of the Prime Meridian. B) Longitude measures north or south of the Equator. C) Latitude measures north or south of the Equator. D) One longitude alone gives a unique global position.",
+  "correctAnswer":"C) Latitude measures north or south of the Equator.",
+  "hint":"Think about the reference line used for north-south position.",
+  "explanation":"Latitude is measured from the Equator; longitude is measured east or west from the Prime Meridian."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0007",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.coordinates.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Point A is at 25°N, 70°E and point B is at 25°S, 70°E. What stays the same and what changes?",
+  "correctAnswer":"Longitude stays the same at 70°E. Latitude changes from north to south of the Equator, so the two points lie on opposite sides of the Equator.",
+  "hint":"Compare the first coordinate and then the second coordinate separately.",
+  "explanation":"Holding one coordinate constant makes the effect of changing the other easy to see."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0008",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.coordinates.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Place three points on an imaginary latitude-longitude grid: P 10°N, 20°E; Q 10°N, 20°W; R 10°S, 20°E. Explain one relationship between each pair.",
+  "correctAnswer":"P and Q share latitude but are east/west of the Prime Meridian; P and R share longitude but are north/south of the Equator; Q and R differ in both coordinates.",
+  "hint":"Look for equal first values and equal second values before comparing hemispheres.",
+  "explanation":"Coordinate pairs support precise comparison of north-south and east-west position."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0009",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.coordinates.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"Why are both latitude and longitude normally needed to describe a precise location on Earth?",
+  "correctAnswer":"Latitude identifies a north-south position and longitude identifies an east-west position. Their intersection identifies a much more precise point than either value alone.",
+  "hint":"Think of a row and a column on a grid.",
+  "explanation":"A two-coordinate system fixes position in two directions."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0010",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.coordinates.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"For four unfamiliar coordinate pairs, label the north/south and east/west hemispheres and identify which pairs share a latitude or longitude. Do not use or reveal your real location.",
+  "correctAnswer":"Answers depend on the supplied coordinates. Each label must follow N/S from latitude and E/W from longitude, and shared values must be identified correctly.",
+  "hint":"First coordinate: latitude. Second coordinate: longitude.",
+  "explanation":"Mastery means transferring the coordinate rules accurately without relying on memorised place names."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0011",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.time-longitude.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Two fictional places differ by 30° of longitude. About how much local solar time difference does that represent? A) 30 minutes B) 1 hour C) 2 hours D) 12 hours",
+  "correctAnswer":"C) 2 hours",
+  "hint":"About 15° of longitude corresponds to one hour.",
+  "explanation":"30° ÷ 15° per hour = about 2 hours."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0012",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.time-longitude.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why can a country's official clock time differ from the exact local solar time at many places inside that country?",
+  "correctAnswer":"Governments adopt standard time zones for practical coordination. A whole region may use one official time even though local solar time varies gradually with longitude.",
+  "hint":"Separate the geographic effect of Earth's rotation from the human system used for shared schedules.",
+  "explanation":"Standard time simplifies coordination across many longitudes."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0013",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.time-longitude.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Place A is at 15°E and place B at 60°E. Estimate the local solar-time difference and state which place is ahead.",
+  "correctAnswer":"The difference is 45°. At about 15° per hour, that is about 3 hours. Place B at 60°E is ahead of place A at 15°E.",
+  "hint":"Subtract the longitudes, divide by 15, then apply the east-ahead rule.",
+  "explanation":"Longitude difference provides an approximate local-time difference because of Earth's rotation."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0014",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.time-longitude.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"Why do some very wide countries use more than one time zone?",
+  "correctAnswer":"They span such a large range of longitudes that a single official time can be impractical. Multiple time zones keep official clock time closer to regional day-night patterns and support coordination.",
+  "hint":"Think about how much local solar time can change across a very large east-west distance.",
+  "explanation":"Large longitude ranges can produce substantial time differences."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0015",
+  "lessonId":"social-science.cbse6.exploring-society.ch1.time-longitude.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Solve three fictional longitude comparisons, estimate each local-time difference using 15° ≈ 1 hour, identify which place is ahead, and explain why the result is not automatically the official legal time-zone difference.",
+  "correctAnswer":"Answers vary with the supplied longitudes. Correct work must calculate longitude difference, convert it consistently, apply east/west direction correctly, and distinguish local solar time from official standard time.",
+  "hint":"Geography explains the approximate local-time relationship; governments define official time zones.",
+  "explanation":"Mastery combines calculation with the conceptual distinction between local solar time and standard time."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0016",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which statement best describes Earth's surface? A) Land covers most of it. B) Water covers much more area than land. C) Land and water cover exactly equal areas. D) The Southern Hemisphere contains no land.",
+  "correctAnswer":"B) Water covers much more area than land.",
+  "hint":"Think of why Earth is often called the blue planet.",
+  "explanation":"Water dominates Earth's surface, while land occupies a smaller share."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0017",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why is it inaccurate to say the Northern Hemisphere is land and the Southern Hemisphere is water?",
+  "correctAnswer":"Both hemispheres contain both land and water. The difference is in broad proportions, not absolute categories.",
+  "hint":"Avoid all-or-nothing statements.",
+  "explanation":"Hemisphere comparison is about relative distribution."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0018",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Two simplified hemisphere diagrams show more visible land in one and more visible ocean in the other. Write two careful comparison sentences without claiming exact percentages.",
+  "correctAnswer":"A valid response states that one view has relatively more land while the other has relatively more water, and confirms both still contain land and water.",
+  "hint":"Use words such as more, less, mostly and relative.",
+  "explanation":"Qualitative map comparison should not invent precision."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0019",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"What is the main land-water pattern a Class 6 learner should remember?",
+  "correctAnswer":"Water covers most of Earth's surface, land covers less, and the two hemispheres have different broad proportions of land and water.",
+  "hint":"State the global pattern first, then the hemisphere comparison.",
+  "explanation":"This captures the chapter-level concept without unnecessary memorisation."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0020",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.land-water.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Given three unfamiliar simplified world or hemisphere maps, identify land and water dominance and justify each comparison using cautious geographic language.",
+  "correctAnswer":"Answers depend on the maps; each justification must distinguish broad visual pattern from exact measurement and avoid absolute claims.",
+  "hint":"Describe what the map supports, not more than it supports.",
+  "explanation":"Mastery requires accurate interpretation and evidence discipline."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0021",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which list contains all five commonly named oceans? A) Pacific, Atlantic, Indian, Southern, Arctic B) Pacific, Atlantic, Mediterranean, Baltic, Arctic C) Indian, Arabian, Pacific, Southern, Arctic D) Atlantic, Red, Black, Pacific, Indian",
+  "correctAnswer":"A) Pacific, Atlantic, Indian, Southern, Arctic",
+  "hint":"Separate oceans from smaller seas.",
+  "explanation":"Those five names are the commonly recognised ocean regions."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0022",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why can we name five oceans even though seawater is physically connected around the planet?",
+  "correctAnswer":"The names divide one connected global ocean into useful geographic regions. The boundaries are conventions, not walls in the water.",
+  "hint":"Think about labels versus physical barriers.",
+  "explanation":"Geographic names organise a connected system."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0023",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"On a blank world outline, place five ocean labels approximately and draw two arrows crossing named ocean boundaries to show interconnection.",
+  "correctAnswer":"A valid solution places all five oceans in broadly correct positions and uses arrows to show that adjacent named oceans connect.",
+  "hint":"Use continents as anchors for ocean positions.",
+  "explanation":"Location plus interconnection demonstrates conceptual understanding."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0024",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"What is the difference between saying oceans have names and saying oceans are sealed apart?",
+  "correctAnswer":"Names identify geographic regions; they do not create physical barriers between connected bodies of seawater.",
+  "hint":"One is a human label, the other would be a physical separation.",
+  "explanation":"The distinction prevents a common misconception."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0025",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.five-oceans.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Label all five oceans on an unfamiliar simplified world map and explain in two sentences how named regions can still form one connected global ocean.",
+  "correctAnswer":"All five labels must be placed broadly correctly and the explanation must distinguish naming convention from physical connection.",
+  "hint":"Use surrounding continents to orient yourself.",
+  "explanation":"Mastery combines map location with system understanding."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0026",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which statement is best? A) Every source must count exactly seven continents. B) Seven is a widely used school convention, but other conventions exist. C) Every island is a continent. D) Europe and Asia are always treated as one continent.",
+  "correctAnswer":"B) Seven is a widely used school convention, but other conventions exist.",
+  "hint":"Think about geographic conventions.",
+  "explanation":"Continent counts can vary depending on naming tradition."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0027",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why might one atlas show seven continents while another uses a different number without either map necessarily being geographically wrong?",
+  "correctAnswer":"They may use different conventions, such as combining Europe and Asia or treating the Americas differently.",
+  "hint":"Separate land geography from naming convention.",
+  "explanation":"Counting systems reflect classification choices."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0028",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Sort ten land-region cards into seven-continent labels, island examples and alternative-convention notes, then explain one borderline or convention-dependent case.",
+  "correctAnswer":"A valid response correctly separates the categories and explains that continent count can depend on convention while islands remain land surrounded by water.",
+  "hint":"Classify physical category and naming convention separately.",
+  "explanation":"The task checks both geographic category and convention awareness."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0029",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"How does an island differ from a continent in this Class 6 lesson?",
+  "correctAnswer":"An island is land surrounded by water and is generally much smaller; a continent is one of Earth's very large named land regions under a chosen convention.",
+  "hint":"Mention both physical form and scale/classification.",
+  "explanation":"The categories differ in scale and conventional geographic classification."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0030",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.continents-islands.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Label the seven commonly taught continents, classify three unfamiliar island examples, and explain why another source might legitimately use a different continent count.",
+  "correctAnswer":"The seven labels and island classifications must be correct, and the explanation must identify convention as the reason counts can differ.",
+  "hint":"Do not confuse classification convention with map accuracy.",
+  "explanation":"Mastery integrates map knowledge, categories and conventions."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0031",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which response best protects oceans? A) Clean a beach once and ignore future waste. B) Prevent pollution, improve waste systems and protect habitats. C) Move litter from one shore to another. D) Assume oceans are too large to be harmed.",
+  "correctAnswer":"B) Prevent pollution, improve waste systems and protect habitats.",
+  "hint":"Look for prevention plus shared action.",
+  "explanation":"Effective protection combines prevention, management and habitat care."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0032",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why is beach clean-up alone not enough to solve ocean pollution?",
+  "correctAnswer":"Clean-up removes some existing waste, but pollution continues unless sources are reduced, waste systems improve and harmful practices are prevented.",
+  "hint":"Think upstream as well as downstream.",
+  "explanation":"Prevention addresses causes, while clean-up mainly addresses effects."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0033",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"A fictional coastal town has plastic entering the sea after rain. Design a four-part response covering household behaviour, community infrastructure, enforcement and habitat care.",
+  "correctAnswer":"A valid plan includes source reduction, better collection or drainage controls, rules/enforcement and measures that protect affected habitats.",
+  "hint":"Address more than one stage of the problem.",
+  "explanation":"Layered responses are stronger than one-off clean-up actions."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0034",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"Name two important roles oceans play in Earth's systems.",
+  "correctAnswer":"Examples include providing habitats for marine life, supporting food webs and livelihoods, influencing climate, storing heat and participating in the water cycle.",
+  "hint":"Choose one ecological role and one broader Earth-system or human role.",
+  "explanation":"Oceans support both living systems and wider planetary processes."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0035",
+  "lessonId":"social-science.cbse6.exploring-society.ch2.oceans-matter.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"For two unfamiliar ocean-impact scenarios, explain the ocean role affected, the human pressure, one likely consequence, one prevention action and one collective response.",
+  "correctAnswer":"Answers vary; each must form a coherent cause-effect chain and include both prevention and shared action without unsupported advanced science.",
+  "hint":"Use the chain: role → pressure → consequence → prevention → collective response.",
+  "explanation":"Mastery links ocean importance to evidence-based protection choices."
+}
 );

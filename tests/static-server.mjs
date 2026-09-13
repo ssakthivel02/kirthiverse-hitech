@@ -18,7 +18,7 @@ const mime = {
   '.webp': 'image/webp',
   '.xml': 'application/xml; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
-  '.webmanifest': 'application/manifest+json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json',
 };
 
 function resolveRequest(urlText) {
@@ -60,7 +60,8 @@ const server = http.createServer(async (req, res) => {
     if (stat.isDirectory()) target = path.join(target, 'index.html');
     return await sendFile(res, target);
   } catch {
-    if (path.extname(request.pathname)) {
+    const extension = path.extname(request.pathname).toLowerCase();
+    if (extension && Object.prototype.hasOwnProperty.call(mime, extension)) {
       res.writeHead(404, { 'Cache-Control': 'no-store' });
       return res.end('Not found');
     }

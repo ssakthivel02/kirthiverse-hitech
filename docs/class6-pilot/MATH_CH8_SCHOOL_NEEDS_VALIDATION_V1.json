@@ -1,0 +1,84 @@
+{
+  "schemaVersion":"1.0.0",
+  "validationId":"KVS-CBSE6-MATH-CH8-SCHOOL-NEEDS-V1",
+  "scope":"CBSE Class 6 Mathematics · Ganita Prakash · Chapter 8 · Playing with Constructions",
+  "validationType":"SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary":"This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary":{"realChildData":false,"names":false,"emails":false,"photos":false,"microphone":false,"camera":false,"recording":false,"preciseLocation":false,"remoteTeacherMonitoring":false,"childFacingCloudAI":false,"telemetryRequired":false},
+  "schoolOverlay":{"school":"SAN Academy Tambaram","use":"validation-context overlay only","schoolSpecificPacingClaimed":false,"liveSchoolEvidenceCollected":false},
+  "passRule":"Every scenario must map to an implemented Chapter 8 topic, an existing Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action and an observable mastery criterion. Fixed-distance constructions must preserve compass width when required; circles and arcs must retain centre-radius meaning; square and rectangle recognition must rely on invariant side/right-angle properties rather than orientation; and ruler-compass constructions must explicitly establish perpendicularity, transfer stated lengths and verify defining properties rather than rely on appearance.",
+  "scenarios":[
+    {
+      "id":"SN-MATH6-CH8-001",
+      "need":"Learner changes the compass opening while trying to construct equal-radius circles or transfer a fixed distance, so equal-distance constraints are lost.",
+      "topicId":"TOPIC-MATH6-08-01",
+      "expectedMisconception":"changing the compass opening during a fixed-radius construction",
+      "requiredAssessmentTypes":["reasoning","mastery_check"],
+      "safeLearnerAction":"On paper, set a compass to one stated fictional length, mark three transferred distances without resetting the opening, then verify each transfer against the original span using the same compass setting.",
+      "masteryCriterion":"Completes three new fixed-distance transfers with one preserved compass opening and correctly rejects a construction where the span was altered midway."
+    },
+    {
+      "id":"SN-MATH6-CH8-002",
+      "need":"Learner confuses the centre with a point on the circle or treats an arc as if it has no centre-radius relationship.",
+      "topicId":"TOPIC-MATH6-08-01",
+      "expectedMisconception":"confusing the centre with a point on the circle",
+      "requiredAssessmentTypes":["short_answer","mastery_check"],
+      "safeLearnerAction":"Draw a fictional circle and two arcs, label each centre and radius, then use the compass to test that several points on each curve are the same stated distance from its centre.",
+      "masteryCriterion":"Identifies centre and radius correctly in four new circle/arc representations and explains that every tested point on the same constructed curve satisfies the fixed-distance condition."
+    },
+    {
+      "id":"SN-MATH6-CH8-003",
+      "need":"Learner accepts intersecting-arc construction points from visual appearance without checking that both required distance conditions are simultaneously satisfied.",
+      "topicId":"TOPIC-MATH6-08-01",
+      "expectedMisconception":"accepting a construction from appearance without checking distance",
+      "requiredAssessmentTypes":["worked_challenge","reasoning","mastery_check"],
+      "safeLearnerAction":"Given two fictional anchor points and two stated distances, draw the corresponding arcs, choose an intersection, and verify with the compass that the selected point is the required distance from both anchors.",
+      "masteryCriterion":"Solves three new two-distance intersection constructions and verifies both distance constraints before accepting each point."
+    },
+    {
+      "id":"SN-MATH6-CH8-004",
+      "need":"Learner rejects a rotated square or rectangle because it is not page-aligned, or classifies a figure from its visual pose instead of invariant properties.",
+      "topicId":"TOPIC-MATH6-08-02",
+      "expectedMisconception":"rejecting a rotated square because it is not page-aligned",
+      "requiredAssessmentTypes":["multiple_choice","reasoning","mastery_check"],
+      "safeLearnerAction":"Inspect fictional quadrilaterals shown at different rotations, mark right angles and equal-side relationships, and classify each figure using those properties without rotating the page or relying on horizontal/vertical alignment.",
+      "masteryCriterion":"Correctly classifies four new rotated candidates and justifies every decision using side equality and right-angle properties rather than orientation."
+    },
+    {
+      "id":"SN-MATH6-CH8-005",
+      "need":"Learner confuses sides with diagonals through out-of-order vertex naming or assumes every rectangle has four equal sides.",
+      "topicId":"TOPIC-MATH6-08-02",
+      "expectedMisconception":"confusing diagonals with sides through out-of-order naming",
+      "requiredAssessmentTypes":["short_answer","reasoning","mastery_check"],
+      "safeLearnerAction":"Label fictional rectangle and square vertices in boundary order, identify adjacent sides and diagonals explicitly, then compare which side-equality statements define a rectangle and which stronger condition defines a square.",
+      "masteryCriterion":"Names sides and diagonals correctly for three new labelled quadrilaterals and distinguishes equal-opposite-side rectangle evidence from four-equal-side square evidence."
+    },
+    {
+      "id":"SN-MATH6-CH8-006",
+      "need":"Learner estimates a perpendicular direction by eye or closes a quadrilateral without ensuring four right angles.",
+      "topicId":"TOPIC-MATH6-08-03",
+      "expectedMisconception":"estimating perpendicularity by eye",
+      "requiredAssessmentTypes":["worked_challenge","mastery_check"],
+      "safeLearnerAction":"Construct a fictional rectangle from one base segment by creating perpendicular directions at the base endpoints, transfer the stated height with a compass, close the fourth side, and verify all four corner conditions rather than judging by appearance.",
+      "masteryCriterion":"Constructs two new rectangles with explicit perpendicular steps and verifies all four right-angle conditions before accepting the figures."
+    },
+    {
+      "id":"SN-MATH6-CH8-007",
+      "need":"Learner measures supposedly equal sides independently instead of transferring one length, or assumes a diagonal measurement alone proves a rectangle or square.",
+      "topicId":"TOPIC-MATH6-08-03",
+      "expectedMisconception":"measuring supposedly equal sides independently instead of transferring distance",
+      "requiredAssessmentTypes":["reasoning","short_answer","mastery_check"],
+      "safeLearnerAction":"Construct a fictional square by transferring the base length to the remaining sides with a fixed compass span, verify four right angles, then use diagonals only as an additional check rather than as the sole proof of the figure.",
+      "masteryCriterion":"Completes two new square constructions with transferred equal sides and right-angle verification, and explains why one diagonal length alone is insufficient proof of a square or rectangle."
+    },
+    {
+      "id":"SN-MATH6-CH8-008",
+      "need":"Learner needs to complete the full construction-reasoning loop without cloud tutoring, image upload, microphone use or remote monitoring while still performing explicit geometric verification.",
+      "topicId":"TOPIC-MATH6-08-03",
+      "expectedMisconception":"skipping verification after construction",
+      "requiredAssessmentTypes":["reasoning","mastery_check"],
+      "safeLearnerAction":"Use cached Kiki text, locally available Chapter 8 prompts, paper, ruler and compass to complete one fixed-distance construction and one square-or-rectangle construction, then verify centre-radius, length and right-angle conditions without any network-dependent tutoring or submission step.",
+      "masteryCriterion":"Completes a new Chapter 8 construction sequence fully offline, states the defining constraints, performs explicit verification, detects one deliberately flawed construction, and requires no real-child data or external communication."
+    }
+  ]
+}

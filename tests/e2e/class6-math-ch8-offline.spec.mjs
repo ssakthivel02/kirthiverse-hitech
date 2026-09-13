@@ -6,7 +6,7 @@ test('Chapter 8 Mathematics lesson remains usable through the PWA with origin ne
   const pageErrors=[];page.on('pageerror',e=>pageErrors.push(e.message));
   const response=await page.goto('/?ch8-offline=prime',{waitUntil:'domcontentloaded'});expect(response?.status()).toBe(200);
   await page.waitForFunction(()=>Boolean(window.KV_NAVIGATION&&window.KV_PWA&&document.documentElement.dataset.class6MathPilot==='ready'));
-  await page.evaluate(()=>navigator.serviceWorker?.ready);
+  await page.evaluate(()=>navigator.serviceWorker.ready.then(()=>true));
   await page.reload({waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>Boolean(navigator.serviceWorker?.controller&&window.KV_NAVIGATION&&document.documentElement.dataset.class6MathPilot==='ready'));
   const cached=await page.evaluate(async()=>{const c=await caches.open('kirthiverse-preview-v45');const required=['/p0-entry-v1.js','/data/class6-math-ch2.js','/data/class6-math-ch8-assessments.js'];const out={};for(const u of required)out[u]=Boolean(await c.match(u));return out;});

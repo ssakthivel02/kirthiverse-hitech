@@ -16,6 +16,7 @@ on:
       - 'tests/class6-math-ch6.test.mjs'
       - 'tests/class6-math-ch7.test.mjs'
       - 'tests/class6-math-ch8.test.mjs'
+      - 'tests/class6-math-ch9.test.mjs'
       - 'tests/class6-math-school-needs.test.mjs'
       - 'tests/class6-math-ch2-school-needs.test.mjs'
       - 'tests/class6-math-ch3-school-needs.test.mjs'
@@ -76,6 +77,8 @@ jobs:
         run: node tests/class6-math-ch8.test.mjs
       - name: Validate Chapter 8 synthetic school-learning needs coverage
         run: node tests/class6-math-ch8-school-needs.test.mjs
+      - name: Validate Class 6 Mathematics Chapter 9 teaching slice
+        run: node tests/class6-math-ch9.test.mjs
       - name: Validate reconciled Class 6 coverage decision
         run: node tests/class6-coverage-reconciliation.test.mjs
       - name: QA summary
@@ -83,13 +86,13 @@ jobs:
         run: |
           echo '### Class 6 Mathematics Pilot QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- CBSE Class 6 Ganita Prakash 10-chapter mapping contract' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-8: twenty-four KirthiVerse-original Kiki lessons / 120 linked assessments' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-8 each retain separate eight-scenario synthetic school-learning-needs validation' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 8 validation covers fixed-distance compass work, centre/radius meaning, intersecting-arc constraints, rotated square/rectangle properties, perpendicular construction, transferred lengths, verification and offline completion' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 8 runtime reuses the existing Chapter 2 data request; Chapters 3-7 remain in their approved consolidated runtime, preserving the existing startup request ceiling' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-9: twenty-seven KirthiVerse-original Kiki lessons / 135 linked assessments' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-8 retain separate eight-scenario synthetic school-learning-needs validation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 9 covers line/reflection symmetry, exact reflected point placement, generating multi-axis symmetric figures, and rotational symmetry/order/angle' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 9 runtime reuses the existing Chapter 1 data request; Chapter 8 reuses Chapter 2; Chapters 3-7 remain in their approved consolidated runtime, preserving the startup request ceiling' >> "$GITHUB_STEP_SUMMARY"
           echo '- Mathematics assessment loading remains deferred on bounded Class 6 lesson/practice/diagnostic/release-closure surfaces' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 9 Symmetry is the next mapped implementation gap; no Chapter 9 content is created by this evidence lane' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 9 school-needs validation remains the separate next evidence task; Chapter 10 content is not created here' >> "$GITHUB_STEP_SUMMARY"
           echo '- privacy boundary: no real child data, photos, microphone, camera, recording, precise location, remote monitoring or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
           echo '- school overlay is validation context only; no school-specific pacing, efficacy or attainment claim' >> "$GITHUB_STEP_SUMMARY"
-          echo '- runtime, PWA v45 cache generation, DNS, database and deployment remain unchanged by this evidence lane' >> "$GITHUB_STEP_SUMMARY"
+          echo '- active PWA v45 cache generation is retained; Chapter 9 assessment asset is additive only' >> "$GITHUB_STEP_SUMMARY"
           echo '- canonical Kiki wording and no-microphone/no-recording safety assertions retained' >> "$GITHUB_STEP_SUMMARY"

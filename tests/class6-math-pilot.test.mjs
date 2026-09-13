@@ -28,11 +28,15 @@ const sandbox={window:{KV_LESSONS:[],KV_ASSESSMENTS:[]}};
 vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync('data/class6-math-pilot.js','utf8'),sandbox,{filename:'class6-math-pilot.js'});
 vm.runInContext(fs.readFileSync('data/class6-math-assessments.js','utf8'),sandbox,{filename:'class6-math-assessments.js'});
-const lessons=sandbox.window.KV_LESSONS;
+const carrierLessons=sandbox.window.KV_LESSONS;
+const lessons=carrierLessons.filter(x=>x.chapter===1);
+const chapter9Carrier=carrierLessons.filter(x=>x.chapter===9);
 const assessments=sandbox.window.KV_ASSESSMENTS;
+assert.equal(carrierLessons.length,6,'historical Chapter 1 carrier must contain only Chapters 1 and 9');
 assert.equal(lessons.length,3);
+assert.equal(chapter9Carrier.length,3,'Chapter 9 runtime carrier must contain three lessons');
 assert.deepEqual([...lessons.map(x=>x.id)].sort(),[...lessonIds].sort());
-assert.equal(new Set(lessons.map(x=>x.id)).size,3);
+assert.equal(new Set(carrierLessons.map(x=>x.id)).size,6);
 assert.equal(new Set(lessons.map(x=>x.topicId)).size,3);
 for(const lesson of lessons){
   assert.equal(lesson.subject,'Mathematics');
@@ -75,4 +79,4 @@ assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."),'canonical Kiki 
 assert.ok(index.includes('microphone:false'),'Kiki microphone safety assertion missing');
 assert.ok(index.includes('recording:false'),'Kiki recording safety assertion missing');
 assert.ok(index.includes('speechRecognition:false'),'Kiki speech-recognition safety assertion missing');
-console.log(`CLASS6_MATH_CH1_PASS chapters=${map.chapters.length} chapter1Topics=${map.chapter1Topics.length} lessons=${lessons.length} assessments=${assessments.length} school=${map.schoolOverlay.school}`);
+console.log(`CLASS6_MATH_CH1_PASS chapters=${map.chapters.length} chapter1Topics=${map.chapter1Topics.length} lessons=${lessons.length} carrier=${carrierLessons.length} assessments=${assessments.length} school=${map.schoolOverlay.school}`);

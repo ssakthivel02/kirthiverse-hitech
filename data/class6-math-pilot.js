@@ -1,3 +1,6 @@
+/* Historical Chapter 1 Mathematics runtime file retained as an existing startup request.
+   Chapter 1 lesson objects below are unchanged; Chapter 9 runtime objects are appended to preserve the total startup request ceiling.
+   Source-of-truth Chapter 9 review module remains data/class6-math-ch9.js. */
 window.KV_LESSONS=window.KV_LESSONS||[];
 window.KV_LESSONS.push(
 {
@@ -11,104 +14,60 @@ window.KV_LESSONS.push(
   "learningObjective":"Identify a consistent rule in a number pattern, extend the pattern correctly, and explain why the rule works across several terms.",
   "content":"A number pattern is an ordered sequence whose terms follow a consistent rule. To identify a rule, compare several neighbouring terms rather than relying on one coincidence. Test the rule on at least three transitions, then use it to predict later terms. Some patterns add or subtract a fixed amount; others grow through square numbers, triangular numbers, doubling, or another repeatable structure. Square numbers such as 1, 4, 9 and 16 are made by multiplying a whole number by itself. Triangular numbers such as 1, 3, 6 and 10 can be visualised as dots arranged in growing triangular rows.",
   "workedExample":"Find the next two terms in 2, 5, 8, 11, ... . The differences are 3, 3 and 3, so the rule is add 3. Applying the same rule gives 14 and then 17. Check: every neighbouring pair follows the same +3 rule.",
-  "board":"CBSE",
-  "classLevel":6,
-  "curriculumSession":"2026-27",
-  "book":"Ganita Prakash",
-  "chapter":1,
-  "chapterTitle":"Patterns in Mathematics",
-  "topicId":"TOPIC-MATH6-01-01",
+  "board":"CBSE","classLevel":6,"curriculumSession":"2026-27","book":"Ganita Prakash","chapter":1,"chapterTitle":"Patterns in Mathematics","topicId":"TOPIC-MATH6-01-01",
   "sourceRefs":["NCERT-GANITA-PRAKASH-G6","KVS-LEGACY-MATH6-PILOT-2026-09-04"],
-  "rightsStatus":"KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION",
-  "schoolOverlay":"SAN Academy Tambaram",
-  "schoolMappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
-  "kikiTeaching":{
-    "objective":"Student can identify and extend a simple number pattern and justify the rule.",
-    "intro":"We are pattern detectives. First find the rule, then prove it keeps working.",
-    "priorKnowledge":"Count by 2s from 2 to 10, then describe what changes each time.",
-    "visualIdea":"Build triangular dot groups 1, 3, 6, 10 and square dot arrays 1, 4, 9, 16.",
-    "misconceptionCheck":"A rule must fit the whole sequence, not just one pair of terms.",
-    "recap":"Find the rule, test it on several terms, then extend the sequence.",
-    "parentPrompt":"Ask the learner to explain the pattern rule aloud before checking the answer."
-  },
-  "remediation":{
-    "trigger":"Learner cannot state a rule or applies it inconsistently.",
-    "strategy":"Return to a concrete skip-counting pattern, mark the change between each pair, then retry with one visual square or triangular pattern.",
-    "masteryEvidence":"Learner correctly extends two different patterns and explains a consistent rule for each without answer prompting."
-  }
+  "rightsStatus":"KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION","schoolOverlay":"SAN Academy Tambaram","schoolMappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
+  "kikiTeaching":{"objective":"Student can identify and extend a simple number pattern and justify the rule.","intro":"We are pattern detectives. First find the rule, then prove it keeps working.","priorKnowledge":"Count by 2s from 2 to 10, then describe what changes each time.","visualIdea":"Build triangular dot groups 1, 3, 6, 10 and square dot arrays 1, 4, 9, 16.","misconceptionCheck":"A rule must fit the whole sequence, not just one pair of terms.","recap":"Find the rule, test it on several terms, then extend the sequence.","parentPrompt":"Ask the learner to explain the pattern rule aloud before checking the answer."},
+  "remediation":{"trigger":"Learner cannot state a rule or applies it inconsistently.","strategy":"Return to a concrete skip-counting pattern, mark the change between each pair, then retry with one visual square or triangular pattern.","masteryEvidence":"Learner correctly extends two different patterns and explains a consistent rule for each without answer prompting."}
 },
 {
-  "id":"math.cbse6.ganita-prakash.patterns.shape-patterns.v1",
-  "title":"Patterns in Mathematics — Shape Patterns",
-  "subject":"Mathematics",
-  "topic":"CBSE Class 6 · Ganita Prakash · Chapter 1",
-  "subtopic":"Patterns in shapes",
-  "ageBand":"11-13",
-  "difficulty":"Foundational",
+  "id":"math.cbse6.ganita-prakash.patterns.shape-patterns.v1","title":"Patterns in Mathematics — Shape Patterns","subject":"Mathematics","topic":"CBSE Class 6 · Ganita Prakash · Chapter 1","subtopic":"Patterns in shapes","ageBand":"11-13","difficulty":"Foundational",
   "learningObjective":"Recognise how a visual figure changes from step to step, describe the growth rule precisely, and predict a later figure or count from that rule.",
   "content":"A shape pattern changes in a repeatable way. The useful question is not only what the next picture looks like, but what stays the same and what changes at every step. A growing pattern may add one square to each side, add a new row of dots, rotate a shape through equal turns, or repeat a fixed group of tiles. We can describe a visual rule with words, a labelled sketch, a table of figure number and quantity, or a numerical sequence. Translating a picture into numbers helps us test whether the visual rule is truly consistent. Different-looking arrangements can also follow the same numerical growth rule, so the explanation must refer to the construction, not only the final count.",
   "workedExample":"Figure 1 uses 3 matchsticks in a row of one joined square edge-pattern unit, Figure 2 uses 5, and Figure 3 uses 7. The counts increase by 2 each time. The fourth figure therefore uses 9. A stronger explanation says that each new figure extends the construction by one unit that contributes two new outside matchsticks, so the +2 rule has a visual reason.",
-  "board":"CBSE",
-  "classLevel":6,
-  "curriculumSession":"2026-27",
-  "book":"Ganita Prakash",
-  "chapter":1,
-  "chapterTitle":"Patterns in Mathematics",
-  "topicId":"TOPIC-MATH6-01-02",
-  "sourceRefs":["NCERT-GANITA-PRAKASH-G6","KVS-CH1-SHAPE-PATTERN-ORIGINAL-2026-09"],
-  "rightsStatus":"KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION",
-  "schoolOverlay":"SAN Academy Tambaram",
-  "schoolMappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
-  "kikiTeaching":{
-    "objective":"Student can describe a visual growth or repetition rule and use it to predict a later figure.",
-    "intro":"Pictures can hide number rules. We will track exactly what changes from one figure to the next.",
-    "priorKnowledge":"Look at three simple dot groups and say what is added each time.",
-    "visualIdea":"Build figures with counters or paper squares, number each stage, and record the total pieces in a two-column table.",
-    "misconceptionCheck":"Do not choose a rule only because the totals fit; explain how the actual shape is constructed at every stage.",
-    "recap":"Compare stages, describe the construction change, convert it to a count, and test the rule on more than one transition.",
-    "parentPrompt":"Ask the learner to build the next figure with coins, buttons or paper pieces and explain which pieces were added."
-  },
-  "remediation":{
-    "trigger":"Learner can copy the next picture but cannot state the repeatable construction rule or connect it to counts.",
-    "strategy":"Use only three small stages. Circle the newly added pieces in each transition, write the amount added beside them, then rebuild the fourth stage from the stated rule.",
-    "masteryEvidence":"Learner correctly predicts two later stages of a new visual pattern and explains both the construction change and its numerical effect."
-  }
+  "board":"CBSE","classLevel":6,"curriculumSession":"2026-27","book":"Ganita Prakash","chapter":1,"chapterTitle":"Patterns in Mathematics","topicId":"TOPIC-MATH6-01-02","sourceRefs":["NCERT-GANITA-PRAKASH-G6","KVS-CH1-SHAPE-PATTERN-ORIGINAL-2026-09"],"rightsStatus":"KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION","schoolOverlay":"SAN Academy Tambaram","schoolMappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
+  "kikiTeaching":{"objective":"Student can describe a visual growth or repetition rule and use it to predict a later figure.","intro":"Pictures can hide number rules. We will track exactly what changes from one figure to the next.","priorKnowledge":"Look at three simple dot groups and say what is added each time.","visualIdea":"Build figures with counters or paper squares, number each stage, and record the total pieces in a two-column table.","misconceptionCheck":"Do not choose a rule only because the totals fit; explain how the actual shape is constructed at every stage.","recap":"Compare stages, describe the construction change, convert it to a count, and test the rule on more than one transition.","parentPrompt":"Ask the learner to build the next figure with coins, buttons or paper pieces and explain which pieces were added."},
+  "remediation":{"trigger":"Learner can copy the next picture but cannot state the repeatable construction rule or connect it to counts.","strategy":"Use only three small stages. Circle the newly added pieces in each transition, write the amount added beside them, then rebuild the fourth stage from the stated rule.","masteryEvidence":"Learner correctly predicts two later stages of a new visual pattern and explains both the construction change and its numerical effect."}
 },
 {
-  "id":"math.cbse6.ganita-prakash.patterns.everyday-patterns.v1",
-  "title":"Patterns in Mathematics — Nature and Everyday Life",
-  "subject":"Mathematics",
-  "topic":"CBSE Class 6 · Ganita Prakash · Chapter 1",
-  "subtopic":"Patterns in nature and everyday life",
-  "ageBand":"11-13",
-  "difficulty":"Foundational",
+  "id":"math.cbse6.ganita-prakash.patterns.everyday-patterns.v1","title":"Patterns in Mathematics — Nature and Everyday Life","subject":"Mathematics","topic":"CBSE Class 6 · Ganita Prakash · Chapter 1","subtopic":"Patterns in nature and everyday life","ageBand":"11-13","difficulty":"Foundational",
   "learningObjective":"Identify repeatable or growing structures in everyday observations, represent an observation mathematically, and distinguish a tested pattern from an unsupported guess.",
   "content":"Patterns can be noticed in calendars, floor tiles, bead strings, rhythms, branching arrangements and many other everyday settings. Mathematics begins when we describe an observation precisely enough to test it. A repeating pattern cycles through the same ordered block, such as red-blue-blue, red-blue-blue. A growing pattern changes according to a rule, such as adding two tiles to each new border. Natural objects can suggest symmetry, spirals, branching or repeated forms, but real biological growth is not always a perfect mathematical sequence. We should therefore separate what we actually observe from a rule we invent to model it. A good mathematical model states the unit being counted, records several observations, proposes a rule and checks where that rule works or fails.",
   "workedExample":"A decorative border repeats triangle, circle, square, triangle, circle, square. The repeating unit has length 3. Position 8 belongs to the second item of a cycle because 8 leaves remainder 2 when grouped in threes, so position 8 is a circle. The conclusion comes from the verified repeat block, not from guessing from one neighbouring pair.",
-  "board":"CBSE",
-  "classLevel":6,
-  "curriculumSession":"2026-27",
-  "book":"Ganita Prakash",
-  "chapter":1,
-  "chapterTitle":"Patterns in Mathematics",
-  "topicId":"TOPIC-MATH6-01-03",
-  "sourceRefs":["NCERT-GANITA-PRAKASH-G6","KVS-CH1-EVERYDAY-PATTERN-ORIGINAL-2026-09"],
-  "rightsStatus":"KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION",
-  "schoolOverlay":"SAN Academy Tambaram",
-  "schoolMappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
-  "kikiTeaching":{
-    "objective":"Student can observe, record, model and test a repeating or growing pattern without overstating what the evidence proves.",
-    "intro":"Patterns are everywhere, but mathematicians check before they claim a rule. Today we turn observations into testable models.",
-    "priorKnowledge":"Name the repeating unit in red-green-red-green-red-green and predict the next two colours.",
-    "visualIdea":"Use a short tile border, weekly-calendar grid and branching sketch; label the unit being counted before writing a rule.",
-    "misconceptionCheck":"Seeing a pleasing shape in nature does not prove that every later part follows an exact sequence; record and test observations first.",
-    "recap":"Observe several cases, define what is counted, propose a rule, test it, and say clearly whether the pattern repeats, grows or is only an approximation.",
-    "parentPrompt":"Invite the learner to find one household pattern, photograph nothing, and describe it with words or a sketch plus a testable rule."
-  },
-  "remediation":{
-    "trigger":"Learner gives a pattern claim without identifying the repeating unit, measured quantity or evidence used to test the rule.",
-    "strategy":"Return to a simple coloured-tile cycle. Mark one full repeat, list positions 1 to 9, then compare with a small growing border so repeating and growing patterns are clearly separated.",
-    "masteryEvidence":"Learner independently records an everyday pattern, identifies whether it repeats or grows, predicts a later position or stage, and gives at least two checks supporting the rule."
-  }
+  "board":"CBSE","classLevel":6,"curriculumSession":"2026-27","book":"Ganita Prakash","chapter":1,"chapterTitle":"Patterns in Mathematics","topicId":"TOPIC-MATH6-01-03","sourceRefs":["NCERT-GANITA-PRAKASH-G6","KVS-CH1-EVERYDAY-PATTERN-ORIGINAL-2026-09"],"rightsStatus":"KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION","schoolOverlay":"SAN Academy Tambaram","schoolMappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
+  "kikiTeaching":{"objective":"Student can observe, record, model and test a repeating or growing pattern without overstating what the evidence proves.","intro":"Patterns are everywhere, but mathematicians check before they claim a rule. Today we turn observations into testable models.","priorKnowledge":"Name the repeating unit in red-green-red-green-red-green and predict the next two colours.","visualIdea":"Use a short tile border, weekly-calendar grid and branching sketch; label the unit being counted before writing a rule.","misconceptionCheck":"Seeing a pleasing shape in nature does not prove that every later part follows an exact sequence; record and test observations first.","recap":"Observe several cases, define what is counted, propose a rule, test it, and say clearly whether the pattern repeats, grows or is only an approximation.","parentPrompt":"Invite the learner to find one household pattern, photograph nothing, and describe it with words or a sketch plus a testable rule."},
+  "remediation":{"trigger":"Learner gives a pattern claim without identifying the repeating unit, measured quantity or evidence used to test the rule.","strategy":"Return to a simple coloured-tile cycle. Mark one full repeat, list positions 1 to 9, then compare with a small growing border so repeating and growing patterns are clearly separated.","masteryEvidence":"Learner independently records an everyday pattern, identifies whether it repeats or grows, predicts a later position or stage, and gives at least two checks supporting the rule."}
+}
+);
+
+/* Chapter 9 runtime objects appended here to preserve the already-established startup request count.
+   Review/source-of-truth copy: data/class6-math-ch9.js. */
+window.KV_LESSONS.push(
+{
+  "id":"math.cbse6.ganita-prakash.ch9.line-reflection-symmetry.v1","title":"Symmetry — Find and Verify Lines of Reflection Symmetry","subject":"Mathematics","topic":"CBSE Class 6 · Ganita Prakash · Chapter 9","subtopic":"Line symmetry, reflection, mirror halves, multiple symmetry axes and verification","ageBand":"11-13","difficulty":"Developing",
+  "learningObjective":"Identify and verify lines of symmetry by reflection or folding logic, distinguish approximate visual balance from exact mirror correspondence, and determine when a figure has zero, one or several symmetry axes.",
+  "content":"A line of symmetry divides a figure so that reflection across the line maps every point on one side to a matching point on the other side at the same perpendicular distance. This is stronger than saying that two halves merely look similar. A useful check is to imagine folding the figure along the proposed line: corresponding boundary points, corners and markings must coincide. Some figures have one line of symmetry, some have several and some have none. A square has several symmetry axes, while a general scalene triangle has none. Orientation does not matter: rotating a symmetric figure does not destroy its symmetry; the symmetry lines rotate with the figure. Reflection symmetry can also be used to complete a missing half of a design. For any chosen point, locate its partner directly across the symmetry line at the same perpendicular distance. The line itself acts like a mirror and is the perpendicular bisector of the segment joining a point to its reflected partner. Exact correspondence, not decorative similarity, is the test.",
+  "workedExample":"Suppose point P is 3 cm to the left of a vertical symmetry line. Its reflected partner P' must lie 3 cm to the right of that line on the same perpendicular level. The segment PP' crosses the symmetry line at its midpoint and at a right angle. Repeating this for the important vertices completes the reflected half exactly.",
+  "board":"CBSE","classLevel":6,"curriculumSession":"2026-27","book":"Ganita Prakash","chapter":9,"chapterTitle":"Symmetry","topicId":"TOPIC-MATH6-09-01","sourceRefs":["NCERT-GANITA-PRAKASH-G6-CH9","KVS-CH9-LINE-REFLECTION-SYMMETRY-ORIGINAL-2026-09"],"rightsStatus":"KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION","schoolOverlay":"SAN Academy Tambaram","schoolMappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
+  "kikiTeaching":{"objective":"Student can test candidate symmetry lines using exact reflection conditions and complete a reflected partner point or partial figure.","intro":"Symmetry is not just a picture looking balanced. A true mirror line pairs every point with an equally distant partner on the other side.","priorKnowledge":"If a point is 2 cm from a mirror line, where should its reflected partner be and how far from the mirror line?","visualIdea":"Show candidate lines through simple polygons and mark point-pairs with equal perpendicular distances; include one near-symmetric distractor that fails at a single vertex.","misconceptionCheck":"Do not accept a symmetry line because the two regions have similar area or appearance; every corresponding point must reflect exactly.","recap":"Reflect across the candidate line, match perpendicular distances, check every key point, and count only the lines that make the whole figure coincide.","parentPrompt":"Draw a simple asymmetric shape and a square. Ask the learner to test several proposed mirror lines by tracing or folding logic and justify which ones work."},
+  "remediation":{"trigger":"Learner chooses a line from visual balance only, counts a diagonal that does not reflect the whole figure, or places reflected points at unequal distances from the mirror line.","strategy":"Use one point-pair at a time. Draw a perpendicular to the candidate mirror line, measure the point's distance to the line, place the partner at the same distance on the opposite side, then repeat for all defining vertices.","masteryEvidence":"Learner verifies symmetry lines for six new figures, rejects at least two plausible but invalid candidates, and accurately reflects four labelled points across horizontal, vertical or slanted mirror lines."}
+},
+{
+  "id":"math.cbse6.ganita-prakash.ch9.generate-symmetric-figures.v1","title":"Symmetry — Complete and Generate Figures from Reflection Rules","subject":"Mathematics","topic":"CBSE Class 6 · Ganita Prakash · Chapter 9","subtopic":"Completing symmetric figures, multiple lines of symmetry, repeated reflection and construction reasoning","ageBand":"11-13","difficulty":"Developing",
+  "learningObjective":"Generate or complete figures with a specified line or set of lines of symmetry by reflecting defining points and segments, and explain how multiple symmetry constraints interact.",
+  "content":"Once reflection is understood point by point, symmetric designs can be generated deliberately. Begin with a stated mirror line and a partial figure. Reflect each important point across the line using equal perpendicular distances, then connect reflected points in the corresponding order. If a design must have more than one line of symmetry, satisfying one line is not enough: the completed figure must also reflect correctly across every additional required axis. Repeated symmetry constraints can create highly regular patterns. For example, a design with both horizontal and vertical mirror symmetry repeats one quarter into the other three quarters through reflection. A circle is an extreme case: every diameter is a line of reflection symmetry because reflecting across any diameter leaves the circle unchanged. Symmetric construction should therefore be rule-driven. Copying by eye may look convincing but can violate equal-distance conditions. A good final check examines corresponding points, segment lengths, angles and repeated motifs under each required reflection.",
+  "workedExample":"A motif is drawn only in the upper-right quadrant and must have both the horizontal and vertical coordinate axes as symmetry lines. First reflect the motif across the vertical axis to create the upper-left copy. Then reflect the entire upper half across the horizontal axis. The four quadrants now correspond under both required reflections.",
+  "board":"CBSE","classLevel":6,"curriculumSession":"2026-27","book":"Ganita Prakash","chapter":9,"chapterTitle":"Symmetry","topicId":"TOPIC-MATH6-09-02","sourceRefs":["NCERT-GANITA-PRAKASH-G6-CH9","KVS-CH9-GENERATE-SYMMETRIC-FIGURES-ORIGINAL-2026-09"],"rightsStatus":"KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION","schoolOverlay":"SAN Academy Tambaram","schoolMappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
+  "kikiTeaching":{"objective":"Student can complete a partial figure from one or more reflection constraints and verify all required symmetry axes rather than only the first one used.","intro":"A symmetry rule can generate a whole design from a small part. The challenge is to obey every mirror condition exactly, not merely copy the pattern by eye.","priorKnowledge":"How would you reflect one point across a vertical line? What changes if the finished design must also have a horizontal symmetry line?","visualIdea":"Animate one quadrant reflected across a vertical axis and then across a horizontal axis, highlighting equal perpendicular distances and repeated segment orientation.","misconceptionCheck":"Completing one mirror half does not automatically satisfy a second symmetry line, and equal-looking regions are not enough if point locations differ.","recap":"Reflect defining points, rebuild matching segments, repeat for every required axis, then verify the entire design under each reflection.","parentPrompt":"Draw half of a simple block-letter or geometric motif beside a mirror line. Ask the learner to complete it exactly and then add a second symmetry constraint."},
+  "remediation":{"trigger":"Learner copies freehand instead of reflecting point positions, satisfies only one required axis, or changes distances while reproducing a motif.","strategy":"Mark only the vertices first. Construct their reflected partners with measured perpendicular distances before drawing any connecting lines. For two-axis tasks, verify the first reflection, then treat the resulting half as the input to the second reflection.","masteryEvidence":"Learner completes three new partial figures with one symmetry line and two figures with two specified symmetry lines, with all reflected vertices and segments correctly matched."}
+},
+{
+  "id":"math.cbse6.ganita-prakash.ch9.rotational-symmetry.v1","title":"Symmetry — Reason with Rotational Symmetry, Order and Angle","subject":"Mathematics","topic":"CBSE Class 6 · Ganita Prakash · Chapter 9","subtopic":"Rotational symmetry, centre of rotation, order, smallest angle and relation to reflection symmetry","ageBand":"11-13","difficulty":"Developing",
+  "learningObjective":"Determine whether a figure has non-trivial rotational symmetry, identify the centre of rotation, find rotational order and smallest positive angle, and distinguish rotational symmetry from reflection symmetry.",
+  "content":"A figure has rotational symmetry when it can turn through an angle greater than 0° but less than 360° around a fixed centre and exactly match its original position. A full 360° turn always returns any figure to itself, so by itself it does not show non-trivial rotational symmetry. The order of rotational symmetry is the number of matching positions in one full turn, including the starting position. If matching positions are equally spaced, the smallest positive angle is 360° divided by the order. A square has rotational order 4 because it matches after quarter-turns; its smallest positive angle is 90°. A non-square rectangle has order 2 and smallest angle 180°. Reflection symmetry is different: it uses a mirror line rather than a turn. A figure can have rotational symmetry but no line symmetry, or reflection symmetry but no non-trivial rotational symmetry. Some highly regular figures have both. A circle has reflection symmetry about every diameter and rotational symmetry through every angle about its centre. Classification must therefore state which transformation is being tested.",
+  "workedExample":"A four-blade pinwheel repeats after each quarter-turn but does not match under any mirror reflection because the blades have a handed direction. Its rotational order is 4, its smallest positive angle is 90°, and it has no line of symmetry. This shows why rotation and reflection must be tested separately.",
+  "board":"CBSE","classLevel":6,"curriculumSession":"2026-27","book":"Ganita Prakash","chapter":9,"chapterTitle":"Symmetry","topicId":"TOPIC-MATH6-09-03","sourceRefs":["NCERT-GANITA-PRAKASH-G6-CH9","KVS-CH9-ROTATIONAL-SYMMETRY-ORIGINAL-2026-09"],"rightsStatus":"KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION","schoolOverlay":"SAN Academy Tambaram","schoolMappingStatus":"SUBJECT_CONFIRMED_CHAPTER_SEQUENCE_NOT_SCHOOL_ATTESTED",
+  "kikiTeaching":{"objective":"Student can identify non-trivial rotational symmetry, compute order and smallest positive angle, and distinguish turning symmetry from mirror symmetry.","intro":"A shape can repeat by turning even when no mirror line works. Rotational symmetry asks when the whole figure returns to exactly the same position during a full turn.","priorKnowledge":"How many quarter-turns make one full turn? At which turns does a square look exactly the same?","visualIdea":"Show transparent overlays of a square, non-square rectangle and pinwheel rotated about marked centres, then compare with separate reflection tests.","misconceptionCheck":"Do not count 360° alone as evidence of non-trivial rotational symmetry, and do not assume rotational symmetry guarantees a mirror line.","recap":"Fix the centre, rotate, record every exact match, count the matching positions as the order, and compute the smallest angle when repeats are equally spaced.","parentPrompt":"Use paper cut-outs of a square, rectangle and an asymmetric arrow. Rotate each around its centre and record which angles produce exact matches."},
+  "remediation":{"trigger":"Learner calls every figure rotationally symmetric because 360° works, counts partial visual similarity as a match, or confuses rotational order with number of mirror lines.","strategy":"Exclude the 360° endpoint at first. Test 90°, 180° and 270° using a traced outline and fixed centre. Record only exact overlaps, then add the starting position when determining order and discuss reflection separately.","masteryEvidence":"Learner correctly identifies rotational symmetry, order and smallest positive angle for six new figures and distinguishes cases with rotation only, reflection only, both, or neither."}
 }
 );

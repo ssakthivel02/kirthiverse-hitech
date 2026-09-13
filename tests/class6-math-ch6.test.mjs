@@ -8,7 +8,7 @@ const lessonIds=[
   'math.cbse6.ganita-prakash.ch6.triangles-composite-area.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.9.0');
+assert.equal(map.schemaVersion,'1.10.0');
 assert.equal(map.chapters[5].chapter,6);
 assert.equal(map.chapters[5].title,'Perimeter and Area');
 assert.equal(map.chapters[5].status,'KIKI_TEACHING_SLICE_COMPLETE');
@@ -51,10 +51,10 @@ assert.equal(runtimeLessons.length,15,'approved Chapters 3-7 runtime must remain
 const sourceSandbox={window:{KV_LESSONS:[]}};vm.createContext(sourceSandbox);for(const file of ['data/class6-math-ch3.js','data/class6-math-ch4.js','data/class6-math-ch5.js','data/class6-math-ch6.js','data/class6-math-ch7.js'])vm.runInContext(fs.readFileSync(file,'utf8'),sourceSandbox,{filename:file});assert.equal(sourceSandbox.window.KV_LESSONS.length,15);const sourceById=new Map(sourceSandbox.window.KV_LESSONS.map(x=>[x.id,x]));for(const runtimeLesson of runtimeLessons){assert.ok(sourceById.has(runtimeLesson.id));assert.deepEqual(JSON.parse(JSON.stringify(runtimeLesson)),JSON.parse(JSON.stringify(sourceById.get(runtimeLesson.id)),null),`runtime drift detected for ${runtimeLesson.id}`)}
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
-for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch6-assessments.js','data/class6-math-ch7-assessments.js','data/class6-math-ch8-assessments.js'])assert.ok(entry.includes(asset),`loader missing ${asset}`);
-assert.ok(entry.includes('ch(?:2|3|4|5|6|7|8)\\.'),'Chapter 1-8 deferred-assessment route coverage missing');assert.ok(!entry.includes("/^\\/lesson\\/math\\./"));
+for(const asset of ['data/class6-math-ch3-4-runtime.js','data/class6-math-ch6-assessments.js','data/class6-math-ch7-assessments.js','data/class6-math-ch8-assessments.js','data/class6-math-ch9-assessments.js'])assert.ok(entry.includes(asset),`loader missing ${asset}`);
+assert.ok(entry.includes('ch(?:2|3|4|5|6|7|8|9)\\.'),'Chapter 1-9 deferred-assessment route coverage missing');assert.ok(!entry.includes("/^\\/lesson\\/math\\./"));
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
-assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'));assert.ok(!baseChunk.includes('data/class6-math-ch6.js'));assert.ok(!baseChunk.includes('data/class6-math-ch7.js'));assert.ok(!baseChunk.includes('data/class6-math-ch8.js'));assert.ok(!baseChunk.includes('data/class6-math-ch6-assessments.js'));assert.ok(!baseChunk.includes('data/class6-math-ch7-assessments.js'));assert.ok(!baseChunk.includes('data/class6-math-ch8-assessments.js'));
-const sw=fs.readFileSync('sw-v30.js','utf8');assert.match(sw,/kirthiverse-preview-v45/);for(const asset of ['/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch6-assessments.js','/data/class6-math-ch7-assessments.js','/data/class6-math-ch8-assessments.js'])assert.ok(sw.includes(asset));
+assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'));assert.ok(!baseChunk.includes('data/class6-math-ch6.js'));assert.ok(!baseChunk.includes('data/class6-math-ch7.js'));assert.ok(!baseChunk.includes('data/class6-math-ch8.js'));assert.ok(!baseChunk.includes('data/class6-math-ch9.js'));assert.ok(!baseChunk.includes('data/class6-math-ch6-assessments.js'));assert.ok(!baseChunk.includes('data/class6-math-ch7-assessments.js'));assert.ok(!baseChunk.includes('data/class6-math-ch8-assessments.js'));assert.ok(!baseChunk.includes('data/class6-math-ch9-assessments.js'));
+const sw=fs.readFileSync('sw-v30.js','utf8');assert.match(sw,/kirthiverse-preview-v45/);for(const asset of ['/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch6-assessments.js','/data/class6-math-ch7-assessments.js','/data/class6-math-ch8-assessments.js','/data/class6-math-ch9-assessments.js'])assert.ok(sw.includes(asset));
 const index=fs.readFileSync('index.html','utf8');assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));assert.ok(index.includes('microphone:false'));assert.ok(index.includes('recording:false'));assert.ok(index.includes('speechRecognition:false'));
 console.log(`CLASS6_MATH_CH6_PASS topics=${map.chapter6Topics.length} lessons=${lessons.length} assessments=${assessments.length} runtimeParity=${runtimeLessons.length} schoolNeeds=${map.chapter6CompletionEvidence.schoolNeedsValidationPresent}`);

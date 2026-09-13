@@ -8,7 +8,7 @@ const lessonIds=[
   'math.cbse6.ganita-prakash.ch8.construct-squares-rectangles.v1',
 ];
 const map=JSON.parse(fs.readFileSync('docs/class6-pilot/MATHEMATICS_GANITA_PRAKASH_MAP_V1.json','utf8'));
-assert.equal(map.schemaVersion,'1.9.0');
+assert.equal(map.schemaVersion,'1.10.0');
 assert.equal(map.chapters[7].chapter,8);
 assert.equal(map.chapters[7].title,'Playing with Constructions');
 assert.equal(map.chapters[7].status,'KIKI_TEACHING_SLICE_COMPLETE');
@@ -86,18 +86,20 @@ vm.runInContext(fs.readFileSync('data/class6-math-ch3-4-runtime.js','utf8'),esta
 assert.equal(establishedRuntime.window.KV_LESSONS.length,15,'approved Chapters 3-7 runtime bundle must remain fifteen lessons');
 
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
-for(const asset of ['data/class6-math-ch2.js','data/class6-math-ch3-4-runtime.js','data/class6-math-ch8-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
-assert.ok(entry.includes('ch(?:2|3|4|5|6|7|8)\\.'),'Chapter 1-8 deferred-assessment route coverage missing');
+for(const asset of ['data/class6-math-ch2.js','data/class6-math-ch3-4-runtime.js','data/class6-math-ch8-assessments.js','data/class6-math-ch9-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
+assert.ok(entry.includes('ch(?:2|3|4|5|6|7|8|9)\\.'),'Chapter 1-9 deferred-assessment route coverage missing');
 assert.ok(!entry.includes("/^\\/lesson\\/math\\./"),'generic Mathematics lessons must not trigger Class 6 assessment bundles');
 const baseChunk=entry.slice(entry.indexOf('const mathBaseFiles'),entry.indexOf('const loadClass6MathPilot'));
 assert.ok(baseChunk.includes('data/class6-math-ch2.js'),'existing Chapter 2 startup request must remain the Chapter 8 runtime carrier');
 assert.ok(baseChunk.includes('data/class6-math-ch3-4-runtime.js'),'approved Chapter 3-7 runtime must remain in base slice');
 assert.ok(!baseChunk.includes('data/class6-math-ch8.js'),'standalone Chapter 8 source module must not add a startup request');
+assert.ok(!baseChunk.includes('data/class6-math-ch9.js'),'standalone Chapter 9 source module must not add a startup request');
 assert.ok(!baseChunk.includes('data/class6-math-ch8-assessments.js'),'Chapter 8 assessments must remain deferred');
+assert.ok(!baseChunk.includes('data/class6-math-ch9-assessments.js'),'Chapter 9 assessments must remain deferred');
 
 const sw=fs.readFileSync('sw-v30.js','utf8');
 assert.match(sw,/kirthiverse-preview-v45/);
-for(const asset of ['/data/class6-math-ch2.js','/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch8-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
+for(const asset of ['/data/class6-math-ch2.js','/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch8-assessments.js','/data/class6-math-ch9-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));
 assert.ok(index.includes('microphone:false'));

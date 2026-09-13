@@ -1,0 +1,84 @@
+{
+  "schemaVersion":"1.0.0",
+  "validationId":"KVS-CBSE6-MATH-CH10-SCHOOL-NEEDS-V1",
+  "scope":"CBSE Class 6 Mathematics · Ganita Prakash · Chapter 10 · The Other Side of Zero",
+  "validationType":"SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary":"This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary":{"realChildData":false,"names":false,"emails":false,"photos":false,"microphone":false,"camera":false,"recording":false,"preciseLocation":false,"remoteTeacherMonitoring":false,"childFacingCloudAI":false,"telemetryRequired":false},
+  "schoolOverlay":{"school":"SAN Academy Tambaram","use":"validation-context overlay only","schoolSpecificPacingClaimed":false,"liveSchoolEvidenceCollected":false},
+  "passRule":"Every scenario must map to an implemented Chapter 10 topic, an existing Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action and an observable mastery criterion. Integer comparison must use number-line order rather than unsigned digit size; zero must remain neither positive nor negative; opposite integers must be equally distant from zero; addition and subtraction must preserve signed direction, opposite-number and zero-pair meaning; and contextual signed quantities must declare and retain a reference zero and sign convention without treating every negative value as inherently bad.",
+  "scenarios":[
+    {
+      "id":"SN-MATH6-CH10-001",
+      "need":"Learner compares negative integers by unsigned digit size and concludes that -8 is greater than -3 because 8 is greater than 3.",
+      "topicId":"TOPIC-MATH6-10-01",
+      "expectedMisconception":"comparing negative integers by digit size alone",
+      "requiredAssessmentTypes":["multiple_choice","reasoning","mastery_check"],
+      "safeLearnerAction":"Place fictional positive and negative integers on a paper number line, compare each pair by left-right position, and explain why the integer farther to the right is greater even when its unsigned digit is smaller.",
+      "masteryCriterion":"Correctly orders six new mixed-sign integer sets and justifies every negative-negative comparison from number-line position rather than digit size."
+    },
+    {
+      "id":"SN-MATH6-CH10-002",
+      "need":"Learner labels zero as positive or negative, or confuses numerical order with distance from zero.",
+      "topicId":"TOPIC-MATH6-10-01",
+      "expectedMisconception":"calling zero positive or negative",
+      "requiredAssessmentTypes":["reasoning","short_answer","mastery_check"],
+      "safeLearnerAction":"Use a fictional number-line table to classify integers as negative, zero or positive, then separately record each value's distance from zero and compare values such as -6 and -2 without replacing order by absolute distance.",
+      "masteryCriterion":"Classifies zero correctly as neither positive nor negative and distinguishes signed order from distance-to-zero reasoning in five new examples."
+    },
+    {
+      "id":"SN-MATH6-CH10-003",
+      "need":"Learner places opposite integers at unequal distances from zero or treats opposites as merely numbers with different signs.",
+      "topicId":"TOPIC-MATH6-10-01",
+      "expectedMisconception":"placing opposite numbers at unequal distances from zero",
+      "requiredAssessmentTypes":["worked_challenge","mastery_check"],
+      "safeLearnerAction":"Mark fictional integers and their opposites on a symmetric paper number line, measure equal step distances from zero, and identify the opposite of each labelled value including the special case of zero.",
+      "masteryCriterion":"Constructs five correct opposite pairs at equal distances from zero, identifies zero as its own opposite, and detects an intentionally misplaced opposite point."
+    },
+    {
+      "id":"SN-MATH6-CH10-004",
+      "need":"Learner adds absolute values and guesses the final sign instead of tracking signed direction or combining positive and negative quantities correctly.",
+      "topicId":"TOPIC-MATH6-10-02",
+      "expectedMisconception":"adding absolute values and guessing the sign",
+      "requiredAssessmentTypes":["multiple_choice","reasoning","mastery_check"],
+      "safeLearnerAction":"Solve fictional mixed-sign additions using directed number-line moves or positive/negative counters, record the starting point and each signed movement, and check the final location before writing the result.",
+      "masteryCriterion":"Solves six new mixed-sign additions correctly and explains the result using signed movement or cancellation rather than unsigned addition followed by a guessed sign."
+    },
+    {
+      "id":"SN-MATH6-CH10-005",
+      "need":"Learner assumes subtraction always makes a number smaller and cannot explain why subtracting a negative can move a value to the right.",
+      "topicId":"TOPIC-MATH6-10-02",
+      "expectedMisconception":"assuming subtraction always makes a number smaller",
+      "requiredAssessmentTypes":["reasoning","worked_challenge","mastery_check"],
+      "safeLearnerAction":"Model fictional integer subtractions on a paper number line by rewriting subtraction as adding the opposite, then compare the starting and ending positions for cases that increase, decrease or leave the value unchanged.",
+      "masteryCriterion":"Solves and explains five new signed subtractions, including subtracting a negative, and correctly predicts whether each result is greater than or less than the starting value."
+    },
+    {
+      "id":"SN-MATH6-CH10-006",
+      "need":"Learner thinks adding or removing a positive-negative zero pair changes the represented integer.",
+      "topicId":"TOPIC-MATH6-10-02",
+      "expectedMisconception":"treating zero pairs as changing the represented value",
+      "requiredAssessmentTypes":["short_answer","worked_challenge","mastery_check"],
+      "safeLearnerAction":"Represent fictional integers with paper positive and negative tokens, add several matched positive-negative pairs, verify that the net value is unchanged, and use zero pairs to make a subtraction model possible without altering the starting value.",
+      "masteryCriterion":"Uses zero pairs correctly in four new token models, preserves the represented starting value, and explains why each added positive-negative pair contributes net zero."
+    },
+    {
+      "id":"SN-MATH6-CH10-007",
+      "need":"Learner drops the sign when interpreting temperature, elevation, floor or fictional credit/debit values, or assumes every negative value means something bad.",
+      "topicId":"TOPIC-MATH6-10-03",
+      "expectedMisconception":"dropping the sign when interpreting a result",
+      "requiredAssessmentTypes":["multiple_choice","reasoning","mastery_check"],
+      "safeLearnerAction":"For fictional temperatures, elevations, floors and account-change examples, state the reference zero and sign meaning first, calculate each signed change, then translate the final signed integer back into words without treating negative as a universal judgement.",
+      "masteryCriterion":"Interprets six new signed-context results with the correct sign, reference and units, including at least two cases where a negative value is descriptive rather than inherently bad."
+    },
+    {
+      "id":"SN-MATH6-CH10-008",
+      "need":"Learner mixes sign conventions across a multi-step problem or needs to complete signed-number reasoning without cloud tutoring, personal data collection or remote monitoring.",
+      "topicId":"TOPIC-MATH6-10-03",
+      "expectedMisconception":"mixing sign conventions without stating the reference",
+      "requiredAssessmentTypes":["reasoning","worked_challenge","mastery_check"],
+      "safeLearnerAction":"Use cached Kiki text, locally available Chapter 10 prompts, paper and a pencil to define one fictional reference zero and sign convention, solve a multi-step signed-change sequence, check direction and magnitude, and explain the final value without any network-dependent tutoring or submission step.",
+      "masteryCriterion":"Completes a new Chapter 10 signed-context sequence fully offline, keeps one consistent reference/sign convention through every step, verifies the result for direction and magnitude, and requires no real-child data or external communication."
+    }
+  ]
+}

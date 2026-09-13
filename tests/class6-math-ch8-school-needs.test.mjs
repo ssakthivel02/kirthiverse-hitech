@@ -49,7 +49,7 @@ assert.ok((topicCoverage.get('TOPIC-MATH6-08-01')||0)>=3,'fixed-distance topic s
 assert.ok((topicCoverage.get('TOPIC-MATH6-08-03')||0)>=3,'construction topic should cover perpendicularity, transferred lengths/verification and offline completion');
 
 const allText=JSON.stringify(validation).toLowerCase();
-for(const required of ['fixed distance','compass','centre','radius','intersecting arcs','rotated square','right angles','diagonals','perpendicular','transfer','verification','offline','network-dependent tutoring']){
+for(const required of ['fixed distance','compass','centre','radius','intersecting-arc','rotated square','right angles','diagonals','perpendicular','transfer','verification','offline','network-dependent tutoring']){
   assert.ok(allText.includes(required),`missing Chapter 8 school-needs boundary: ${required}`);
 }
 for(const forbidden of ['real child data collected','remote teacher monitoring enabled','child-facing cloud ai enabled','school-specific pacing verified','photo upload required','camera required']){

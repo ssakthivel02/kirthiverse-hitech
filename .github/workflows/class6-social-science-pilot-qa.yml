@@ -29,6 +29,8 @@ jobs:
           node-version: '20'
       - name: Validate Social Science Chapter 1 teaching slice
         run: node tests/class6-social-science-ch1.test.mjs
+      - name: Validate Social Science Chapter 1 school-needs evidence
+        run: node tests/class6-social-science-ch1-school-needs.test.mjs
       - name: Validate Class 6 coverage transition
         run: node tests/class6-coverage-reconciliation.test.mjs
       - name: QA summary
@@ -37,8 +39,8 @@ jobs:
           echo '## Class 6 Social Science Chapter 1' >> "$GITHUB_STEP_SUMMARY"
           echo '- 3 independently authored Kiki lessons' >> "$GITHUB_STEP_SUMMARY"
           echo '- 15 deterministic assessments' >> "$GITHUB_STEP_SUMMARY"
-          echo '- route-deferred runtime loading; no new home-startup request' >> "$GITHUB_STEP_SUMMARY"
-          echo '- offline precache includes lesson and assessment datasets' >> "$GITHUB_STEP_SUMMARY"
-          echo '- SAN Academy remains validation context only; no live-school or pacing claim' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 1 school-needs validation remains a separate next gate' >> "$GITHUB_STEP_SUMMARY"
-          echo '- no Social Science or whole-Class-6 completion claim' >> "$GITHUB_STEP_SUMMARY"
+          echo '- 8 synthetic school-needs scenarios linked to implemented topics and assessments' >> "$GITHUB_STEP_SUMMARY"
+          echo '- privacy-safe validation: no real child data, live location, camera, microphone or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
+          echo '- SAN Academy remains validation context only; no live-school, efficacy, attainment or pacing claim' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 1 implemented + school-needs validated; Social Science remains incomplete' >> "$GITHUB_STEP_SUMMARY"
+          echo '- next bounded task requires fresh concurrency check before Chapter 2 source/topic reconciliation' >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "1.0.0",
+  "reconciliationId": "KVS-CBSE6-SOC-CH2-SOURCE-TOPIC-V1",
+  "subject": "Social Science",
+  "class": 6,
+  "board": "CBSE",
+  "curriculumSession": "2026-27",
+  "book": "Exploring Society: India and Beyond",
+  "chapter": 2,
+  "chapterTitle": "Oceans and Continents",
+  "decision": "CHAPTER_2_SOURCE_TOPIC_BOUNDARY_RECONCILED",
+  "claimBoundary": "This artifact reconciles Chapter 2 source identity and independently authorable concept boundaries only. It does not reproduce textbook prose, exercise questions, illustrations or page layouts; it does not implement lessons or assessments; and it does not make live-school, efficacy, attainment, accessibility-certification or school-specific pacing claims.",
+  "canonicalSource": {
+    "provider": "NCERT",
+    "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
+    "publicationCode": "0681",
+    "officialPortalChapterLinkObserved": true,
+    "chapterNumber": 2,
+    "chapterTitleVerified": "Oceans and Continents",
+    "chapterTextCopied": false,
+    "exerciseQuestionsCopied": false,
+    "illustrationsCopied": false
+  },
+  "currentStructureCorroboration": {
+    "session": "2026-27",
+    "chapterCount": 14,
+    "chapter2Title": "Oceans and Continents",
+    "use": "Corroboration only. NCERT remains the canonical publisher/source authority."
+  },
+  "learningOutcomeAlignment": {
+    "source": "NCERT Class VI Social Sciences learning outcomes",
+    "relevantOutcome": "Explore maps for locating continents, oceans and seas.",
+    "use": "Broad pedagogical alignment only; it does not replace chapter-specific source reconciliation."
+  },
+  "reconciledTopicBoundary": [
+    {
+      "topicId": "TOPIC-SOC6-02-01",
+      "title": "Land and Water Distribution",
+      "scope": "Earth's surface has much more water than land; compare broad Northern- and Southern-Hemisphere land/water distribution without requiring memorisation beyond the chapter-level conceptual relationship.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-02-02",
+      "title": "Five Oceans and Their Interconnection",
+      "scope": "Identify the Pacific, Atlantic, Indian, Southern and Arctic oceans; understand that named ocean boundaries are conventions within one interconnected global ocean system; distinguish oceans from smaller water-body terms at an age-appropriate level.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-02-03",
+      "title": "Continents, Islands and Counting Conventions",
+      "scope": "Identify major continents, distinguish a continent from an island, compare relative continental size qualitatively, and recognise that continent counts can vary by convention while seven is the widely used school convention.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-02-04",
+      "title": "Why Oceans Matter and Why They Need Protection",
+      "scope": "Explain oceans as habitats that support marine life and as major influences on climate, then connect human activity, pollution and collective protection without introducing unsupported advanced oceanography.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    }
+  ],
+  "excludedOrDeferredBoundary": [
+    "Do not copy NCERT exercise wording, crossword clues, maps, diagrams, figures or page layouts.",
+    "Do not treat ocean currents as a required Chapter 2 implementation topic unless direct canonical-source evidence is separately reconciled.",
+    "Do not introduce plate tectonics, detailed bathymetry, advanced climatology or marine chemistry into this Class 6 slice.",
+    "Do not require a learner's real location, home address, live GPS or precise coordinates.",
+    "Do not claim SAN Academy-specific chapter order, pacing, textbook edition or assessed attainment without direct evidence."
+  ],
+  "rightsAndSchoolBoundary": {
+    "rightsReviewArtifact": "docs/class6-pilot/SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_V1.json",
+    "schoolValidationProfile": "SAN Academy Tambaram",
+    "schoolUse": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false,
+    "realChildDataCollected": false
+  },
+  "implementationGate": {
+    "topicCount": 4,
+    "lessonImplementationAllowedAfterMerge": true,
+    "assessmentImplementationAllowedAfterMerge": true,
+    "schoolNeedsValidationRequiredAfterTeachingSlice": true,
+    "runtimeChangeRequiredByThisReconciliation": false,
+    "completionClaim": false,
+    "nextTask": "After exact-head CI and merge, fresh concurrency check then implement one bounded independently authored Chapter 2 Kiki teaching slice across the four reconciled topics."
+  }
+}

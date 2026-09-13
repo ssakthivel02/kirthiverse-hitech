@@ -28,6 +28,7 @@ on:
       - 'tests/class6-math-ch8-school-needs.test.mjs'
       - 'tests/class6-math-ch9-school-needs.test.mjs'
       - 'tests/class6-math-ch10-school-needs.test.mjs'
+      - 'tests/class6-math-completion-audit.test.mjs'
       - 'tests/class6-coverage-reconciliation.test.mjs'
       - 'tests/e2e/release-closure.spec.mjs'
       - '.github/workflows/class6-math-pilot-qa.yml'
@@ -88,20 +89,22 @@ jobs:
         run: node tests/class6-math-ch10.test.mjs
       - name: Validate Chapter 10 synthetic school-learning needs coverage
         run: node tests/class6-math-ch10-school-needs.test.mjs
+      - name: Validate bounded Mathematics completion audit
+        run: node tests/class6-math-completion-audit.test.mjs
       - name: Validate reconciled Class 6 coverage decision
         run: node tests/class6-coverage-reconciliation.test.mjs
       - name: QA summary
         if: always()
         run: |
           echo '### Class 6 Mathematics Pilot QA' >> "$GITHUB_STEP_SUMMARY"
-          echo '- CBSE Class 6 Ganita Prakash 10-chapter mapping contract' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-10: thirty KirthiVerse-original Kiki lessons / 150 linked assessments' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-10 each have an eight-scenario synthetic school-learning-needs validation artifact; this evidence PR does not itself change the curriculum-map completion flag' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 10 evidence covers negative-integer ordering, zero category, opposites, signed addition/subtraction, zero pairs, reference/sign conventions, signed contexts and offline completion' >> "$GITHUB_STEP_SUMMARY"
+          echo '- CBSE Class 6 Ganita Prakash: 10/10 mapped chapters and 30/30 mapped topics implemented' >> "$GITHUB_STEP_SUMMARY"
+          echo '- thirty KirthiVerse-original Kiki lessons / 150 linked assessments with deterministic stable IDs' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-10 each retain eight-scenario synthetic school-learning-needs validation: 80 scenarios total' >> "$GITHUB_STEP_SUMMARY"
+          echo '- MATHEMATICS_COMPLETE is a bounded repository implementation decision backed by MATHEMATICS_COMPLETION_AUDIT_V1.json and deterministic recounting' >> "$GITHUB_STEP_SUMMARY"
+          echo '- the completion claim is not live-school efficacy, attainment, accreditation, accessibility certification, safety certification or school-specific pacing' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapters 9-10 reuse the existing Chapter 1 data request; Chapter 8 reuses Chapter 2; Chapters 3-7 remain in their approved consolidated runtime, preserving the startup request ceiling' >> "$GITHUB_STEP_SUMMARY"
           echo '- Mathematics assessment loading remains deferred on bounded Class 6 lesson/practice/diagnostic/release-closure surfaces' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Governance acknowledgement and any Mathematics completion audit remain separate follow-up work after this evidence passes and merges' >> "$GITHUB_STEP_SUMMARY"
           echo '- privacy boundary: no real child data, photos, microphone, camera, recording, precise location, remote monitoring or child-facing cloud AI' >> "$GITHUB_STEP_SUMMARY"
           echo '- school overlay is validation context only; no school-specific pacing, efficacy or attainment claim' >> "$GITHUB_STEP_SUMMARY"
-          echo '- runtime, PWA v45, DNS, database, deployment and identity boundaries are unchanged by this evidence lane' >> "$GITHUB_STEP_SUMMARY"
-          echo '- canonical Kiki wording and no-microphone/no-recording safety assertions retained' >> "$GITHUB_STEP_SUMMARY"
+          echo '- PWA remains v45; DNS, database, deployment and identity boundaries remain unchanged' >> "$GITHUB_STEP_SUMMARY"
+          echo '- whole-Class-6 completion remains false; remaining required subjects must be reconciled independently' >> "$GITHUB_STEP_SUMMARY"

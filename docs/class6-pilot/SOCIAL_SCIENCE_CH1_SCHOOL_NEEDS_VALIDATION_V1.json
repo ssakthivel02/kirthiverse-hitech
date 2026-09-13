@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-SOC-CH1-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Social Science · Exploring Society: India and Beyond · Chapter 1 · Locating Places on the Earth",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseHomeLocation": false,
+    "liveDeviceLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "schoolTextbookEditionDirectlyVerified": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 1 topic, a Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action, and an observable mastery criterion.",
+  "scenarios": [
+    {
+      "id": "SN-SOC6-CH1-001",
+      "need": "Learner reads a map as a picture and estimates real distance from visual length without applying the stated scale.",
+      "topicId": "TOPIC-SOC6-01-01",
+      "expectedMisconception": "visual route length treated as real-world distance",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use a fictional map, identify the scale, measure a marked route, convert the map distance to real distance, and explain why appearance alone is insufficient.",
+      "masteryCriterion": "Independently converts distances correctly on two unfamiliar fictional maps and justifies each result using the stated scale."
+    },
+    {
+      "id": "SN-SOC6-CH1-002",
+      "need": "Learner identifies a symbol or destination correctly but ignores direction or the map legend when describing where one place lies relative to another.",
+      "topicId": "TOPIC-SOC6-01-01",
+      "expectedMisconception": "map components used in isolation",
+      "requiredAssessmentTypes": ["multiple_choice", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Read a fictional legend and north arrow, then describe two routes using the destination symbol, cardinal direction and distance together.",
+      "masteryCriterion": "Uses scale, direction and legend together to interpret two new map relationships without relying on unlabeled visual guesses."
+    },
+    {
+      "id": "SN-SOC6-CH1-003",
+      "need": "Learner swaps latitude and longitude or confuses the direction in which the reference lines run with what each coordinate measures.",
+      "topicId": "TOPIC-SOC6-01-02",
+      "expectedMisconception": "latitude-longitude roles reversed",
+      "requiredAssessmentTypes": ["reasoning", "mastery_check"],
+      "safeLearnerAction": "Use an imaginary globe grid to label the Equator and Prime Meridian, then classify latitude as north/south position and longitude as east/west position before locating points.",
+      "masteryCriterion": "Correctly interprets four unfamiliar coordinate pairs and explains which value gives north-south position and which gives east-west position."
+    },
+    {
+      "id": "SN-SOC6-CH1-004",
+      "need": "Learner omits N/S/E/W or assumes one coordinate alone identifies a precise global position.",
+      "topicId": "TOPIC-SOC6-01-02",
+      "expectedMisconception": "incomplete coordinate treated as precise location",
+      "requiredAssessmentTypes": ["short_answer", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Complete fictional coordinate cards by adding hemisphere labels and both coordinate values, then compare points that share one coordinate but differ in the other.",
+      "masteryCriterion": "Builds and compares three complete coordinate pairs with correct hemisphere notation and no request for the learner's real-world location."
+    },
+    {
+      "id": "SN-SOC6-CH1-005",
+      "need": "Learner links local-time difference to latitude or reverses the east/west relationship between longitude and local solar time.",
+      "topicId": "TOPIC-SOC6-01-03",
+      "expectedMisconception": "time difference attributed to latitude or east-west direction reversed",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Compare fictional longitude pairs, calculate angular difference, convert using 15 degrees as approximately one hour, and state which location has later local solar time.",
+      "masteryCriterion": "Solves three unfamiliar longitude-time comparisons and consistently identifies the eastward location as later in local solar time."
+    },
+    {
+      "id": "SN-SOC6-CH1-006",
+      "need": "Learner assumes official time zones are perfect 15-degree strips or that every country must use exactly one standard time zone.",
+      "topicId": "TOPIC-SOC6-01-03",
+      "expectedMisconception": "official time-zone rules treated as pure longitude geometry",
+      "requiredAssessmentTypes": ["multiple_choice", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Separate a geographic local-time calculation from an official-clock statement and explain why legal or administrative time-zone boundaries can depart from ideal longitude strips.",
+      "masteryCriterion": "Distinguishes local solar-time reasoning from official standard-time rules in two new examples and avoids universal one-zone claims."
+    },
+    {
+      "id": "SN-SOC6-CH1-007",
+      "need": "Learner needs an offline or low-bandwidth path and cannot depend on video, GPS, microphone, camera, cloud AI or personal-data collection to complete the chapter task.",
+      "topicId": "TOPIC-SOC6-01-01",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use cached text, a printed or locally drawn fictional map and locally available assessment prompts; complete the reasoning in writing or by local selection without sharing personal location data.",
+      "masteryCriterion": "Completes a map-reading task and mastery check using local resources only, with no network-dependent tutoring or precise-location disclosure."
+    },
+    {
+      "id": "SN-SOC6-CH1-008",
+      "need": "Learner understands individual ideas but loses accuracy when scale, coordinates and time reasoning are presented as one long multi-step instruction.",
+      "topicId": "TOPIC-SOC6-01-03",
+      "expectedMisconception": "instruction load masks geographic reasoning",
+      "requiredAssessmentTypes": ["worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use a Kiki step sequence: identify the geographic question, choose the relevant reference system, calculate one quantity at a time, then state a bounded conclusion.",
+      "masteryCriterion": "Completes one scaffolded and one independent multi-step location/time task while selecting only the map or coordinate information relevant to each step."
+    }
+  ]
+}

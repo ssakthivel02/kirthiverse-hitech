@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-SOC-CH5-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Social Science · Exploring Society: India and Beyond · Chapter 5 · India, That Is Bharat",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, political-opinion study, patriotic-loyalty test, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseHomeLocation": false,
+    "liveDeviceLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false,
+    "religionDisclosureRequired": false,
+    "casteDisclosureRequired": false,
+    "communityIdentityDisclosureRequired": false,
+    "ancestryDisclosureRequired": false,
+    "familyOriginDisclosureRequired": false,
+    "migrationDisclosureRequired": false,
+    "nationalityPreferenceDisclosureRequired": false,
+    "politicalOpinionDisclosureRequired": false,
+    "preferredCountryNameDisclosureRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "schoolTextbookEditionDirectlyVerified": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 5 topic, a Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe and politically neutral learner action, and an observable mastery criterion.",
+  "scenarios": [
+    {
+      "id": "SN-SOC6-CH5-001",
+      "need": "Learner treats the Indian subcontinent, a historical regional description and the modern Republic of India as if they were identical maps with identical boundaries.",
+      "topicId": "TOPIC-SOC6-05-01",
+      "expectedMisconception": "geographical, historical and modern political frames collapsed into one timeless territorial frame",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Sort fictional map descriptions into physical-geography, historical-region and modern-state frames, then explain differences using only supplied public or invented evidence rather than a learner's nationality or family origin.",
+      "masteryCriterion": "For two unfamiliar examples, correctly identifies the frame and explains why an older regional description should not automatically be projected onto present political boundaries."
+    },
+    {
+      "id": "SN-SOC6-CH5-002",
+      "need": "Learner sees an old regional name and assumes it must describe exactly the same territory and legal status as the country today.",
+      "topicId": "TOPIC-SOC6-05-01",
+      "expectedMisconception": "historical label treated as exact modern territorial and constitutional identity",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Compare two fictional source cards from different periods and state what each source can establish, what geographic scope is uncertain and what cannot be inferred about today's borders.",
+      "masteryCriterion": "Independently distinguishes historical regional evidence from present constitutional geography and states at least one bounded uncertainty in each unfamiliar case."
+    },
+    {
+      "id": "SN-SOC6-CH5-003",
+      "need": "Learner memorises Sapta Sindhava, Jambudvipa, Bharata and Bharatavarsha as four exact synonyms with one fixed meaning and border across all periods.",
+      "topicId": "TOPIC-SOC6-05-02",
+      "expectedMisconception": "historical names detached from source, period and geographic-scope context",
+      "requiredAssessmentTypes": ["multiple_choice", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Attach supplied historical-name cards to fictional source context, approximate period and described geographic scope, without asking about religion, caste, ancestry, language identity or community membership.",
+      "masteryCriterion": "Explains two unfamiliar historical names with source-context language and gives a valid reason their geographic meaning may vary across time or authors."
+    },
+    {
+      "id": "SN-SOC6-CH5-004",
+      "need": "Learner assumes that continuity of a name proves continuity of exactly the same territory, population, identity or political system.",
+      "topicId": "TOPIC-SOC6-05-02",
+      "expectedMisconception": "name continuity overextended into unsupported claims of fixed territory or identity",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use invented texts separated by centuries to identify what remains similar in vocabulary and what must remain uncertain about geographic reach, communities or governance.",
+      "masteryCriterion": "For two unfamiliar source pairs, identifies continuity in naming without inferring unsupported continuity of borders, population identity or political authority."
+    },
+    {
+      "id": "SN-SOC6-CH5-005",
+      "need": "Learner treats Sindhu, Hindu, Indoi, Yindu, Hindustan and India as if they all appeared at one moment and always carried identical meanings.",
+      "topicId": "TOPIC-SOC6-05-03",
+      "expectedMisconception": "cross-cultural name transmission reduced to one simultaneous naming event",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Arrange fictional language-contact forms on a branching transmission diagram and label possible pronunciation, spelling and scope changes without ranking any culture, religion or language as more authentic.",
+      "masteryCriterion": "Explains an unfamiliar naming chain as a multi-stage language-contact process and identifies at least two possible changes without claiming one universal naming event."
+    },
+    {
+      "id": "SN-SOC6-CH5-006",
+      "need": "Learner interprets linguistic transmission as proof that one historical or modern name is inherently more authentic, legitimate or culturally superior than another.",
+      "topicId": "TOPIC-SOC6-05-03",
+      "expectedMisconception": "language-history evidence converted into authenticity ranking or identity judgement",
+      "requiredAssessmentTypes": ["short_answer", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Compare invented multilingual place-name variants and describe evidence for transmission neutrally, with no request for the learner's religion, home language, ancestry, nationality preference or preferred national name.",
+      "masteryCriterion": "Uses source and language-contact evidence to explain two unfamiliar variants while explicitly avoiding unsupported authenticity, ownership or cultural-superiority conclusions."
+    },
+    {
+      "id": "SN-SOC6-CH5-007",
+      "need": "Learner confuses historical naming evidence with the modern constitutional formulation or believes learning 'India, that is Bharat' requires choosing a preferred name, political position or patriotic response.",
+      "topicId": "TOPIC-SOC6-05-04",
+      "expectedMisconception": "historical evidence, constitutional fact and personal or political preference collapsed together",
+      "requiredAssessmentTypes": ["reasoning", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Sort supplied statements into historical-source evidence, modern constitutional fact and personal or political opinion, then rewrite opinion prompts as neutral evidence questions without requiring any declaration of preference or loyalty.",
+      "masteryCriterion": "Correctly distinguishes historical naming evidence from the modern constitutional formulation in two unfamiliar examples and explains both without expressing or requesting political preference or patriotic loyalty."
+    },
+    {
+      "id": "SN-SOC6-CH5-008",
+      "need": "Learner needs an offline, low-bandwidth and instruction-light path to practise Chapter 5 source-context reasoning without live search, cloud AI, uploads or sensitive identity disclosure.",
+      "topicId": "TOPIC-SOC6-05-04",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["multiple_choice", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use cached Kiki explanations, fictional source cards and local comparison prompts one step at a time; no live web search, microphone, camera, upload, political survey or personal identity information is required.",
+      "masteryCriterion": "Completes one historical-versus-constitutional comparison plus mastery check using local resources only, while maintaining source context, neutrality and zero personal-data disclosure."
+    }
+  ]
+}

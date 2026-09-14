@@ -32,7 +32,7 @@ const ch5=map.chapters.find(x=>x.chapter===5);
 assert.equal(map.schemaVersion,'1.14.0');assert.equal(ch5.status,'KIKI_TEACHING_SLICE_COMPLETE');assert.equal(ch5.topicCount,4);assert.equal(ch5.assessmentCount,20);
 assert.equal(ch5.lessonDataset,'data/class6-social-science-ch5.js');assert.equal(ch5.assessmentDataset,'data/class6-social-science-ch5-assessments.js');
 assert.equal(ch5.schoolNeedsValidationRequired,true);assert.equal(ch5.schoolNeedsValidationPresent,true);assert.equal(ch5.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH5_SCHOOL_NEEDS_VALIDATION_V1.json');
-assert.equal(map.implementationStatus.implementedChapterCount,6);assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,5);assert.equal(map.implementationStatus.completionClaim,false);
+assert.equal(map.implementationStatus.implementedChapterCount,6);assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,6);assert.equal(map.implementationStatus.completionClaim,false);
 assert.match(loader,/data\/class6-social-science-ch5\.js/);assert.match(loader,/data\/class6-social-science-ch5-assessments\.js/);
 assert.match(loader,/data\/class6-social-science-ch6\.js/);assert.match(loader,/data\/class6-social-science-ch6-assessments\.js/);
 assert.match(loader,/ch\(\?:1\|2\|3\|4\|5\|6\)/);assert.match(loader,/CBSE6-SOC-CH6-1/);

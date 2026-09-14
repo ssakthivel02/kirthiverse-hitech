@@ -40,17 +40,15 @@ assert.equal(rec.implementationGate.runtimeChangeRequiredByThisReconciliation,fa
 assert.equal(rec.implementationGate.completionClaim,false);
 const ch3=map.chapters.find(x=>x.chapter===3);
 assert.equal(ch3.title,'Landforms and Life');
-assert.equal(ch3.status,'SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(ch3.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch3.topicCount,4);
 assert.equal(ch3.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH3_SOURCE_TOPIC_RECONCILIATION_V1.json');
 assert.equal(ch3.schoolNeedsValidationRequired,true);
 assert.equal(ch3.schoolNeedsValidationPresent,false);
-assert.equal(map.implementationStatus.implementedChapterCount,2);
+assert.equal(map.implementationStatus.implementedChapterCount,3);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,2);
 assert.equal(map.implementationStatus.completionClaim,false);
 
-// Safety/rights exclusions are expected to be named inside this governance artifact.
-// Validate the prohibitions themselves instead of treating their text as a violation.
 const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();
 assert.match(exclusions,/do not copy.*exercise/);
 assert.match(exclusions,/real location|live gps|precise coordinates|home address/);

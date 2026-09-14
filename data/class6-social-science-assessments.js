@@ -494,5 +494,185 @@ window.KV_ASSESSMENTS.push(
   "correctAnswer":"Answers vary; each must balance opportunities and hazards, use the supplied evidence and avoid universal claims about plains or rivers.",
   "hint":"Use the structure: opportunity → risk → adaptation → evidence.",
   "explanation":"Mastery requires balanced geographic evaluation."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0056",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.human-past.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"A broken storage pot is discovered at a fictional old settlement. Which statement is strongest? A) It proves exactly who owned it. B) It is material evidence that can support questions about storage or daily life, but it does not answer every question alone. C) It proves the settlement traded overseas. D) It tells us every belief of the community.",
+  "correctAnswer":"B) It is material evidence that can support questions about storage or daily life, but it does not answer every question alone.",
+  "hint":"Separate what the object directly shows from what would require more evidence.",
+  "explanation":"Historical evidence supports bounded conclusions; one artefact rarely proves a complete story."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0057",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.human-past.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why should a historian distinguish an observation from an inference when studying the past?",
+  "correctAnswer":"An observation describes what the surviving evidence directly shows, while an inference is an interpretation based on that evidence. Keeping them separate makes uncertainty visible and reduces overclaiming.",
+  "hint":"Ask whether the statement is seen directly in the source or reasoned from it.",
+  "explanation":"Evidence discipline depends on showing where interpretation begins."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0058",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.human-past.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"A fictional site contains a stone tool, a storage vessel and a later written inventory. For each clue, write one direct observation, one cautious inference and one question that remains unanswered.",
+  "correctAnswer":"Answers vary; each response must keep direct evidence separate from interpretation and identify a genuine evidence gap.",
+  "hint":"Use the columns: observed → may suggest → still unknown.",
+  "explanation":"The challenge practises disciplined historical reasoning across different source types."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0059",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.human-past.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"How can archaeologists and historians contribute differently to one question about the past?",
+  "correctAnswer":"Archaeologists can study material remains, sites and physical context, while historians may compare those findings with written or other records. Their evidence can complement one another.",
+  "hint":"Think about material evidence versus broader documentary interpretation.",
+  "explanation":"Different specialists contribute different evidence and methods to a shared question."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0060",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.human-past.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Given two unfamiliar fictional evidence sets about past communities, identify observations, supported inferences and unsupported claims, then name one additional source that could test each inference.",
+  "correctAnswer":"Answers vary; each classification must be justified from the evidence, and the proposed additional source must be relevant to testing the inference rather than simply repeating it.",
+  "hint":"A strong conclusion says both what is supported and what is still uncertain.",
+  "explanation":"Mastery requires transferable evidence reasoning rather than memorised historical facts."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0061",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.historical-time.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which date is earliest? A) 300 BCE B) 700 BCE C) 200 CE D) 900 CE",
+  "correctAnswer":"B) 700 BCE",
+  "hint":"In BCE, the larger year number is farther back in the past.",
+  "explanation":"700 BCE is earlier than 300 BCE, and both are earlier than CE dates."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0062",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.historical-time.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why is 800 BCE earlier than 200 BCE even though 800 is the larger number?",
+  "correctAnswer":"BCE years count backward toward the start of the Common Era, so larger BCE numbers are farther from that boundary and therefore earlier in time.",
+  "hint":"Imagine moving from the distant past toward CE on a timeline.",
+  "explanation":"Chronological order and numerical size work differently on the BCE side of the timeline."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0063",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.historical-time.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Place these fictional dates from earliest to latest: 950 BCE, 120 BCE, 350 CE, 1250 CE. Then label which two are separated by more than one millennium.",
+  "correctAnswer":"Earliest to latest: 950 BCE, 120 BCE, 350 CE, 1250 CE. The exact interval comparisons should respect the conventional BCE/CE sequence with no year zero; 950 BCE to 350 CE and 950 BCE to 1250 CE are both more than one millennium apart.",
+  "hint":"Order first; calculate intervals only after the timeline direction is correct.",
+  "explanation":"The task combines chronological ordering with scale awareness across long spans."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0064",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.historical-time.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"What is the difference between a decade, a century and a millennium?",
+  "correctAnswer":"A decade is ten years, a century is one hundred years and a millennium is one thousand years.",
+  "hint":"Think 10, 100 and 1,000.",
+  "explanation":"These units organise historical time at different scales."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0065",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.historical-time.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Order six unfamiliar mixed BCE/CE dates, identify two decade-scale, century-scale or millennium-scale gaps, and explain the BCE ordering rule in your own words.",
+  "correctAnswer":"Answers depend on the supplied dates; all dates must be ordered correctly, scale labels must match the approximate spans, and the explanation must state that larger BCE numbers are farther back in time.",
+  "hint":"Treat the timeline as one continuous sequence and remember there is no conventional year zero.",
+  "explanation":"Mastery combines chronology, BCE/CE reasoning and historical-time scale."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0066",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.sources-evidence.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which example is material or archaeological evidence? A) A surviving stone tool B) A modern guess with no source C) A fictional rumour D) An unsupported internet comment",
+  "correctAnswer":"A) A surviving stone tool",
+  "hint":"Material evidence is a physical remain from the past.",
+  "explanation":"A stone tool is a physical object that can be studied as historical evidence."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0067",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.sources-evidence.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why can two historical sources disagree without making both useless?",
+  "correctAnswer":"Sources can differ because of perspective, purpose, timing, incomplete information or preservation. The disagreement itself is evidence to investigate through context and corroboration.",
+  "hint":"Ask what each source could know, why it was created and what other evidence can test it.",
+  "explanation":"Historical reasoning evaluates sources rather than accepting or rejecting them automatically."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0068",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.sources-evidence.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Three fictional sources describe a market: coins found at the site, a damaged account record and a later traveller's description. State what each source can support, one limitation of each and where the three sources corroborate or conflict.",
+  "correctAnswer":"Answers vary; each source must be evaluated separately, and the final comparison must distinguish agreement, disagreement and remaining gaps without treating any one source as complete proof.",
+  "hint":"Use the frame: source → supports → limitation → comparison.",
+  "explanation":"Corroboration depends on comparing independent evidence with attention to source limits."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0069",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.sources-evidence.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"What does corroboration mean in historical investigation?",
+  "correctAnswer":"It means comparing independent sources or evidence to see where they agree, differ or leave gaps, so an interpretation can be tested rather than based on one source alone.",
+  "hint":"Think compare, confirm, challenge and identify gaps.",
+  "explanation":"Corroboration strengthens evidence-based conclusions while preserving uncertainty."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0070",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.sources-evidence.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Evaluate an unfamiliar set containing one material source, one written source and one oral or remembered account. Classify each, identify one limitation, and write a conclusion that uses corroboration without claiming certainty beyond the evidence.",
+  "correctAnswer":"Answers vary; the response must classify all three sources correctly, identify meaningful limitations and produce a conclusion proportionate to the combined evidence.",
+  "hint":"Your conclusion should include both supporting evidence and at least one uncertainty.",
+  "explanation":"Mastery requires source classification, limitation awareness and corroborated reasoning."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0071",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.early-communities-change.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"A fictional site has repeated building foundations, storage pits and cultivation evidence. Which conclusion is most responsible? A) Every person lived there permanently. B) The evidence may suggest longer-term settlement, but it does not prove every person's behaviour. C) It proves an exact migration route. D) It proves the ancestry of modern learners.",
+  "correctAnswer":"B) The evidence may suggest longer-term settlement, but it does not prove every person's behaviour.",
+  "hint":"Choose the conclusion that is strong enough to use the evidence but cautious enough to respect its limits.",
+  "explanation":"Material patterns can support settlement inferences without proving identity, ancestry or universal behaviour."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0072",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.early-communities-change.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why should we avoid saying every early human community followed one identical path from mobility to permanent settlement?",
+  "correctAnswer":"Communities lived in different environments and made different choices; evidence shows varied combinations of mobility, gathering, hunting, fishing, herding and cultivation across times and places.",
+  "hint":"Variation across evidence sets matters.",
+  "explanation":"Historical change is not a single universal sequence."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0073",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.early-communities-change.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Compare two fictional early-community evidence panels. Identify two directly observed differences, one possible continuity, one supported change inference and one alternative explanation that the evidence cannot rule out.",
+  "correctAnswer":"Answers vary; the response must distinguish observation from inference and include at least one plausible uncertainty or alternative explanation.",
+  "hint":"Use the labels observed, suggests, may have continued and uncertain.",
+  "explanation":"Comparative evidence supports cautious reasoning about continuity and change."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0074",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.early-communities-change.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"Name two kinds of material evidence that could help investigate how an early community lived.",
+  "correctAnswer":"Examples include tools, food remains, hearths, shelters, storage pits, building traces or other material remains; each provides clues rather than a complete story alone.",
+  "hint":"Think about things that could physically survive from earlier activity.",
+  "explanation":"Material evidence can reveal patterns of activity while still leaving interpretive limits."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0075",
+  "lessonId":"social-science.cbse6.exploring-society.ch4.early-communities-change.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Analyse two unfamiliar fictional early-community evidence sets. Identify continuity and change, write one supported interpretation for each, and state at least one uncertainty without making ancestry, caste, religion, community-identity or exact-migration claims.",
+  "correctAnswer":"Answers vary; each interpretation must be evidence-based, distinguish observed patterns from inference and preserve at least one explicit uncertainty or alternative explanation.",
+  "hint":"Use cautious phrases such as 'the evidence suggests' and name what the evidence cannot establish.",
+  "explanation":"Mastery requires evidence-based comparison, historical uncertainty and safe boundaries around identity claims."
 }
 );

@@ -41,12 +41,15 @@ assert.equal(rec.implementationGate.completionClaim,false);
 
 const ch4=map.chapters.find(x=>x.chapter===4);
 assert.equal(ch4.title,'Timeline and Sources of History');
-assert.equal(ch4.status,'SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(ch4.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch4.topicCount,4);
+assert.equal(ch4.assessmentCount,20);
+assert.equal(ch4.lessonDataset,'data/class6-social-science-pilot.js');
+assert.equal(ch4.assessmentDataset,'data/class6-social-science-assessments.js');
 assert.equal(ch4.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH4_SOURCE_TOPIC_RECONCILIATION_V1.json');
 assert.equal(ch4.schoolNeedsValidationRequired,true);
 assert.equal(ch4.schoolNeedsValidationPresent,false);
-assert.equal(map.implementationStatus.implementedChapterCount,3);
+assert.equal(map.implementationStatus.implementedChapterCount,4);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,3);
 assert.equal(map.implementationStatus.completionClaim,false);
 
@@ -59,4 +62,4 @@ assert.equal(rec.canonicalSource.exerciseQuestionsCopied,false);
 assert.equal(rec.canonicalSource.illustrationsCopied,false);
 assert.equal(rec.rightsAndSchoolBoundary.realChildDataCollected,false);
 
-console.log('CLASS6_SOCIAL_SCIENCE_CH4_RECONCILIATION_PASS topics=4');
+console.log('CLASS6_SOCIAL_SCIENCE_CH4_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=pending');

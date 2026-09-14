@@ -1,0 +1,114 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-SOC-CH7-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Social Science · Exploring Society: India and Beyond · Chapter 7 · India’s Cultural Roots",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, religious instruction, belief assessment, identity study, ethnographic fieldwork, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseHomeLocation": false,
+    "liveDeviceLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false,
+    "religionDisclosureRequired": false,
+    "beliefDisclosureRequired": false,
+    "sectDisclosureRequired": false,
+    "casteDisclosureRequired": false,
+    "tribeDisclosureRequired": false,
+    "communityIdentityDisclosureRequired": false,
+    "ancestryDisclosureRequired": false,
+    "familyOriginDisclosureRequired": false,
+    "familyRitualDisclosureRequired": false,
+    "privateCommunityKnowledgeDisclosureRequired": false,
+    "politicalOpinionDisclosureRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "schoolTextbookEditionDirectlyVerified": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 7 topic, a Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action and an observable mastery criterion while preserving historical evidence limits, belief neutrality, non-devotional instruction, non-ranking of traditions or communities, anti-stereotype safeguards and zero sensitive identity disclosure.",
+  "scenarios": [
+    {
+      "id": "SN-SOC6-CH7-001",
+      "need": "Learner treats an important Vedic textual tradition as proof that every ancient person or community shared one identical belief or practice.",
+      "topicId": "TOPIC-SOC6-07-01",
+      "expectedMisconception": "historical importance converted into a universal-belief claim",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Classify supplied fictional source statements as direct source evidence, reasonable historical inference or unsupported universal claim, then rewrite overgeneralised claims without asking about the learner’s religion, family worship, caste or sect.",
+      "masteryCriterion": "For an unfamiliar oral-source example, identifies two contextual questions, one proportionate inference, one evidence limit and one universal-belief claim that must be rejected."
+    },
+    {
+      "id": "SN-SOC6-CH7-002",
+      "need": "Learner assumes oral transmission is automatically unreliable or, conversely, that disciplined transmission removes the need for source criticism.",
+      "topicId": "TOPIC-SOC6-07-01",
+      "expectedMisconception": "oral preservation treated as either worthless or infallible",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use an invented oral-transmission chain to identify preservation strengths, possible changes, corroborating evidence and questions a historian should still ask; no sacred-text recitation or devotional performance is required.",
+      "masteryCriterion": "Explains one strength and one limit of oral preservation, distinguishes preservation method from evidential certainty, and proposes at least two appropriate source-context questions."
+    },
+    {
+      "id": "SN-SOC6-CH7-003",
+      "need": "Learner collapses diverse philosophical schools into one doctrine or treats one school as the complete or superior expression of Indian thought.",
+      "topicId": "TOPIC-SOC6-07-02",
+      "expectedMisconception": "intellectual diversity replaced by one uniform or ranked worldview",
+      "requiredAssessmentTypes": ["multiple_choice", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Compare supplied fictional viewpoints by question, reasoning method, disagreement and uncertainty, using neutral historical language and without ranking truth, spiritual worth or cultural value.",
+      "masteryCriterion": "For at least three unfamiliar viewpoints, accurately compares questions and methods, identifies one disagreement and one uncertainty, and avoids prescribing or ranking beliefs."
+    },
+    {
+      "id": "SN-SOC6-CH7-004",
+      "need": "Learner interprets historical study of philosophical or religious ideas as an instruction to practise, affirm, reject or disclose a personal belief.",
+      "topicId": "TOPIC-SOC6-07-02",
+      "expectedMisconception": "descriptive intellectual history confused with belief instruction or belief testing",
+      "requiredAssessmentTypes": ["reasoning", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Rewrite invented classroom prompts so they ask about historical questions, arguments and evidence rather than prayer, meditation, worship, conversion, personal faith or private family practice.",
+      "masteryCriterion": "Distinguishes historical comparison from personal belief participation and converts at least three unsafe belief-oriented prompts into neutral evidence-based historical questions."
+    },
+    {
+      "id": "SN-SOC6-CH7-005",
+      "need": "Learner treats Buddhism and Jainism as interchangeable because they developed in related historical settings, or assumes one tradition can be ranked as superior to the other.",
+      "topicId": "TOPIC-SOC6-07-03",
+      "expectedMisconception": "shared context converted into sameness or sectarian ranking",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Sort supplied neutral statements into shared historical context, Buddhism-specific, Jainism-specific or insufficient evidence, then replace ranking or sameness claims with evidence-bounded comparisons.",
+      "masteryCriterion": "Identifies at least two supported shared-context features, two supported distinctions and one evidence limit without ranking either tradition or assuming a learner’s religious identity."
+    },
+    {
+      "id": "SN-SOC6-CH7-006",
+      "need": "Learner generalises one short description to every Buddhist or Jain school, period or follower, or turns historical comparison into worship or conversion-oriented activity.",
+      "topicId": "TOPIC-SOC6-07-03",
+      "expectedMisconception": "one historical description universalised across living traditions or converted into religious participation",
+      "requiredAssessmentTypes": ["worked_challenge", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Qualify a set of invented overgeneralised statements using terms such as some, in this source, in this period or evidence suggests, and explain why historical study does not require worship, conversion or personal-belief disclosure.",
+      "masteryCriterion": "Rewrites at least three universalising claims with appropriate historical qualifiers and clearly separates descriptive study from devotional or conversion-oriented practice."
+    },
+    {
+      "id": "SN-SOC6-CH7-007",
+      "need": "Learner stereotypes folk, tribal or local communities as primitive, static, isolated, culturally inferior or internally uniform, or assumes one local practice represents a whole community.",
+      "topicId": "TOPIC-SOC6-07-04",
+      "expectedMisconception": "community diversity and change replaced by static or hierarchical stereotypes",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Rewrite supplied fictional stereotype statements so each specifies evidence, time, place and variation, then identify continuity, adaptation and two-way cultural exchange without asking the learner to disclose caste, tribe, religion, ancestry or private community knowledge.",
+      "masteryCriterion": "For an unfamiliar cultural-history case, rejects at least one static or hierarchical stereotype, identifies evidence of both continuity and change, and states one limit on generalising from a local example."
+    },
+    {
+      "id": "SN-SOC6-CH7-008",
+      "need": "Learner needs an offline, low-bandwidth and instruction-light route through Chapter 7 without live search, cloud AI, uploads, microphone, camera, location collection, devotional participation or sensitive identity disclosure.",
+      "topicId": "TOPIC-SOC6-07-04",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use cached Kiki explanations, supplied fictional source and tradition cards, and local comparison prompts one step at a time; no live web search, upload, microphone, camera, device location, personal belief statement or community identity information is required.",
+      "masteryCriterion": "Completes one plural cultural-history comparison and mastery check using local resources only while preserving evidence limits, belief neutrality, anti-stereotype safeguards and zero personal-data disclosure."
+    }
+  ]
+}

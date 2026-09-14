@@ -53,6 +53,8 @@ jobs:
         run: node tests/class6-social-science-ch5-reconciliation.test.mjs
       - name: Validate Social Science Chapter 5 teaching slice
         run: node tests/class6-social-science-ch5.test.mjs
+      - name: Validate Social Science Chapter 5 school-needs evidence
+        run: node tests/class6-social-science-ch5-school-needs.test.mjs
       - name: Validate Class 6 coverage transition
         run: node tests/class6-coverage-reconciliation.test.mjs
       - name: QA summary
@@ -63,9 +65,9 @@ jobs:
           echo '- Chapter 2: 4 Kiki lessons, 20 deterministic assessments, 8 synthetic school-needs scenarios' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapter 3: 4 Kiki lessons, 20 deterministic assessments, 8 synthetic school-needs scenarios' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapter 4: 4 Kiki lessons, 20 deterministic assessments, 8 synthetic school-needs scenarios' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapter 5: 4 Kiki lessons, 20 deterministic assessments; separate school-needs validation remains pending' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Chapters 1-4 are implemented and separately school-needs validated; Chapter 5 teaching is implemented only' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 5: 4 Kiki lessons, 20 deterministic assessments, 8 synthetic school-needs scenarios' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapters 1-5 are independently implemented and separately synthetic school-needs validated' >> "$GITHUB_STEP_SUMMARY"
           echo '- NCERT remains canonical source authority; textbook prose, exercises, source extracts, maps and figures are not copied' >> "$GITHUB_STEP_SUMMARY"
-          echo '- existing deferred Social Science loader is reused; no home startup request was introduced' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 5 validation is synthetic readiness evidence only; no live-school efficacy, attainment, political-opinion or pacing claim' >> "$GITHUB_STEP_SUMMARY"
           echo '- Social Science and whole Class 6 remain incomplete' >> "$GITHUB_STEP_SUMMARY"
-          echo '- next bounded task requires fresh concurrency check before Chapter 5 school-needs validation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 6 remains untouched; any next work requires a fresh concurrency check and source/topic reconciliation first' >> "$GITHUB_STEP_SUMMARY"

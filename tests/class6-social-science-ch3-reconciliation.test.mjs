@@ -46,7 +46,7 @@ assert.equal(ch3.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCI
 assert.equal(ch3.schoolNeedsValidationRequired,true);
 assert.equal(ch3.schoolNeedsValidationPresent,true);
 assert.equal(ch3.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH3_SCHOOL_NEEDS_VALIDATION_V1.json');
-assert.equal(map.implementationStatus.implementedChapterCount,3);
+assert.equal(map.implementationStatus.implementedChapterCount,4);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,3);
 assert.equal(map.implementationStatus.completionClaim,false);
 

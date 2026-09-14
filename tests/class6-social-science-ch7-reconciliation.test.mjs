@@ -53,13 +53,17 @@ assert.match(exclusions,/modern religious|caste|communal|territorial|party-polit
 
 const ch7=map.chapters.find(x=>x.chapter===7);
 assert.equal(ch7.title,'India’s Cultural Roots');
-assert.equal(ch7.status,'MAPPED_NOT_YET_IMPLEMENTED');
+assert.equal(ch7.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch7.topicCount,4);
+assert.equal(ch7.lessonDataset,'data/class6-social-science-ch7.js');
+assert.equal(ch7.assessmentDataset,'data/class6-social-science-ch7-assessments.js');
+assert.equal(ch7.assessmentCount,20);
 assert.equal(ch7.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH7_SOURCE_TOPIC_RECONCILIATION_V1.json');
 assert.equal(ch7.schoolNeedsValidationRequired,true);
 assert.equal(ch7.schoolNeedsValidationPresent,false);
-assert.equal(map.implementationStatus.implementedChapterCount,6);
+assert.equal(ch7.schoolNeedsValidationArtifact,undefined);
+assert.equal(map.implementationStatus.implementedChapterCount,7);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,6);
 assert.equal(map.implementationStatus.completionClaim,false);
 
-console.log('CLASS6_SOCIAL_SCIENCE_CH7_RECONCILIATION_PASS topics=4 teaching=pending schoolNeeds=pending beliefDisclosure=false');
+console.log('CLASS6_SOCIAL_SCIENCE_CH7_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=pending beliefDisclosure=false');

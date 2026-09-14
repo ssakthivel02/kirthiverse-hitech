@@ -41,11 +41,11 @@ assert.deepEqual(assessments.map(x=>x.stableAssessmentId),Array.from({length:15}
 assert.ok(assessments.every(a=>lessons.some(l=>l.id===a.lessonId)));
 
 const ch1=map.chapters.find(x=>x.chapter===1);
-assert.equal(map.schemaVersion,'1.12.0');
+assert.equal(map.schemaVersion,'1.13.0');
 assert.equal(ch1.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch1.topicCount,3);assert.equal(ch1.assessmentCount,15);
 assert.equal(ch1.schoolNeedsValidationRequired,true);assert.equal(ch1.schoolNeedsValidationPresent,true);
-assert.equal(map.implementationStatus.implementedChapterCount,4);
+assert.equal(map.implementationStatus.implementedChapterCount,5);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,4);
 assert.equal(map.implementationStatus.completionClaim,false);
 assert.equal(overlay.decision,'SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_RECONCILED');
@@ -53,15 +53,19 @@ assert.ok(overlay.rightsSafeAuthoringBoundary.mustBeIndependentlyAuthored.includ
 assert.equal(overlay.schoolValidationOverlay.status,'VALIDATION_CONTEXT_ONLY');
 assert.equal(overlay.schoolValidationOverlay.realChildDataCollected,false);
 
-assert.match(loader,/CBSE6-SOC-CH1-1/);
+assert.match(loader,/CBSE6-SOC-CH5-1/);
 assert.match(loader,/class6-social-science-pilot\.js/);
 assert.match(loader,/class6-social-science-assessments\.js/);
+assert.match(loader,/class6-social-science-ch5\.js/);
+assert.match(loader,/class6-social-science-ch5-assessments\.js/);
 assert.match(loader,/p==='\/world\/geography'/);
-assert.match(loader,/social-science\\\.cbse6\\\.exploring-society\\\.ch1/);
+assert.match(loader,/ch\(\?:1\|2\|3\|4\|5\)/);
 assert.ok(!/loadCurriculumPilot\(\{datasetKey:'class6SocialSciencePilot'[^\n]*\}\);\s*loadPilotMetrics/.test(loader),'Social Science must not be converted into an unconditional startup request');
 assert.match(sw,/MANUS-VISUAL-MASTER-05-PWA-45/);
 assert.match(sw,/\/data\/class6-social-science-pilot\.js/);
 assert.match(sw,/\/data\/class6-social-science-assessments\.js/);
+assert.match(sw,/\/data\/class6-social-science-ch5\.js/);
+assert.match(sw,/\/data\/class6-social-science-ch5-assessments\.js/);
 
 const joined=JSON.stringify({lessons,assessments}).toLowerCase();
 for(const forbidden of ['share your home address','upload your precise location','share your precise coordinates','collect real child data'])assert.ok(!joined.includes(forbidden),`forbidden learner-data prompt: ${forbidden}`);

@@ -40,13 +40,14 @@ assert.equal(rec.implementationGate.runtimeChangeRequiredByThisReconciliation,fa
 assert.equal(rec.implementationGate.completionClaim,false);
 
 const ch5=map.chapters.find(x=>x.chapter===5);
+assert.equal(map.schemaVersion,'1.13.0');
 assert.equal(ch5.title,'India, That Is Bharat');
-assert.equal(ch5.status,'SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(ch5.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch5.topicCount,4);
 assert.equal(ch5.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH5_SOURCE_TOPIC_RECONCILIATION_V1.json');
 assert.equal(ch5.schoolNeedsValidationRequired,true);
 assert.equal(ch5.schoolNeedsValidationPresent,false);
-assert.equal(map.implementationStatus.implementedChapterCount,4);
+assert.equal(map.implementationStatus.implementedChapterCount,5);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,4);
 assert.equal(map.implementationStatus.completionClaim,false);
 
@@ -59,4 +60,4 @@ assert.match(exclusions,/party politics|territorial disputes|geopolitical claims
 assert.match(exclusions,/religion, caste, community identity/);
 assert.match(exclusions,/patriotic loyalty tests/);
 
-console.log('CLASS6_SOCIAL_SCIENCE_CH5_RECONCILIATION_PASS topics=4 teaching=pending schoolNeeds=pending');
+console.log('CLASS6_SOCIAL_SCIENCE_CH5_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=pending');

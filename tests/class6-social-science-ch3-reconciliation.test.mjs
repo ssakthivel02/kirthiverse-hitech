@@ -1,0 +1,62 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+
+const rec=JSON.parse(fs.readFileSync('docs/class6-pilot/SOCIAL_SCIENCE_CH3_SOURCE_TOPIC_RECONCILIATION_V1.json','utf8'));
+const map=JSON.parse(fs.readFileSync('docs/class6-pilot/SOCIAL_SCIENCE_CURRICULUM_MAPPING_V1.json','utf8'));
+
+assert.equal(rec.schemaVersion,'1.0.0');
+assert.equal(rec.reconciliationId,'KVS-CBSE6-SOC-CH3-SOURCE-TOPIC-V1');
+assert.equal(rec.subject,'Social Science');
+assert.equal(rec.class,6);
+assert.equal(rec.board,'CBSE');
+assert.equal(rec.curriculumSession,'2026-27');
+assert.equal(rec.book,'Exploring Society: India and Beyond');
+assert.equal(rec.chapter,3);
+assert.equal(rec.chapterTitle,'Landforms and Life');
+assert.equal(rec.decision,'CHAPTER_3_SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(rec.canonicalSource.provider,'NCERT');
+assert.equal(rec.canonicalSource.publicationCode,'0681');
+assert.equal(rec.canonicalSource.chapterNumber,3);
+assert.equal(rec.canonicalSource.chapterTitleVerified,'Landforms and Life');
+assert.equal(rec.canonicalSource.chapterTextCopied,false);
+assert.equal(rec.canonicalSource.exerciseQuestionsCopied,false);
+assert.equal(rec.canonicalSource.illustrationsCopied,false);
+assert.equal(rec.currentStructureCorroboration.session,'2026-27');
+assert.equal(rec.currentStructureCorroboration.chapterCount,14);
+assert.equal(rec.currentStructureCorroboration.chapter3Title,'Landforms and Life');
+assert.equal(rec.reconciledTopicBoundary.length,4);
+assert.deepEqual(rec.reconciledTopicBoundary.map(x=>x.topicId),['TOPIC-SOC6-03-01','TOPIC-SOC6-03-02','TOPIC-SOC6-03-03','TOPIC-SOC6-03-04']);
+assert.ok(rec.reconciledTopicBoundary.every(x=>x.independentAuthoringAllowed===true));
+assert.ok(rec.reconciledTopicBoundary.every(x=>x.implementationStatus==='BOUNDARY_RECONCILED_NOT_IMPLEMENTED'));
+assert.equal(rec.rightsAndSchoolBoundary.schoolUse,'validation-context overlay only');
+assert.equal(rec.rightsAndSchoolBoundary.schoolSpecificPacingClaimed,false);
+assert.equal(rec.rightsAndSchoolBoundary.liveSchoolEvidenceCollected,false);
+assert.equal(rec.rightsAndSchoolBoundary.realChildDataCollected,false);
+assert.equal(rec.implementationGate.topicCount,4);
+assert.equal(rec.implementationGate.lessonImplementationAllowedAfterMerge,true);
+assert.equal(rec.implementationGate.assessmentImplementationAllowedAfterMerge,true);
+assert.equal(rec.implementationGate.schoolNeedsValidationRequiredAfterTeachingSlice,true);
+assert.equal(rec.implementationGate.runtimeChangeRequiredByThisReconciliation,false);
+assert.equal(rec.implementationGate.completionClaim,false);
+const ch3=map.chapters.find(x=>x.chapter===3);
+assert.equal(ch3.title,'Landforms and Life');
+assert.equal(ch3.status,'SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(ch3.topicCount,4);
+assert.equal(ch3.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH3_SOURCE_TOPIC_RECONCILIATION_V1.json');
+assert.equal(ch3.schoolNeedsValidationRequired,true);
+assert.equal(ch3.schoolNeedsValidationPresent,false);
+assert.equal(map.implementationStatus.implementedChapterCount,2);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,2);
+assert.equal(map.implementationStatus.completionClaim,false);
+
+// Safety/rights exclusions are expected to be named inside this governance artifact.
+// Validate the prohibitions themselves instead of treating their text as a violation.
+const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();
+assert.match(exclusions,/do not copy.*exercise/);
+assert.match(exclusions,/real location|live gps|precise coordinates|home address/);
+assert.equal(rec.canonicalSource.chapterTextCopied,false);
+assert.equal(rec.canonicalSource.exerciseQuestionsCopied,false);
+assert.equal(rec.canonicalSource.illustrationsCopied,false);
+assert.equal(rec.rightsAndSchoolBoundary.realChildDataCollected,false);
+
+console.log('CLASS6_SOCIAL_SCIENCE_CH3_RECONCILIATION_PASS topics=4');

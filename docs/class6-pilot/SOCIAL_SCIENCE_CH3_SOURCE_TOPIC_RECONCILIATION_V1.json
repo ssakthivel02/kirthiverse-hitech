@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0.0",
+  "reconciliationId": "KVS-CBSE6-SOC-CH3-SOURCE-TOPIC-V1",
+  "subject": "Social Science",
+  "class": 6,
+  "board": "CBSE",
+  "curriculumSession": "2026-27",
+  "book": "Exploring Society: India and Beyond",
+  "chapter": 3,
+  "chapterTitle": "Landforms and Life",
+  "decision": "CHAPTER_3_SOURCE_TOPIC_BOUNDARY_RECONCILED",
+  "claimBoundary": "This artifact reconciles Chapter 3 source identity and independently authorable concept boundaries only. It does not reproduce textbook prose, exercise questions, illustrations or page layouts; it does not implement lessons or assessments; and it does not make live-school, efficacy, attainment, accessibility-certification or school-specific pacing claims.",
+  "canonicalSource": {
+    "provider": "NCERT",
+    "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
+    "publicationCode": "0681",
+    "chapterNumber": 3,
+    "chapterTitleVerified": "Landforms and Life",
+    "chapterTextCopied": false,
+    "exerciseQuestionsCopied": false,
+    "illustrationsCopied": false
+  },
+  "currentStructureCorroboration": {
+    "session": "2026-27",
+    "chapterCount": 14,
+    "chapter3Title": "Landforms and Life",
+    "observedCurrentEvidence": [
+      "Current 2026-27 NCERT-aligned chapter indexes identify Landforms and Life as Chapter 3 of Exploring Society: India and Beyond.",
+      "Current chapter summaries consistently centre the chapter on mountains, plateaus and plains and on how these landforms shape human life, settlements, occupations, vegetation, water access, opportunities and hazards."
+    ],
+    "use": "Corroboration only. NCERT remains the canonical publisher/source authority."
+  },
+  "reconciledTopicBoundary": [
+    {
+      "topicId": "TOPIC-SOC6-03-01",
+      "title": "Recognising Major Landforms",
+      "scope": "Understand landforms as major physical features of Earth's surface and distinguish the broad school-level characteristics of mountains, plateaus and plains using independently authored examples and diagrams.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-03-02",
+      "title": "Mountains and Life",
+      "scope": "Explore mountains and hills at an age-appropriate level, including relief, colder high-altitude conditions, river-source relationships, vegetation, livelihoods, tourism or pilgrimage, and hazards such as landslides or avalanches without turning the lesson into advanced geomorphology.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-03-03",
+      "title": "Plateaus and Life",
+      "scope": "Identify plateaus as elevated relatively level landforms and connect them, at a bounded Class 6 level, with resources, waterfalls or river valleys, vegetation, settlement and livelihood patterns while avoiding unsupported resource-generalisation claims.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-03-04",
+      "title": "Plains, Rivers and Human Adaptation",
+      "scope": "Explore plains and river valleys as comparatively level landscapes that can support farming, transport and dense settlement, then compare how people adapt activities, housing, movement and livelihoods to different landforms while recognising that each environment brings both opportunities and challenges.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    }
+  ],
+  "excludedOrDeferredBoundary": [
+    "Do not copy NCERT exercise wording, quotations, maps, diagrams, figures, photographs or page layouts.",
+    "Do not make plate tectonics, detailed erosion cycles, rock classification or advanced geomorphology mandatory Chapter 3 content unless separately reconciled from direct canonical evidence.",
+    "Do not teach deterministic claims that one occupation, culture or settlement pattern applies to every mountain, plateau or plain community.",
+    "Do not require a learner's home address, live GPS, precise coordinates, photographs or personally identifying location information for landform activities.",
+    "Do not claim SAN Academy-specific chapter order, pacing, textbook edition or assessed attainment without direct evidence."
+  ],
+  "rightsAndSchoolBoundary": {
+    "rightsReviewArtifact": "docs/class6-pilot/SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_V1.json",
+    "schoolValidationProfile": "SAN Academy Tambaram",
+    "schoolUse": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false,
+    "realChildDataCollected": false
+  },
+  "implementationGate": {
+    "topicCount": 4,
+    "lessonImplementationAllowedAfterMerge": true,
+    "assessmentImplementationAllowedAfterMerge": true,
+    "schoolNeedsValidationRequiredAfterTeachingSlice": true,
+    "runtimeChangeRequiredByThisReconciliation": false,
+    "completionClaim": false,
+    "nextTask": "After exact-head CI and merge, fresh concurrency check then implement one bounded independently authored Chapter 3 Kiki teaching slice across the four reconciled topics."
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "1.0.0",
+  "reconciliationId": "KVS-CBSE6-SOC-CH6-SOURCE-TOPIC-V1",
+  "subject": "Social Science",
+  "class": 6,
+  "board": "CBSE",
+  "curriculumSession": "2026-27",
+  "book": "Exploring Society: India and Beyond",
+  "chapter": 6,
+  "chapterTitle": "The Beginnings of Indian Civilisation",
+  "decision": "CHAPTER_6_SOURCE_TOPIC_BOUNDARY_RECONCILED",
+  "claimBoundary": "This artifact reconciles Chapter 6 source identity and independently authorable concept boundaries only. It does not reproduce textbook prose, exercise questions, quotations, maps, figures, photographs, archaeological source extracts or page layouts; it does not implement lessons or assessments; it does not present uncertain archaeological interpretation as settled fact; it does not rank civilisations, cultures or present-day identities; and it does not make live-school, efficacy, attainment, accessibility-certification or school-specific pacing claims.",
+  "canonicalSource": {
+    "provider": "NCERT",
+    "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
+    "publicationCode": "0681",
+    "chapterNumber": 6,
+    "chapterTitleVerified": "The Beginnings of Indian Civilisation",
+    "chapterTextCopied": false,
+    "exerciseQuestionsCopied": false,
+    "illustrationsCopied": false
+  },
+  "currentStructureCorroboration": {
+    "session": "2026-27",
+    "chapterCount": 14,
+    "chapter6Title": "The Beginnings of Indian Civilisation",
+    "observedCurrentEvidence": [
+      "Current 2026-27 NCERT-aligned chapter indexes identify The Beginnings of Indian Civilisation as Chapter 6 of Exploring Society: India and Beyond.",
+      "Current curriculum evidence places Chapter 6 around characteristics of civilisation, Harappan urban and material evidence, settlement and resource systems, and evidence-aware explanations for transformation or decline."
+    ],
+    "use": "Corroboration only. NCERT remains the canonical publisher/source authority."
+  },
+  "reconciledTopicBoundary": [
+    {
+      "topicId": "TOPIC-SOC6-06-01",
+      "title": "What Archaeologists Mean by Civilisation",
+      "scope": "Introduce civilisation as an analytical description built from multiple kinds of evidence rather than a ranking of peoples. At Class 6 level, examine recurring features such as organised settlements, specialised work, exchange, public or shared infrastructure, record or symbol systems and social organisation while emphasising that checklists are models, evidence is incomplete and different ancient societies need not develop in one fixed sequence.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-06-02",
+      "title": "Harappan Settlements and Urban Evidence",
+      "scope": "Use independently authored descriptions of archaeological evidence from Harappan or Indus civilisation settlements to explore planned streets, buildings, drainage, water storage and differences among sites. Treat labels such as Harappan, Indus and related terminology as source-context terms rather than modern territorial claims, and distinguish observed remains from interpretations about institutions or daily life.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-06-03",
+      "title": "Food, Craft, Water and Exchange Networks",
+      "scope": "Explore how archaeological finds can support cautious inferences about farming, animal use, craft production, raw materials, water management and exchange between settlements. Teach learners to connect artefacts and environmental evidence to possible economic activity without inventing precise occupations, social identities, ownership systems or trade routes where evidence is incomplete.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-06-04",
+      "title": "Change, Transformation and the Limits of Evidence",
+      "scope": "Introduce evidence that many Harappan urban centres changed or declined over time and compare several possible contributing factors at an age-appropriate level, such as environmental change, river-system shifts, changing settlement patterns or economic reorganisation. Avoid a single-cause certainty claim, invasion-as-default narrative, civilisational disappearance claim or unsupported direct continuity claim; emphasise that archaeology revises explanations as evidence improves.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    }
+  ],
+  "excludedOrDeferredBoundary": [
+    "Do not copy NCERT exercise wording, quotations, archaeological source extracts, maps, site plans, diagrams, figures, photographs or page layouts.",
+    "Do not describe civilisation as a measure of human worth, cultural superiority, intelligence or modern national legitimacy.",
+    "Do not project present-day international, state, religious, caste, linguistic or community boundaries backward onto archaeological cultures.",
+    "Do not present the undeciphered Harappan script as translated or use speculative readings as established evidence.",
+    "Do not state one certain cause for urban transformation or decline when evidence supports multiple hypotheses and regional variation.",
+    "Do not require learners to disclose ancestry, genetics, caste, religion, community identity, family origin, migration history, political opinion, home address, photographs or recordings.",
+    "Do not claim SAN Academy-specific chapter order, pacing, textbook edition or assessed attainment without direct evidence."
+  ],
+  "rightsAndSchoolBoundary": {
+    "rightsReviewArtifact": "docs/class6-pilot/SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_V1.json",
+    "schoolValidationProfile": "SAN Academy Tambaram",
+    "schoolUse": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false,
+    "realChildDataCollected": false
+  },
+  "implementationGate": {
+    "topicCount": 4,
+    "lessonImplementationAllowedAfterMerge": true,
+    "assessmentImplementationAllowedAfterMerge": true,
+    "schoolNeedsValidationRequiredAfterTeachingSlice": true,
+    "runtimeChangeRequiredByThisReconciliation": false,
+    "completionClaim": false,
+    "nextTask": "After exact-head CI and merge, fresh concurrency check then implement one bounded independently authored Chapter 6 Kiki teaching slice across the four reconciled topics."
+  }
+}

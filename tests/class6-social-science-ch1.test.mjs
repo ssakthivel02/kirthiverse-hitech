@@ -46,7 +46,7 @@ assert.equal(ch1.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch1.topicCount,3);assert.equal(ch1.assessmentCount,15);
 assert.equal(ch1.schoolNeedsValidationRequired,true);assert.equal(ch1.schoolNeedsValidationPresent,true);
 assert.equal(map.implementationStatus.implementedChapterCount,6);
-assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,5);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,6);
 assert.equal(map.implementationStatus.completionClaim,false);
 assert.equal(overlay.decision,'SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_RECONCILED');
 assert.ok(overlay.rightsSafeAuthoringBoundary.mustBeIndependentlyAuthored.includes('assessment items'));

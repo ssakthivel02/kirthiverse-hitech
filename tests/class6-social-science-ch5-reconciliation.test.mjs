@@ -49,7 +49,7 @@ assert.equal(ch5.schoolNeedsValidationRequired,true);
 assert.equal(ch5.schoolNeedsValidationPresent,true);
 assert.equal(ch5.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH5_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(map.implementationStatus.implementedChapterCount,6);
-assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,5);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,6);
 assert.equal(map.implementationStatus.completionClaim,false);
 
 const allText=JSON.stringify(rec).toLowerCase();

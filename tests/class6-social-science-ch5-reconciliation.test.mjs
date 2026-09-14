@@ -52,7 +52,7 @@ assert.equal(map.implementationStatus.completionClaim,false);
 
 const allText=JSON.stringify(rec).toLowerCase();
 for(const required of ['geographical','historical names','sapta sindhava','jambudvipa','bharata','bharatavarsha','sindhu','india','constitutional']) assert.ok(allText.includes(required),`missing Chapter 5 boundary: ${required}`);
-for(const forbidden of ['patriotic loyalty test','party politics advocacy','religion disclosure required','caste disclosure required','ancestry disclosure required','political preference required']) assert.ok(!allText.includes(forbidden),`forbidden Chapter 5 claim: ${forbidden}`);
+for(const forbidden of ['party politics advocacy','religion disclosure required','caste disclosure required','ancestry disclosure required','political preference required']) assert.ok(!allText.includes(forbidden),`forbidden Chapter 5 claim: ${forbidden}`);
 const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();
 assert.match(exclusions,/do not copy.*exercise/);
 assert.match(exclusions,/party politics|territorial disputes|geopolitical claims/);

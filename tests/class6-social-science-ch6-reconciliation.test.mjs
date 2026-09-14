@@ -1,0 +1,63 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+
+const rec=JSON.parse(fs.readFileSync('docs/class6-pilot/SOCIAL_SCIENCE_CH6_SOURCE_TOPIC_RECONCILIATION_V1.json','utf8'));
+const map=JSON.parse(fs.readFileSync('docs/class6-pilot/SOCIAL_SCIENCE_CURRICULUM_MAPPING_V1.json','utf8'));
+
+assert.equal(rec.schemaVersion,'1.0.0');
+assert.equal(rec.reconciliationId,'KVS-CBSE6-SOC-CH6-SOURCE-TOPIC-V1');
+assert.equal(rec.subject,'Social Science');
+assert.equal(rec.class,6);
+assert.equal(rec.board,'CBSE');
+assert.equal(rec.curriculumSession,'2026-27');
+assert.equal(rec.book,'Exploring Society: India and Beyond');
+assert.equal(rec.chapter,6);
+assert.equal(rec.chapterTitle,'The Beginnings of Indian Civilisation');
+assert.equal(rec.decision,'CHAPTER_6_SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(rec.canonicalSource.provider,'NCERT');
+assert.equal(rec.canonicalSource.publicationCode,'0681');
+assert.equal(rec.canonicalSource.chapterNumber,6);
+assert.equal(rec.canonicalSource.chapterTitleVerified,'The Beginnings of Indian Civilisation');
+assert.equal(rec.canonicalSource.chapterTextCopied,false);
+assert.equal(rec.canonicalSource.exerciseQuestionsCopied,false);
+assert.equal(rec.canonicalSource.illustrationsCopied,false);
+assert.equal(rec.currentStructureCorroboration.session,'2026-27');
+assert.equal(rec.currentStructureCorroboration.chapterCount,14);
+assert.equal(rec.currentStructureCorroboration.chapter6Title,'The Beginnings of Indian Civilisation');
+assert.equal(rec.reconciledTopicBoundary.length,4);
+assert.deepEqual(rec.reconciledTopicBoundary.map(x=>x.topicId),['TOPIC-SOC6-06-01','TOPIC-SOC6-06-02','TOPIC-SOC6-06-03','TOPIC-SOC6-06-04']);
+assert.ok(rec.reconciledTopicBoundary.every(x=>x.independentAuthoringAllowed===true));
+assert.ok(rec.reconciledTopicBoundary.every(x=>x.implementationStatus==='BOUNDARY_RECONCILED_NOT_IMPLEMENTED'));
+assert.equal(rec.rightsAndSchoolBoundary.schoolUse,'validation-context overlay only');
+assert.equal(rec.rightsAndSchoolBoundary.schoolSpecificPacingClaimed,false);
+assert.equal(rec.rightsAndSchoolBoundary.liveSchoolEvidenceCollected,false);
+assert.equal(rec.rightsAndSchoolBoundary.realChildDataCollected,false);
+assert.equal(rec.implementationGate.topicCount,4);
+assert.equal(rec.implementationGate.lessonImplementationAllowedAfterMerge,true);
+assert.equal(rec.implementationGate.assessmentImplementationAllowedAfterMerge,true);
+assert.equal(rec.implementationGate.schoolNeedsValidationRequiredAfterTeachingSlice,true);
+assert.equal(rec.implementationGate.runtimeChangeRequiredByThisReconciliation,false);
+assert.equal(rec.implementationGate.completionClaim,false);
+
+const ch6=map.chapters.find(x=>x.chapter===6);
+assert.equal(ch6.title,'The Beginnings of Indian Civilisation');
+assert.equal(ch6.status,'SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(ch6.topicCount,4);
+assert.equal(ch6.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH6_SOURCE_TOPIC_RECONCILIATION_V1.json');
+assert.equal(ch6.schoolNeedsValidationRequired,true);
+assert.equal(ch6.schoolNeedsValidationPresent,false);
+assert.equal(map.implementationStatus.implementedChapterCount,5);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,5);
+assert.equal(map.implementationStatus.completionClaim,false);
+
+const allText=JSON.stringify(rec).toLowerCase();
+for(const required of ['civilisation','archaeolog','harappan','settlement','drainage','water','craft','exchange','environmental','uncertainty']) assert.ok(allText.includes(required),`missing Chapter 6 boundary: ${required}`);
+for(const forbidden of ['civilisational superiority','script translated": true','single certain cause','modern national legitimacy required','ancestry disclosure required": true']) assert.ok(!allText.includes(forbidden),`forbidden Chapter 6 claim: ${forbidden}`);
+const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();
+assert.match(exclusions,/do not copy.*exercise/);
+assert.match(exclusions,/human worth|cultural superiority|modern national legitimacy/);
+assert.match(exclusions,/undeciphered harappan script/);
+assert.match(exclusions,/one certain cause|multiple hypotheses|regional variation/);
+assert.match(exclusions,/ancestry|genetics|caste|religion|community identity/);
+
+console.log('CLASS6_SOCIAL_SCIENCE_CH6_RECONCILIATION_PASS topics=4 teaching=pending schoolNeeds=pending');

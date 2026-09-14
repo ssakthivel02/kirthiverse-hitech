@@ -1,0 +1,61 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+
+const rec=JSON.parse(fs.readFileSync('docs/class6-pilot/SOCIAL_SCIENCE_CH8_SOURCE_TOPIC_RECONCILIATION_V1.json','utf8'));
+const map=JSON.parse(fs.readFileSync('docs/class6-pilot/SOCIAL_SCIENCE_CURRICULUM_MAPPING_V1.json','utf8'));
+
+assert.equal(rec.schemaVersion,'1.0.0');
+assert.equal(rec.reconciliationId,'KVS-CBSE6-SOC-CH8-SOURCE-TOPIC-V1');
+assert.equal(rec.subject,'Social Science');
+assert.equal(rec.class,6);
+assert.equal(rec.board,'CBSE');
+assert.equal(rec.curriculumSession,'2026-27');
+assert.equal(rec.book,'Exploring Society: India and Beyond');
+assert.equal(rec.chapter,8);
+assert.equal(rec.chapterTitle,'Unity in Diversity, or ‘Many in the One’');
+assert.equal(rec.decision,'CHAPTER_8_SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(rec.canonicalSource.provider,'NCERT');
+assert.equal(rec.canonicalSource.publicationCode,'0681');
+assert.equal(rec.canonicalSource.chapterNumber,8);
+assert.equal(rec.canonicalSource.chapterTitleVerified,'Unity in Diversity, or ‘Many in the One’');
+assert.equal(rec.canonicalSource.chapterTextCopied,false);
+assert.equal(rec.canonicalSource.exerciseQuestionsCopied,false);
+assert.equal(rec.canonicalSource.illustrationsCopied,false);
+assert.equal(rec.currentStructureCorroboration.session,'2026-27');
+assert.equal(rec.currentStructureCorroboration.chapterCount,14);
+assert.equal(rec.currentStructureCorroboration.chapter8Title,'Unity in Diversity, or ‘Many in the One’');
+assert.equal(rec.reconciledTopicBoundary.length,4);
+assert.deepEqual(rec.reconciledTopicBoundary.map(x=>x.topicId),['TOPIC-SOC6-08-01','TOPIC-SOC6-08-02','TOPIC-SOC6-08-03','TOPIC-SOC6-08-04']);
+assert.ok(rec.reconciledTopicBoundary.every(x=>x.independentAuthoringAllowed===true));
+assert.ok(rec.reconciledTopicBoundary.every(x=>x.implementationStatus==='BOUNDARY_RECONCILED_NOT_IMPLEMENTED'));
+assert.equal(rec.rightsAndSchoolBoundary.schoolUse,'validation-context overlay only');
+assert.equal(rec.rightsAndSchoolBoundary.schoolSpecificPacingClaimed,false);
+assert.equal(rec.rightsAndSchoolBoundary.liveSchoolEvidenceCollected,false);
+assert.equal(rec.rightsAndSchoolBoundary.realChildDataCollected,false);
+assert.equal(rec.rightsAndSchoolBoundary.sensitiveIdentityDisclosureRequired,false);
+assert.equal(rec.implementationGate.topicCount,4);
+assert.equal(rec.implementationGate.lessonImplementationAllowedAfterMerge,true);
+assert.equal(rec.implementationGate.assessmentImplementationAllowedAfterMerge,true);
+assert.equal(rec.implementationGate.schoolNeedsValidationRequiredAfterTeachingSlice,true);
+assert.equal(rec.implementationGate.runtimeChangeRequiredByThisReconciliation,false);
+assert.equal(rec.implementationGate.completionClaim,false);
+
+const allText=JSON.stringify(rec).toLowerCase();
+for(const required of ['diversity','food','textiles','clothing','festivals','epic','regional','folk'])assert.ok(allText.includes(required),`missing Chapter 8 boundary: ${required}`);
+for(const forbidden of ['learner religion disclosure required": true','learner language disclosure required": true','caste disclosure required": true','community disclosure required": true','devotional activity required','political loyalty required','real child data collected": true'])assert.ok(!allText.includes(forbidden),`forbidden Chapter 8 claim: ${forbidden}`);
+const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();
+assert.match(exclusions,/religion|language|caste|community|ancestry/);
+assert.match(exclusions,/devotional|persuasive|political/);
+assert.match(exclusions,/uniform|superior|inferior|stereotyp/);
+assert.match(exclusions,/textbook prose|exercise|photograph|figure|page layout/);
+
+const ch8=map.chapters.find(x=>x.chapter===8);
+assert.equal(ch8.title,'Unity in Diversity, or ‘Many in the One’');
+assert.equal(ch8.status,'SOURCE_TOPIC_RECONCILED_NOT_IMPLEMENTED');
+assert.equal(ch8.topicCount,4);
+assert.equal(ch8.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH8_SOURCE_TOPIC_RECONCILIATION_V1.json');
+assert.equal(map.implementationStatus.implementedChapterCount,7);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,7);
+assert.equal(map.implementationStatus.completionClaim,false);
+
+console.log('CLASS6_SOCIAL_SCIENCE_CH8_RECONCILIATION_PASS topics=4 implemented=7 schoolNeeds=validated');

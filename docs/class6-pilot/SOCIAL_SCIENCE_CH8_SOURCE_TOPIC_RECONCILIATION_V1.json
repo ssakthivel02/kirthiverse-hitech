@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "1.0.0",
+  "reconciliationId": "KVS-CBSE6-SOC-CH8-SOURCE-TOPIC-V1",
+  "subject": "Social Science",
+  "class": 6,
+  "board": "CBSE",
+  "curriculumSession": "2026-27",
+  "book": "Exploring Society: India and Beyond",
+  "chapter": 8,
+  "chapterTitle": "Unity in Diversity, or ‘Many in the One’",
+  "decision": "CHAPTER_8_SOURCE_TOPIC_BOUNDARY_RECONCILED",
+  "claimBoundary": "This artifact reconciles Chapter 8 source identity and independently authorable concept boundaries only. It does not reproduce textbook prose, exercise questions, quotations, maps, photographs, figures, page layouts or source extracts; it does not implement lessons or assessments; it does not turn cultural diversity into patriotic loyalty testing, religious instruction or claims that all Indians share one identity or practice; it does not ask learners to disclose religion, caste, tribe, community, home language, migration history or family practices; and it does not make live-school, efficacy, attainment, accessibility-certification or school-specific pacing claims.",
+  "canonicalSource": {
+    "provider": "NCERT",
+    "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
+    "epathshalaChapterIndex": "https://epathshala.nic.in/topicc.php?id=0681CH08",
+    "publicationCode": "0681",
+    "chapterNumber": 8,
+    "chapterTitleVerified": "Unity in Diversity, or ‘Many in the One’",
+    "chapterTextCopied": false,
+    "exerciseQuestionsCopied": false,
+    "quotationsCopied": false,
+    "mapsCopied": false,
+    "illustrationsCopied": false
+  },
+  "currentStructureCorroboration": {
+    "session": "2026-27",
+    "chapterCount": 14,
+    "chapter8Title": "Unity in Diversity, or ‘Many in the One’",
+    "observedCurrentEvidence": [
+      "The current ePathshala QR-content index lists Chapter 8 as Unity in Diversity, or ‘Many in the One’ for the Class 6 Social Science book sequence.",
+      "Current chapter evidence organises the discussion around visible diversity; shared and varied food and clothing patterns; festivals with regional names and forms; and literary or epic traditions with regional, folk and community adaptations."
+    ],
+    "use": "Corroboration only. NCERT remains the canonical publisher/source authority."
+  },
+  "reconciledTopicBoundary": [
+    {
+      "topicId": "TOPIC-SOC6-08-01",
+      "title": "Seeing Diversity Without Turning Difference into Division",
+      "scope": "Introduce unity in diversity as an analytical idea: India contains substantial variation in languages, scripts, landscapes, customs and ways of life while people and cultural forms also interact across regions. Teach observation, evidence limits and internal variation without claiming that every Indian shares one language, religion, custom or identity, and without asking learners to disclose sensitive personal or family identity information.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-08-02",
+      "title": "Shared Ingredients and Forms, Many Foods and Textiles",
+      "scope": "Use independently authored examples of staple ingredients, textile forms, weaving, fabrics and ways of wearing clothing to show how recurring materials or forms can coexist with regional variation and innovation. Avoid presenting any food, dress, region, caste or community as more authentic, pure, national or representative than others; do not ask learners to reveal home diet, caste-linked practices or family clothing customs.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-08-03",
+      "title": "Festivals: Related Timing, Different Names and Practices",
+      "scope": "Explore how festivals can show both recurring seasonal or social patterns and significant regional, religious and community variation. Use supplied neutral examples rather than requiring learners to describe their own religious observances; distinguish similarity from sameness and avoid implying that every region, religion or household celebrates a festival in one fixed way.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-08-04",
+      "title": "Stories, Epics and Adaptations Across Languages and Communities",
+      "scope": "Study literary circulation and adaptation through independently authored historical descriptions of widely travelled story traditions and regional, folk or community versions of major epics. Focus on translation, retelling, oral transmission and cultural interaction; do not reproduce protected textbook wording or long source passages, require devotional participation, assert one canonical community interpretation, or rank regional and tribal adaptations as lesser or impure.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    }
+  ],
+  "excludedOrDeferredBoundary": [
+    "Do not copy NCERT exercise wording, quotations, source extracts, maps, photographs, figures, diagrams or page layouts.",
+    "Do not require patriotic loyalty statements, national-uniformity claims, pledges, religious observance, prayer, chanting, worship, devotional performance or conversion-oriented activity.",
+    "Do not ask learners to disclose religion, caste, sect, tribe, community, ancestry, home language, migration history, family festival practices, home diet, photographs, recordings or home address.",
+    "Do not claim that all Indians share one language, religion, food, dress, festival, story version, political view or cultural identity.",
+    "Do not rank regional, religious, linguistic, folk, tribal or local traditions as more or less authentic, civilised, pure, national or developed.",
+    "Do not treat cultural similarity as proof that communities are identical, or cultural difference as evidence of conflict, inferiority or lack of belonging.",
+    "Do not present one version of the Ramayana, Mahabharata, Panchatantra or another literary tradition as the only legitimate community interpretation; keep literary discussion descriptive and source-aware rather than devotional.",
+    "Do not use ‘unity in diversity’ to erase discrimination, disagreement, internal variation or historical change, and do not turn the chapter into contemporary party-political advocacy.",
+    "Do not claim SAN Academy-specific chapter order, pacing, textbook edition or assessed attainment without direct evidence."
+  ],
+  "rightsAndSchoolBoundary": {
+    "rightsReviewArtifact": "docs/class6-pilot/SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_V1.json",
+    "schoolValidationProfile": "SAN Academy Tambaram",
+    "schoolUse": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false,
+    "realChildDataCollected": false,
+    "sensitiveIdentityDisclosureRequired": false,
+    "patrioticLoyaltyTestingRequired": false
+  },
+  "implementationGate": {
+    "topicCount": 4,
+    "lessonImplementationAllowedAfterMerge": true,
+    "assessmentImplementationAllowedAfterMerge": true,
+    "schoolNeedsValidationRequiredAfterTeachingSlice": true,
+    "runtimeChangeRequiredByThisReconciliation": false,
+    "completionClaim": false,
+    "nextTask": "After exact-head CI and merge, perform a fresh concurrency check before implementing one bounded independently authored Chapter 8 Kiki teaching slice across the four reconciled topics."
+  }
+}

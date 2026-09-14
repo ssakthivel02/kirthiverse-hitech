@@ -40,11 +40,11 @@
   "scenarios": [
     {
       "id": "SN-SOC6-CH7-001",
-      "need": "Learner treats an important Vedic textual tradition as proof that every ancient person or community shared one identical belief or practice.",
+      "need": "Learner treats the Vedas as proof that every ancient person or community shared one identical belief or practice instead of studying the Vedas as historically important textual traditions with evidence limits.",
       "topicId": "TOPIC-SOC6-07-01",
       "expectedMisconception": "historical importance converted into a universal-belief claim",
       "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
-      "safeLearnerAction": "Classify supplied fictional source statements as direct source evidence, reasonable historical inference or unsupported universal claim, then rewrite overgeneralised claims without asking about the learner’s religion, family worship, caste or sect.",
+      "safeLearnerAction": "Classify supplied fictional source statements about Vedas-style oral textual transmission as direct source evidence, reasonable historical inference or unsupported universal claim, then rewrite overgeneralised claims without asking about the learner’s religion, family worship, caste or sect.",
       "masteryCriterion": "For an unfamiliar oral-source example, identifies two contextual questions, one proportionate inference, one evidence limit and one universal-belief claim that must be rejected."
     },
     {

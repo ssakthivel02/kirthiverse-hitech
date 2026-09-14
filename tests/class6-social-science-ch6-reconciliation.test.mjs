@@ -41,12 +41,15 @@ assert.equal(rec.implementationGate.completionClaim,false);
 
 const ch6=map.chapters.find(x=>x.chapter===6);
 assert.equal(ch6.title,'The Beginnings of Indian Civilisation');
-assert.equal(ch6.status,'SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(ch6.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch6.topicCount,4);
+assert.equal(ch6.assessmentCount,20);
+assert.equal(ch6.lessonDataset,'data/class6-social-science-ch6.js');
+assert.equal(ch6.assessmentDataset,'data/class6-social-science-ch6-assessments.js');
 assert.equal(ch6.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH6_SOURCE_TOPIC_RECONCILIATION_V1.json');
 assert.equal(ch6.schoolNeedsValidationRequired,true);
 assert.equal(ch6.schoolNeedsValidationPresent,false);
-assert.equal(map.implementationStatus.implementedChapterCount,5);
+assert.equal(map.implementationStatus.implementedChapterCount,6);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,5);
 assert.equal(map.implementationStatus.completionClaim,false);
 
@@ -60,4 +63,4 @@ assert.match(exclusions,/undeciphered harappan script/);
 assert.match(exclusions,/one certain cause|multiple hypotheses|regional variation/);
 assert.match(exclusions,/ancestry|genetics|caste|religion|community identity/);
 
-console.log('CLASS6_SOCIAL_SCIENCE_CH6_RECONCILIATION_PASS topics=4 teaching=pending schoolNeeds=pending');
+console.log('CLASS6_SOCIAL_SCIENCE_CH6_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=pending');

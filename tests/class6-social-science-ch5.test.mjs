@@ -36,7 +36,7 @@ assert.equal(map.implementationStatus.implementedChapterCount,8);assert.equal(ma
 assert.match(loader,/data\/class6-social-science-ch5\.js/);assert.match(loader,/data\/class6-social-science-ch5-assessments\.js/);
 assert.match(loader,/data\/class6-social-science-ch6\.js/);assert.match(loader,/data\/class6-social-science-ch6-assessments\.js/);
 assert.match(loader,/data\/class6-social-science-ch7\.js/);assert.match(loader,/data\/class6-social-science-ch7-assessments\.js/);
-assert.match(loader,/ch\(\?:1\|2\|3\|4\|5\|6\|7\)/);assert.match(loader,/CBSE6-SOC-CH7-1/);
+assert.match(loader,/ch\(\?:1\|2\|3\|4\|5\|6\|7\|8\)/);assert.match(loader,/CBSE6-SOC-CH8-1/);
 const text=JSON.stringify({lessons,assessments}).toLowerCase();
 for(const forbidden of ['share your religion','share your caste','share your ancestry','share your political preference','prove your patriotism','rank cultures as more authentic','share your home address'])assert.ok(!text.includes(forbidden),`forbidden Chapter 5 learner prompt: ${forbidden}`);
 assert.match(lessons.find(x=>x.topicId==='TOPIC-SOC6-05-01').content,/historical name|modern republic|political boundaries/i);

@@ -60,10 +60,10 @@ assert.equal(ch7.assessmentDataset,'data/class6-social-science-ch7-assessments.j
 assert.equal(ch7.assessmentCount,20);
 assert.equal(ch7.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH7_SOURCE_TOPIC_RECONCILIATION_V1.json');
 assert.equal(ch7.schoolNeedsValidationRequired,true);
-assert.equal(ch7.schoolNeedsValidationPresent,false);
-assert.equal(ch7.schoolNeedsValidationArtifact,undefined);
+assert.equal(ch7.schoolNeedsValidationPresent,true);
+assert.equal(ch7.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH7_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(map.implementationStatus.implementedChapterCount,7);
-assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,6);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,7);
 assert.equal(map.implementationStatus.completionClaim,false);
 
-console.log('CLASS6_SOCIAL_SCIENCE_CH7_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=pending beliefDisclosure=false');
+console.log('CLASS6_SOCIAL_SCIENCE_CH7_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=validated beliefDisclosure=false');

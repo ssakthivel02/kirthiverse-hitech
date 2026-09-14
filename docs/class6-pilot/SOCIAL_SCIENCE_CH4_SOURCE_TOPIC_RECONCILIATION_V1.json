@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "reconciliationId": "KVS-CBSE6-SOC-CH4-SOURCE-TOPIC-V1",
+  "subject": "Social Science",
+  "class": 6,
+  "board": "CBSE",
+  "curriculumSession": "2026-27",
+  "book": "Exploring Society: India and Beyond",
+  "chapter": 4,
+  "chapterTitle": "Timeline and Sources of History",
+  "decision": "CHAPTER_4_SOURCE_TOPIC_BOUNDARY_RECONCILED",
+  "claimBoundary": "This artifact reconciles Chapter 4 source identity and independently authorable concept boundaries only. It does not reproduce textbook prose, exercise questions, quotations, illustrations or page layouts; it does not implement lessons or assessments; and it does not make live-school, efficacy, attainment, accessibility-certification or school-specific pacing claims.",
+  "canonicalSource": {
+    "provider": "NCERT",
+    "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
+    "publicationCode": "0681",
+    "chapterNumber": 4,
+    "chapterTitleVerified": "Timeline and Sources of History",
+    "chapterTextCopied": false,
+    "exerciseQuestionsCopied": false,
+    "illustrationsCopied": false
+  },
+  "currentStructureCorroboration": {
+    "session": "2026-27",
+    "chapterCount": 14,
+    "chapter4Title": "Timeline and Sources of History",
+    "observedCurrentEvidence": [
+      "Current 2026-27 NCERT-aligned chapter indexes identify Timeline and Sources of History as Chapter 4 of Exploring Society: India and Beyond.",
+      "Current chapter summaries consistently centre the chapter on measuring historical time, using sources to understand the past, and building an introductory evidence-based picture of early human life."
+    ],
+    "use": "Corroboration only. NCERT remains the canonical publisher/source authority."
+  },
+  "reconciledTopicBoundary": [
+    {
+      "topicId": "TOPIC-SOC6-04-01",
+      "title": "Learning About the Human Past",
+      "scope": "Introduce history as the evidence-based study of the human past and distinguish, at a Class 6 level, how historians and related specialists such as archaeologists, anthropologists, geologists and palaeontologists contribute different kinds of evidence without reproducing textbook examples.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-04-02",
+      "title": "Measuring Historical Time",
+      "scope": "Develop chronology and timeline reasoning using BCE and CE together with decade, century and millennium, focusing on ordering and comparing events across time rather than excessive date memorisation.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-04-03",
+      "title": "Sources and Historical Evidence",
+      "scope": "Compare broad categories of historical evidence, including material or archaeological evidence, written or literary evidence, and oral or other records, and practise distinguishing supported inference from unsupported certainty using independently authored or rights-safe examples.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-04-04",
+      "title": "Early Human Communities and Change Over Time",
+      "scope": "Provide a bounded introduction to how evidence can be used to reason about early human communities and changes in ways of living over long time spans, without turning the chapter into advanced prehistory, genetics, archaeological dating or contested identity narratives.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    }
+  ],
+  "excludedOrDeferredBoundary": [
+    "Do not copy NCERT exercise wording, quotations, source extracts, maps, diagrams, figures, photographs or page layouts.",
+    "Do not make advanced archaeological dating methods, detailed palaeoanthropology, ancient DNA or genetics mandatory Chapter 4 content unless separately reconciled from strong canonical evidence.",
+    "Do not present uncertain historical interpretations as established fact; evidence limits and alternative reasonable interpretations must remain explicit where relevant.",
+    "Do not require learners to disclose family oral histories, religion, caste, community identity, home address, photographs, recordings or other personal or sensitive information for history activities.",
+    "Do not introduce contentious migration, ancestry or identity claims beyond the bounded Class 6 source evidence without separate reconciliation.",
+    "Do not claim SAN Academy-specific chapter order, pacing, textbook edition or assessed attainment without direct evidence."
+  ],
+  "rightsAndSchoolBoundary": {
+    "rightsReviewArtifact": "docs/class6-pilot/SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_V1.json",
+    "schoolValidationProfile": "SAN Academy Tambaram",
+    "schoolUse": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false,
+    "realChildDataCollected": false
+  },
+  "implementationGate": {
+    "topicCount": 4,
+    "lessonImplementationAllowedAfterMerge": true,
+    "assessmentImplementationAllowedAfterMerge": true,
+    "schoolNeedsValidationRequiredAfterTeachingSlice": true,
+    "runtimeChangeRequiredByThisReconciliation": false,
+    "completionClaim": false,
+    "nextTask": "After exact-head CI and merge, fresh concurrency check then implement one bounded independently authored Chapter 4 Kiki teaching slice across the four reconciled topics."
+  }
+}

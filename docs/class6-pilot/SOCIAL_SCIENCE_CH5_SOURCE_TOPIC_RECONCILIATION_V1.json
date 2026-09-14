@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "reconciliationId": "KVS-CBSE6-SOC-CH5-SOURCE-TOPIC-V1",
+  "subject": "Social Science",
+  "class": 6,
+  "board": "CBSE",
+  "curriculumSession": "2026-27",
+  "book": "Exploring Society: India and Beyond",
+  "chapter": 5,
+  "chapterTitle": "India, That Is Bharat",
+  "decision": "CHAPTER_5_SOURCE_TOPIC_BOUNDARY_RECONCILED",
+  "claimBoundary": "This artifact reconciles Chapter 5 source identity and independently authorable concept boundaries only. It does not reproduce textbook prose, exercise questions, quotations, maps, figures, source extracts or page layouts; it does not implement lessons or assessments; it does not advocate a political position or test patriotic loyalty; and it does not make live-school, efficacy, attainment, accessibility-certification or school-specific pacing claims.",
+  "canonicalSource": {
+    "provider": "NCERT",
+    "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
+    "publicationCode": "0681",
+    "chapterNumber": 5,
+    "chapterTitleVerified": "India, That Is Bharat",
+    "chapterTextCopied": false,
+    "exerciseQuestionsCopied": false,
+    "illustrationsCopied": false
+  },
+  "currentStructureCorroboration": {
+    "session": "2026-27",
+    "chapterCount": 14,
+    "chapter5Title": "India, That Is Bharat",
+    "observedCurrentEvidence": [
+      "Current 2026-27 NCERT-aligned chapter indexes identify India, That Is Bharat as Chapter 5 of Exploring Society: India and Beyond.",
+      "Current curriculum evidence centres Chapter 5 on how India is defined, the naming of the country across historical contexts, geographical framing and the continuity of the names India and Bharat into the modern constitutional period."
+    ],
+    "use": "Corroboration only. NCERT remains the canonical publisher/source authority."
+  },
+  "reconciledTopicBoundary": [
+    {
+      "topicId": "TOPIC-SOC6-05-01",
+      "title": "Defining India in Geography and History",
+      "scope": "Introduce India and the Indian subcontinent as geographical and historical frames using independently authored descriptions of broad physical setting and natural boundaries. Distinguish geographical regions, historical usage and the modern Republic of India so learners do not treat every historical label or map as identical to present political boundaries.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-05-02",
+      "title": "Names Used Within the Subcontinent",
+      "scope": "Explore, at an introductory Class 6 level, how names such as Sapta Sindhava, Jambudvipa, Bharata and Bharatavarsha appear in different historical or literary contexts. Teach that names can change in meaning and geographic reach over time, and attribute them to sources and contexts rather than presenting one timeless definition.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-05-03",
+      "title": "Names Through Cross-Cultural Contact",
+      "scope": "Trace, in a simplified evidence-aware way, how words connected with Sindhu were rendered in different languages and traditions, contributing to forms such as Hindu, Indoi, Yindu, Hindustan and India. Emphasise language transmission, pronunciation and source context rather than claiming a single simple naming event or ranking one name as more legitimate than another.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-05-04",
+      "title": "India and Bharat in the Modern Constitutional Frame",
+      "scope": "Connect historical naming to the modern constitutional formulation that recognises India and Bharat, while keeping the lesson factual and non-partisan. Distinguish historical name evidence from present constitutional identity and invite evidence-based comparison without requiring declarations of patriotism, political preference, religion, caste, ancestry or community identity.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    }
+  ],
+  "excludedOrDeferredBoundary": [
+    "Do not copy NCERT exercise wording, quotations, source extracts, maps, diagrams, figures, photographs or page layouts.",
+    "Do not present historical names as if each referred to exactly the same territory at every period; geographic scope and source context must remain explicit.",
+    "Do not turn the chapter into advocacy about contemporary party politics, constitutional amendment, territorial disputes or present-day geopolitical claims.",
+    "Do not require learners to disclose religion, caste, community identity, nationality preference, political opinion, family origin, ancestry, migration history, home address, photographs or recordings.",
+    "Do not use patriotic loyalty tests, rank identities as more authentic, or imply that a learner's belonging depends on ancestry, language, religion or political belief.",
+    "Do not claim SAN Academy-specific chapter order, pacing, textbook edition or assessed attainment without direct evidence."
+  ],
+  "rightsAndSchoolBoundary": {
+    "rightsReviewArtifact": "docs/class6-pilot/SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_V1.json",
+    "schoolValidationProfile": "SAN Academy Tambaram",
+    "schoolUse": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false,
+    "realChildDataCollected": false
+  },
+  "implementationGate": {
+    "topicCount": 4,
+    "lessonImplementationAllowedAfterMerge": true,
+    "assessmentImplementationAllowedAfterMerge": true,
+    "schoolNeedsValidationRequiredAfterTeachingSlice": true,
+    "runtimeChangeRequiredByThisReconciliation": false,
+    "completionClaim": false,
+    "nextTask": "After exact-head CI and merge, fresh concurrency check then implement one bounded independently authored Chapter 5 Kiki teaching slice across the four reconciled topics."
+  }
+}

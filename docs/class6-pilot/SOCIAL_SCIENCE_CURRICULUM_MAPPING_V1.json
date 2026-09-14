@@ -7,7 +7,7 @@
   "baselineTitle": "Exploring Society: India and Beyond",
   "mappingDate": "2026-09-14",
   "decision": "SOCIAL_SCIENCE_14_CHAPTER_MAPPING_BASELINE",
-  "scopeBoundary": "Fourteen-chapter curriculum mapping with independently authored Kiki teaching implementation and separate synthetic school-needs validation for Chapters 1-6. Chapter 7 remains mapped but not implemented. No NCERT textbook prose, exercises, live-school evidence or subject-completion claim is included.",
+  "scopeBoundary": "Fourteen-chapter curriculum mapping with independently authored Kiki teaching implementation and separate synthetic school-needs validation for Chapters 1-6. Chapter 7 source/topic boundaries are reconciled but teaching and school-needs validation remain unimplemented. No NCERT textbook prose, exercises, sacred-text quotations, live-school evidence or subject-completion claim is included.",
   "officialSource": {
     "provider": "NCERT",
     "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
@@ -30,7 +30,7 @@
     {"chapter":4,"title":"Timeline and Sources of History","theme":"Theme B — Tapestry of the Past","status":"KIKI_TEACHING_SLICE_COMPLETE","topicCount":4,"lessonDataset":"data/class6-social-science-pilot.js","assessmentDataset":"data/class6-social-science-assessments.js","assessmentCount":20,"sourceTopicReconciliationArtifact":"docs/class6-pilot/SOCIAL_SCIENCE_CH4_SOURCE_TOPIC_RECONCILIATION_V1.json","schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":true,"schoolNeedsValidationArtifact":"docs/class6-pilot/SOCIAL_SCIENCE_CH4_SCHOOL_NEEDS_VALIDATION_V1.json","implementationBoundary":"Independently authored investigation of the human past; chronology and historical time; source classification and corroboration; and cautious evidence-based reasoning about early communities and change. No copied textbook prose, exercises, source extracts, images or page layouts; no sensitive family, religion, caste, community, ancestry or precise migration disclosure requirement."},
     {"chapter":5,"title":"India, That Is Bharat","theme":"Theme B — Tapestry of the Past","status":"KIKI_TEACHING_SLICE_COMPLETE","topicCount":4,"lessonDataset":"data/class6-social-science-ch5.js","assessmentDataset":"data/class6-social-science-ch5-assessments.js","assessmentCount":20,"sourceTopicReconciliationArtifact":"docs/class6-pilot/SOCIAL_SCIENCE_CH5_SOURCE_TOPIC_RECONCILIATION_V1.json","schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":true,"schoolNeedsValidationArtifact":"docs/class6-pilot/SOCIAL_SCIENCE_CH5_SCHOOL_NEEDS_VALIDATION_V1.json","implementationBoundary":"Independently authored geographical/historical framing; source-aware interpretation of names used within the subcontinent; cross-cultural language transmission of names; and factual modern constitutional India/Bharat framing. No copied textbook prose, exercises, maps, figures or source extracts; no party-political advocacy, territorial advocacy, patriotic loyalty testing or sensitive identity disclosure requirement."},
     {"chapter":6,"title":"The Beginnings of Indian Civilisation","theme":"Theme B — Tapestry of the Past","status":"KIKI_TEACHING_SLICE_COMPLETE","topicCount":4,"lessonDataset":"data/class6-social-science-ch6.js","assessmentDataset":"data/class6-social-science-ch6-assessments.js","assessmentCount":20,"sourceTopicReconciliationArtifact":"docs/class6-pilot/SOCIAL_SCIENCE_CH6_SOURCE_TOPIC_RECONCILIATION_V1.json","schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":true,"schoolNeedsValidationArtifact":"docs/class6-pilot/SOCIAL_SCIENCE_CH6_SCHOOL_NEEDS_VALIDATION_V1.json","implementationBoundary":"Independently authored civilisation-as-evidence model; Harappan settlement and urban evidence; food, craft, water and exchange systems; and evidence-aware transformation or decline. No copied textbook prose, exercises, maps, site plans, figures, photographs or source extracts; no civilisational superiority, modern identity projection, speculative script decoding or single-cause decline claim."},
-    {"chapter":7,"title":"India’s Cultural Roots","theme":"Theme C — Our Cultural Heritage and Knowledge Traditions","status":"MAPPED_NOT_YET_IMPLEMENTED"},
+    {"chapter":7,"title":"India’s Cultural Roots","theme":"Theme C — Our Cultural Heritage and Knowledge Traditions","status":"MAPPED_NOT_YET_IMPLEMENTED","topicCount":4,"sourceTopicReconciliationArtifact":"docs/class6-pilot/SOCIAL_SCIENCE_CH7_SOURCE_TOPIC_RECONCILIATION_V1.json","schoolNeedsValidationRequired":true,"schoolNeedsValidationPresent":false,"implementationBoundary":"Source/topic boundary reconciled across Vedas and oral knowledge transmission; diverse early philosophical schools; Buddhism and Jainism; and folk, tribal and local traditions. No copied textbook prose, exercises or sacred-text quotations; no devotional or persuasive activity, belief ranking, modern communal advocacy or sensitive identity disclosure."},
     {"chapter":8,"title":"Unity in Diversity, or ‘Many in the One’","theme":"Theme C — Our Cultural Heritage and Knowledge Traditions","status":"MAPPED_NOT_YET_IMPLEMENTED"},
     {"chapter":9,"title":"Family and Community","theme":"Theme D — Governance and Democracy","status":"MAPPED_NOT_YET_IMPLEMENTED"},
     {"chapter":10,"title":"Grassroots Democracy — Part 1: Governance","theme":"Theme D — Governance and Democracy","status":"MAPPED_NOT_YET_IMPLEMENTED"},
@@ -44,7 +44,7 @@
     "implementedChapterCount": 6,
     "schoolNeedsValidatedChapterCount": 6,
     "completionClaim": false,
-    "nextBoundedTask": "After Chapter 6 school-needs validation passes exact-head CI and merges, perform a fresh concurrency check before beginning Chapter 7 source/topic reconciliation."
+    "nextBoundedTask": "After Chapter 7 source/topic reconciliation passes exact-head CI and merges, perform a fresh concurrency check before implementing one bounded independently authored Chapter 7 Kiki teaching slice."
   },
   "rightsAndSafetyBoundary": [
     "Use chapter titles and structural metadata for mapping only.",
@@ -57,6 +57,7 @@
     "Do not present uncertain historical or archaeological interpretations as established fact.",
     "Do not use Chapter 5 for contemporary party-political advocacy, territorial claims or patriotic loyalty testing.",
     "Do not use Chapter 6 to rank civilisations, project modern identities backward, assert speculative script readings, or present one uncertain decline hypothesis as settled fact.",
+    "Treat Chapter 7 religious, philosophical, folk and tribal traditions historically and descriptively: no devotional or persuasive practice, no ranking of beliefs or communities, no sensitive belief/caste/tribe/community disclosure, and no use of ancient traditions to justify modern communal or party-political claims.",
     "Do not claim whole-Class-6 or Social Science completion."
   ]
 }

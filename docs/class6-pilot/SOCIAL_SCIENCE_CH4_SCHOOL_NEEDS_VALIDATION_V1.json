@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-SOC-CH4-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Social Science · Exploring Society: India and Beyond · Chapter 4 · Timeline and Sources of History",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseHomeLocation": false,
+    "liveDeviceLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false,
+    "familyOralHistoryRequired": false,
+    "religionDisclosureRequired": false,
+    "casteDisclosureRequired": false,
+    "communityIdentityDisclosureRequired": false,
+    "ancestryDisclosureRequired": false,
+    "geneticsDisclosureRequired": false,
+    "migrationDisclosureRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "schoolTextbookEditionDirectlyVerified": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 4 topic, a Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action, and an observable mastery criterion.",
+  "scenarios": [
+    {
+      "id": "SN-SOC6-CH4-001",
+      "need": "Learner treats one surviving object or written clue as a complete and certain account of the past.",
+      "topicId": "TOPIC-SOC6-04-01",
+      "expectedMisconception": "single clue treated as complete proof rather than bounded evidence",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use fictional evidence cards to separate direct observations, cautious inferences and unanswered questions, without using personal family records or identity information.",
+      "masteryCriterion": "For two unfamiliar evidence sets, independently distinguishes observation from inference and states at least one uncertainty that remains."
+    },
+    {
+      "id": "SN-SOC6-CH4-002",
+      "need": "Learner repeats a historical claim without identifying what evidence supports it or what additional evidence would test it.",
+      "topicId": "TOPIC-SOC6-04-01",
+      "expectedMisconception": "historical claim accepted without evidence trail or uncertainty check",
+      "requiredAssessmentTypes": ["multiple_choice", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Match fictional claims to supporting clues, reject unsupported overclaims and identify one additional source that could strengthen or challenge each interpretation.",
+      "masteryCriterion": "Correctly classifies supported, unsupported and uncertain statements in two unfamiliar cases and proposes a relevant evidence check."
+    },
+    {
+      "id": "SN-SOC6-CH4-003",
+      "need": "Learner orders BCE dates by ordinary number size and therefore places a larger BCE year later instead of earlier.",
+      "topicId": "TOPIC-SOC6-04-02",
+      "expectedMisconception": "larger BCE number treated as later in time",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Order fictional BCE and CE date cards on a printed or cached timeline, then explain the BCE direction rule in simple language.",
+      "masteryCriterion": "Orders an unfamiliar mixed BCE/CE set correctly and explains why larger BCE numbers are farther back in time."
+    },
+    {
+      "id": "SN-SOC6-CH4-004",
+      "need": "Learner confuses decade, century and millennium scales or estimates long historical intervals inconsistently.",
+      "topicId": "TOPIC-SOC6-04-02",
+      "expectedMisconception": "historical time scales confused or applied inconsistently",
+      "requiredAssessmentTypes": ["short_answer", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Classify fictional time spans as decade-, century- or millennium-scale and compare intervals using only supplied dates.",
+      "masteryCriterion": "Correctly distinguishes 10-, 100- and 1,000-year scales and applies them to two unfamiliar timeline comparisons."
+    },
+    {
+      "id": "SN-SOC6-CH4-005",
+      "need": "Learner assumes a source is automatically reliable because it is old, written, official-looking or physical.",
+      "topicId": "TOPIC-SOC6-04-03",
+      "expectedMisconception": "source type or age treated as automatic proof of reliability",
+      "requiredAssessmentTypes": ["reasoning", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Compare fictional material, written and later descriptive sources by origin, purpose, limitation and what each can or cannot establish.",
+      "masteryCriterion": "Evaluates two unfamiliar sources using at least two relevant reliability questions instead of accepting either source automatically."
+    },
+    {
+      "id": "SN-SOC6-CH4-006",
+      "need": "Learner treats disagreement between historical sources as proof that both sources are useless rather than evidence to investigate.",
+      "topicId": "TOPIC-SOC6-04-03",
+      "expectedMisconception": "source disagreement treated as automatic invalidation instead of corroboration task",
+      "requiredAssessmentTypes": ["multiple_choice", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Compare three fictional accounts of the same event, identify agreement and disagreement, and state what additional evidence could corroborate competing claims.",
+      "masteryCriterion": "Explains how conflicting sources can still be useful and identifies a sensible corroboration step in two unfamiliar cases."
+    },
+    {
+      "id": "SN-SOC6-CH4-007",
+      "need": "Learner turns limited evidence about early communities into certain claims about exact beliefs, ancestry, identity or migration routes.",
+      "topicId": "TOPIC-SOC6-04-04",
+      "expectedMisconception": "limited evidence overextended into certain claims about identity, ancestry, belief or migration",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use fictional settlement evidence to write one supported inference, one reasonable alternative and one remaining uncertainty, without asking for religion, caste, ancestry, genetics or family migration information.",
+      "masteryCriterion": "Produces cautious evidence-proportional interpretations for two unfamiliar early-community cases and clearly labels uncertainty."
+    },
+    {
+      "id": "SN-SOC6-CH4-008",
+      "need": "Learner needs a low-bandwidth, offline and instruction-light path for chronology and source reasoning that does not depend on cloud AI, live search, microphone, camera or personal-data collection.",
+      "topicId": "TOPIC-SOC6-04-04",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["short_answer", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use cached text, fictional source cards and local timeline prompts; complete one Kiki step at a time without live search, uploads, recordings or disclosure of family or identity information.",
+      "masteryCriterion": "Completes one evidence-and-change reasoning task plus mastery check using local resources only, with no personal data or remote service dependency."
+    }
+  ]
+}

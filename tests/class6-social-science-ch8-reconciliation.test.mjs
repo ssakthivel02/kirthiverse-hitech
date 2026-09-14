@@ -42,7 +42,7 @@ assert.equal(rec.implementationGate.completionClaim,false);
 
 const allText=JSON.stringify(rec).toLowerCase();
 for(const required of ['diversity','food','textiles','clothing','festivals','epic','regional','folk'])assert.ok(allText.includes(required),`missing Chapter 8 boundary: ${required}`);
-for(const forbidden of ['learner religion disclosure required": true','learner language disclosure required": true','caste disclosure required": true','community disclosure required": true','devotional activity required','political loyalty required','real child data collected": true'])assert.ok(!allText.includes(forbidden),`forbidden Chapter 8 claim: ${forbidden}`);
+for(const forbidden of ['learner religion disclosure required\": true','learner language disclosure required\": true','caste disclosure required\": true','community disclosure required\": true','devotional activity required','political loyalty required','real child data collected\": true'])assert.ok(!allText.includes(forbidden),`forbidden Chapter 8 claim: ${forbidden}`);
 const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();
 assert.match(exclusions,/religion|language|caste|community|ancestry/);
 assert.match(exclusions,/devotional|persuasive|political/);
@@ -51,11 +51,16 @@ assert.match(exclusions,/textbook prose|exercise|photograph|figure|page layout/)
 
 const ch8=map.chapters.find(x=>x.chapter===8);
 assert.equal(ch8.title,'Unity in Diversity, or ‘Many in the One’');
-assert.equal(ch8.status,'SOURCE_TOPIC_RECONCILED_NOT_IMPLEMENTED');
+assert.equal(ch8.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch8.topicCount,4);
+assert.equal(ch8.lessonDataset,'data/class6-social-science-ch8.js');
+assert.equal(ch8.assessmentDataset,'data/class6-social-science-ch8-assessments.js');
+assert.equal(ch8.assessmentCount,20);
 assert.equal(ch8.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH8_SOURCE_TOPIC_RECONCILIATION_V1.json');
-assert.equal(map.implementationStatus.implementedChapterCount,7);
+assert.equal(ch8.schoolNeedsValidationRequired,true);
+assert.equal(ch8.schoolNeedsValidationPresent,false);
+assert.equal(map.implementationStatus.implementedChapterCount,8);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,7);
 assert.equal(map.implementationStatus.completionClaim,false);
 
-console.log('CLASS6_SOCIAL_SCIENCE_CH8_RECONCILIATION_PASS topics=4 implemented=7 schoolNeeds=validated');
+console.log('CLASS6_SOCIAL_SCIENCE_CH8_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=pending');

@@ -48,9 +48,10 @@ assert.equal(ch6.lessonDataset,'data/class6-social-science-ch6.js');
 assert.equal(ch6.assessmentDataset,'data/class6-social-science-ch6-assessments.js');
 assert.equal(ch6.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH6_SOURCE_TOPIC_RECONCILIATION_V1.json');
 assert.equal(ch6.schoolNeedsValidationRequired,true);
-assert.equal(ch6.schoolNeedsValidationPresent,false);
+assert.equal(ch6.schoolNeedsValidationPresent,true);
+assert.equal(ch6.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH6_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(map.implementationStatus.implementedChapterCount,6);
-assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,5);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,6);
 assert.equal(map.implementationStatus.completionClaim,false);
 
 const allText=JSON.stringify(rec).toLowerCase();
@@ -63,4 +64,4 @@ assert.match(exclusions,/undeciphered harappan script/);
 assert.match(exclusions,/one certain cause|multiple hypotheses|regional variation/);
 assert.match(exclusions,/ancestry|genetics|caste|religion|community identity/);
 
-console.log('CLASS6_SOCIAL_SCIENCE_CH6_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=pending');
+console.log('CLASS6_SOCIAL_SCIENCE_CH6_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=validated');

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-SOC-CH6-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Social Science · Exploring Society: India and Beyond · Chapter 6 · The Beginnings of Indian Civilisation",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, archaeological research claim, identity study, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseHomeLocation": false,
+    "liveDeviceLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false,
+    "religionDisclosureRequired": false,
+    "casteDisclosureRequired": false,
+    "communityIdentityDisclosureRequired": false,
+    "ancestryDisclosureRequired": false,
+    "familyOriginDisclosureRequired": false,
+    "migrationDisclosureRequired": false,
+    "nationalityDisclosureRequired": false,
+    "ethnicityDisclosureRequired": false,
+    "languageIdentityDisclosureRequired": false,
+    "politicalOpinionDisclosureRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "schoolTextbookEditionDirectlyVerified": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 6 topic, a Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action, evidence-proportional archaeological reasoning, and an observable mastery criterion without civilisational ranking, modern identity projection, speculative script decoding or single-cause decline claims.",
+  "scenarios": [
+    {
+      "id": "SN-SOC6-CH6-001",
+      "need": "Learner treats the word civilisation as a score for intelligence, worth or cultural superiority instead of an analytical model built from archaeological and historical evidence.",
+      "topicId": "TOPIC-SOC6-06-01",
+      "expectedMisconception": "civilisation category converted into a hierarchy of human worth",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Sort supplied fictional settlement clues into observed evidence, cautious inference and unsupported ranking, then explain why social complexity evidence does not measure the value or intelligence of a people.",
+      "masteryCriterion": "For an unfamiliar settlement, identifies at least three observations and two proportionate inferences while explicitly rejecting a superiority or inferiority conclusion unsupported by evidence."
+    },
+    {
+      "id": "SN-SOC6-CH6-002",
+      "need": "Learner converts one archaeological feature into a certain claim about rulers, religion, language or social organisation and does not distinguish observation from inference.",
+      "topicId": "TOPIC-SOC6-06-01",
+      "expectedMisconception": "single material clue overextended into certain institutional or identity claims",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use fictional archaeology cards to separate what is directly observed from what is reasonably inferred and what remains unknown, without asking for the learner's religion, caste, ancestry, ethnicity, language or family identity.",
+      "masteryCriterion": "Independently classifies unfamiliar evidence into observation, inference and uncertainty and states why at least one institutional or identity conclusion cannot be established."
+    },
+    {
+      "id": "SN-SOC6-CH6-003",
+      "need": "Learner assumes every Harappan settlement followed one identical city plan or that drains, wells and streets directly reveal a single known government system.",
+      "topicId": "TOPIC-SOC6-06-02",
+      "expectedMisconception": "site variation ignored and urban features treated as direct proof of one political structure",
+      "requiredAssessmentTypes": ["multiple_choice", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Compare two fictional settlement plans containing streets, wells, drains and buildings, recording observed similarities, differences and cautious interpretations using only supplied diagrams and descriptions.",
+      "masteryCriterion": "For two unfamiliar plans, identifies meaningful site variation and gives at least one justified urban inference while rejecting an unsupported exact-government conclusion."
+    },
+    {
+      "id": "SN-SOC6-CH6-004",
+      "need": "Learner projects modern national, religious, caste, linguistic or territorial identities backward onto Harappan archaeological populations.",
+      "topicId": "TOPIC-SOC6-06-02",
+      "expectedMisconception": "archaeological labels treated as proof of present-day identity or territorial ownership",
+      "requiredAssessmentTypes": ["reasoning", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Interpret supplied fictional site evidence using archaeological terms only and identify which modern identity or territorial claims would require evidence not provided; no personal identity declaration is requested.",
+      "masteryCriterion": "Explains an unfamiliar settlement using material evidence and explicitly rejects at least two unsupported present-day nationality, religion, caste, language or territorial projections."
+    },
+    {
+      "id": "SN-SOC6-CH6-005",
+      "need": "Learner sees one imported material, craft object or standardised weight and invents an exact trader, occupation, ownership system, price or trade route.",
+      "topicId": "TOPIC-SOC6-06-03",
+      "expectedMisconception": "economic reconstruction overclaims precise people, routes or institutions from limited material evidence",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Connect fictional raw materials, craft debris, weights, food remains and water structures to cautious economic inferences, then name evidence still needed before claiming a precise route, person, occupation or ownership system.",
+      "masteryCriterion": "Uses at least three independent clues in an unfamiliar assemblage to construct a proportionate economic explanation and identifies one plausible alternative or evidence gap."
+    },
+    {
+      "id": "SN-SOC6-CH6-006",
+      "need": "Learner relies on one artefact instead of corroborating food, craft, water and exchange evidence across multiple clues.",
+      "topicId": "TOPIC-SOC6-06-03",
+      "expectedMisconception": "single-object story substituted for corroborated archaeological economic reasoning",
+      "requiredAssessmentTypes": ["worked_challenge", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Build an evidence network from supplied fictional crops, animal remains, workshop debris, water structures and distant materials, marking which conclusions have multiple supporting clues and which remain tentative.",
+      "masteryCriterion": "For an unfamiliar evidence set, distinguishes a corroborated inference from a single-clue hypothesis and identifies additional evidence that would strengthen the weaker explanation."
+    },
+    {
+      "id": "SN-SOC6-CH6-007",
+      "need": "Learner repeats one universal cause for Harappan urban decline, treats communities as disappearing instantly, or uses the undeciphered script as a settled written account.",
+      "topicId": "TOPIC-SOC6-06-04",
+      "expectedMisconception": "multi-regional transformation reduced to one certain cause, total disappearance or speculative script narrative",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Compare fictional evidence for river change, settlement shifts, exchange disruption and environmental stress in an evidence-hypothesis matrix, while treating the Harappan script as undeciphered and preserving uncertainty.",
+      "masteryCriterion": "Evaluates at least two plausible contributors in an unfamiliar case, identifies supporting and conflicting evidence, and rejects a universal single-cause, instant-disappearance or speculative-script conclusion."
+    },
+    {
+      "id": "SN-SOC6-CH6-008",
+      "need": "Learner needs an offline, low-bandwidth and instruction-light path for Chapter 6 evidence reasoning without live search, cloud AI, uploads, location collection or sensitive identity disclosure.",
+      "topicId": "TOPIC-SOC6-06-04",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use cached Kiki explanations, supplied fictional evidence cards and local hypothesis prompts one step at a time; no live web search, microphone, camera, upload, device location or personal identity information is required.",
+      "masteryCriterion": "Completes one multi-causal transformation comparison and mastery check using local resources only while preserving evidence limits, archaeological uncertainty and zero personal-data disclosure."
+    }
+  ]
+}

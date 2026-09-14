@@ -32,8 +32,8 @@ assert.deepEqual(rec.reconciledTopicBoundary.map(x=>x.topicId),lessons.map(x=>x.
 const ch6=map.chapters.find(x=>x.chapter===6);
 assert.equal(map.schemaVersion,'1.14.0');assert.equal(ch6.status,'KIKI_TEACHING_SLICE_COMPLETE');assert.equal(ch6.topicCount,4);assert.equal(ch6.assessmentCount,20);
 assert.equal(ch6.lessonDataset,'data/class6-social-science-ch6.js');assert.equal(ch6.assessmentDataset,'data/class6-social-science-ch6-assessments.js');
-assert.equal(ch6.schoolNeedsValidationRequired,true);assert.equal(ch6.schoolNeedsValidationPresent,false);
-assert.equal(map.implementationStatus.implementedChapterCount,6);assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,5);assert.equal(map.implementationStatus.completionClaim,false);
+assert.equal(ch6.schoolNeedsValidationRequired,true);assert.equal(ch6.schoolNeedsValidationPresent,true);assert.equal(ch6.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH6_SCHOOL_NEEDS_VALIDATION_V1.json');
+assert.equal(map.implementationStatus.implementedChapterCount,6);assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,6);assert.equal(map.implementationStatus.completionClaim,false);
 assert.match(loader,/data\/class6-social-science-ch6\.js/);assert.match(loader,/data\/class6-social-science-ch6-assessments\.js/);assert.match(loader,/ch\(\?:1\|2\|3\|4\|5\|6\)/);assert.match(loader,/CBSE6-SOC-CH6-1/);
 assert.match(sw,/kirthiverse-preview-v45/);assert.match(sw,/data\/class6-social-science-ch6\.js/);assert.match(sw,/data\/class6-social-science-ch6-assessments\.js/);
 const text=JSON.stringify({lessons,assessments}).toLowerCase();
@@ -44,4 +44,4 @@ assert.match(lessons.find(x=>x.topicId==='TOPIC-SOC6-06-02').content,/settlement
 assert.match(lessons.find(x=>x.topicId==='TOPIC-SOC6-06-03').content,/craft|raw materials|exchange|water/i);
 assert.match(lessons.find(x=>x.topicId==='TOPIC-SOC6-06-04').content,/multiple|river|undeciphered|uncertainty/i);
 assert.ok(assessments.filter(x=>x.assessmentType==='mastery_check').every(x=>/evidence|uncertain|inference|clue|support|identity|cause/i.test(`${x.correctAnswer} ${x.explanation}`)));
-console.log(`CLASS6_SOCIAL_SCIENCE_CH6_PASS lessons=${lessons.length} assessments=${assessments.length} schoolNeeds=pending`);
+console.log(`CLASS6_SOCIAL_SCIENCE_CH6_PASS lessons=${lessons.length} assessments=${assessments.length} schoolNeeds=validated`);

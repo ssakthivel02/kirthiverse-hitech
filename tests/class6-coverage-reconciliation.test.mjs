@@ -14,7 +14,7 @@ const socialOverlay=readJson('docs/class6-pilot/SOCIAL_SCIENCE_PROVENANCE_RIGHTS
 const socialNeeds=[1,2,3,4,5,6,7].map(ch=>readJson(`docs/class6-pilot/SOCIAL_SCIENCE_CH${ch}_SCHOOL_NEEDS_VALIDATION_V1.json`));
 const socialRec=[2,3,4,5,6,7,8].map(ch=>readJson(`docs/class6-pilot/SOCIAL_SCIENCE_CH${ch}_SOURCE_TOPIC_RECONCILIATION_V1.json`));
 
-assert.equal(manifest.schemaVersion,'1.22.0');
+assert.equal(manifest.schemaVersion,'1.21.0');
 assert.equal(manifest.pilot.board,'CBSE');
 assert.equal(manifest.pilot.class,6);
 assert.equal(manifest.pilot.canonicalRepository,'ssakthivel02/kirthiverse-hitech');
@@ -41,11 +41,7 @@ assert.equal(social.curriculumMap,'docs/class6-pilot/SOCIAL_SCIENCE_CURRICULUM_M
 assert.equal(social.provenanceReconciliation,'docs/class6-pilot/SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_V1.json');
 assert.equal(social.officialChapterLinkCountVerified,12);assert.equal(social.mappedChapterCount,14);assert.equal(social.chapterTitlesVerified,true);
 assert.equal(social.implementedChapterCount,7);assert.equal(social.schoolNeedsValidatedChapterCount,7);assert.notEqual(social.completionClaim,true);
-for(const ch of [2,3,4,5,6,7]){
-  assert.equal(social[`chapter${ch}SchoolNeedsValidationRequired`],true);
-  assert.equal(social[`chapter${ch}SchoolNeedsValidationPresent`],true);
-  assert.equal(social[`chapter${ch}SchoolNeedsValidationArtifact`],`docs/class6-pilot/SOCIAL_SCIENCE_CH${ch}_SCHOOL_NEEDS_VALIDATION_V1.json`);
-}
+for(const ch of [2,3,4,5,6,7]){assert.equal(social[`chapter${ch}SchoolNeedsValidationRequired`],true);assert.equal(social[`chapter${ch}SchoolNeedsValidationPresent`],true);assert.equal(social[`chapter${ch}SchoolNeedsValidationArtifact`],`docs/class6-pilot/SOCIAL_SCIENCE_CH${ch}_SCHOOL_NEEDS_VALIDATION_V1.json`);}
 assert.equal(social.chapter6SourceTopicReconciliation,'docs/class6-pilot/SOCIAL_SCIENCE_CH6_SOURCE_TOPIC_RECONCILIATION_V1.json');
 assert.equal(social.chapter7SourceTopicReconciliation,'docs/class6-pilot/SOCIAL_SCIENCE_CH7_SOURCE_TOPIC_RECONCILIATION_V1.json');
 assert.equal(social.chapter7SchoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH7_SCHOOL_NEEDS_VALIDATION_V1.json');
@@ -53,7 +49,7 @@ assert.equal(social.chapter8SourceTopicReconciliation,'docs/class6-pilot/SOCIAL_
 assert.equal(social.chapter8SchoolNeedsValidationRequired,true);assert.equal(social.chapter8SchoolNeedsValidationPresent,false);
 
 assert.equal(socialSource.decision,'SOCIAL_SCIENCE_MAPPING_REQUIRES_14_CHAPTER_BASELINE');assert.equal(socialSource.officialSource.provider,'NCERT');assert.equal(socialSource.officialSource.publicationCode,'0681');assert.equal(socialSource.officialSource.currentWorkingChapterCount,14);assert.equal(socialSource.officialSource.chapterContentExtracted,false);assert.equal(socialSource.officialSource.chapterTitlesVerified,true);
-assert.equal(socialMap.schemaVersion,'1.16.0');assert.equal(socialMap.decision,'SOCIAL_SCIENCE_14_CHAPTER_MAPPING_BASELINE');assert.equal(socialMap.chapters.length,14);assert.deepEqual(socialMap.chapters.map(x=>x.chapter),[1,2,3,4,5,6,7,8,9,10,11,12,13,14]);
+assert.equal(socialMap.schemaVersion,'1.15.0');assert.equal(socialMap.decision,'SOCIAL_SCIENCE_14_CHAPTER_MAPPING_BASELINE');assert.equal(socialMap.chapters.length,14);assert.deepEqual(socialMap.chapters.map(x=>x.chapter),[1,2,3,4,5,6,7,8,9,10,11,12,13,14]);
 const implementedSocial=socialMap.chapters.slice(0,7);assert.ok(implementedSocial.every(x=>x.status==='KIKI_TEACHING_SLICE_COMPLETE'));
 assert.deepEqual(implementedSocial.map(x=>x.topicCount),[3,4,4,4,4,4,4]);assert.deepEqual(implementedSocial.map(x=>x.assessmentCount),[15,20,20,20,20,20,20]);
 assert.ok(implementedSocial.every(x=>x.schoolNeedsValidationRequired===true&&x.schoolNeedsValidationPresent===true));
@@ -63,19 +59,12 @@ const ch8=socialMap.chapters[7];assert.equal(ch8.title,'Unity in Diversity, or �
 assert.ok(socialMap.chapters.slice(8).every(x=>x.status==='MAPPED_NOT_YET_IMPLEMENTED'));
 assert.equal(socialMap.implementationStatus.implementedChapterCount,7);assert.equal(socialMap.implementationStatus.schoolNeedsValidatedChapterCount,7);assert.notEqual(socialMap.implementationStatus.completionClaim,true);
 
-for(const [i,artifact] of socialNeeds.entries()){
-  const ch=i+1;assert.equal(artifact.validationType,'SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS');assert.equal(artifact.scenarios.length,8,`Social Science Chapter ${ch} scenario count`);assert.equal(artifact.schoolOverlay.liveSchoolEvidenceCollected,false);assert.equal(artifact.schoolOverlay.schoolSpecificPacingClaimed,false);
-}
-assert.equal(socialNeeds[6].validationId,'KVS-CBSE6-SOC-CH7-SCHOOL-NEEDS-V1');
-assert.ok(socialNeeds[6].scenarios.every(x=>x.safeLearnerAction.length>80&&x.masteryCriterion.length>80));
-assert.equal(socialNeeds.flatMap(x=>x.scenarios).length,56);
+for(const [i,artifact] of socialNeeds.entries()){const ch=i+1;assert.equal(artifact.validationType,'SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS');assert.equal(artifact.scenarios.length,8,`Social Science Chapter ${ch} scenario count`);assert.equal(artifact.schoolOverlay.liveSchoolEvidenceCollected,false);assert.equal(artifact.schoolOverlay.schoolSpecificPacingClaimed,false);}
+assert.equal(socialNeeds[6].validationId,'KVS-CBSE6-SOC-CH7-SCHOOL-NEEDS-V1');assert.ok(socialNeeds[6].scenarios.every(x=>x.safeLearnerAction.length>80&&x.masteryCriterion.length>80));assert.equal(socialNeeds.flatMap(x=>x.scenarios).length,56);
 
-for(const [i,rec] of socialRec.entries()){
-  const ch=i+2;assert.equal(rec.decision,`CHAPTER_${ch}_SOURCE_TOPIC_BOUNDARY_RECONCILED`);assert.equal(rec.chapter,ch);assert.equal(rec.canonicalSource.provider,'NCERT');assert.equal(rec.reconciledTopicBoundary.length,4);assert.ok(rec.reconciledTopicBoundary.every(x=>x.independentAuthoringAllowed===true));assert.equal(rec.implementationGate.schoolNeedsValidationRequiredAfterTeachingSlice,true);assert.equal(rec.implementationGate.completionClaim,false);
-}
+for(const [i,rec] of socialRec.entries()){const ch=i+2;assert.equal(rec.decision,`CHAPTER_${ch}_SOURCE_TOPIC_BOUNDARY_RECONCILED`);assert.equal(rec.chapter,ch);assert.equal(rec.canonicalSource.provider,'NCERT');assert.equal(rec.reconciledTopicBoundary.length,4);assert.ok(rec.reconciledTopicBoundary.every(x=>x.independentAuthoringAllowed===true));assert.equal(rec.implementationGate.schoolNeedsValidationRequiredAfterTeachingSlice,true);assert.equal(rec.implementationGate.completionClaim,false);}
 const ch7Rec=socialRec[5];assert.equal(ch7Rec.canonicalSource.sacredTextQuotationsCopied,false);assert.equal(ch7Rec.rightsAndSchoolBoundary.learnerBeliefDisclosureRequired,false);assert.equal(ch7Rec.rightsAndSchoolBoundary.liveSchoolEvidenceCollected,false);assert.equal(ch7Rec.rightsAndSchoolBoundary.realChildDataCollected,false);assert.equal(ch7Rec.implementationGate.runtimeChangeRequiredByThisReconciliation,false);
-const ch7Text=JSON.stringify(ch7Rec).toLowerCase();for(const required of ['vedas','upanishad','charvaka','buddhism','jainism','folk','tribal'])assert.ok(ch7Text.includes(required),`missing Chapter 7 reconciliation boundary ${required}`);
-assert.ok(/devotional|persuasive/.test(ch7Text));assert.ok(/religion|caste|community|tribe/.test(ch7Text));
+const ch7Text=JSON.stringify(ch7Rec).toLowerCase();for(const required of ['vedas','upanishad','charvaka','buddhism','jainism','folk','tribal'])assert.ok(ch7Text.includes(required),`missing Chapter 7 reconciliation boundary ${required}`);assert.ok(/devotional|persuasive/.test(ch7Text));assert.ok(/religion|caste|community|tribe/.test(ch7Text));
 const ch8Rec=socialRec[6];assert.equal(ch8Rec.canonicalSource.chapterNumber,8);assert.equal(ch8Rec.currentStructureCorroboration.chapter8Title,'Unity in Diversity, or ‘Many in the One’');assert.equal(ch8Rec.reconciledTopicBoundary.length,4);assert.equal(ch8Rec.rightsAndSchoolBoundary.sensitiveIdentityDisclosureRequired,false);assert.equal(ch8Rec.rightsAndSchoolBoundary.liveSchoolEvidenceCollected,false);assert.equal(ch8Rec.rightsAndSchoolBoundary.realChildDataCollected,false);assert.equal(ch8Rec.implementationGate.runtimeChangeRequiredByThisReconciliation,false);const ch8Text=JSON.stringify(ch8Rec).toLowerCase();for(const required of ['diversity','food','textiles','festivals','epic','regional','folk'])assert.ok(ch8Text.includes(required),`missing Chapter 8 reconciliation boundary ${required}`);assert.ok(/uniform|devotional|political|religion|language|community/.test(ch8Text));
 
 assert.equal(socialOverlay.decision,'SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_RECONCILED');assert.equal(socialOverlay.schoolValidationOverlay.status,'VALIDATION_CONTEXT_ONLY');assert.equal(socialOverlay.schoolValidationOverlay.liveSchoolEvidenceCollected,false);assert.equal(socialOverlay.schoolValidationOverlay.realChildDataCollected,false);

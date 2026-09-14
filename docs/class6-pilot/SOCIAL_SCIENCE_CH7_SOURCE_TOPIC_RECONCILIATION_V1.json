@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "1.0.0",
+  "reconciliationId": "KVS-CBSE6-SOC-CH7-SOURCE-TOPIC-V1",
+  "subject": "Social Science",
+  "class": 6,
+  "board": "CBSE",
+  "curriculumSession": "2026-27",
+  "book": "Exploring Society: India and Beyond",
+  "chapter": 7,
+  "chapterTitle": "India’s Cultural Roots",
+  "decision": "CHAPTER_7_SOURCE_TOPIC_BOUNDARY_RECONCILED",
+  "claimBoundary": "This artifact reconciles Chapter 7 source identity and independently authorable concept boundaries only. It does not reproduce textbook prose, exercise questions, sacred-text quotations, photographs, figures, page layouts or source extracts; it does not implement lessons or assessments; it treats religious and philosophical traditions descriptively rather than devotionally or persuasively; it does not rank traditions or ask learners to disclose personal belief, religion, caste, community or ancestry; and it does not make live-school, efficacy, attainment, accessibility-certification or school-specific pacing claims.",
+  "canonicalSource": {
+    "provider": "NCERT",
+    "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
+    "epathshalaChapterIndex": "https://epathshala.nic.in/topicc.php?id=0681CH07",
+    "publicationCode": "0681",
+    "chapterNumber": 7,
+    "chapterTitleVerified": "India’s Cultural Roots",
+    "chapterTextCopied": false,
+    "exerciseQuestionsCopied": false,
+    "sacredTextQuotationsCopied": false,
+    "illustrationsCopied": false
+  },
+  "currentStructureCorroboration": {
+    "session": "2026-27",
+    "chapterCount": 14,
+    "chapter7Title": "India’s Cultural Roots",
+    "observedCurrentEvidence": [
+      "The current ePathshala QR-content index identifies book 0681, Class 6 Social Science, Chapter 7 as India’s Cultural Roots.",
+      "Current 2026-27 NCERT-aligned chapter references consistently place the chapter around the Vedas and oral knowledge transmission, major early philosophical or spiritual schools, Buddhism and Jainism, and folk or tribal traditions."
+    ],
+    "use": "Corroboration only. NCERT remains the canonical publisher/source authority."
+  },
+  "reconciledTopicBoundary": [
+    {
+      "topicId": "TOPIC-SOC6-07-01",
+      "title": "Vedas, Oral Knowledge and Early Cultural Memory",
+      "scope": "Introduce the Vedas as historically important early textual traditions and examine oral composition, memorisation and transmission as knowledge-preservation practices. Teach source context, chronology and cultural significance without reproducing hymns, requiring recitation, presenting faith claims as historical proof or treating familiarity with a tradition as a test of identity.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-07-02",
+      "title": "Questions, Ideas and Diverse Schools of Thought",
+      "scope": "Explore age-appropriate philosophical inquiry about self, knowledge, conduct and the world through descriptive treatment of strands associated with the Upanishads or Vedanta, Yoga and materialist or Charvaka thought. Focus on comparison of questions and ideas rather than religious instruction, metaphysical certainty, practice requirements or claims that one school represents all Indian thought.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-07-03",
+      "title": "Buddhism and Jainism in Historical Context",
+      "scope": "Introduce Buddhism and Jainism as distinct traditions that developed in the first millennium BCE, using independently authored historical descriptions of their founders, communities and selected ethical or philosophical principles at Class 6 level. Avoid devotional practice, conversion or persuasion, theological truth claims, sectarian comparison, oversimplifying the traditions as identical, or assigning a learner any belief identity.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-07-04",
+      "title": "Folk, Tribal and Local Traditions in a Plural Cultural Landscape",
+      "scope": "Explore how folk, tribal and local traditions contribute to a diverse cultural landscape through stories, practices, knowledge, arts and relationships with place, while emphasising variation within and between communities. Avoid treating communities as static, primitive, exotic or uniform; do not infer a learner’s community identity; and frame cultural interaction as historically changing rather than as proof of one fixed or superior cultural essence.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    }
+  ],
+  "excludedOrDeferredBoundary": [
+    "Do not copy NCERT exercise wording, sacred-text quotations, source extracts, photographs, figures, diagrams or page layouts.",
+    "Do not require prayer, chanting, meditation, ritual, worship, devotional performance, conversion-oriented activity or declaration of belief.",
+    "Do not ask learners to disclose religion, caste, sect, tribe, community, ancestry, family practices, home language, political opinion, photographs, recordings or home address.",
+    "Do not rank religions, philosophies, folk traditions, tribal traditions or communities as true, false, superior, inferior, authentic or less developed.",
+    "Do not present metaphysical or theological claims as empirically established historical facts; distinguish source description, belief claim, philosophical argument and historical evidence.",
+    "Do not present Vedic, Upanishadic, Buddhist, Jain, Charvaka, folk or tribal traditions as internally uniform or as the sole essence of Indian culture.",
+    "Do not use ancient traditions to justify modern religious, caste, communal, territorial or party-political claims.",
+    "Do not claim SAN Academy-specific chapter order, pacing, textbook edition or assessed attainment without direct evidence."
+  ],
+  "rightsAndSchoolBoundary": {
+    "rightsReviewArtifact": "docs/class6-pilot/SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_V1.json",
+    "schoolValidationProfile": "SAN Academy Tambaram",
+    "schoolUse": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false,
+    "realChildDataCollected": false,
+    "learnerBeliefDisclosureRequired": false
+  },
+  "implementationGate": {
+    "topicCount": 4,
+    "lessonImplementationAllowedAfterMerge": true,
+    "assessmentImplementationAllowedAfterMerge": true,
+    "schoolNeedsValidationRequiredAfterTeachingSlice": true,
+    "runtimeChangeRequiredByThisReconciliation": false,
+    "completionClaim": false,
+    "nextTask": "After exact-head CI and merge, perform a fresh concurrency check before implementing one bounded independently authored Chapter 7 Kiki teaching slice across the four reconciled topics."
+  }
+}

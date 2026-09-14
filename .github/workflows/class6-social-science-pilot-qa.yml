@@ -49,6 +49,8 @@ jobs:
         run: node tests/class6-social-science-ch4.test.mjs
       - name: Validate Social Science Chapter 4 school-needs evidence
         run: node tests/class6-social-science-ch4-school-needs.test.mjs
+      - name: Validate Social Science Chapter 5 source and topic boundary
+        run: node tests/class6-social-science-ch5-reconciliation.test.mjs
       - name: Validate Class 6 coverage transition
         run: node tests/class6-coverage-reconciliation.test.mjs
       - name: QA summary
@@ -60,7 +62,8 @@ jobs:
           echo '- Chapter 3: 4 Kiki lessons, 20 deterministic assessments, 8 synthetic school-needs scenarios' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapter 4: 4 Kiki lessons, 20 deterministic assessments, 8 synthetic school-needs scenarios' >> "$GITHUB_STEP_SUMMARY"
           echo '- Chapters 1, 2, 3 and 4 are implemented and separately school-needs validated' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Chapter 5: four-topic source/topic boundary reconciled; no lessons or assessments implemented in this task' >> "$GITHUB_STEP_SUMMARY"
           echo '- NCERT remains canonical source authority; textbook prose, exercises, source extracts, maps and figures are not copied' >> "$GITHUB_STEP_SUMMARY"
           echo '- no new Social Science loader or startup request was introduced' >> "$GITHUB_STEP_SUMMARY"
           echo '- Social Science and whole Class 6 remain incomplete' >> "$GITHUB_STEP_SUMMARY"
-          echo '- next bounded task requires fresh concurrency check before Chapter 5 source/topic reconciliation' >> "$GITHUB_STEP_SUMMARY"
+          echo '- next bounded task requires fresh concurrency check before Chapter 5 Kiki teaching implementation' >> "$GITHUB_STEP_SUMMARY"

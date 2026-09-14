@@ -48,9 +48,10 @@ assert.equal(ch4.lessonDataset,'data/class6-social-science-pilot.js');
 assert.equal(ch4.assessmentDataset,'data/class6-social-science-assessments.js');
 assert.equal(ch4.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH4_SOURCE_TOPIC_RECONCILIATION_V1.json');
 assert.equal(ch4.schoolNeedsValidationRequired,true);
-assert.equal(ch4.schoolNeedsValidationPresent,false);
+assert.equal(ch4.schoolNeedsValidationPresent,true);
+assert.equal(ch4.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH4_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(map.implementationStatus.implementedChapterCount,4);
-assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,3);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,4);
 assert.equal(map.implementationStatus.completionClaim,false);
 
 const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();
@@ -62,4 +63,4 @@ assert.equal(rec.canonicalSource.exerciseQuestionsCopied,false);
 assert.equal(rec.canonicalSource.illustrationsCopied,false);
 assert.equal(rec.rightsAndSchoolBoundary.realChildDataCollected,false);
 
-console.log('CLASS6_SOCIAL_SCIENCE_CH4_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=pending');
+console.log('CLASS6_SOCIAL_SCIENCE_CH4_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=validated');

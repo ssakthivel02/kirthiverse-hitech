@@ -34,7 +34,7 @@ assert.deepEqual(ch3Assessments.map(x=>x.stableAssessmentId),Array.from({length:
 assert.equal(rec.decision,'CHAPTER_3_SOURCE_TOPIC_BOUNDARY_RECONCILED');
 assert.deepEqual(rec.reconciledTopicBoundary.map(x=>x.topicId),ch3Lessons.map(x=>x.topicId));
 const ch3=map.chapters.find(x=>x.chapter===3);
-assert.equal(map.schemaVersion,'1.10.0');
+assert.equal(map.schemaVersion,'1.11.0');
 assert.equal(ch3.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch3.topicCount,4);
 assert.equal(ch3.assessmentCount,20);
@@ -44,7 +44,7 @@ assert.equal(ch3.schoolNeedsValidationRequired,true);
 assert.equal(ch3.schoolNeedsValidationPresent,true);
 assert.equal(ch3.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH3_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(map.implementationStatus.implementedChapterCount,4);
-assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,3);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,4);
 assert.equal(map.implementationStatus.completionClaim,false);
 const text=JSON.stringify({lessons:ch3Lessons,assessments:ch3Assessments}).toLowerCase();
 for(const forbidden of ['share your home address','upload your precise location','share your precise coordinates','live gps','plate tectonics cycle','advanced geomorphology'])assert.ok(!text.includes(forbidden),`forbidden Chapter 3 boundary found: ${forbidden}`);

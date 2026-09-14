@@ -34,16 +34,17 @@ assert.deepEqual(ch4Assessments.map(x=>x.stableAssessmentId),Array.from({length:
 assert.equal(rec.decision,'CHAPTER_4_SOURCE_TOPIC_BOUNDARY_RECONCILED');
 assert.deepEqual(rec.reconciledTopicBoundary.map(x=>x.topicId),ch4Lessons.map(x=>x.topicId));
 const ch4=map.chapters.find(x=>x.chapter===4);
-assert.equal(map.schemaVersion,'1.10.0');
+assert.equal(map.schemaVersion,'1.11.0');
 assert.equal(ch4.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch4.topicCount,4);
 assert.equal(ch4.assessmentCount,20);
 assert.equal(ch4.lessonDataset,'data/class6-social-science-pilot.js');
 assert.equal(ch4.assessmentDataset,'data/class6-social-science-assessments.js');
 assert.equal(ch4.schoolNeedsValidationRequired,true);
-assert.equal(ch4.schoolNeedsValidationPresent,false);
+assert.equal(ch4.schoolNeedsValidationPresent,true);
+assert.equal(ch4.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH4_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(map.implementationStatus.implementedChapterCount,4);
-assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,3);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,4);
 assert.equal(map.implementationStatus.completionClaim,false);
 
 const text=JSON.stringify({lessons:ch4Lessons,assessments:ch4Assessments}).toLowerCase();

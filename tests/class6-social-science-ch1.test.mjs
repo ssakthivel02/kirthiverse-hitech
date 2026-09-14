@@ -41,11 +41,11 @@ assert.deepEqual(assessments.map(x=>x.stableAssessmentId),Array.from({length:15}
 assert.ok(assessments.every(a=>lessons.some(l=>l.id===a.lessonId)));
 
 const ch1=map.chapters.find(x=>x.chapter===1);
-assert.equal(map.schemaVersion,'1.6.0');
+assert.equal(map.schemaVersion,'1.7.0');
 assert.equal(ch1.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch1.topicCount,3);assert.equal(ch1.assessmentCount,15);
 assert.equal(ch1.schoolNeedsValidationRequired,true);assert.equal(ch1.schoolNeedsValidationPresent,true);
-assert.equal(map.implementationStatus.implementedChapterCount,2);
+assert.equal(map.implementationStatus.implementedChapterCount,3);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,2);
 assert.equal(map.implementationStatus.completionClaim,false);
 assert.equal(overlay.decision,'SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_RECONCILED');

@@ -48,6 +48,15 @@ assert.equal(ch3.schoolNeedsValidationPresent,false);
 assert.equal(map.implementationStatus.implementedChapterCount,2);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,2);
 assert.equal(map.implementationStatus.completionClaim,false);
-const text=JSON.stringify(rec).toLowerCase();
-for(const forbidden of ['copy ncERT exercise wording'.toLowerCase(),'live gps','precise coordinates','home address'])assert.ok(!text.includes(forbidden),`forbidden Chapter 3 reconciliation content: ${forbidden}`);
+
+// Safety/rights exclusions are expected to be named inside this governance artifact.
+// Validate the prohibitions themselves instead of treating their text as a violation.
+const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();
+assert.match(exclusions,/do not copy.*exercise/);
+assert.match(exclusions,/real location|live gps|precise coordinates|home address/);
+assert.equal(rec.canonicalSource.chapterTextCopied,false);
+assert.equal(rec.canonicalSource.exerciseQuestionsCopied,false);
+assert.equal(rec.canonicalSource.illustrationsCopied,false);
+assert.equal(rec.rightsAndSchoolBoundary.realChildDataCollected,false);
+
 console.log('CLASS6_SOCIAL_SCIENCE_CH3_RECONCILIATION_PASS topics=4');

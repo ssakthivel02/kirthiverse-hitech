@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-SOC-CH3-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Social Science · Exploring Society: India and Beyond · Chapter 3 · Landforms and Life",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseHomeLocation": false,
+    "liveDeviceLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "schoolTextbookEditionDirectlyVerified": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 3 topic, a Kiki misconception/remediation path, at least one linked required assessment type, a privacy-safe learner action, and an observable mastery criterion.",
+  "scenarios": [
+    {
+      "id": "SN-SOC6-CH3-001",
+      "need": "Learner classifies major landforms from a single visible cue, for example calling every high area a mountain or every broad area a plain.",
+      "topicId": "TOPIC-SOC6-03-01",
+      "expectedMisconception": "major landforms classified from one cue instead of multiple observable features",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Compare fictional profile cards using relative height, slope and broad-surface clues, then justify whether each example is best described as a mountain, plateau, plain or needs more evidence.",
+      "masteryCriterion": "Independently classifies two unfamiliar major landforms using at least two relevant features and states when the evidence is insufficient for a confident label."
+    },
+    {
+      "id": "SN-SOC6-CH3-002",
+      "need": "Learner assumes every landscape must fit one rigid landform category and cannot reason about a mixed landscape containing more than one feature.",
+      "topicId": "TOPIC-SOC6-03-01",
+      "expectedMisconception": "mixed landscape forced into one absolute category",
+      "requiredAssessmentTypes": ["multiple_choice", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Sort fictional mixed-landscape descriptions into dominant landform, mixed features or needs-more-evidence groups, explaining which clues support each choice without using personal location information.",
+      "masteryCriterion": "Correctly handles two unfamiliar mixed landscape cases without forcing a single absolute category when the description contains meaningful features of more than one landform."
+    },
+    {
+      "id": "SN-SOC6-CH3-003",
+      "need": "Learner makes deterministic claims that people living in mountains must have the same occupation, transport, housing or culture.",
+      "topicId": "TOPIC-SOC6-03-02",
+      "expectedMisconception": "mountain setting treated as a rule that determines human choices",
+      "requiredAssessmentTypes": ["reasoning", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Compare two fictional mountain communities with different access, services and livelihood choices, then identify constraints and possibilities while explicitly separating geographic influence from human decisions.",
+      "masteryCriterion": "Explains in two new mountain examples that landform can influence opportunities and constraints but does not determine occupation, culture or community choices."
+    },
+    {
+      "id": "SN-SOC6-CH3-004",
+      "need": "Learner assumes all mountain routes and settlements face identical access, weather or risk conditions simply because both are in mountainous terrain.",
+      "topicId": "TOPIC-SOC6-03-02",
+      "expectedMisconception": "all mountain places treated as having identical conditions",
+      "requiredAssessmentTypes": ["multiple_choice", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Compare fictional valley, pass and slope scenarios with different season, route and service information, then make conditional statements about access without requesting live GPS or a learner's real location.",
+      "masteryCriterion": "Uses evidence from two unfamiliar mountain scenarios to make conditional access comparisons and avoids stereotypes or universal claims about all mountain communities."
+    },
+    {
+      "id": "SN-SOC6-CH3-005",
+      "need": "Learner assumes every plateau contains the same minerals, soil, water availability or livelihood opportunities.",
+      "topicId": "TOPIC-SOC6-03-03",
+      "expectedMisconception": "all plateaus treated as having identical resources and livelihoods",
+      "requiredAssessmentTypes": ["reasoning", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Compare fictional plateau evidence cards with different soil, water, mineral and transport information, and write only the resource or livelihood claims that the supplied evidence supports.",
+      "masteryCriterion": "Distinguishes two unfamiliar plateau cases using the given evidence and avoids claiming that every plateau has the same resources, minerals or livelihoods."
+    },
+    {
+      "id": "SN-SOC6-CH3-006",
+      "need": "Learner assumes that finding a useful resource on a plateau automatically means it should be extracted or used without considering trade-offs.",
+      "topicId": "TOPIC-SOC6-03-03",
+      "expectedMisconception": "resource presence treated as automatic permission or benefit without trade-off reasoning",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use a fictional plateau decision matrix to compare possible resource benefits with water, land, community and environmental trade-offs, then state what additional evidence would be needed before a decision.",
+      "masteryCriterion": "Produces a balanced evidence-aware response for two unfamiliar resource scenarios and explains why resource presence alone does not determine the best community decision."
+    },
+    {
+      "id": "SN-SOC6-CH3-007",
+      "need": "Learner states that all plains are fertile and safe, or that living close to a river is always beneficial without considering flood and drainage risk.",
+      "topicId": "TOPIC-SOC6-03-04",
+      "expectedMisconception": "plain and river advantages turned into universal fertility or safety claims",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Compare fictional plain and floodplain descriptions using soil, drainage, river and flood-history clues, then identify both opportunities and risks and propose a simple flood-aware adaptation.",
+      "masteryCriterion": "Explains two unfamiliar plains or river cases conditionally, identifying both possible benefits and flood or drainage risks without claiming that all plains are fertile or safe."
+    },
+    {
+      "id": "SN-SOC6-CH3-008",
+      "need": "Learner needs a low-bandwidth, offline and instruction-light path for landform reasoning that does not depend on live maps, GPS, microphone, camera, cloud AI or personal-data collection.",
+      "topicId": "TOPIC-SOC6-03-04",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["short_answer", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use cached text, locally drawn fictional landform profiles and local assessment prompts; complete one Kiki step at a time without network-dependent tutoring, live GPS or disclosure of a home address.",
+      "masteryCriterion": "Completes one plains-and-rivers adaptation task and its mastery check using local resources only, with no personal data, live location or remote service dependency."
+    }
+  ]
+}

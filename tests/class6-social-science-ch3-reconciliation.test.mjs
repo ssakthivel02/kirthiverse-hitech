@@ -44,9 +44,10 @@ assert.equal(ch3.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch3.topicCount,4);
 assert.equal(ch3.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH3_SOURCE_TOPIC_RECONCILIATION_V1.json');
 assert.equal(ch3.schoolNeedsValidationRequired,true);
-assert.equal(ch3.schoolNeedsValidationPresent,false);
+assert.equal(ch3.schoolNeedsValidationPresent,true);
+assert.equal(ch3.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH3_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(map.implementationStatus.implementedChapterCount,3);
-assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,2);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,3);
 assert.equal(map.implementationStatus.completionClaim,false);
 
 const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();

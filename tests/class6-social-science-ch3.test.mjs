@@ -34,7 +34,7 @@ assert.deepEqual(ch3Assessments.map(x=>x.stableAssessmentId),Array.from({length:
 assert.equal(rec.decision,'CHAPTER_3_SOURCE_TOPIC_BOUNDARY_RECONCILED');
 assert.deepEqual(rec.reconciledTopicBoundary.map(x=>x.topicId),ch3Lessons.map(x=>x.topicId));
 const ch3=map.chapters.find(x=>x.chapter===3);
-assert.equal(map.schemaVersion,'1.8.0');
+assert.equal(map.schemaVersion,'1.9.0');
 assert.equal(ch3.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch3.topicCount,4);
 assert.equal(ch3.assessmentCount,20);

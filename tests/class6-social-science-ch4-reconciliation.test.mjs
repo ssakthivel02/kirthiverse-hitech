@@ -1,0 +1,62 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+
+const rec=JSON.parse(fs.readFileSync('docs/class6-pilot/SOCIAL_SCIENCE_CH4_SOURCE_TOPIC_RECONCILIATION_V1.json','utf8'));
+const map=JSON.parse(fs.readFileSync('docs/class6-pilot/SOCIAL_SCIENCE_CURRICULUM_MAPPING_V1.json','utf8'));
+
+assert.equal(rec.schemaVersion,'1.0.0');
+assert.equal(rec.reconciliationId,'KVS-CBSE6-SOC-CH4-SOURCE-TOPIC-V1');
+assert.equal(rec.subject,'Social Science');
+assert.equal(rec.class,6);
+assert.equal(rec.board,'CBSE');
+assert.equal(rec.curriculumSession,'2026-27');
+assert.equal(rec.book,'Exploring Society: India and Beyond');
+assert.equal(rec.chapter,4);
+assert.equal(rec.chapterTitle,'Timeline and Sources of History');
+assert.equal(rec.decision,'CHAPTER_4_SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(rec.canonicalSource.provider,'NCERT');
+assert.equal(rec.canonicalSource.publicationCode,'0681');
+assert.equal(rec.canonicalSource.chapterNumber,4);
+assert.equal(rec.canonicalSource.chapterTitleVerified,'Timeline and Sources of History');
+assert.equal(rec.canonicalSource.chapterTextCopied,false);
+assert.equal(rec.canonicalSource.exerciseQuestionsCopied,false);
+assert.equal(rec.canonicalSource.illustrationsCopied,false);
+assert.equal(rec.currentStructureCorroboration.session,'2026-27');
+assert.equal(rec.currentStructureCorroboration.chapterCount,14);
+assert.equal(rec.currentStructureCorroboration.chapter4Title,'Timeline and Sources of History');
+assert.equal(rec.reconciledTopicBoundary.length,4);
+assert.deepEqual(rec.reconciledTopicBoundary.map(x=>x.topicId),['TOPIC-SOC6-04-01','TOPIC-SOC6-04-02','TOPIC-SOC6-04-03','TOPIC-SOC6-04-04']);
+assert.ok(rec.reconciledTopicBoundary.every(x=>x.independentAuthoringAllowed===true));
+assert.ok(rec.reconciledTopicBoundary.every(x=>x.implementationStatus==='BOUNDARY_RECONCILED_NOT_IMPLEMENTED'));
+assert.equal(rec.rightsAndSchoolBoundary.schoolUse,'validation-context overlay only');
+assert.equal(rec.rightsAndSchoolBoundary.schoolSpecificPacingClaimed,false);
+assert.equal(rec.rightsAndSchoolBoundary.liveSchoolEvidenceCollected,false);
+assert.equal(rec.rightsAndSchoolBoundary.realChildDataCollected,false);
+assert.equal(rec.implementationGate.topicCount,4);
+assert.equal(rec.implementationGate.lessonImplementationAllowedAfterMerge,true);
+assert.equal(rec.implementationGate.assessmentImplementationAllowedAfterMerge,true);
+assert.equal(rec.implementationGate.schoolNeedsValidationRequiredAfterTeachingSlice,true);
+assert.equal(rec.implementationGate.runtimeChangeRequiredByThisReconciliation,false);
+assert.equal(rec.implementationGate.completionClaim,false);
+
+const ch4=map.chapters.find(x=>x.chapter===4);
+assert.equal(ch4.title,'Timeline and Sources of History');
+assert.equal(ch4.status,'SOURCE_TOPIC_BOUNDARY_RECONCILED');
+assert.equal(ch4.topicCount,4);
+assert.equal(ch4.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH4_SOURCE_TOPIC_RECONCILIATION_V1.json');
+assert.equal(ch4.schoolNeedsValidationRequired,true);
+assert.equal(ch4.schoolNeedsValidationPresent,false);
+assert.equal(map.implementationStatus.implementedChapterCount,3);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,3);
+assert.equal(map.implementationStatus.completionClaim,false);
+
+const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();
+assert.match(exclusions,/do not copy.*exercise/);
+assert.match(exclusions,/family oral histories|religion|caste|community identity|home address|photographs|recordings/);
+assert.match(exclusions,/uncertain historical interpretations|established fact/);
+assert.equal(rec.canonicalSource.chapterTextCopied,false);
+assert.equal(rec.canonicalSource.exerciseQuestionsCopied,false);
+assert.equal(rec.canonicalSource.illustrationsCopied,false);
+assert.equal(rec.rightsAndSchoolBoundary.realChildDataCollected,false);
+
+console.log('CLASS6_SOCIAL_SCIENCE_CH4_RECONCILIATION_PASS topics=4');

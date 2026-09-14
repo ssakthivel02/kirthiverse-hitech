@@ -1,5 +1,5 @@
 {
-  "schemaVersion":"1.20.0",
+  "schemaVersion":"1.19.0",
   "pilot":{"board":"CBSE","class":6,"schoolValidationProfile":"SAN Academy Tambaram","canonicalRepository":"ssakthivel02/kirthiverse-hitech","status":"CURRICULUM_IMPLEMENTATION_IN_PROGRESS","completionLabel":"COMPLETE_CBSE_CLASS6","lastReconciledMain":"f23e39625a74be84e6c82f99897b6ae56ef8704d"},
   "completionRule":"No subject or whole-class completion claim is allowed until every applicable chapter has approved provenance, Kiki-teachable instruction, examples, guided practice, assessment, remediation, mastery evidence, separate school-needs validation where required, accessibility review, and rights/source review.",
   "subjects":[

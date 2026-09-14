@@ -314,5 +314,185 @@ window.KV_ASSESSMENTS.push(
   "correctAnswer":"Answers vary; each must form a coherent cause-effect chain and include both prevention and shared action without unsupported advanced science.",
   "hint":"Use the chain: role → pressure → consequence → prevention → collective response.",
   "explanation":"Mastery links ocean importance to evidence-based protection choices."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0036",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.major-landforms.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which description best fits a plateau? A) A broad elevated surface that may be level or rolling. B) Any low flat field. C) A steep peak only. D) Any land beside a river.",
+  "correctAnswer":"A) A broad elevated surface that may be level or rolling.",
+  "hint":"Combine elevation with overall surface shape.",
+  "explanation":"A plateau is elevated and broad; it is not defined by one tiny flat summit."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0037",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.major-landforms.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why is it weak reasoning to classify a landform from one clue such as 'it looks flat'?",
+  "correctAnswer":"Different landforms can contain flat-looking areas. Classification is stronger when elevation, relief, slope and the overall shape are considered together.",
+  "hint":"Ask what other physical evidence could confirm the classification.",
+  "explanation":"Multiple independent clues reduce misclassification."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0038",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.major-landforms.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Classify three fictional terrain profiles: one high and steep, one high and broadly level, and one wide with low relief. Give two clues for each decision.",
+  "correctAnswer":"Mountain, plateau and plain respectively, with justification based on elevation, slope, relief and surface form.",
+  "hint":"Do not rely on a single visual clue.",
+  "explanation":"The challenge requires comparison across the defining physical patterns."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0039",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.major-landforms.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"What does 'dominant landform pattern' mean?",
+  "correctAnswer":"It means the overall terrain is mainly characterised by one landform type even though smaller hills, valleys, rivers or other features may occur within it.",
+  "hint":"Real landscapes are not perfectly uniform.",
+  "explanation":"Landform labels summarise broad terrain rather than every local feature."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0040",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.major-landforms.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"For four unfamiliar terrain cards, classify the dominant landform and justify each answer with at least two physical clues, including one cautious answer for a transitional landscape.",
+  "correctAnswer":"Answers vary; each classification must cite multiple relevant terrain clues and avoid overclaiming in the ambiguous case.",
+  "hint":"Use evidence words such as elevation, relief, slope and broad surface shape.",
+  "explanation":"Mastery requires transferable classification and evidence discipline."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0041",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.mountains-life.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which statement is most accurate? A) Everyone in mountains must have the same occupation. B) Mountain terrain can create access challenges and opportunities, but communities respond in different ways. C) Roads are impossible in mountains. D) Mountains provide only disadvantages.",
+  "correctAnswer":"B) Mountain terrain can create access challenges and opportunities, but communities respond in different ways.",
+  "hint":"Separate geographic influence from human determinism.",
+  "explanation":"Terrain shapes conditions; it does not dictate one lifestyle or livelihood."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0042",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.mountains-life.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why might two mountain settlements choose different transport solutions even when both have steep slopes?",
+  "correctAnswer":"Technology, cost, valley shape, weather, available roads, public services and local priorities can differ, so the same broad landform does not force the same solution.",
+  "hint":"List factors beyond the word 'mountain'.",
+  "explanation":"Human adaptation depends on several interacting conditions."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0043",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.mountains-life.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"A fictional mountain settlement needs safer access to a clinic. Compare a steep direct road, a longer gentler route and a bridge-based route using safety, cost and terrain evidence.",
+  "correctAnswer":"Answers vary; a strong response compares trade-offs and chooses conditionally rather than claiming one solution is always best.",
+  "hint":"Terrain is one factor; include safety, cost and practicality.",
+  "explanation":"Geographic problem-solving evaluates alternatives rather than assuming a predetermined response."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0044",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.mountains-life.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"Give one possible mountain opportunity and one possible mountain challenge without claiming either applies everywhere.",
+  "correctAnswer":"Examples include water sources, tourism, grazing or specialised crops as opportunities, and steep access, limited buildable land or transport difficulty as challenges; wording should remain conditional.",
+  "hint":"Use 'can' or 'may', not 'always'.",
+  "explanation":"Conditional language prevents geographic stereotypes."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0045",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.mountains-life.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Analyse two unfamiliar mountain-community scenarios. For each, identify one terrain constraint, one opportunity and two plausible adaptations without making livelihood or cultural stereotypes.",
+  "correctAnswer":"Answers vary; each must connect terrain evidence to multiple possible human responses and preserve community choice.",
+  "hint":"Use the chain: terrain evidence → constraint/opportunity → alternative responses.",
+  "explanation":"Mastery combines geographic reasoning with non-deterministic human geography."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0046",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.plateaus-life.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which claim should be rejected? A) Some plateaus contain mineral resources. B) All plateaus are mineral-rich. C) Plateau use depends on local water, soil and connections. D) Plateaus can contain rivers and valleys.",
+  "correctAnswer":"B) All plateaus are mineral-rich.",
+  "hint":"Look for an unsupported universal claim.",
+  "explanation":"Landform type alone does not guarantee mineral resources."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0047",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.plateaus-life.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Two plateaus are equally high, but one has reliable rainfall and roads while the other has seasonal water and weak transport. Why might their land use differ?",
+  "correctAnswer":"Water reliability, soil, transport, markets and other local conditions influence farming, settlement and economic choices in addition to elevation.",
+  "hint":"Same landform does not mean same local conditions.",
+  "explanation":"Plateau geography must be interpreted with multiple factors."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0048",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.plateaus-life.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"Compare three fictional plateau profiles with different rainfall, soils, mineral evidence and transport. Recommend one possible land use for each and state what extra evidence you would still need.",
+  "correctAnswer":"Answers vary; recommendations must be conditional, use supplied evidence and identify missing information before making a firm decision.",
+  "hint":"A good recommendation includes uncertainty and evidence needs.",
+  "explanation":"The task checks multi-factor geographic evaluation rather than stereotypes."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0049",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.plateaus-life.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"Why is 'plateau' only the beginning of a land-use explanation?",
+  "correctAnswer":"Because water, soil, climate, resources, infrastructure and human choices vary widely among plateaus and can change what activities are practical.",
+  "hint":"Name factors that landform category does not tell you.",
+  "explanation":"Landform classification does not determine complete human geography."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0050",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.plateaus-life.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"For two unfamiliar plateau scenarios, explain the physical setting and evaluate at least three local factors before proposing a conditional farming, settlement or resource-use choice.",
+  "correctAnswer":"Answers vary; each must separate plateau characteristics from additional local evidence and avoid universal resource or livelihood claims.",
+  "hint":"Use 'could' and 'depends on' where evidence is incomplete.",
+  "explanation":"Mastery requires careful conditional reasoning."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0051",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.plains-rivers-adaptation.v1",
+  "assessmentType":"multiple_choice",
+  "questionActivity":"Which statement is most accurate about river plains? A) They are always safe from hazards. B) They are always fertile. C) They can offer farming and settlement advantages while also facing flood risk. D) Rivers only create problems.",
+  "correctAnswer":"C) They can offer farming and settlement advantages while also facing flood risk.",
+  "hint":"Look for both opportunity and risk.",
+  "explanation":"River plains can support human activity but require hazard-aware planning."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0052",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.plains-rivers-adaptation.v1",
+  "assessmentType":"reasoning",
+  "questionActivity":"Why might flat terrain attract settlement without guaranteeing that a site is safe or suitable?",
+  "correctAnswer":"Flat land can simplify building and transport, but flooding, drainage, soil, water quality, climate and services still affect suitability.",
+  "hint":"Separate ease of building from overall site risk.",
+  "explanation":"Settlement decisions depend on more than slope."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0053",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.plains-rivers-adaptation.v1",
+  "assessmentType":"worked_challenge",
+  "questionActivity":"On a fictional floodplain map, choose locations for a school, clinic and farms using flood-prone zones, safer ground, roads and drainage clues. Explain the trade-offs.",
+  "correctAnswer":"Answers vary; essential services should favour safer accessible ground, farms may use suitable lower-risk areas, and the explanation must account for flood and drainage evidence.",
+  "hint":"Protect critical services first and preserve natural drainage.",
+  "explanation":"The task integrates terrain opportunity with hazard-aware planning."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0054",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.plains-rivers-adaptation.v1",
+  "assessmentType":"short_answer",
+  "questionActivity":"Name two adaptations that can reduce flood risk on a settled plain.",
+  "correctAnswer":"Examples include flood warnings, drainage maintenance, flood-aware building, keeping high-risk zones clear and carefully designed protective works where appropriate.",
+  "hint":"Think about planning, warning and water movement.",
+  "explanation":"Risk reduction can combine infrastructure, information and land-use planning."
+},
+{
+  "stableAssessmentId":"KV-CBSE6-SOC-0055",
+  "lessonId":"social-science.cbse6.exploring-society.ch3.plains-rivers-adaptation.v1",
+  "assessmentType":"mastery_check",
+  "questionActivity":"Evaluate two unfamiliar plain-and-river scenarios. For each, identify two opportunities, two risks and a justified adaptation plan without assuming every plain is fertile or densely populated.",
+  "correctAnswer":"Answers vary; each must balance opportunities and hazards, use the supplied evidence and avoid universal claims about plains or rivers.",
+  "hint":"Use the structure: opportunity → risk → adaptation → evidence.",
+  "explanation":"Mastery requires balanced geographic evaluation."
 }
 );

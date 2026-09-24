@@ -51,12 +51,12 @@ assert.equal(ch6.schoolNeedsValidationRequired,true);
 assert.equal(ch6.schoolNeedsValidationPresent,true);
 assert.equal(ch6.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH6_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(map.implementationStatus.implementedChapterCount,8);
-assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,7);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,8);
 assert.equal(map.implementationStatus.completionClaim,false);
 
 const allText=JSON.stringify(rec).toLowerCase();
 for(const required of ['civilisation','archaeolog','harappan','settlement','drainage','water','craft','exchange','environmental','uncertainty']) assert.ok(allText.includes(required),`missing Chapter 6 boundary: ${required}`);
-for(const forbidden of ['civilisational superiority','script translated": true','single certain cause','modern national legitimacy required','ancestry disclosure required": true']) assert.ok(!allText.includes(forbidden),`forbidden Chapter 6 claim: ${forbidden}`);
+for(const forbidden of ['civilisational superiority','script translated\": true','single certain cause','modern national legitimacy required','ancestry disclosure required\": true']) assert.ok(!allText.includes(forbidden),`forbidden Chapter 6 claim: ${forbidden}`);
 const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();
 assert.match(exclusions,/do not copy.*exercise/);
 assert.match(exclusions,/human worth|cultural superiority|modern national legitimacy/);

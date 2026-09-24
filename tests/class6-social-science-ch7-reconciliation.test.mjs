@@ -63,7 +63,7 @@ assert.equal(ch7.schoolNeedsValidationRequired,true);
 assert.equal(ch7.schoolNeedsValidationPresent,true);
 assert.equal(ch7.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH7_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(map.implementationStatus.implementedChapterCount,8);
-assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,7);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,8);
 assert.equal(map.implementationStatus.completionClaim,false);
 
 console.log('CLASS6_SOCIAL_SCIENCE_CH7_RECONCILIATION_PASS topics=4 teaching=implemented schoolNeeds=validated beliefDisclosure=false');

@@ -35,9 +35,10 @@ assert.equal(ch8.lessonDataset,'data/class6-social-science-ch8.js');
 assert.equal(ch8.assessmentDataset,'data/class6-social-science-ch8-assessments.js');
 assert.equal(ch8.assessmentCount,20);
 assert.equal(ch8.schoolNeedsValidationRequired,true);
-assert.equal(ch8.schoolNeedsValidationPresent,false);
+assert.equal(ch8.schoolNeedsValidationPresent,true);
+assert.equal(ch8.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH8_SCHOOL_NEEDS_VALIDATION_V1.json');
 assert.equal(map.implementationStatus.implementedChapterCount,8);
-assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,7);
+assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,8);
 assert.equal(map.implementationStatus.completionClaim,false);
 
 const text=JSON.stringify({lessons,assessments}).toLowerCase();
@@ -48,4 +49,4 @@ const food=lessons.find(x=>x.topicId==='TOPIC-SOC6-08-02');assert.match(food.con
 const festivals=lessons.find(x=>x.topicId==='TOPIC-SOC6-08-03');assert.match(festivals.content,/festival|season|region|relig/i);assert.match(festivals.content,/does not require|without asking|rather than asking/i);
 const stories=lessons.find(x=>x.topicId==='TOPIC-SOC6-08-04');assert.match(stories.content,/ramayana|mahabharata|panchatantra|adapt/i);assert.match(stories.content,/not evidence of corruption|not.*inferior|not.*authentic/i);
 assert.ok(assessments.filter(x=>x.assessmentType==='mastery_check').every(x=>/evidence|limit|variation|ranking|uniform|adapt|continuity|change/i.test(`${x.correctAnswer} ${x.explanation}`)));
-console.log(`CLASS6_SOCIAL_SCIENCE_CH8_PASS lessons=${lessons.length} assessments=${assessments.length} schoolNeeds=pending`);
+console.log(`CLASS6_SOCIAL_SCIENCE_CH8_PASS lessons=${lessons.length} assessments=${assessments.length} schoolNeeds=validated`);

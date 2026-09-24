@@ -43,7 +43,7 @@ assert.equal(rec.implementationGate.completionClaim,false);
 
 const allText=JSON.stringify(rec).toLowerCase();
 for(const required of ['vedas','oral','upanishad','vedanta','yoga','charvaka','buddhism','jainism','folk','tribal'])assert.ok(allText.includes(required),`missing Chapter 7 boundary: ${required}`);
-for(const forbidden of ['learner belief disclosure required": true','real child data collected": true','religion disclosure required": true','caste disclosure required": true','conversion-oriented activity required','devotional performance required'])assert.ok(!allText.includes(forbidden),`forbidden Chapter 7 claim: ${forbidden}`);
+for(const forbidden of ['learner belief disclosure required\": true','real child data collected\": true','religion disclosure required\": true','caste disclosure required\": true','conversion-oriented activity required','devotional performance required'])assert.ok(!allText.includes(forbidden),`forbidden Chapter 7 claim: ${forbidden}`);
 const exclusions=(rec.excludedOrDeferredBoundary||[]).join(' ').toLowerCase();
 assert.match(exclusions,/prayer|chanting|meditation|ritual|worship|devotional|conversion/);
 assert.match(exclusions,/religion|caste|sect|tribe|community|ancestry/);
@@ -62,7 +62,7 @@ assert.equal(ch7.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCI
 assert.equal(ch7.schoolNeedsValidationRequired,true);
 assert.equal(ch7.schoolNeedsValidationPresent,true);
 assert.equal(ch7.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH7_SCHOOL_NEEDS_VALIDATION_V1.json');
-assert.equal(map.implementationStatus.implementedChapterCount,7);
+assert.equal(map.implementationStatus.implementedChapterCount,8);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,7);
 assert.equal(map.implementationStatus.completionClaim,false);
 

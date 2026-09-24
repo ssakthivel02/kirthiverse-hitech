@@ -43,7 +43,7 @@ assert.equal(ch3.assessmentDataset,'data/class6-social-science-assessments.js');
 assert.equal(ch3.schoolNeedsValidationRequired,true);
 assert.equal(ch3.schoolNeedsValidationPresent,true);
 assert.equal(ch3.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH3_SCHOOL_NEEDS_VALIDATION_V1.json');
-assert.equal(map.implementationStatus.implementedChapterCount,7);
+assert.equal(map.implementationStatus.implementedChapterCount,8);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,7);
 assert.equal(map.implementationStatus.completionClaim,false);
 const text=JSON.stringify({lessons:ch3Lessons,assessments:ch3Assessments}).toLowerCase();

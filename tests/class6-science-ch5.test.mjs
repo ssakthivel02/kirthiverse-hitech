@@ -65,7 +65,7 @@ for(const unsafeDirective of ['stand in the road','chase a moving vehicle','lean
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 for(const asset of ['data/class6-science-ch5.js','data/class6-science-ch5-assessments.js']) assert.ok(entry.includes(asset),`loader missing ${asset}`);
 assert.match(entry,/datasetKey:'class6SciencePilot'/);
-assert.match(entry,/CBSE6-SCI-CH7-1/);
+assert.match(entry,/CBSE6-SCI-CH12-1/);
 const sw=fs.readFileSync('sw-v30.js','utf8');
 assert.match(sw,/kirthiverse-preview-v40/);
 for(const asset of ['/data/class6-science-ch5.js','/data/class6-science-ch5-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);

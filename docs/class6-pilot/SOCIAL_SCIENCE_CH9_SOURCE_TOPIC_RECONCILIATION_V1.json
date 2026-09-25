@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "1.0.0",
+  "reconciliationId": "KVS-CBSE6-SOC-CH9-SOURCE-TOPIC-V1",
+  "subject": "Social Science",
+  "class": 6,
+  "board": "CBSE",
+  "curriculumSession": "2026-27",
+  "book": "Exploring Society: India and Beyond",
+  "chapter": 9,
+  "chapterTitle": "Family and Community",
+  "decision": "CHAPTER_9_SOURCE_TOPIC_BOUNDARY_RECONCILED",
+  "claimBoundary": "This artifact reconciles Chapter 9 source identity and independently authorable concept boundaries only. It does not reproduce textbook prose, exercise questions, quotations, photographs, figures, page layouts or source extracts; it does not implement lessons or assessments; it does not prescribe one family form or community identity as normal or superior; it does not require learners to disclose sensitive family, caste, religion, tribe, community, economic, care, household or political information; and it does not make live-school, efficacy, attainment, accessibility-certification or school-specific pacing claims.",
+  "canonicalSource": {
+    "provider": "NCERT",
+    "textbookPortal": "https://ncert.nic.in/textbook.php?fees1=8-12",
+    "epathshalaChapterIndex": "https://epathshala.nic.in/topicc.php?id=0681CH09",
+    "publicationCode": "0681",
+    "chapterNumber": 9,
+    "chapterTitleVerified": "Family and Community",
+    "chapterTextCopied": false,
+    "exerciseQuestionsCopied": false,
+    "quotationsCopied": false,
+    "photographsCopied": false,
+    "illustrationsCopied": false
+  },
+  "currentStructureCorroboration": {
+    "session": "2026-27",
+    "workingChapterCount": 14,
+    "chapter9Title": "Family and Community",
+    "use": "Chapter identity and structural corroboration only. NCERT remains the canonical publisher/source authority; the repository's preserved 12-versus-14 chapter-count discrepancy remains unchanged and is not resolved by this chapter-level artifact."
+  },
+  "reconciledTopicBoundary": [
+    {
+      "topicId": "TOPIC-SOC6-09-01",
+      "title": "Families Can Take Different Forms",
+      "scope": "Introduce family as a social setting for relationships, care, belonging and everyday cooperation while recognising that households and family arrangements vary. Use fictional or supplied examples rather than requiring learners to describe their own household. Avoid treating one family structure, gender arrangement, generation pattern, marital status, caregiving arrangement or economic condition as the universal norm.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-09-02",
+      "title": "Roles, Responsibilities, Care and Mutual Support",
+      "scope": "Explore how people may share care, household work, earning, decision-making and other responsibilities, and how cooperation can change with circumstances. Teach fairness and shared responsibility without assigning tasks by gender, age, caste, class or another identity, and without asking learners to reveal private finances, conflict, illness, disability, adoption, bereavement or caregiving circumstances.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-09-03",
+      "title": "From Households to Communities",
+      "scope": "Explain community as networks of people, places, groups and institutions connected through interaction, shared spaces, cooperation and differing interests. Use neutral fictional examples of neighbourhood or locality connections; do not equate community with a single caste, religion, tribe, language or political identity and do not require learners to identify their own sensitive affiliations.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    },
+    {
+      "topicId": "TOPIC-SOC6-09-04",
+      "title": "Cooperation, Rules, Participation and Respectful Difference",
+      "scope": "Study how communities coordinate shared needs through cooperation, informal or formal rules, participation and institutions while recognising disagreement and unequal experiences. Use age-appropriate fictional scenarios to practise evidence-based, respectful problem solving; do not demand conformity, political loyalty, religious participation or disclosure of disputes, legal status, property, income or identity information.",
+      "independentAuthoringAllowed": true,
+      "implementationStatus": "BOUNDARY_RECONCILED_NOT_IMPLEMENTED"
+    }
+  ],
+  "excludedOrDeferredBoundary": [
+    "Do not copy NCERT textbook prose, exercise wording, quotations, source extracts, photographs, figures, diagrams or page layouts.",
+    "Do not require learners to disclose names or details of parents, guardians, siblings, adoption or foster status, marital separation, bereavement, disability, illness, household conflict, income, debt, employment, property, address or legal status.",
+    "Do not require caste, religion, sect, tribe, community, ethnicity, home language, migration history, political opinion or voting-related disclosure.",
+    "Do not define one family structure, gender role, earning pattern, caregiving model or household composition as normal, superior, traditional or more authentic than others.",
+    "Do not stereotype occupations, responsibilities, behaviour or authority by gender, caste, class, religion, region or community.",
+    "Do not present community cooperation as requiring sameness or erase disagreement, exclusion, unequal access or changing social arrangements.",
+    "Do not turn community participation into patriotic, religious or party-political loyalty testing.",
+    "Do not diagnose or investigate a learner's real family relationships, safety, finances or social circumstances through classroom assessment.",
+    "Do not claim SAN Academy-specific chapter order, pacing, textbook edition or assessed attainment without direct evidence."
+  ],
+  "rightsAndSchoolBoundary": {
+    "rightsReviewArtifact": "docs/class6-pilot/SOCIAL_SCIENCE_PROVENANCE_RIGHTS_SCHOOL_OVERLAY_V1.json",
+    "schoolValidationProfile": "SAN Academy Tambaram",
+    "schoolUse": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "liveSchoolEvidenceCollected": false,
+    "realChildDataCollected": false,
+    "sensitiveFamilyDisclosureRequired": false,
+    "sensitiveIdentityDisclosureRequired": false,
+    "politicalLoyaltyTestingRequired": false
+  },
+  "implementationGate": {
+    "topicCount": 4,
+    "lessonImplementationAllowedAfterMerge": true,
+    "assessmentImplementationAllowedAfterMerge": true,
+    "schoolNeedsValidationRequiredAfterTeachingSlice": true,
+    "runtimeChangeRequiredByThisReconciliation": false,
+    "completionClaim": false,
+    "nextTask": "After exact-head CI and merge, perform a fresh concurrency check before implementing one bounded independently authored Chapter 9 Kiki teaching slice across the four reconciled topics."
+  }
+}

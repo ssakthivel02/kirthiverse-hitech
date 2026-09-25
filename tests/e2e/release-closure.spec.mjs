@@ -35,7 +35,7 @@ const CLASS6_SOCIAL_SCIENCE_LESSON_IDS = [
   'social-science.cbse6.exploring-society.ch6.civilisation-model.v1','social-science.cbse6.exploring-society.ch6.harappan-urban-evidence.v1','social-science.cbse6.exploring-society.ch6.food-craft-water-exchange.v1','social-science.cbse6.exploring-society.ch6.change-decline-evidence.v1',
   'social-science.cbse6.exploring-society.ch7.vedas-oral-knowledge.v1','social-science.cbse6.exploring-society.ch7.schools-of-thought.v1','social-science.cbse6.exploring-society.ch7.buddhism-jainism.v1','social-science.cbse6.exploring-society.ch7.folk-tribal-plurality.v1',
   'social-science.cbse6.exploring-society.ch8.diversity-unity.v1','social-science.cbse6.exploring-society.ch8.food-textiles.v1','social-science.cbse6.exploring-society.ch8.festivals.v1','social-science.cbse6.exploring-society.ch8.stories-adaptations.v1',
-  'social-science.cbse6.exploring-society.ch9.family-forms.v1','social-science.cbse6.exploring-society.ch9.roles-care.v1','social-science.cbse6.exploring-society.ch9.communities.v1','social-science.cbse6.exploring-society.ch9.cooperation-rules.v1',
+  'social-science.cbse6.exploring-society.ch9.family-forms.v1','social-science.cbse6.exploring-society.ch9.roles-care.v1','social-science.cbse6.exploring-society.ch9.households-community.v1','social-science.cbse6.exploring-society.ch9.cooperation-rules.v1',
 ];
 const CLASS6_MATH_ASSESSMENT_IDS = Array.from({length:150},(_,i)=>`KV-CBSE6-MATH-${String(i+1).padStart(4,'0')}`);
 const CLASS6_SCIENCE_ASSESSMENT_IDS = Array.from({length:180},(_,i)=>`KV-CBSE6-SCI-${String(i+1).padStart(4,'0')}`);

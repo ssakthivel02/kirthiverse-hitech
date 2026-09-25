@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.0.0",
+  "validationId": "KVS-CBSE6-SOC-CH8-SCHOOL-NEEDS-V1",
+  "scope": "CBSE Class 6 Social Science · Exploring Society: India and Beyond · Chapter 8 · Unity in Diversity, or ‘Many in the One’",
+  "validationType": "SYNTHETIC_SCHOOL_LEARNING_NEEDS_READINESS",
+  "claimBoundary": "This is deterministic readiness validation using synthetic learner scenarios. It is not a live student study, school pilot, efficacy trial, attainment claim, accessibility certification, identity survey, cultural-authenticity assessment, religious instruction, patriotic loyalty test, political-opinion assessment, ethnographic fieldwork, or school-specific pacing validation.",
+  "privacyBoundary": {
+    "realChildData": false,
+    "names": false,
+    "emails": false,
+    "photos": false,
+    "microphone": false,
+    "camera": false,
+    "recording": false,
+    "preciseHomeLocation": false,
+    "liveDeviceLocation": false,
+    "remoteTeacherMonitoring": false,
+    "childFacingCloudAI": false,
+    "telemetryRequired": false,
+    "religionDisclosureRequired": false,
+    "beliefDisclosureRequired": false,
+    "casteDisclosureRequired": false,
+    "tribeDisclosureRequired": false,
+    "communityIdentityDisclosureRequired": false,
+    "homeLanguageDisclosureRequired": false,
+    "ancestryDisclosureRequired": false,
+    "migrationHistoryDisclosureRequired": false,
+    "familyFestivalDisclosureRequired": false,
+    "homeDietDisclosureRequired": false,
+    "familyDressDisclosureRequired": false,
+    "privateCommunityKnowledgeDisclosureRequired": false,
+    "politicalOpinionDisclosureRequired": false
+  },
+  "schoolOverlay": {
+    "school": "SAN Academy Tambaram",
+    "use": "validation-context overlay only",
+    "schoolSpecificPacingClaimed": false,
+    "schoolTextbookEditionDirectlyVerified": false,
+    "liveSchoolEvidenceCollected": false
+  },
+  "passRule": "Every scenario must map to an implemented Chapter 8 topic, a Kiki misconception/remediation/mastery path, at least one linked required assessment type, a privacy-safe learner action and an observable mastery criterion while preserving cultural plurality, evidence limits, belief neutrality, non-devotional instruction, non-ranking of communities or cultural forms, anti-stereotype safeguards and zero sensitive identity disclosure.",
+  "scenarios": [
+    {
+      "id": "SN-SOC6-CH8-001",
+      "need": "Learner turns shared cultural features into a claim that all people in India must share one language, religion, custom, identity or political feeling.",
+      "topicId": "TOPIC-SOC6-08-01",
+      "expectedMisconception": "shared connection converted into forced cultural uniformity",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Analyse supplied fictional region cards and sort claims into evidence-backed difference, evidence-backed connection, unsupported sameness claim or needs-more-evidence without asking about the learner’s religion, caste, home language, ancestry, migration history or family practices.",
+      "masteryCriterion": "For an unfamiliar cultural dataset, identifies at least two differences, two connections, one evidence limit and one false uniformity claim while keeping conclusions within the supplied evidence."
+    },
+    {
+      "id": "SN-SOC6-CH8-002",
+      "need": "Learner treats visible cultural difference as proof of conflict, lesser belonging or disloyalty instead of distinguishing plurality from political or social judgement.",
+      "topicId": "TOPIC-SOC6-08-01",
+      "expectedMisconception": "difference converted into division, inferiority or loyalty judgement",
+      "requiredAssessmentTypes": ["reasoning", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Rewrite supplied fictional statements so difference is described neutrally and cultural evidence is not turned into a patriotic or political loyalty test; no personal national-feeling or political-opinion disclosure is requested.",
+      "masteryCriterion": "Correctly distinguishes cultural difference, shared connection and unsupported loyalty judgement in at least three unfamiliar examples and explains why social-science analysis does not require a prescribed political or patriotic response."
+    },
+    {
+      "id": "SN-SOC6-CH8-003",
+      "need": "Learner treats one food or textile form as the national standard, pure version or more authentic expression because a material or ingredient is widely shared.",
+      "topicId": "TOPIC-SOC6-08-02",
+      "expectedMisconception": "shared material converted into cultural ranking or one standard form",
+      "requiredAssessmentTypes": ["multiple_choice", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Compare supplied fictional food and textile profiles by material, process, regional variation and possible exchange, then rewrite ranking claims without asking about home diet, caste-linked practices, religious food rules or family dress customs.",
+      "masteryCriterion": "For an unfamiliar comparison, identifies one shared material, two distinct forms, one plausible exchange mechanism, one evidence limit and one unsupported authenticity or development ranking that must be rejected."
+    },
+    {
+      "id": "SN-SOC6-CH8-004",
+      "need": "Learner infers a household’s religion, caste, community or social worth from food, clothing or textile examples.",
+      "topicId": "TOPIC-SOC6-08-02",
+      "expectedMisconception": "cultural examples used to infer sensitive identity or human hierarchy",
+      "requiredAssessmentTypes": ["reasoning", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Review invented comparison prompts and remove any request to identify or infer religion, caste, community, home diet or family dress from a cultural example, replacing it with neutral questions about material, process, exchange and variation.",
+      "masteryCriterion": "Repairs at least three identity-inference prompts, explains why the inference exceeds the evidence, and produces privacy-safe alternatives that still assess material, process and regional variation."
+    },
+    {
+      "id": "SN-SOC6-CH8-005",
+      "need": "Learner assumes celebrations with similar timing or seasonal themes must be the same festival with the same religious or community meaning.",
+      "topicId": "TOPIC-SOC6-08-03",
+      "expectedMisconception": "shared timing converted into identical meaning or universal participation",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "mastery_check"],
+      "safeLearnerAction": "Compare supplied fictional festival profiles by timing, public purpose, local form and source context while avoiding any question about the learner’s household worship, religion, family festival practice or attendance.",
+      "masteryCriterion": "For three unfamiliar festival profiles, identifies one shared pattern, at least two meaningful differences, one unsupported universal-participation claim and one evidence limit without requiring personal belief disclosure."
+    },
+    {
+      "id": "SN-SOC6-CH8-006",
+      "need": "Learner interprets social-science study of festivals as requiring prayer, worship, devotional participation or endorsement of one religious interpretation.",
+      "topicId": "TOPIC-SOC6-08-03",
+      "expectedMisconception": "descriptive cultural study confused with devotional participation",
+      "requiredAssessmentTypes": ["worked_challenge", "short_answer", "mastery_check"],
+      "safeLearnerAction": "Sort invented classroom prompts into neutral description, evidence-based comparison, unsupported universal claim or devotional participation request, then rewrite unsafe prompts as descriptive social-science questions.",
+      "masteryCriterion": "Rejects at least two devotional or belief-testing requirements, rewrites them as neutral evidence-based questions, and explains how cultural study can remain rigorous without requiring religious participation."
+    },
+    {
+      "id": "SN-SOC6-CH8-007",
+      "need": "Learner treats one epic, story or community retelling as the only authentic version and assumes regional, linguistic, folk or theatrical adaptations are corrupt or inferior.",
+      "topicId": "TOPIC-SOC6-08-04",
+      "expectedMisconception": "story transmission converted into unique-authenticity ranking",
+      "requiredAssessmentTypes": ["multiple_choice", "reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Trace supplied fictional retellings across oral telling, theatre and translation, marking continuity, change, medium and source limits without asking which sacred or community version the learner or family believes is correct.",
+      "masteryCriterion": "For an unfamiliar adaptation chain, identifies continuity, change, medium and one evidence limit, and rejects at least one claim that a regional, folk or translated version is inherently inferior or uniquely inauthentic."
+    },
+    {
+      "id": "SN-SOC6-CH8-008",
+      "need": "Learner needs an offline, low-bandwidth and instruction-light route through Chapter 8 without live search, cloud AI, uploads, microphone, camera, location collection, devotional participation, family-culture disclosure or sensitive identity inference.",
+      "topicId": "TOPIC-SOC6-08-04",
+      "expectedMisconception": "none-required-access-need",
+      "requiredAssessmentTypes": ["reasoning", "worked_challenge", "mastery_check"],
+      "safeLearnerAction": "Use cached Kiki explanations, supplied fictional region, festival, food, textile and story cards, and local comparison prompts one step at a time; no live web search, upload, microphone, camera, device location, personal belief statement or family-cultural disclosure is required.",
+      "masteryCriterion": "Completes one plural cultural-comparison and adaptation task plus mastery check using local resources only while preserving evidence limits, cultural plurality, belief neutrality, anti-ranking safeguards and zero personal-data disclosure."
+    }
+  ]
+}

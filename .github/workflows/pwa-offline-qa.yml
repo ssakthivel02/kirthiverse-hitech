@@ -175,7 +175,7 @@ jobs:
           node <<'NODE'
           const {execFileSync}=await import('node:child_process');
           const base=process.env.LOCAL_URL,cacheName=process.env.EXPECTED_CACHE;
-          const lesson='social-science.cbse6.exploring-society.ch9.family-community.v1';
+          const lesson='social-science.cbse6.exploring-society.ch9.family-forms.v1';
           const pages=await fetch('http://127.0.0.1:9333/json/list').then(r=>r.json());const page=pages.find(x=>x.type==='page');if(!page)throw Error('No Chromium page target');
           const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});let seq=0;const pending=new Map();
           ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.bad(Error(m.error.message)):p.ok(m.result)}};

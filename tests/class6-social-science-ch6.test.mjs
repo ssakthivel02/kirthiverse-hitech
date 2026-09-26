@@ -30,12 +30,12 @@ assert.deepEqual(assessments.map(x=>x.stableAssessmentId),Array.from({length:20}
 assert.equal(rec.decision,'CHAPTER_6_SOURCE_TOPIC_BOUNDARY_RECONCILED');
 assert.deepEqual(rec.reconciledTopicBoundary.map(x=>x.topicId),lessons.map(x=>x.topicId));
 const ch6=map.chapters.find(x=>x.chapter===6);
-assert.equal(map.schemaVersion,'1.16.0');assert.equal(ch6.status,'KIKI_TEACHING_SLICE_COMPLETE');assert.equal(ch6.topicCount,4);assert.equal(ch6.assessmentCount,20);
+assert.equal(map.schemaVersion,'1.17.0');assert.equal(ch6.status,'KIKI_TEACHING_SLICE_COMPLETE');assert.equal(ch6.topicCount,4);assert.equal(ch6.assessmentCount,20);
 assert.equal(ch6.lessonDataset,'data/class6-social-science-ch6.js');assert.equal(ch6.assessmentDataset,'data/class6-social-science-ch6-assessments.js');
 assert.equal(ch6.schoolNeedsValidationRequired,true);assert.equal(ch6.schoolNeedsValidationPresent,true);assert.equal(ch6.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH6_SCHOOL_NEEDS_VALIDATION_V1.json');
-assert.equal(map.implementationStatus.implementedChapterCount,8);assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,8);assert.equal(map.implementationStatus.completionClaim,false);
-assert.match(loader,/data\/class6-social-science-ch6\.js/);assert.match(loader,/data\/class6-social-science-ch6-assessments\.js/);assert.match(loader,/data\/class6-social-science-ch7\.js/);assert.match(loader,/data\/class6-social-science-ch7-assessments\.js/);assert.match(loader,/ch\(\?:1\|2\|3\|4\|5\|6\|7\|8\)/);assert.match(loader,/CBSE6-SOC-CH8-1/);
-assert.match(sw,/kirthiverse-preview-v47/);assert.match(sw,/data\/class6-social-science-ch6\.js/);assert.match(sw,/data\/class6-social-science-ch6-assessments\.js/);assert.match(sw,/data\/class6-social-science-ch7\.js/);assert.match(sw,/data\/class6-social-science-ch7-assessments\.js/);
+assert.equal(map.implementationStatus.implementedChapterCount,9);assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,8);assert.equal(map.implementationStatus.completionClaim,false);
+assert.match(loader,/data\/class6-social-science-ch6\.js/);assert.match(loader,/data\/class6-social-science-ch6-assessments\.js/);assert.match(loader,/data\/class6-social-science-ch7\.js/);assert.match(loader,/data\/class6-social-science-ch7-assessments\.js/);assert.match(loader,/ch\(\?:1\|2\|3\|4\|5\|6\|7\|8\|9\)/);assert.match(loader,/CBSE6-SOC-CH9-1/);
+assert.match(sw,/kirthiverse-preview-v48/);assert.match(sw,/data\/class6-social-science-ch6\.js/);assert.match(sw,/data\/class6-social-science-ch6-assessments\.js/);assert.match(sw,/data\/class6-social-science-ch7\.js/);assert.match(sw,/data\/class6-social-science-ch7-assessments\.js/);
 const text=JSON.stringify({lessons,assessments}).toLowerCase();
 for(const forbidden of ['share your religion','share your caste','share your ancestry','share your political preference','prove your patriotism','our civilisation was superior','harappan script has been deciphered','one invasion certainly ended'])assert.ok(!text.includes(forbidden),`forbidden Chapter 6 learner prompt/claim: ${forbidden}`);
 for(const required of ['evidence','uncertainty','archaeolog','harappan','drain','water','craft','exchange','undeciphered','multiple'])assert.ok(text.includes(required),`missing Chapter 6 teaching boundary: ${required}`);

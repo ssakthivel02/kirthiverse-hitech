@@ -40,7 +40,7 @@ assert.equal(rec.implementationGate.runtimeChangeRequiredByThisReconciliation,fa
 assert.equal(rec.implementationGate.completionClaim,false);
 
 const ch5=map.chapters.find(x=>x.chapter===5);
-assert.equal(map.schemaVersion,'1.16.0');
+assert.equal(map.schemaVersion,'1.17.0');
 assert.equal(ch5.title,'India, That Is Bharat');
 assert.equal(ch5.status,'KIKI_TEACHING_SLICE_COMPLETE');
 assert.equal(ch5.topicCount,4);
@@ -48,7 +48,7 @@ assert.equal(ch5.sourceTopicReconciliationArtifact,'docs/class6-pilot/SOCIAL_SCI
 assert.equal(ch5.schoolNeedsValidationRequired,true);
 assert.equal(ch5.schoolNeedsValidationPresent,true);
 assert.equal(ch5.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH5_SCHOOL_NEEDS_VALIDATION_V1.json');
-assert.equal(map.implementationStatus.implementedChapterCount,8);
+assert.equal(map.implementationStatus.implementedChapterCount,9);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,8);
 assert.equal(map.implementationStatus.completionClaim,false);
 

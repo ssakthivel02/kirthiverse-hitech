@@ -29,14 +29,14 @@ assert.deepEqual(assessments.map(x=>x.stableAssessmentId),Array.from({length:20}
 assert.equal(rec.decision,'CHAPTER_5_SOURCE_TOPIC_BOUNDARY_RECONCILED');
 assert.deepEqual(rec.reconciledTopicBoundary.map(x=>x.topicId),lessons.map(x=>x.topicId));
 const ch5=map.chapters.find(x=>x.chapter===5);
-assert.equal(map.schemaVersion,'1.16.0');assert.equal(ch5.status,'KIKI_TEACHING_SLICE_COMPLETE');assert.equal(ch5.topicCount,4);assert.equal(ch5.assessmentCount,20);
+assert.equal(map.schemaVersion,'1.17.0');assert.equal(ch5.status,'KIKI_TEACHING_SLICE_COMPLETE');assert.equal(ch5.topicCount,4);assert.equal(ch5.assessmentCount,20);
 assert.equal(ch5.lessonDataset,'data/class6-social-science-ch5.js');assert.equal(ch5.assessmentDataset,'data/class6-social-science-ch5-assessments.js');
 assert.equal(ch5.schoolNeedsValidationRequired,true);assert.equal(ch5.schoolNeedsValidationPresent,true);assert.equal(ch5.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH5_SCHOOL_NEEDS_VALIDATION_V1.json');
-assert.equal(map.implementationStatus.implementedChapterCount,8);assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,8);assert.equal(map.implementationStatus.completionClaim,false);
+assert.equal(map.implementationStatus.implementedChapterCount,9);assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,8);assert.equal(map.implementationStatus.completionClaim,false);
 assert.match(loader,/data\/class6-social-science-ch5\.js/);assert.match(loader,/data\/class6-social-science-ch5-assessments\.js/);
 assert.match(loader,/data\/class6-social-science-ch6\.js/);assert.match(loader,/data\/class6-social-science-ch6-assessments\.js/);
 assert.match(loader,/data\/class6-social-science-ch7\.js/);assert.match(loader,/data\/class6-social-science-ch7-assessments\.js/);
-assert.match(loader,/ch\(\?:1\|2\|3\|4\|5\|6\|7\|8\)/);assert.match(loader,/CBSE6-SOC-CH8-1/);
+assert.match(loader,/ch\(\?:1\|2\|3\|4\|5\|6\|7\|8\|9\)/);assert.match(loader,/CBSE6-SOC-CH9-1/);
 const text=JSON.stringify({lessons,assessments}).toLowerCase();
 for(const forbidden of ['share your religion','share your caste','share your ancestry','share your political preference','prove your patriotism','rank cultures as more authentic','share your home address'])assert.ok(!text.includes(forbidden),`forbidden Chapter 5 learner prompt: ${forbidden}`);
 assert.match(lessons.find(x=>x.topicId==='TOPIC-SOC6-05-01').content,/historical name|modern republic|political boundaries/i);

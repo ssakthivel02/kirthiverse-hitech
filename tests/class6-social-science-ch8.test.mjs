@@ -37,7 +37,7 @@ assert.equal(ch8.assessmentCount,20);
 assert.equal(ch8.schoolNeedsValidationRequired,true);
 assert.equal(ch8.schoolNeedsValidationPresent,true);
 assert.equal(ch8.schoolNeedsValidationArtifact,'docs/class6-pilot/SOCIAL_SCIENCE_CH8_SCHOOL_NEEDS_VALIDATION_V1.json');
-assert.equal(map.implementationStatus.implementedChapterCount,8);
+assert.equal(map.implementationStatus.implementedChapterCount,9);
 assert.equal(map.implementationStatus.schoolNeedsValidatedChapterCount,8);
 assert.equal(map.implementationStatus.completionClaim,false);
 

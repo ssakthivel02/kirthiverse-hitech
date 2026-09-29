@@ -86,7 +86,7 @@ concurrency:
 
 env:
   LOCAL_URL: http://127.0.0.1:8765
-  EXPECTED_CACHE: kirthiverse-preview-v48
+  EXPECTED_CACHE: kirthiverse-preview-v49
 
 jobs:
   pwa-offline-qa:
@@ -129,13 +129,13 @@ jobs:
           core=Path('core-runtime-v30.js').read_text()
           assert manifest['start_url']=='/' and manifest['scope']=='/' and manifest['display']=='standalone'
           assert manifest['name'].startswith('KirthiVerse') and manifest['icons']
-          assert "CACHE='kirthiverse-preview-v48'" in sw, 'current v48 cache contract missing'
-          assert "VERSION='MANUS-VISUAL-MASTER-05-PWA-48'" in sw, 'current PWA v48 version missing'
+          assert "CACHE='kirthiverse-preview-v49'" in sw, 'current v49 cache contract missing'
+          assert "VERSION='MANUS-VISUAL-MASTER-05-PWA-49'" in sw, 'current PWA v49 version missing'
           block=re.search(r"PRECACHE=\[(.*?)\];self\.addEventListener\('install'",sw,re.S)
           assert block,'PRECACHE block not found'
           paths=re.findall(r"'(/[^']*)'",block.group(1));assert paths,'PRECACHE is empty'
           required=[
-            '/index.html','/core-runtime-v30.js','/p0-entry-v1.js','/educator-pilot-v1.js','/pilot-metrics-v1.js','/pilot-readiness-v1.js','/pilot-run-v1.js',
+            '/index.html','/core-runtime-v30.js','/p0-entry-v1.js','/educator-pilot-v1.js','/pilot-metrics-v1.js','/pilot-readiness-v1.js','/pilot-run-v1.js','/practice-arena-v1.js','/practice-arena-v1.css',
             '/data/lessons-1.js','/data/assessments-1.js','/data/class6-math-pilot.js','/data/class6-math-assessments.js','/data/class6-math-ch2.js','/data/class6-math-ch2-assessments.js','/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch3-assessments.js','/data/class6-math-ch4-assessments.js','/data/class6-math-ch5-assessments.js','/data/class6-math-ch6-assessments.js','/data/class6-math-ch7-assessments.js',
             '/data/class6-science-pilot.js','/data/class6-science-assessments.js','/data/class6-science-ch2.js','/data/class6-science-ch2-assessments.js','/data/class6-science-ch3.js','/data/class6-science-ch3-assessments.js','/data/class6-science-ch4.js','/data/class6-science-ch4-assessments.js','/data/class6-science-ch5.js','/data/class6-science-ch5-assessments.js','/data/class6-science-ch6.js','/data/class6-science-ch6-assessments.js','/data/class6-science-ch7.js','/data/class6-science-ch7-assessments.js','/data/class6-science-ch8.js','/data/class6-science-ch8-assessments.js','/data/class6-science-ch9.js','/data/class6-science-ch9-assessments.js','/data/class6-science-ch10.js','/data/class6-science-ch10-assessments.js','/data/class6-science-ch11.js','/data/class6-science-ch11-assessments.js','/data/class6-science-ch12.js','/data/class6-science-ch12-assessments.js',
             '/data/class6-social-science-pilot.js','/data/class6-social-science-assessments.js','/data/class6-social-science-ch5.js','/data/class6-social-science-ch5-assessments.js','/data/class6-social-science-ch6.js','/data/class6-social-science-ch6-assessments.js','/data/class6-social-science-ch7.js','/data/class6-social-science-ch7-assessments.js','/data/class6-social-science-ch8.js','/data/class6-social-science-ch8-assessments.js','/data/class6-social-science-ch9.js','/data/class6-social-science-ch9-assessments.js'
@@ -147,7 +147,7 @@ jobs:
               if not target.is_file():missing.append(url)
           assert not missing,f'PRECACHE references missing repository files: {missing}'
           for marker in ["navigator.serviceWorker.register(SW","updateViaCache:'none'",'offlineCapable']: assert marker in core,marker
-          print(f'PWA_CONTRACT_PASS: manifest + v48 cache + {len(paths)} verified precache paths + Social Science Chapter 9')
+          print(f'PWA_CONTRACT_PASS: manifest + v49 cache + {len(paths)} verified precache paths + Social Science Chapter 9')
           PY
 
       - name: Browser cached-origin fallback and direct navigation
@@ -199,7 +199,7 @@ jobs:
           echo '### PWA / offline QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- HI-TECH ACTIVE MASTER identity checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Manifest contract checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Current v48 cache and every repository precache path checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Current v49 cache and every repository precache path checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Class 6 Mathematics + Science + Social Science through Chapter 9 required curriculum assets checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Service worker install/control and origin-unavailable Social Science Chapter 9 SPA/direct navigation checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production DNS/deployment: unchanged' >> "$GITHUB_STEP_SUMMARY"

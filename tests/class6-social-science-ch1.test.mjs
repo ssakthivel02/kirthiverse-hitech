@@ -69,7 +69,7 @@ assert.match(loader,/class6-social-science-ch9-assessments\.js/);
 assert.match(loader,/p==='\/world\/geography'/);
 assert.match(loader,/ch\(\?:1\|2\|3\|4\|5\|6\|7\|8\|9\)/);
 assert.ok(!/loadCurriculumPilot\(\{datasetKey:'class6SocialSciencePilot'[^\n]*\}\);\s*loadPilotMetrics/.test(loader),'Social Science must not be converted into an unconditional startup request');
-assert.match(sw,/MANUS-VISUAL-MASTER-05-PWA-48/);
+assert.match(sw,/MANUS-VISUAL-MASTER-05-PWA-49/);
 assert.match(sw,/\/data\/class6-social-science-pilot\.js/);
 assert.match(sw,/\/data\/class6-social-science-assessments\.js/);
 assert.match(sw,/\/data\/class6-social-science-ch5\.js/);

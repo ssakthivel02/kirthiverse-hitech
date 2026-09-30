@@ -1,0 +1,27 @@
+name: KirthiVerse Curriculum Expansion Foundation QA
+on:
+  pull_request:
+    paths:
+      - 'data/curriculum-catalog-v1.js'
+      - 'scripts/validate-curriculum-expansion-foundation.mjs'
+      - '.github/workflows/curriculum-expansion-foundation-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  foundation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate curriculum expansion contract
+        run: |
+          set -euo pipefail
+          node --check data/curriculum-catalog-v1.js
+          node --check scripts/validate-curriculum-expansion-foundation.mjs
+          node scripts/validate-curriculum-expansion-foundation.mjs
+      - name: Guard against fabricated class 7-12 coverage
+        run: |
+          set -euo pipefail
+          test "$(find data -maxdepth 1 -type f -name 'class[7-9]-*' -o -name 'class1[0-2]-*' | wc -l)" -eq 0
+          echo 'CLASS_7_12_FOUNDATION_NO_FABRICATED_CONTENT_PASS'

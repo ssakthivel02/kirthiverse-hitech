@@ -50,10 +50,10 @@ const cooperation=lessons.find(x=>x.topicId==='TOPIC-SOC6-09-04');assert.match(c
 assert.ok(assessments.filter(x=>x.assessmentType==='mastery_check').every(x=>/evidence|fair|assumption|privacy|identity|review|ranking|stereotype|access|disagreement/i.test(`${x.correctAnswer} ${x.explanation}`)));
 
 const sw=fs.readFileSync('sw-v30.js','utf8');
-assert.match(sw,/kirthiverse-preview-v48/);assert.match(sw,/MANUS-VISUAL-MASTER-05-PWA-48/);
+assert.match(sw,/kirthiverse-preview-v49/);assert.match(sw,/MANUS-VISUAL-MASTER-05-PWA-49/);
 assert.ok(sw.includes("'/data/class6-social-science-ch9.js'"));assert.ok(sw.includes("'/data/class6-social-science-ch9-assessments.js'"));
 const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 assert.ok(entry.includes("['class6-social-science-ch9-lessons','data/class6-social-science-ch9.js']"));
 assert.ok(entry.includes("['class6-social-science-ch9-assessments','data/class6-social-science-ch9-assessments.js']"));
 assert.match(entry,/CBSE6-SOC-CH9-1/);assert.match(entry,/ch\(\?:1\|2\|3\|4\|5\|6\|7\|8\|9\)/);
-console.log(`CLASS6_SOCIAL_SCIENCE_CH9_PASS lessons=${lessons.length} assessments=${assessments.length} schoolNeeds=pending pwa=v48`);
+console.log(`CLASS6_SOCIAL_SCIENCE_CH9_PASS lessons=${lessons.length} assessments=${assessments.length} schoolNeeds=pending pwa=v49`);

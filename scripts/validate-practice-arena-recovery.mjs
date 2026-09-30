@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+const js=fs.readFileSync('practice-arena-v1.js','utf8');
+const css=fs.readFileSync('practice-arena-v1.css','utf8');
+const must=["const ROUTE='/practice-arena'","localOnly:true","canonicalOnly:true","confidenceNotMastery:true","stableAssessmentId","retryIds","history","No fallback question was fabricated"];
+for(const token of must)if(!js.includes(token))throw new Error(`Practice Arena contract missing: ${token}`);
+for(const forbidden of ['fetch(','XMLHttpRequest','WebSocket','sendBeacon','getUserMedia','MediaRecorder'])if(js.includes(forbidden))throw new Error(`Forbidden Practice Arena capability: ${forbidden}`);
+for(const forbiddenPattern of [/leaderboard\s*[:=(]/i,/chat\s*(?:endpoint|url|api)?\s*[:=(]/i])if(forbiddenPattern.test(js))throw new Error(`Forbidden Practice Arena capability pattern: ${forbiddenPattern}`);
+const boundary='No account, cloud child identity, ads, leaderboard, chat, camera, microphone or analytics upload.';
+if(!js.includes(boundary))throw new Error('Explicit Practice Arena privacy boundary copy missing');
+if(!js.includes("'/data/class6-math-ch10-assessments.js'")||!js.includes("'/data/class6-science-ch12-assessments.js'")||!js.includes("'/data/class6-social-science-ch9-assessments.js'"))throw new Error('Current Class 6 assessment catalog coverage missing');
+if(!js.includes('slice(-199)'))throw new Error('Bounded local history contract missing');
+if(!css.includes('prefers-reduced-motion:reduce')||!css.includes('min-height:44px')||!css.includes(':focus-visible'))throw new Error('Accessibility CSS contract missing');
+console.log('PRACTICE_ARENA_RECOVERY_CONTRACT_PASS');

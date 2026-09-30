@@ -53,7 +53,7 @@ jobs:
           for marker in ["setAttribute('aria-label',label)","setAttribute('aria-current','page')",'aria-labelledby']:
               assert marker in nav, marker
 
-          for marker in ["CACHE='kirthiverse-preview-v48'",'/parent-v1.js','/diagnostic-v1.js','/speedlab-v1.js','/mastery-engine-v1.js','/p0-entry-v1.js','/p0-v1.css']:
+          for marker in ["CACHE='kirthiverse-preview-v49'",'/parent-v1.js','/diagnostic-v1.js','/speedlab-v1.js','/mastery-engine-v1.js','/p0-entry-v1.js','/p0-v1.css']:
               assert marker in sw, marker
 
           print('P1_STATIC_PASS: parent safety + diagnostic + accessibility + active PWA markers')
@@ -144,8 +144,8 @@ jobs:
           if(!(promptLength>0&&promptLength<=280))throw Error('Diagnostic prompt is empty or too long: '+promptLength);
 
           await ev(`navigator.serviceWorker.register('/sw-v30.js',{scope:'/',updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);
-          await wait(`caches.keys().then(k=>k.includes('kirthiverse-preview-v48'))`,'v48 PWA cache',20000);
-          const cached=await ev(`caches.open('kirthiverse-preview-v48').then(async c=>(await Promise.all(['/parent-v1.js','/diagnostic-v1.js','/speedlab-v1.js','/mastery-engine-v1.js','/p0-entry-v1.js','/p0-v1.css'].map(x=>c.match(x).then(Boolean)))).every(Boolean))`);
+          await wait(`caches.keys().then(k=>k.includes('kirthiverse-preview-v49'))`,'v48 PWA cache',20000);
+          const cached=await ev(`caches.open('kirthiverse-preview-v49').then(async c=>(await Promise.all(['/parent-v1.js','/diagnostic-v1.js','/speedlab-v1.js','/mastery-engine-v1.js','/p0-entry-v1.js','/p0-v1.css'].map(x=>c.match(x).then(Boolean)))).every(Boolean))`);
           if(!cached)throw Error('One or more P0 assets missing from active v48 cache');
 
           console.log('P1_BROWSER_PASS: PIN hashed + throttled + unlock verified');

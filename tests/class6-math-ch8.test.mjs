@@ -100,7 +100,7 @@ assert.ok(!baseChunk.includes('data/class6-math-ch9-assessments.js'),'Chapter 9 
 assert.ok(!baseChunk.includes('data/class6-math-ch10-assessments.js'),'Chapter 10 assessments must remain deferred');
 
 const sw=fs.readFileSync('sw-v30.js','utf8');
-assert.match(sw,/kirthiverse-preview-v45/);
+assert.match(sw,/kirthiverse-preview-v49/);
 for(const asset of ['/data/class6-math-ch2.js','/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch8-assessments.js','/data/class6-math-ch9-assessments.js','/data/class6-math-ch10-assessments.js']) assert.ok(sw.includes(asset),`precache missing ${asset}`);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));

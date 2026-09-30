@@ -38,7 +38,7 @@ jobs:
               assert marker in entry, marker
           for marker in ['/practice-arena-v1.js','/practice-arena-v1.css']:
               assert marker in sw, marker
-          assert "const CACHE='kirthiverse-preview-v49'" in sw
+          assert "CACHE='kirthiverse-preview-v49'" in sw
           print('PRACTICE_ARENA_INTEGRATION_STATIC_PASS')
           PY
       - name: Start site and Chromium

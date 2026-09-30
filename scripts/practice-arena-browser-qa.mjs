@@ -21,6 +21,8 @@ if(await ev(`document.documentElement.scrollWidth>document.documentElement.clien
 if(!(await ev(`Array.from(document.querySelectorAll('.arena-controls button,.arena-controls input,.arena-actions button')).filter(x=>x.offsetParent!==null).every(x=>Math.max(x.getBoundingClientRect().height,x.getBoundingClientRect().width)>=40)`)))throw Error('Arena touch target below bounded mobile QA threshold');
 await ev(`navigator.serviceWorker.register('/sw-v30.js',{scope:'/',updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);await wait(`caches.keys().then(k=>k.includes('kirthiverse-preview-v49'))`,'v49 cache');
 const cached=await ev(`caches.open('kirthiverse-preview-v49').then(async c=>(await Promise.all(['/practice-arena-v1.js','/practice-arena-v1.css'].map(x=>c.match(x).then(Boolean)))).every(Boolean))`);if(!cached)throw Error('Arena assets missing from active PWA cache');
+await send('Page.reload',{ignoreCache:false});await new Promise(r=>setTimeout(r,1500));
+await wait(`location.pathname==='/practice-arena'&&!!navigator.serviceWorker.controller&&!!document.querySelector('main .arena-page')`,'service-worker-controlled arena shell');
 await send('Network.enable');await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
 await send('Page.reload',{ignoreCache:false});await new Promise(r=>setTimeout(r,1500));
 await wait(`location.pathname==='/practice-arena'&&!!document.querySelector('main .arena-page')`,'offline arena shell');

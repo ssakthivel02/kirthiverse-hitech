@@ -1,0 +1,29 @@
+name: KirthiVerse Class 7 Curriculum Manifest QA
+on:
+  pull_request:
+    paths:
+      - 'data/curriculum-catalog-v1.js'
+      - 'data/class7-curriculum-manifest-v1.js'
+      - 'scripts/validate-class7-curriculum-manifest.mjs'
+      - '.github/workflows/class7-curriculum-manifest-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  manifest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate Class 7 manifest contract
+        run: |
+          set -euo pipefail
+          node --check data/class7-curriculum-manifest-v1.js
+          node --check scripts/validate-class7-curriculum-manifest.mjs
+          node scripts/validate-class7-curriculum-manifest.mjs
+      - name: Prohibit premature Class 7 lesson coverage
+        run: |
+          set -euo pipefail
+          count="$(find data -maxdepth 1 -type f -name 'class7-*' ! -name 'class7-curriculum-manifest-v1.js' | wc -l)"
+          test "$count" -eq 0
+          echo 'CLASS7_NO_PREMATURE_CONTENT_PASS'

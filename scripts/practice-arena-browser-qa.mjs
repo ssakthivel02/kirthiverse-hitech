@@ -14,7 +14,7 @@ if(!(await ev(`window.KV_PRACTICE_ARENA.localOnly===true&&window.KV_PRACTICE_ARE
 await wait(`!!document.querySelector('main .arena-page')&&!!document.querySelector('main .arena-controls')&&!!document.querySelector('main .arena-boundary')`,'arena UI');
 if(!(await ev(`!!document.querySelector('a[href="/practice-arena"][aria-current="page"]')`)))throw Error('Arena current navigation state missing');
 if(!(await ev(`document.querySelectorAll('button,input,select,a[href]').length>0`)))throw Error('Arena interactive controls missing');
-const unnamed=await ev(`Array.from(document.querySelectorAll('button,input,select')).filter(el=>!((el.getAttribute('aria-label')||el.getAttribute('aria-labelledby')||el.labels?.length||el.textContent||'').trim())).length`);if(unnamed)throw Error('Arena contains unnamed controls');
+const unnamed=await ev(`Array.from(document.querySelectorAll('button,input,select')).filter(el=>{try{return !String(el.getAttribute('aria-label')||el.getAttribute('aria-labelledby')||(el.labels&&el.labels.length)||el.textContent||'').trim()}catch{return true}}).length`);if(unnamed)throw Error('Arena contains unnamed controls');
 await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
 await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await new Promise(r=>setTimeout(r,300));
 if(await ev(`document.documentElement.scrollWidth>document.documentElement.clientWidth+2`))throw Error('Arena mobile horizontal overflow');

@@ -105,7 +105,7 @@ const entry=fs.readFileSync('p0-entry-v1.js','utf8');
 assert.ok(entry.includes('ch(?:2|3|4|5|6|7|8|9|10)\\.'),'bounded Mathematics deferred-assessment route coverage must remain through Chapter 10');
 assert.ok(!entry.includes("/^\\/lesson\\/math\\./"),'generic Mathematics lesson routes must not trigger Class 6 bundles');
 const sw=fs.readFileSync('sw-v30.js','utf8');
-assert.match(sw,/kirthiverse-preview-v45/);
+assert.match(sw,/kirthiverse-preview-v49/);
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("I’m Kiki, your KirthiVerse guide."));
 assert.ok(index.includes('microphone:false'));

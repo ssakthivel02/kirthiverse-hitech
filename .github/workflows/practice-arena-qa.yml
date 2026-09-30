@@ -38,7 +38,7 @@ jobs:
               assert marker in entry, marker
           for marker in ['/practice-arena-v1.js','/practice-arena-v1.css']:
               assert marker in sw, marker
-          assert "CACHE='kirthiverse-preview-v49'" in sw
+          assert "CACHE='kirthiverse-preview-v50'" in sw
           print('PRACTICE_ARENA_INTEGRATION_STATIC_PASS')
           PY
       - name: Start site and Chromium
@@ -71,5 +71,5 @@ jobs:
           echo '- current shell/navigation discovery checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- accessible names + reduced-motion emulation checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- 390px mobile overflow/touch target checks executed' >> "$GITHUB_STEP_SUMMARY"
-          echo '- active v49 precache + offline route reload checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- active v50 precache + deterministic offline route fallback checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- local-only/confidence-not-mastery safety boundary preserved' >> "$GITHUB_STEP_SUMMARY"

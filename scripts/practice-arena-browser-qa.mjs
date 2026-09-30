@@ -11,7 +11,7 @@ await wait(`!!window.KV_NAVIGATION`,'navigation runtime');
 await ev(`window.KV_NAVIGATION.navigate('/practice-arena');true`);await wait(`location.pathname==='/practice-arena'`,'arena route');
 await wait(`!!window.KV_PRACTICE_ARENA`,'arena runtime');
 if(!(await ev(`window.KV_PRACTICE_ARENA.localOnly===true&&window.KV_PRACTICE_ARENA.canonicalOnly===true&&window.KV_PRACTICE_ARENA.confidenceNotMastery===true`)))throw Error('Arena safety boundary mismatch');
-await wait(`!!document.querySelector('main')&&document.querySelector('main').textContent.includes('Practice Arena')`,'arena UI');
+await wait(`!!document.querySelector('main .arena-page')&&!!document.querySelector('main .arena-controls')&&!!document.querySelector('main .arena-boundary')`,'arena UI');
 if(!(await ev(`!!document.querySelector('a[href="/practice-arena"][aria-current="page"]')`)))throw Error('Arena current navigation state missing');
 if(!(await ev(`document.querySelectorAll('button,input,select,a[href]').length>0`)))throw Error('Arena interactive controls missing');
 const unnamed=await ev(`Array.from(document.querySelectorAll('button,input,select')).filter(el=>!((el.getAttribute('aria-label')||el.getAttribute('aria-labelledby')||el.labels?.length||el.textContent||'').trim())).length`);if(unnamed)throw Error('Arena contains unnamed controls');
@@ -23,6 +23,6 @@ await ev(`navigator.serviceWorker.register('/sw-v30.js',{scope:'/',updateViaCach
 const cached=await ev(`caches.open('kirthiverse-preview-v49').then(async c=>(await Promise.all(['/practice-arena-v1.js','/practice-arena-v1.css'].map(x=>c.match(x).then(Boolean)))).every(Boolean))`);if(!cached)throw Error('Arena assets missing from active PWA cache');
 await send('Network.enable');await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
 await send('Page.reload',{ignoreCache:false});await new Promise(r=>setTimeout(r,1500));
-await wait(`location.pathname==='/practice-arena'&&!!document.querySelector('main')`,'offline arena shell');
+await wait(`location.pathname==='/practice-arena'&&!!document.querySelector('main .arena-page')`,'offline arena shell');
 await send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
 console.log('PRACTICE_ARENA_BROWSER_QA_PASS');ws.close();

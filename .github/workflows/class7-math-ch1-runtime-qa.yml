@@ -1,0 +1,32 @@
+name: Class 7 Mathematics Chapter 1 Runtime QA
+
+on:
+  pull_request:
+    paths:
+      - 'data/class7-math-ch1.js'
+      - 'data/class7-math-ch1-assessments.js'
+      - 'p0-entry-v1.js'
+      - 'scripts/verify-class7-math-ch1-runtime.mjs'
+      - '.github/workflows/class7-math-ch1-runtime-qa.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/class7-math-ch1.js'
+      - 'data/class7-math-ch1-assessments.js'
+      - 'p0-entry-v1.js'
+      - 'scripts/verify-class7-math-ch1-runtime.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-reachability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Class 7 Chapter 1 runtime wiring and records
+        run: node scripts/verify-class7-math-ch1-runtime.mjs

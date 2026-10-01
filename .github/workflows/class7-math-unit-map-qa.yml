@@ -1,0 +1,29 @@
+name: KirthiVerse Class 7 Mathematics Unit Map QA
+on:
+  pull_request:
+    paths:
+      - 'data/class7-math-unit-map-v1.js'
+      - 'scripts/validate-class7-math-unit-map.mjs'
+      - '.github/workflows/class7-math-unit-map-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verified-map:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate verified Class 7 Mathematics metadata
+        run: |
+          set -euo pipefail
+          node --check data/class7-math-unit-map-v1.js
+          node --check scripts/validate-class7-math-unit-map.mjs
+          node scripts/validate-class7-math-unit-map.mjs
+      - name: Guard copyright and premature lesson claims
+        run: |
+          set -euo pipefail
+          test "$(find data -maxdepth 1 -type f -name 'class7-math-*' ! -name 'class7-math-unit-map-v1.js' | wc -l)" -eq 0
+          grep -q "textbookProseCopied:false" data/class7-math-unit-map-v1.js
+          grep -q "textbookExercisesCopied:false" data/class7-math-unit-map-v1.js
+          echo 'CLASS7_MATH_METADATA_ONLY_BOUNDARY_PASS'

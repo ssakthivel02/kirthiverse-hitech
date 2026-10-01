@@ -53,10 +53,13 @@
 })();
 
 /* Class 7 Mathematics runtime bootstrap bridge.
-   lesson-check-v1.js is already a global bootstrap dependency; keep this bridge tiny and
-   isolated until the next core-runtime consolidation so Chapter 2+ can use the generic loader
-   without duplicating chapter-specific logic in p0-entry-v1.js. */
+   The generic loader is fetched only where Class 7 content can be requested. This preserves
+   the global release/performance request budget while keeping Chapters 1+ data-driven. */
 (()=>{
-  if(document.querySelector('script[data-class7-math-runtime]'))return;
-  const s=document.createElement('script');s.async=false;s.src='/class7-math-runtime-v1.js?v=CBSE7-MATH-RUNTIME-1';s.setAttribute('data-class7-math-runtime','script');document.body.appendChild(s);
+  const relevant=()=>/^\/lesson\/math\.cbse7\.ganita-prakash\.ch\d+\./.test(location.pathname)||['/search','/practice','/practice-arena','/diagnostic'].includes(location.pathname)||new URLSearchParams(location.search).has('release-closure');
+  function ensureRuntime(){
+    if(!relevant()||window.KV_CLASS7_MATH_RUNTIME||document.querySelector('script[data-class7-math-runtime]'))return;
+    const s=document.createElement('script');s.async=false;s.src='/class7-math-runtime-v1.js?v=CBSE7-MATH-RUNTIME-1';s.setAttribute('data-class7-math-runtime','script');document.body.appendChild(s);
+  }
+  ensureRuntime();addEventListener('popstate',ensureRuntime);addEventListener('kv:rendered',ensureRuntime);
 })();

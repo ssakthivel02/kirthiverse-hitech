@@ -6,8 +6,10 @@ const CLASS6_SOCIAL_PREFIX='social-science.cbse6.exploring-society.';
 const CLASS7_MATH_LESSON_IDS=[
   'math.cbse7.ganita-prakash.ch1.place-value-estimation.v1',
   'math.cbse7.ganita-prakash.ch1.operations-reasoning.v1',
+  'math.cbse7.ganita-prakash.ch2.expression-structure.v1',
+  'math.cbse7.ganita-prakash.ch2.evaluate-reason.v1',
 ];
-const CLASS7_MATH_ASSESSMENT_IDS=Array.from({length:10},(_,i)=>`KV-CBSE7-MATH-${String(i+1).padStart(4,'0')}`);
+const CLASS7_MATH_ASSESSMENT_IDS=Array.from({length:20},(_,i)=>`KV-CBSE7-MATH-${String(i+1).padStart(4,'0')}`);
 
 async function waitForRuntime(page){
   await page.waitForFunction(()=>Boolean(window.KV_NAVIGATION&&window.KV_APP_RUNTIME&&window.KV_PROFILE_RUNTIME));
@@ -25,6 +27,7 @@ test('ACTIVE MASTER release surface preserves canonical corpus and local-first i
     document.documentElement.dataset.class6SciencePilot==='ready'&&
     document.documentElement.dataset.class6SocialSciencePilot==='ready'&&
     document.documentElement.dataset.class7MathChapter1==='ready'&&
+    document.documentElement.dataset.class7MathChapter2==='ready'&&
     class7Ids.every(id=>window.KV_LESSONS?.some(lesson=>lesson.id===id)),
     {class7Ids:CLASS7_MATH_LESSON_IDS}
   );
@@ -51,7 +54,8 @@ test('ACTIVE MASTER release surface preserves canonical corpus and local-first i
       class7LessonIds:class7Math.map(x=>x.id).sort(),
       class7AssessmentIds:class7MathAssessments.map(x=>x.stableAssessmentId).sort(),
       class7Rights:class7Math.map(x=>x.rightsStatus),
-      class7State:document.documentElement.dataset.class7MathChapter1,
+      class7Chapter1State:document.documentElement.dataset.class7MathChapter1,
+      class7Chapter2State:document.documentElement.dataset.class7MathChapter2,
       mathState:document.documentElement.dataset.class6MathPilot,
       scienceState:document.documentElement.dataset.class6SciencePilot,
       socialState:document.documentElement.dataset.class6SocialSciencePilot,
@@ -60,7 +64,6 @@ test('ACTIVE MASTER release surface preserves canonical corpus and local-first i
     };
   },{class7LessonIds:CLASS7_MATH_LESSON_IDS,class7AssessmentIds:CLASS7_MATH_ASSESSMENT_IDS});
 
-  // Preserve the previously-qualified Class 6 and legacy corpus exactly.
   expect(corpus.legacyCoreLessons).toBe(135);
   expect(corpus.class6Math).toBe(30);
   expect(corpus.class6Science).toBe(36);
@@ -70,16 +73,16 @@ test('ACTIVE MASTER release surface preserves canonical corpus and local-first i
   expect(corpus.class6ScienceAssessments).toBe(180);
   expect(corpus.class6SocialAssessments).toBe(175);
 
-  // Qualify the new Class 7 slice explicitly instead of absorbing it into "core" totals.
-  expect(corpus.class7Math).toBe(2);
-  expect(corpus.class7MathAssessments).toBe(10);
+  expect(corpus.class7Math).toBe(4);
+  expect(corpus.class7MathAssessments).toBe(20);
   expect(corpus.class7LessonIds).toEqual([...CLASS7_MATH_LESSON_IDS].sort());
   expect(corpus.class7AssessmentIds).toEqual([...CLASS7_MATH_ASSESSMENT_IDS].sort());
   expect(corpus.class7Rights.every(x=>x==='KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION')).toBe(true);
-  expect(corpus.class7State).toBe('ready');
+  expect(corpus.class7Chapter1State).toBe('ready');
+  expect(corpus.class7Chapter2State).toBe('ready');
 
-  expect(corpus.lessons).toBe(238);
-  expect(corpus.assessments).toBe(587);
+  expect(corpus.lessons).toBe(240);
+  expect(corpus.assessments).toBe(597);
   expect(corpus.mathState).toBe('ready');
   expect(corpus.scienceState).toBe('ready');
   expect(corpus.socialState).toBe('ready');
@@ -115,6 +118,20 @@ test('ACTIVE MASTER release surface preserves canonical corpus and local-first i
   await page.waitForFunction(()=>location.pathname==='/educator');
   await expect(page.locator('main')).toContainText('Unlock Parent Space first');
   await expect(page.locator('main')).toContainText('It is not teacher authentication or a school account.');
+  expect(pageErrors,`uncaught browser exceptions: ${pageErrors.join(' | ')}`).toEqual([]);
+});
+
+test('Class 7 Chapter 2 direct lesson deep link loads the generic runtime and assessment slice',async({page})=>{
+  const pageErrors=[];
+  page.on('pageerror',error=>pageErrors.push(error.message));
+  const lessonId='math.cbse7.ganita-prakash.ch2.expression-structure.v1';
+  const response=await page.goto(`/lesson/${lessonId}`);
+  expect(response?.status()).toBe(200);
+  await waitForRuntime(page);
+  await page.waitForFunction(id=>document.documentElement.dataset.class7MathChapter2==='ready'&&window.KV_LESSONS?.some(x=>x.id===id)&&window.KV_ASSESSMENTS?.some(x=>x.lessonId===id),lessonId);
+  expect(new URL(page.url()).pathname).toBe(`/lesson/${lessonId}`);
+  await expect(page.locator('main')).toContainText('Arithmetic Expressions');
+  expect(await page.evaluate(()=>window.KV_CLASS7_MATH_RUNTIME?.chapters?.[2]?.version)).toBe('CBSE7-MATH-CH2-1');
   expect(pageErrors,`uncaught browser exceptions: ${pageErrors.join(' | ')}`).toEqual([]);
 });
 

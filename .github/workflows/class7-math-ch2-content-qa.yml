@@ -1,0 +1,31 @@
+name: Class 7 Mathematics Chapter 2 Content QA
+on:
+  pull_request:
+    paths:
+      - 'data/class7-math-ch2.js'
+      - 'data/class7-math-ch2-assessments.js'
+      - 'scripts/verify-class7-math-ch2-content.mjs'
+      - '.github/workflows/class7-math-ch2-content-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  chapter2-content:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate syntax and Chapter 2 contract
+        run: |
+          set -euo pipefail
+          node --check data/class7-math-ch2.js
+          node --check data/class7-math-ch2-assessments.js
+          node --check scripts/verify-class7-math-ch2-content.mjs
+          node scripts/verify-class7-math-ch2-content.mjs
+      - name: Guard original-content boundary
+        run: |
+          set -euo pipefail
+          grep -q 'KirthiVerse-original' data/class7-math-ch2.js
+          grep -q 'KirthiVerse-original' data/class7-math-ch2-assessments.js
+          grep -q 'KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION' data/class7-math-ch2.js
+          echo 'CLASS7_MATH_CH2_ORIGINAL_CONTENT_BOUNDARY_PASS'

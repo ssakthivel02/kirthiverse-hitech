@@ -15,7 +15,7 @@
   function inject(){
     if(!location.pathname.startsWith('/lesson/'))return;
     const article=document.querySelector('.lesson-content'); if(!article)return;
-    const assessmentBlock=article.querySelector('.assessment'); if(!assessmentBlock)return; // no canonical assessment on this lesson
+    const assessmentBlock=article.querySelector('.assessment'); if(!assessmentBlock)return;
     if(assessmentBlock.dataset.checkInjected)return;
     assessmentBlock.dataset.checkInjected='1';
 
@@ -50,4 +50,16 @@
   addEventListener('kv:rendered',()=>setTimeout(inject,0));
   addEventListener('kv:assistance',()=>{const d=document.querySelector('.lesson-content .assessment details');if(d&&assistanceEnabled())d.style.display='';});
   window.KV_LESSON_CHECK_RUNTIME={version:'v1',route:'/lesson/:id',localOnly:true,storageKey:KEY};
+})();
+
+/* Class 7 Mathematics runtime bootstrap bridge.
+   The generic loader is fetched only where Class 7 content can be requested. This preserves
+   the global release/performance request budget while keeping Chapters 1+ data-driven. */
+(()=>{
+  const relevant=()=>/^\/lesson\/math\.cbse7\.ganita-prakash\.ch\d+\./.test(location.pathname)||['/search','/practice','/practice-arena','/diagnostic'].includes(location.pathname)||new URLSearchParams(location.search).has('release-closure');
+  function ensureRuntime(){
+    if(!relevant()||window.KV_CLASS7_MATH_RUNTIME||document.querySelector('script[data-class7-math-runtime]'))return;
+    const s=document.createElement('script');s.async=false;s.src='/class7-math-runtime-v1.js?v=CBSE7-MATH-RUNTIME-1';s.setAttribute('data-class7-math-runtime','script');document.body.appendChild(s);
+  }
+  ensureRuntime();addEventListener('popstate',ensureRuntime);addEventListener('kv:rendered',ensureRuntime);
 })();

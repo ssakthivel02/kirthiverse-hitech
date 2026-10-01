@@ -15,7 +15,7 @@
   function inject(){
     if(!location.pathname.startsWith('/lesson/'))return;
     const article=document.querySelector('.lesson-content'); if(!article)return;
-    const assessmentBlock=article.querySelector('.assessment'); if(!assessmentBlock)return; // no canonical assessment on this lesson
+    const assessmentBlock=article.querySelector('.assessment'); if(!assessmentBlock)return;
     if(assessmentBlock.dataset.checkInjected)return;
     assessmentBlock.dataset.checkInjected='1';
 
@@ -50,4 +50,13 @@
   addEventListener('kv:rendered',()=>setTimeout(inject,0));
   addEventListener('kv:assistance',()=>{const d=document.querySelector('.lesson-content .assessment details');if(d&&assistanceEnabled())d.style.display='';});
   window.KV_LESSON_CHECK_RUNTIME={version:'v1',route:'/lesson/:id',localOnly:true,storageKey:KEY};
+})();
+
+/* Class 7 Mathematics runtime bootstrap bridge.
+   lesson-check-v1.js is already a global bootstrap dependency; keep this bridge tiny and
+   isolated until the next core-runtime consolidation so Chapter 2+ can use the generic loader
+   without duplicating chapter-specific logic in p0-entry-v1.js. */
+(()=>{
+  if(document.querySelector('script[data-class7-math-runtime]'))return;
+  const s=document.createElement('script');s.async=false;s.src='/class7-math-runtime-v1.js?v=CBSE7-MATH-RUNTIME-1';s.setAttribute('data-class7-math-runtime','script');document.body.appendChild(s);
 })();

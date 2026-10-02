@@ -131,7 +131,10 @@
     window.dispatchEvent(new CustomEvent('kv:rendered',{detail:{reason:'app-render',sequence:renderSeq,path,candidate:CANDIDATE,source:'app'}}));
   }
 
+  function ensureScienceRuntime(){const p=location.pathname,q=new URLSearchParams(location.search);if(!(/^\/lesson\/science\.cbse7\.curiosity\.ch\d+\./.test(p)||q.has('release-closure')))return;if(window.KV_CLASS7_SCIENCE_RUNTIME)return;if(document.querySelector('script[data-kv-science-runtime]'))return;const s=document.createElement('script');s.src='/class7-science-runtime-v1.js?v=CBSE7-SCI-RUNTIME-1';s.dataset.kvScienceRuntime='v1';document.head.appendChild(s)}
+
   function render(){
+    ensureScienceRuntime();
     const path=location.pathname;
     const view=path==='/'?home():path==='/worlds'?worldsPage():path==='/search'?searchPage():path==='/progress'?progressPage():path.startsWith('/world/')?worldPage(decodeURIComponent(path.split('/')[2]||'')):path.startsWith('/lesson/')?lessonPage(decodeURIComponent(path.split('/')[2]||'')):home();
     document.getElementById('app').innerHTML=shell(view); bind(); window.scrollTo({top:0,behavior:'instant'}); emitRendered(path);

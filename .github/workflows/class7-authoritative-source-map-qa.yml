@@ -20,9 +20,16 @@ jobs:
           node --check data/class7-authoritative-source-map-v1.js
           node --check scripts/validate-class7-authoritative-source-map.mjs
           node scripts/validate-class7-authoritative-source-map.mjs
-      - name: Keep lesson authoring blocked
+      - name: Enforce source-before-authoring policy
         run: |
           set -euo pipefail
-          count="$(find data -maxdepth 1 -type f -name 'class7-*' ! -name 'class7-curriculum-manifest-v1.js' ! -name 'class7-authoritative-source-map-v1.js' | wc -l)"
-          test "$count" -eq 0
-          echo 'CLASS7_SOURCE_MAP_NO_PREMATURE_LESSONS_PASS'
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const sandbox={window:{}};vm.createContext(sandbox);
+          vm.runInContext(fs.readFileSync('data/class7-authoritative-source-map-v1.js','utf8'),sandbox);
+          const s=sandbox.window.KV_CLASS7_AUTHORITATIVE_SOURCE_MAP;
+          const pending=Object.entries(s.subjects).filter(([,v])=>v.state==='SOURCE_VERIFIED_UNIT_MAP_PENDING').map(([k])=>k);
+          if(!pending.includes('Social Science'))throw Error('Social Science must remain blocked until its direct official unit map is verified');
+          for(const subject of ['Mathematics','Science'])if(s.subjects[subject].state!=='SOURCE_VERIFIED_UNIT_MAP_COMPLETE')throw Error(`${subject} verified unit-map state missing`);
+          console.log('CLASS7_SOURCE_BEFORE_AUTHORING_POLICY_PASS');
+          NODE

@@ -1,10 +1,11 @@
 /* KirthiVerse Class 7 Science runtime v1 — data-driven chapter loader. */
 (()=>{
   const batches={
+    ch1:{lesson:'data/class7-science-ch1-lessons.js',assessment:'data/class7-science-ch1-assessments.js',version:'CBSE7-SCI-CH1-1',chapters:[1]},
     ch2to5:{lesson:'data/class7-science-ch2-5-lessons.js',assessment:'data/class7-science-ch2-5-assessments.js',version:'CBSE7-SCI-CH2-5-1',chapters:[2,3,4,5]},
     ch6to12:{lesson:'data/class7-science-ch6-12-lessons.js',assessment:'data/class7-science-ch6-12-assessments.js',version:'CBSE7-SCI-CH6-12-1',chapters:[6,7,8,9,10,11,12]}
   };
-  const chapters={1:null};
+  const chapters={};
   for(const batch of Object.values(batches))for(const chapter of batch.chapters)chapters[chapter]={...batch};
   const loaded=new Set(),loading=new Map(),assetPromises=new Map();
   const relevantSurface=()=>['/search','/practice','/practice-arena','/diagnostic'].includes(location.pathname)||new URLSearchParams(location.search).has('release-closure');
@@ -32,7 +33,7 @@
     }catch(error){document.documentElement.dataset.class7Science='load-error';document.documentElement.dataset['class7ScienceChapter'+chapter]='load-error';console.error('[KirthiVerse] Class 7 Science load failed',error)}})();
     loading.set(chapter,work);await work;loading.delete(chapter)
   }
-  function reconcile(){const direct=chapterFromRoute();if(direct)loadChapter(direct);if(relevantSurface())for(const chapter of Object.keys(chapters).map(Number))if(chapter>1)loadChapter(chapter)}
+  function reconcile(){const direct=chapterFromRoute();if(direct)loadChapter(direct);if(relevantSurface())for(const chapter of Object.keys(chapters).map(Number))loadChapter(chapter)}
   window.KV_CLASS7_SCIENCE_RUNTIME={loadChapter,reconcile,chapters:Object.freeze({...chapters})};
   reconcile();addEventListener('popstate',reconcile);addEventListener('kv:rendered',reconcile)
 })();

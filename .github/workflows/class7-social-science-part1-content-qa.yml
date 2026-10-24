@@ -1,0 +1,29 @@
+name: Class 7 Social Science Part 1 Content QA
+on:
+  pull_request:
+    paths:
+      - 'data/class7-social-science-part1-*.js'
+      - 'data/class7-social-science-unit-map-v1.js'
+      - 'class7-social-science-runtime-v1.js'
+      - 'lesson-check-v1.js'
+      - 'scripts/verify-class7-social-science-part1.mjs'
+      - '.github/workflows/class7-social-science-part1-content-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  part1-content:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate Class 7 Social Science Part 1 content contract
+        run: |
+          set -euo pipefail
+          node --check data/class7-social-science-unit-map-v1.js
+          node --check data/class7-social-science-part1-lessons.js
+          node --check data/class7-social-science-part1-assessments.js
+          node --check class7-social-science-runtime-v1.js
+          node --check lesson-check-v1.js
+          node --check scripts/verify-class7-social-science-part1.mjs
+          node scripts/verify-class7-social-science-part1.mjs

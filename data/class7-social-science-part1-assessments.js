@@ -5,13 +5,13 @@ const RIGHTS='KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_PROSE_OR_EXERCISE_REPRODUCTION';
 const plans=[
 ['landforms-and-regions',1,[
 ['Name a map feature that shows the meaning of its colours and symbols.','legend'],
-['Which map is designed mainly to show land height and relief?','physical relief map',['political boundary map','shopping directory','weather forecast','bus timetable']],
+['Which map is designed mainly to show land height and relief?','physical relief map',['physical relief map','political boundary map','thematic rainfall map','bus timetable']],
 ['Why might a journey across a steep mountain route take longer than across a level plain of equal length?','steep slopes and winding routes can slow movement'],
 ['A map marks a plateau and a nearby river. What is directly observed, and what is an inference?','The plateau and river locations are observed; a possible water access effect is an inference.'],
 ['A learner wants to compare rainfall across regions. What kind of map would help most?','a thematic rainfall map']]],
 ['rivers-coasts-islands',1,[
 ['What fertile material can rivers deposit on plains?','alluvium'],
-['Which is both an opportunity and a risk for a coastal community?','A harbour supports fishing and trade, while storms can create danger.',['Coasts have no weather hazards','A harbour prevents all erosion','A coast supports trade and may face cyclones','Saltwater makes every crop grow better']],
+['Which is both an opportunity and a risk for a coastal community?','A coast supports trade and may face cyclones.',['Coasts have no weather hazards','A harbour prevents all erosion','A coast supports trade and may face cyclones.','Saltwater makes every crop grow better']],
 ['How can a river support people and also create a hazard?','It supplies water and transport but may flood surrounding land.'],
 ['A coastal town builds storm shelters near a fishing harbour. What two needs does this respond to?','livelihood and safety'],
 ['What should planners consider when improving transport to an island?','safe sea links and reliable access to services']]],
@@ -23,19 +23,19 @@ const plans=[
 ['Which two elements would you record to describe a windy, hot afternoon?','temperature and wind']]],
 ['weather-data-patterns',2,[
 ['What does a forecast describe?','an informed estimate of future weather'],
-['A table records rain on four of five afternoons. Which is the best cautious conclusion?','Rain was common in the observed afternoons, but tomorrow is not guaranteed.',['It will rain every afternoon forever','Rain was common in this short record','The place has no dry season','The table proves the climate for a century']],
+['A table records rain on four of five afternoons. Which is the best cautious conclusion?','Rain was common in the observed afternoons, but tomorrow is not guaranteed.',['It will rain every afternoon forever','Rain was common in the observed afternoons, but tomorrow is not guaranteed.','The place has no dry season','The table proves the climate for a century']],
 ['Why is one unusual day not enough to establish a weather pattern?','A pattern needs repeated observations over time.'],
 ['What should stay consistent when comparing rainfall records from two weeks?','place, time period and units'],
 ['An outdoor event is planned after several wet afternoons. What evidence-based backup could organizers make?','prepare an indoor option and check the latest forecast']]],
 ['climate-and-monsoon',3,[
 ['What time scale is usually used to describe climate?','many years'],
-['Which statement describes climate rather than today’s weather?','The region usually has a rainy season each year.',['It is cloudy this morning','The temperature at noon is 31 degrees','The region usually has a rainy season each year','Rain began ten minutes ago']],
+['Which statement describes climate rather than today’s weather?','The region usually has a rainy season each year.',['It is cloudy this morning','The temperature at noon is 31 degrees','The region usually has a rainy season each year.','Rain began ten minutes ago']],
 ['Why can two places in India receive different amounts of monsoon rain?','Relief, distance from the sea and regional wind patterns differ.'],
 ['A learner records one rainy day and says the city has a rainy climate. What evidence is missing?','observations across many years'],
 ['How should a report label a statement about this afternoon’s rain?','weather']]],
 ['regional-climate-adaptation',3,[
 ['Name one way a community can adapt to limited rainfall.','store rainwater'],
-['A town expects extreme heat. Which response supports safety for many residents?','Provide shaded public areas and accessible drinking water.',['Close all water points','Provide shaded public areas and accessible drinking water','Remove tree cover','Tell every household to use the same solution']],
+['A town expects extreme heat. Which response supports safety for many residents?','Provide shaded public areas and accessible drinking water.',['Close all water points','Provide shaded public areas and accessible drinking water.','Remove tree cover','Tell every household to use the same solution']],
 ['Why may the same climate event affect households differently?','Resources, housing, health and preparation vary.'],
 ['A high-rainfall village and a dry town need water plans. Why should their plans differ?','Their local water conditions and risks differ.'],
 ['What should you identify before proposing an adaptation?','the local climate condition and risk']]],
@@ -53,7 +53,7 @@ const plans=[
 ['A researcher finds a tool with no location record. What is an important limitation?','its original context is unknown']]],
 ['empire-and-administration',5,[
 ['Name one way rulers communicated with distant areas.','messengers'],
-['Why do large empires need local officials and routes?','They help coordinate distant places and share instructions.',['They remove every local difference','They help coordinate distant places and share instructions','They make maps unnecessary','They guarantee everyone agrees']],
+['Why do large empires need local officials and routes?','They help coordinate distant places and share instructions.',['They remove every local difference','They help coordinate distant places and share instructions.','They make maps unnecessary','They guarantee everyone agrees']],
 ['Why might an empire’s control differ between its centre and frontier?','Distance, local power and communication affect authority.'],
 ['An inscription claims a region belongs to a ruler. What does that prove, and what does it not prove?','It proves the claim was made; it does not prove uniform control in practice.'],
 ['Which source could help study how a ruler presented authority?','an inscription']]],
@@ -65,13 +65,13 @@ const plans=[
 ['Name a source detail that helps evaluate an inscription.','its author, audience or location']]],
 ['regional-powers-and-networks',6,[
 ['What can happen to political authority when a large empire weakens?','it can shift to regional powers'],
-['Which statement best describes political change and trade routes?','A ruler may change while a route continues to connect communities.',['All trade ends when a ruler changes','A ruler may change while a route continues to connect communities','Every region changes at the same speed','Routes prevent new rulers']],
+['Which statement best describes political change and trade routes?','A ruler may change while a route continues to connect communities.',['All trade ends when a ruler changes','A ruler may change while a route continues to connect communities.','Every region changes at the same speed','Routes prevent new rulers']],
 ['Why should a source’s date and place be recorded?','They show which time and region the evidence represents.'],
 ['A new political boundary appears but traders use the same route. What changed and what continued?','Political authority changed; the trade connection continued.'],
 ['What two records could help compare changing powers and continuing routes?','a timeline and a route map']]],
 ['trade-crafts-and-cultural-exchange',6,[
 ['Name one thing besides goods that can move along trade routes.','ideas'],
-['What is a careful conclusion when two distant objects have similar designs?','Contact is possible, but dates and materials should be compared.',['One person definitely carried both objects','Contact is possible, but dates and materials should be compared','The objects have no historical value','Both objects must be the same age']],
+['What is a careful conclusion when two distant objects have similar designs?','Contact is possible, but dates and materials should be compared.',['One person definitely carried both objects','Contact is possible, but dates and materials should be compared.','The objects have no historical value','Both objects must be the same age']],
 ['How can an idea change as it moves between communities?','People adapt it to local needs and practices.'],
 ['Why is similarity alone weak evidence for exactly who travelled?','Similar designs may have more than one explanation.'],
 ['What details would you compare to test whether two objects are connected?','their dates, materials and contexts']]],
@@ -89,7 +89,7 @@ const plans=[
 ['Why should historical credit avoid assigning long-running knowledge to one person without evidence?','Ideas often build across people and generations.']]],
 ['sacred-landscapes',8,[
 ['Name one natural feature that may hold sacred meaning for a community.','a river'],
-['How can one river be described in more than one meaningful way?','It can be a water source and a sacred place.',['Only as scenery','As a water source and a sacred place','Only as a boundary','Only as a market']],
+['How can one river be described in more than one meaningful way?','As a water source and a sacred place.',['Only as scenery','As a water source and a sacred place.','Only as a boundary','Only as a market']],
 ['Why should a researcher name whose perspective is being described?','Different communities may understand the place differently.'],
 ['A sacred hill is also a forest habitat. What two meanings should a respectful account include?','community or religious meaning and ecological importance'],
 ['What is a respectful way to compare two traditions connected to one place?','Describe each tradition without ranking one above the other.']]],
@@ -125,7 +125,7 @@ const plans=[
 ['Name one responsibility that supports others’ rights.','respect other people’s dignity']]],
 ['barter-and-exchange',11,[
 ['What is barter?','direct exchange without money'],
-['What makes a barter exchange difficult to arrange?','Both people must want what the other offers.',['Every good has a printed price','Both people must want what the other offers','A bank must set the exchange','Goods cannot be exchanged']],
+['What makes a barter exchange difficult to arrange?','Both people must want what the other offers.',['Every good has a printed price','Both people must want what the other offers.','A bank must set the exchange','Goods cannot be exchanged']],
 ['How can a common medium make exchange easier?','A seller can exchange for it and later use it to buy another good.'],
 ['A potter wants grain, but the grower wants cloth. What is missing for direct barter?','a match between each person’s wants'],
 ['Give one situation where barter may still work well.','two neighbours directly exchange services they each want']]],

@@ -47,6 +47,6 @@ for(const a of assessments){
   }
 }
 const runtime=read('class7-social-science-runtime-v1.js');
-for(const token of ['data/class7-social-science-part1-lessons.js','data/class7-social-science-part1-assessments.js','p1ch\\d+','class7SocialSciencePart1','window.KV_CLASS7_SOCIAL_SCIENCE_RUNTIME'])if(!runtime.includes(token))fail(`runtime missing ${token}`);
+for(const token of ['data/class7-social-science-part1-lessons.js','data/class7-social-science-part1-assessments.js','p1ch\\d+','Part1','Part2','window.KV_CLASS7_SOCIAL_SCIENCE_RUNTIME'])if(!runtime.includes(token))fail(`runtime missing ${token}`);
 if(!read('lesson-check-v1.js').includes('class7-social-science-runtime-v1.js'))fail('Social Science runtime bridge missing');
 console.log('CLASS7_SOCIAL_SCIENCE_PART1_CORPUS_PASS');

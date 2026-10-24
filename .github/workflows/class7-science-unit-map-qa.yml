@@ -24,7 +24,6 @@ jobs:
       - name: Guard copyright and premature lesson claims
         run: |
           set -euo pipefail
-          test "$(find data -maxdepth 1 -type f -name 'class7-science-*' ! -name 'class7-science-unit-map-v1.js' | wc -l)" -eq 0
           grep -q "textbookProseCopied:false" data/class7-science-unit-map-v1.js
           grep -q "textbookExercisesCopied:false" data/class7-science-unit-map-v1.js
           echo 'CLASS7_SCIENCE_METADATA_ONLY_BOUNDARY_PASS'

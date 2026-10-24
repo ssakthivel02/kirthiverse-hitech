@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'data/class7-authoritative-source-map-v1.js'
+      - 'data/class7-social-science-unit-map-v1.js'
       - 'scripts/validate-class7-authoritative-source-map.mjs'
       - '.github/workflows/class7-authoritative-source-map-qa.yml'
   workflow_dispatch:
@@ -29,7 +30,7 @@ jobs:
           vm.runInContext(fs.readFileSync('data/class7-authoritative-source-map-v1.js','utf8'),sandbox);
           const s=sandbox.window.KV_CLASS7_AUTHORITATIVE_SOURCE_MAP;
           const pending=Object.entries(s.subjects).filter(([,v])=>v.state==='SOURCE_VERIFIED_UNIT_MAP_PENDING').map(([k])=>k);
-          if(!pending.includes('Social Science'))throw Error('Social Science must remain blocked until its direct official unit map is verified');
-          for(const subject of ['Mathematics','Science'])if(s.subjects[subject].state!=='SOURCE_VERIFIED_UNIT_MAP_COMPLETE')throw Error(`${subject} verified unit-map state missing`);
+          if(pending.length)throw Error(`Subjects blocked until their direct official unit map is verified: ${pending.join(', ')}`);
+          for(const subject of ['Mathematics','Science','Social Science'])if(s.subjects[subject].state!=='SOURCE_VERIFIED_UNIT_MAP_COMPLETE')throw Error(`${subject} verified unit-map state missing`);
           console.log('CLASS7_SOURCE_BEFORE_AUTHORING_POLICY_PASS');
           NODE

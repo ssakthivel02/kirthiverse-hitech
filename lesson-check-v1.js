@@ -63,3 +63,14 @@
   }
   ensureRuntime();addEventListener('popstate',ensureRuntime);addEventListener('kv:rendered',ensureRuntime);
 })();
+
+/* Class 7 Social Science runtime bootstrap bridge.
+   Same request-budget rule as the Mathematics bridge: the loader is fetched only where Class 7 Social Science can be requested. */
+(()=>{
+  const relevant=()=>/^\/lesson\/social-science\.cbse7\.exploring-society\./.test(location.pathname)||['/search','/practice','/practice-arena','/diagnostic'].includes(location.pathname)||new URLSearchParams(location.search).has('release-closure');
+  function ensureRuntime(){
+    if(!relevant()||window.KV_CLASS7_SOCIAL_SCIENCE_RUNTIME||document.querySelector('script[data-class7-social-science-runtime]'))return;
+    const s=document.createElement('script');s.async=false;s.src='/class7-social-science-runtime-v1.js?v=CBSE7-SOC-RUNTIME-1';s.setAttribute('data-class7-social-science-runtime','script');document.body.appendChild(s);
+  }
+  ensureRuntime();addEventListener('popstate',ensureRuntime);addEventListener('kv:rendered',ensureRuntime);
+})();

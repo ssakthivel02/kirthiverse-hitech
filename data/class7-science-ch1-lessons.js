@@ -6,7 +6,7 @@ const R='KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION';
 window.KV_LESSONS.push({
   id:'science.cbse7.curiosity.ch1.science-as-process.v1',
   title:'Science as a Way of Asking and Testing',
-  subject:'Science',topic:'CBSE Class 7 · Curiosity · Chapter 1',subtopic:'Science as a Way of Asking and Testing',
+  subject:'Science',worldId:'science',topic:'CBSE Class 7 · Curiosity · Chapter 1',subtopic:'Science as a Way of Asking and Testing',
   ageBand:'12-14',difficulty:'Developing',
   learningObjective:'Turn a curious observation into a testable question, collect fair evidence and revise an explanation when results disagree.',
   content:'Science grows through careful questions and evidence. An observation describes what we notice; an explanation proposes why it happened. A useful investigation makes a question specific, plans a safe way to collect evidence, records observations clearly and compares the results with the idea being tested. If results do not fit an explanation, scientists reconsider the explanation or improve the investigation. A single observation can suggest a possibility, but repeated and well-controlled evidence gives stronger support. Some questions also need tools, expertise or longer observation, so it is reasonable to state what remains unknown.',

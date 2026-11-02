@@ -37,7 +37,8 @@
     if(x.includes('life'))return'life-skills';
     return'general-knowledge';
   }
-  L.forEach(x=>x.worldId=x.worldId||wid(x.subject));
+  const assignLessonWorlds=()=>L.forEach(x=>{if(!x.worldId)x.worldId=wid(x.subject)});
+  assignLessonWorlds();
   const link=(href,html,cls='')=>`<a href="${href}" data-link class="${cls}">${html}</a>`;
   const worldBy=id=>worlds.find(w=>w.id===id);
   const assessmentsFor=id=>A.filter(a=>a.lessonId===id);
@@ -134,6 +135,7 @@
   function ensureScienceRuntime(){const p=location.pathname,q=new URLSearchParams(location.search);if(!(/^\/lesson\/science\.cbse7\.curiosity\.ch\d+\./.test(p)||q.has('release-closure')))return;if(window.KV_CLASS7_SCIENCE_RUNTIME)return;if(document.querySelector('script[data-kv-science-runtime]'))return;const s=document.createElement('script');s.src='/class7-science-runtime-v1.js?v=CBSE7-SCI-RUNTIME-1';s.dataset.kvScienceRuntime='v1';document.head.appendChild(s)}
 
   function render(){
+    assignLessonWorlds();
     ensureScienceRuntime();
     const path=location.pathname;
     const view=path==='/'?home():path==='/worlds'?worldsPage():path==='/search'?searchPage():path==='/progress'?progressPage():path.startsWith('/world/')?worldPage(decodeURIComponent(path.split('/')[2]||'')):path.startsWith('/lesson/')?lessonPage(decodeURIComponent(path.split('/')[2]||'')):home();

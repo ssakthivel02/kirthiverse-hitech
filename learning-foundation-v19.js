@@ -13,7 +13,84 @@ function flare(){/* Internal build/provenance stamp removed from learner pages (
 function intelligence(x){const home=qs('.home-page');if(!home||qs('.learning-pulse-v4'))return;const pct=percent(x.done.size,L.length),pool=L.filter(l=>!x.done.has(l.id)&&ageMatch(l,x.age)),picks=(pool.length?pool:L.filter(l=>!x.done.has(l.id))).slice(0,3),pulse=document.createElement('section');pulse.className='learning-pulse-v4';pulse.innerHTML=`<div class="pulse-v4-head"><div><small>LOCAL LEARNING INTELLIGENCE</small><h2>Your classroom is responding to your journey.</h2></div><span>${x.age==='all'?'ALL AGE PATHS':'AGE PATH '+esc(x.age)}</span></div><div class="pulse-v4-grid"><article class="pulse-v4-card"><small>PROGRESS SIGNAL</small><strong>${pct}%</strong><h3>${x.done.size} missions completed</h3><p>Your progress remains on this device. No remote child profile is required.</p><div class="mini-bar"><i style="width:${pct}%"></i></div></article><article class="pulse-v4-card"><small>EXPLORATION SIGNAL</small><strong>${x.started.size}</strong><h3>lessons explored</h3><p>Continue from where curiosity last took you.</p></article><article class="pulse-v4-card"><small>ACTIVE TRAJECTORY</small><strong>${x.age==='all'?'∞':esc(x.age)}</strong><h3>${x.age==='all'?'Open exploration':'Age-adaptive path'}</h3><p>Switch trajectories at any time without changing the verified corpus.</p></article></div>`;const metric=qs('.metric-deck');(metric?.parentNode||home).insertBefore(pulse,metric?.nextSibling||home.firstChild);if(picks.length){const rail=document.createElement('section');rail.className='mission-rail-v4';rail.innerHTML=`<div class="rail-head"><div><small>SMART MISSION RAIL</small><h2>Three verified missions ready now.</h2></div><span>Selected from the canonical corpus</span></div><div class="rail-grid">${picks.map((l,i)=>link(href(l.id),`<div class="rail-meta"><span>MISSION 0${i+1}</span><span>${esc(l.ageBand||'AGE GUIDE')}</span></div><h3>${esc(title(l))}</h3><p>${esc(objective(l))}</p><b>Launch mission ↗</b>`)).join('')}</div>`;pulse.insertAdjacentElement('afterend',rail)}}
 const worlds=[['mathematics','∑','Math'],['science','✦','Science'],['english','Aa','English'],['tamil','அ','Tamil'],['coding-ai','</>','Coding'],['geography','⌖','Geo'],['history','⌛','History'],['music-rhythm','♫','Music'],['art-design','◌','Art'],['general-knowledge','?','GK'],['life-skills','＋','Life']];
 function cockpit(x){const root=qs('.home-page');if(!root||qs('.cockpit-v5',root)||!L.length)return;const candidates=L.filter(l=>ageMatch(l,x.age)),rec=[...candidates.filter(l=>x.started.has(l.id)&&!x.done.has(l.id)),...candidates.filter(l=>!x.started.has(l.id)&&!x.done.has(l.id)),...candidates.filter(l=>x.done.has(l.id))].slice(0,4),reach=new Set([...x.started].map(id=>BY_ID.get(id)?.worldId).filter(Boolean)).size,pct=percent(x.done.size,L.length),explore=percent(x.started.size,L.length),worldPct=percent(reach,11),score=Math.min(100,Math.round(pct*.5+explore*.3+worldPct*.2));const html=`<section class="cockpit-v5" aria-label="Learning cockpit"><span class="cockpit-badge-v5">LOCAL INTELLIGENCE</span><div class="cockpit-head"><div><small>LEARNING COCKPIT // VISUAL MASTER</small><h2>Your next best moves, without cloud profiling.</h2></div><p>KirthiVerse uses only this browser's local progress to surface useful continuation paths. No remote child profile is required.</p></div><div class="cockpit-grid"><div class="cockpit-panel"><div class="cockpit-panel-title"><b>SMART MISSION QUEUE</b><small>${esc(x.age==='all'?'ALL AGES':x.age)} PATH</small></div><div class="journey-track">${rec.map((l,i)=>link(href(l.id),`<span class="journey-icon">${String(i+1).padStart(2,'0')}</span><span><small>${esc(l.subject||l.worldId||'Learning')}</small><strong>${esc(title(l))}</strong></span><span class="journey-state ${x.done.has(l.id)?'done':''}">${x.done.has(l.id)?'COMPLETE':x.started.has(l.id)?'CONTINUE':'READY'}</span>`,'journey-item')).join('')}</div><div class="cockpit-actions">${rec[0]?link(href(rec[0].id),'Launch recommended mission ↗','cockpit-btn primary-mini'):''}${link('/worlds','Open universe map','cockpit-btn')}</div></div><div class="cockpit-panel"><div class="cockpit-panel-title"><b>LEARNING PULSE</b><small>ON-DEVICE ONLY</small></div><div class="pulse-card"><div class="pulse-score"><div><strong>${score}</strong><span>/ 100 LOCAL SIGNAL</span></div><span>${x.done.size} COMPLETE</span></div><div class="pulse-bars"><div class="pulse-row"><span>Completion</span><i style="--w:${pct}%"></i><b>${pct}%</b></div><div class="pulse-row"><span>Exploration</span><i style="--w:${explore}%"></i><b>${explore}%</b></div><div class="pulse-row"><span>World reach</span><i style="--w:${worldPct}%"></i><b>${worldPct}%</b></div></div></div></div></div><div class="universe-strip-v5">${worlds.map(w=>link('/world/'+w[0],`<b>${w[1]}</b><span>${w[2]}</span>`,'universe-chip-v5')).join('')}</div></section>`;const metric=qs('.metric-deck');if(metric)metric.insertAdjacentHTML('afterend',html);else root.insertAdjacentHTML('afterbegin',html)}
-function run(){const x=context();experienceUI();navState();ageStatus(x);intelligence(x);flare();cockpit(x)}
+function teaching(){/* The lesson teaching module is bundled in this runtime to preserve the security request-family ceiling. */}
+function run(){const x=context();experienceUI();navState();ageStatus(x);intelligence(x);flare();cockpit(x);teaching()}
 install();addEventListener('kv:rendered',run);addEventListener('storage',run);run();
 window.KV_EXPERIENCE_LIFECYCLE='kv:rendered';window.KV_EXPERIENCE_NAVIGATION='central';window.KV_INTELLIGENCE_LIFECYCLE='kv:rendered';window.KV_INTELLIGENCE_CANDIDATE=C;window.KV_COCKPIT_BUILD=C;window.KV_COCKPIT_LIFECYCLE='kv:rendered';window.KV_LEARNING_FOUNDATION={candidate:C,version:'v19',modules:['experience','intelligence','cockpit'],sharedHelpers:true,singleRenderContext:true,indexedLessonLookup:true,searchIndex:true};
+})();
+
+/* KirthiVerse lesson teaching panel v1.
+   Renders the already-authored per-lesson kikiTeaching + remediation data (163 lessons, Classes 6-7) on the lesson page,
+   which previously never displayed it. Loaded only on /lesson/:id routes by learning-foundation-v19.js; never on the
+   release-closure audit URL. All text is set with textContent (no innerHTML). Learner-facing items are native <details>,
+   so they work with keyboard and screen readers; parent/teacher guidance (remediation) is in its own collapsed section. */
+(()=>{
+  if(window.KV_LESSON_TEACHING)return;
+  const audit=()=>/[?&]release-closure=/.test(location.search);
+  const ROUTE=/^\/lesson\/([^/]+)$/;
+  const T={
+    title:['Kiki’s guide for this lesson','இந்தப் பாடத்திற்கான கிகியின் வழிகாட்டி'],
+    before:['Before you start','தொடங்குவதற்கு முன்'],
+    picture:['Picture it','மனதில் படமாகப் பார்'],
+    watch:['Watch out for this','இதில் கவனம்'],
+    recap:['In one line','ஒரே வரியில்'],
+    adult:['For a parent or teacher','பெற்றோர் அல்லது ஆசிரியருக்கு'],
+    watchFor:['Look for','கவனிக்க'],
+    try:['Try this','இதை முயற்சிக்கவும்'],
+    done:['You will know they have got it when','புரிந்துவிட்டது என்பதற்கான அடையாளம்'],
+    activity:['Activity to do together','சேர்ந்து செய்ய ஒரு செயல்'],
+    safety:['Safety','பாதுகாப்பு'],
+    review:['Content review','உள்ளடக்க மதிப்பாய்வு']
+  };
+  const showTamil=()=>{try{const p=JSON.parse(localStorage.getItem('kirthiverse.hitech.profile.local.v2')||'{}');return /tamil/i.test(String(p.language||'English + Tamil'))}catch{return true}};
+  const str=v=>typeof v==='string'&&v.trim()?v.trim():'';
+  function el(tag,attrs,text){const e=document.createElement(tag);for(const k in(attrs||{}))e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;return e}
+  function label(key,tag,attrs){const e=el(tag,attrs,T[key][0]);if(showTamil()){const ta=el('span',{lang:'ta','class':'kv-teach-ta'},' · '+T[key][1]);e.appendChild(ta)}return e}
+  function item(key,text){if(!text)return null;const d=el('details');d.appendChild(label(key,'summary'));d.appendChild(el('p',{},text));return d}
+  function adultLine(key,text){if(!text)return null;const p=el('p');const b=label(key,'b');p.appendChild(b);p.appendChild(el('span',{},' '+text));return p}
+  function build(lesson){
+    if(!lesson||typeof lesson!=='object')return null;
+    const k=lesson.kikiTeaching&&typeof lesson.kikiTeaching==='object'?lesson.kikiTeaching:null;
+    const r=lesson.remediation&&typeof lesson.remediation==='object'?lesson.remediation:null;
+    if(!k&&!r)return null;
+    const sec=el('section',{'class':'kv-teach','data-kiki-teaching':'v1','aria-labelledby':'kv-teach-h'});
+    sec.appendChild(el('label',{},'KIKI // GUIDE'));
+    const h=label('title','h2',{id:'kv-teach-h'});sec.appendChild(h);
+    /* Lessons whose shelf renders its own safety note (Future Doctor) are skipped here to avoid a duplicate notice. */
+    const ownSafety=/^science\.futuredoctor\./.test(String(lesson.id||''));
+    const safety=str(lesson.safetyNote);
+    if(safety&&!ownSafety){const a=el('aside',{role:'note','data-kv-safety':''});a.appendChild(label('safety','b'));a.appendChild(el('p',{},safety));sec.appendChild(a)}
+    const review=str(lesson.reviewStatus);
+    if(review&&!ownSafety){const p=el('p',{'class':'kv-teach-review','data-kv-review':''});p.appendChild(label('review','b'));p.appendChild(el('span',{},': '+review));sec.appendChild(p)}
+    if(k){
+      const intro=str(k.intro);if(intro)sec.appendChild(el('p',{'class':'kv-teach-intro'},intro));
+      for(const [key,field] of [['before','priorKnowledge'],['picture','visualIdea'],['watch','misconceptionCheck'],['recap','recap']]){const d=item(key,str(k[field]));if(d)sec.appendChild(d)}
+    }
+    const parent=k?str(k.parentPrompt):'',trigger=r?str(r.trigger):'',strategy=r?str(r.strategy):'',mastery=r?str(r.masteryEvidence):'';
+    if(parent||trigger||strategy||mastery){
+      const d=el('details',{'class':'kv-teach-adult'});d.appendChild(label('adult','summary'));
+      for(const l of [adultLine('activity',parent),adultLine('watchFor',trigger),adultLine('try',strategy),adultLine('done',mastery)])if(l)d.appendChild(l);
+      sec.appendChild(d)
+    }
+    return sec.children.length>2?sec:null
+  }
+  function ensureStyle(){
+    if(document.querySelector('style[data-kv-teach-style]'))return;
+    const st=el('style',{'data-kv-teach-style':''});
+    st.textContent='.kv-teach{margin:0}.kv-teach>label{display:block;color:var(--vm-blue,#426C78)}.kv-teach h2{margin:4px 0 12px}.kv-teach-ta{font-weight:400}.lesson-content>.kv-teach>p.kv-teach-intro{margin:0 0 12px;color:var(--vm-ink-soft,#50605B);line-height:1.55}.kv-teach details{margin:8px 0;border:1px solid #b9c9c9;border-radius:12px;background:#fff;color:var(--vm-ink,#1F2A2B)}.kv-teach summary{cursor:pointer;padding:12px 14px;min-height:24px;font-weight:600;border-radius:12px}.kv-teach summary:focus-visible{outline:3px solid #1d4f5f;outline-offset:2px}.kv-teach details>p,.kv-teach details>div{margin:0;padding:0 14px 12px;line-height:1.55}.kv-teach-adult p{margin:0 0 10px;padding:0 14px}.kv-teach-adult p:last-child{padding-bottom:12px}.kv-teach-adult p b{display:block}.kv-teach aside{margin:0 0 12px;padding:12px 14px;border:2px solid #7a4b00;border-radius:12px;background:#fff4d6;color:#2b1b00}.kv-teach aside p{margin:6px 0 0}.lesson-content>.kv-teach>p.kv-teach-review{margin:0 0 12px;color:var(--vm-ink-soft,#50605B)}';
+    document.head.appendChild(st)
+  }
+  function inject(){
+    if(audit())return;
+    let id;try{const m=ROUTE.exec(decodeURIComponent(location.pathname));id=m&&m[1]}catch{return}
+    if(!id)return;
+    const host=document.querySelector('.lesson-content');if(!host||host.querySelector('[data-kiki-teaching]'))return;
+    const lesson=(window.KV_LESSONS||[]).find(x=>x.id===id);const sec=build(lesson);if(!sec)return;
+    ensureStyle();
+    const anchor=host.querySelector('.worked-card');
+    if(anchor)anchor.after(sec);else host.insertBefore(sec,host.querySelector('#complete'))
+  }
+  addEventListener('kv:rendered',()=>setTimeout(inject,0));addEventListener('popstate',()=>setTimeout(inject,50));
+  window.KV_LESSON_TEACHING={version:'v1',build,inject};
+  inject();
 })();

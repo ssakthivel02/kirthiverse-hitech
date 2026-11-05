@@ -42,11 +42,16 @@ test('question progression retains local state after navigation and reload',asyn
   await page.goto(LESSON);
   const root=page.locator('[data-lesson-practice="v2"]');
   await expect(root).toBeVisible();
+  const lessonId=decodeURIComponent(new URL(page.url()).pathname.split('/')[2]);
+  const attempts=()=>page.evaluate(id=>JSON.parse(localStorage.getItem('kirthiverse.hitech.lessoncheck.v1')||'{}')?.[id]?.attempts||0,lessonId);
   await root.locator('#lc-answer').fill('intentionally wrong answer');
   await root.locator('#lc-form button[type=submit]').click();
+  await expect.poll(attempts).toBe(1);
   await root.getByRole('button',{name:'Next'}).click();
+  await expect(root).toContainText('Question 2 of');
   await root.locator('#lc-answer').fill('another intentionally wrong answer');
   await root.locator('#lc-form button[type=submit]').click();
+  await expect.poll(attempts).toBe(2);
   const stateBefore=await page.evaluate(()=>JSON.parse(localStorage.getItem('kirthiverse.hitech.lessoncheck.v1')));
   await page.reload();await expect(page.locator('[data-lesson-practice="v2"]')).toBeVisible();
   const stateAfter=await page.evaluate(()=>JSON.parse(localStorage.getItem('kirthiverse.hitech.lessoncheck.v1')));

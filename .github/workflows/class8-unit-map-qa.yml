@@ -1,0 +1,35 @@
+name: KirthiVerse Class 8 Unit Map QA
+on:
+  pull_request:
+    paths:
+      - 'data/class8-*-unit-map-v1.js'
+      - 'scripts/validate-class8-unit-maps.mjs'
+      - '.github/workflows/class8-unit-map-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-metadata:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+      - name: Set up pinned Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check source and run Class 8 metadata contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in data/class8-*-unit-map-v1.js; do node --check "$f"; done
+          node --check scripts/validate-class8-unit-maps.mjs
+          node scripts/validate-class8-unit-maps.mjs
+      - name: Ensure no unpublished Class 8 content is silently claimed
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(find data -maxdepth 1 -type f -name 'class8-*-lessons.js' | wc -l)" -eq 0
+          test "$(find data -maxdepth 1 -type f -name 'class8-*-assessments.js' | wc -l)" -eq 0
+          echo 'CLASS8_METADATA_ONLY_PASS'

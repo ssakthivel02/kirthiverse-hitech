@@ -1,0 +1,36 @@
+name: Class 7 Social Science Part 2 Content QA
+on:
+  pull_request:
+    paths:
+      - 'data/class7-social-science-part2-*.js'
+      - 'class7-social-science-runtime-v1.js'
+      - 'lesson-check-v1.js'
+      - 'scripts/verify-class7-social-science-part2.mjs'
+      - '.github/workflows/class7-social-science-part2-content-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  part2-content:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate syntax and Part 2 contract
+        run: |
+          set -euo pipefail
+          node --check data/class7-social-science-unit-map-v1.js
+          node --check data/class7-social-science-part2-lessons.js
+          node --check data/class7-social-science-part2-assessments.js
+          node --check class7-social-science-runtime-v1.js
+          node --check lesson-check-v1.js
+          node --check scripts/verify-class7-social-science-part2.mjs
+          node scripts/validate-class7-social-science-unit-map.mjs
+          node scripts/verify-class7-social-science-part2.mjs
+      - name: Guard original-content boundary
+        run: |
+          set -euo pipefail
+          grep -q 'KirthiVerse-original' data/class7-social-science-part2-lessons.js
+          grep -q 'KirthiVerse-original' data/class7-social-science-part2-assessments.js
+          grep -q 'KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_PROSE_OR_EXERCISE_REPRODUCTION' data/class7-social-science-part2-lessons.js
+          echo 'CLASS7_SOCIAL_SCIENCE_PART2_ORIGINAL_CONTENT_BOUNDARY_PASS'

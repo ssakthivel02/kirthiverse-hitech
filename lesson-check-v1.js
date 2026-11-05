@@ -56,10 +56,21 @@
    The generic loader is fetched only where Class 7 content can be requested. This preserves
    the global release/performance request budget while keeping Chapters 1+ data-driven. */
 (()=>{
-  const relevant=()=>/^\/lesson\/math\.cbse7\.ganita-prakash\.ch\d+\./.test(location.pathname)||['/search','/practice','/practice-arena','/diagnostic'].includes(location.pathname)||new URLSearchParams(location.search).has('release-closure');
+  const relevant=()=>/^\/lesson\/math\.cbse7\.ganita-prakash\.(?:p2)?ch\d+\./.test(location.pathname)||['/search','/practice','/practice-arena','/diagnostic'].includes(location.pathname)||new URLSearchParams(location.search).has('release-closure');
   function ensureRuntime(){
     if(!relevant()||window.KV_CLASS7_MATH_RUNTIME||document.querySelector('script[data-class7-math-runtime]'))return;
     const s=document.createElement('script');s.async=false;s.src='/class7-math-runtime-v1.js?v=CBSE7-MATH-RUNTIME-1';s.setAttribute('data-class7-math-runtime','script');document.body.appendChild(s);
+  }
+  ensureRuntime();addEventListener('popstate',ensureRuntime);addEventListener('kv:rendered',ensureRuntime);
+})();
+
+/* Class 7 Social Science runtime bootstrap bridge.
+   Same request-budget rule as the Mathematics bridge: the loader is fetched only where Class 7 Social Science can be requested. */
+(()=>{
+  const relevant=()=>/^\/lesson\/social-science\.cbse7\.exploring-society\./.test(location.pathname)||['/search','/practice','/practice-arena','/diagnostic'].includes(location.pathname)||new URLSearchParams(location.search).has('release-closure');
+  function ensureRuntime(){
+    if(!relevant()||window.KV_CLASS7_SOCIAL_SCIENCE_RUNTIME||document.querySelector('script[data-class7-social-science-runtime]'))return;
+    const s=document.createElement('script');s.async=false;s.src='/class7-social-science-runtime-v1.js?v=CBSE7-SOC-RUNTIME-2';s.setAttribute('data-class7-social-science-runtime','script');document.body.appendChild(s);
   }
   ensureRuntime();addEventListener('popstate',ensureRuntime);addEventListener('kv:rendered',ensureRuntime);
 })();

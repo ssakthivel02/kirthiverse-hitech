@@ -1,0 +1,62 @@
+import { test, expect } from '@playwright/test';
+
+const PART1 = [
+  [1, 'squares-and-square-roots', 'Squares and Square Roots'],
+  [2, 'laws-of-exponents', 'Laws of Exponents'],
+  [3, 'place-value-and-zero', 'Place Value and the Power of Zero'],
+  [4, 'types-and-angle-sum', 'Types and the Angle Sum'],
+  [5, 'divisibility-tests', 'Divisibility Tests'],
+  [6, 'expanding-with-distributive-law', 'Expanding with the Distributive Law'],
+  [7, 'ratio-and-sharing', 'Ratios and Sharing in a Ratio'],
+];
+
+for (const [chapter, slug, title] of PART1) {
+  const lessonId = `math.cbse8.ganita-prakash.ch${chapter}.${slug}.v1`;
+  test(`Class 8 Maths Part I chapter ${chapter} direct deep link loads its lessons and assessments`, async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    const response = await page.goto(`/lesson/${lessonId}`);
+    expect(response?.status()).toBe(200);
+    await page.waitForFunction(
+      (id) => document.documentElement.dataset.class8MathPart1 === 'ready'
+        && window.KV_LESSONS?.some((x) => x.id === id)
+        && window.KV_ASSESSMENTS?.filter((x) => x.lessonId === id).length === 5,
+      lessonId,
+    );
+    expect(new URL(page.url()).pathname).toBe(`/lesson/${lessonId}`);
+    await expect(page.locator('main')).toContainText(title);
+    expect(errors).toEqual([]);
+  });
+}
+
+test('Class 8 Maths Part I registers 14 lessons and 70 stable assessments', async ({ page }) => {
+  await page.goto('/lesson/math.cbse8.ganita-prakash.ch1.squares-and-square-roots.v1');
+  await page.waitForFunction(() => document.documentElement.dataset.class8MathPart1 === 'ready');
+  const summary = await page.evaluate(() => {
+    const lessons = window.KV_LESSONS.filter((x) => x.id.startsWith('math.cbse8.ganita-prakash.'));
+    const assessments = window.KV_ASSESSMENTS.filter((x) => /^KV-CBSE8-MATH-\d{4}$/.test(x.stableAssessmentId || ''));
+    const ids = assessments.map((x) => x.stableAssessmentId).sort();
+    return { lessons: lessons.length, assessments: assessments.length, first: ids[0], last: ids[ids.length - 1], unique: new Set(ids).size };
+  });
+  expect(summary).toEqual({ lessons: 14, assessments: 70, first: 'KV-CBSE8-MATH-0001', last: 'KV-CBSE8-MATH-0070', unique: 70 });
+});
+
+test('Class 8 Maths Part I learner can check a typed answer and gets feedback', async ({ page }) => {
+  await page.goto('/lesson/math.cbse8.ganita-prakash.ch1.squares-and-square-roots.v1');
+  await page.waitForFunction(() => document.documentElement.dataset.class8MathPart1 === 'ready');
+  const answer = page.locator('#lc-answer');
+  await expect(answer).toBeVisible();
+  await answer.fill('14');
+  await page.getByRole('button', { name: 'Check', exact: true }).click();
+  await expect(page.locator('main')).toContainText('Correct');
+});
+
+test('Class 8 Maths Part I appears on the Mathematics world and links back to it', async ({ page }) => {
+  await page.goto('/world/mathematics');
+  await page.waitForFunction(() => document.documentElement.dataset.class8MathPart1 === 'ready');
+  const link = page.locator('a[href="/lesson/math.cbse8.ganita-prakash.ch2.laws-of-exponents.v1"]');
+  await expect(link.first()).toBeVisible();
+  await link.first().click();
+  await expect(page.locator('main')).toContainText('Laws of Exponents');
+  await expect(page.getByRole('link', { name: /Back to Mathematics/ })).toBeVisible();
+});

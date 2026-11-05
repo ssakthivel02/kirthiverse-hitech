@@ -46,12 +46,12 @@ test('no Kiki teaching panel appears on a lesson without authored teaching', asy
   await expect(page.locator('[data-kiki-teaching]')).toHaveCount(0);
 });
 test('panel is absent from unrelated routes and release audit', async ({page}) => {
-  await page.goto('/worlds');
-  await page.waitForLoadState('networkidle');
-  expect(await page.locator('script[data-kiki-teaching-runtime]').count()).toBe(0);
-  await page.goto('/?release-closure=1');
-  await page.waitForLoadState('networkidle');
-  expect(await page.locator('[data-kiki-teaching]').count()).toBe(0);
+  await page.goto('/worlds', {waitUntil: 'domcontentloaded'});
+  await expect(page.locator('.page')).toBeVisible();
+  await expect(page.locator('script[data-kiki-teaching-runtime]')).toHaveCount(0);
+  await page.goto('/?release-closure=1', {waitUntil: 'domcontentloaded'});
+  await expect(page.locator('.page')).toBeVisible();
+  await expect(page.locator('[data-kiki-teaching]')).toHaveCount(0);
 });
 test('lesson panel passes focused accessibility scan', async ({page}) => {
   await openLesson(page, WITH_DATA[0]);

@@ -2,6 +2,7 @@
    Keeps chapter datasets route-deferred and provides one extension point for Chapters 1–8. */
 (()=>{
   const batchLesson='data/class7-math-ch3-8-lessons.js',batchAssessment='data/class7-math-ch3-8-assessments.js',batchVersion='CBSE7-MATH-CH3-8-1';
+  const part2Lesson='data/class7-math-part2-lessons.js',part2Assessment='data/class7-math-part2-assessments.js',part2Version='CBSE7-MATH-P2-1';
   const chapters={
     1:{lesson:'data/class7-math-ch1.js',assessment:'data/class7-math-ch1-assessments.js',version:'CBSE7-MATH-CH1-1'},
     2:{lesson:'data/class7-math-ch2.js',assessment:'data/class7-math-ch2-assessments.js',version:'CBSE7-MATH-CH2-1'},
@@ -10,11 +11,12 @@
     5:{lesson:batchLesson,assessment:batchAssessment,version:batchVersion},
     6:{lesson:batchLesson,assessment:batchAssessment,version:batchVersion},
     7:{lesson:batchLesson,assessment:batchAssessment,version:batchVersion},
-    8:{lesson:batchLesson,assessment:batchAssessment,version:batchVersion}
+    8:{lesson:batchLesson,assessment:batchAssessment,version:batchVersion},
+    p2:{lesson:part2Lesson,assessment:part2Assessment,version:part2Version}
   };
   const loaded=new Set(),loading=new Map(),assetPromises=new Map();
   const relevantSurface=()=>['/search','/practice','/practice-arena','/diagnostic'].includes(location.pathname)||new URLSearchParams(location.search).has('release-closure');
-  const chapterFromRoute=()=>{const m=location.pathname.match(/^\/lesson\/math\.cbse7\.ganita-prakash\.ch(\d+)\./);return m?Number(m[1]):null};
+  const chapterFromRoute=()=>{const m=location.pathname.match(/^\/lesson\/math\.cbse7\.ganita-prakash\.ch(\d+)\./);if(m)return Number(m[1]);return /^\/lesson\/math\.cbse7\.ganita-prakash\.p2ch\d+\./.test(location.pathname)?'p2':null};
   const inject=(tag,src,version)=>{
     const key=`${src}?v=${version}`;
     if(assetPromises.has(key))return assetPromises.get(key);
@@ -33,13 +35,13 @@
     const work=(async()=>{try{
       await inject(`class7-math-ch${chapter}-lessons`,cfg.lesson,cfg.version);
       await inject(`class7-math-ch${chapter}-assessments`,cfg.assessment,cfg.version);
-      if(chapter>=3){for(let c=3;c<=8;c++){loaded.add(c);document.documentElement.dataset[`class7MathChapter${c}`]='ready'}}else{loaded.add(chapter);document.documentElement.dataset[`class7MathChapter${chapter}`]='ready'}
+      if(chapter==='p2'){loaded.add('p2');document.documentElement.dataset.class7MathPart2='ready'}else if(chapter>=3){for(let c=3;c<=8;c++){loaded.add(c);document.documentElement.dataset[`class7MathChapter${c}`]='ready'}}else{loaded.add(chapter);document.documentElement.dataset[`class7MathChapter${chapter}`]='ready'}
       document.documentElement.dataset.class7Math='ready';
       dispatchEvent(new PopStateEvent('popstate'));dispatchEvent(new CustomEvent('kv:class7-math-ready',{detail:{classLevel:7,subject:'Mathematics',chapter,localOnly:true}}));
-    }catch(error){document.documentElement.dataset.class7Math='load-error';document.documentElement.dataset[`class7MathChapter${chapter}`]='load-error';console.error('[KirthiVerse] Class 7 Mathematics load failed',error)}})();
+    }catch(error){document.documentElement.dataset.class7Math='load-error';document.documentElement.dataset[chapter==='p2'?'class7MathPart2':`class7MathChapter${chapter}`]='load-error';console.error('[KirthiVerse] Class 7 Mathematics load failed',error)}})();
     loading.set(chapter,work);await work;loading.delete(chapter)
   }
-  function reconcile(){const direct=chapterFromRoute();if(direct)loadChapter(direct);if(relevantSurface())for(const chapter of Object.keys(chapters))loadChapter(Number(chapter))}
+  function reconcile(){const direct=chapterFromRoute();if(direct)loadChapter(direct);if(relevantSurface())for(const chapter of Object.keys(chapters))loadChapter(chapter==='p2'?chapter:Number(chapter))}
   window.KV_CLASS7_MATH_RUNTIME={loadChapter,reconcile,chapters:Object.freeze({...chapters})};
   reconcile();addEventListener('popstate',reconcile);addEventListener('kv:rendered',reconcile)
 })();

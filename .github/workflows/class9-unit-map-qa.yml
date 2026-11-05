@@ -1,0 +1,33 @@
+name: KirthiVerse Class 9 Unit Map QA
+on:
+  pull_request:
+    paths:
+      - 'data/class9-*-unit-map-v1.js'
+      - 'scripts/validate-class9-unit-maps.mjs'
+      - '.github/workflows/class9-unit-map-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  corroborated-maps:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate corroborated Class 9 metadata
+        run: |
+          set -euo pipefail
+          for f in data/class9-*-unit-map-v1.js scripts/validate-class9-unit-maps.mjs; do node --check "$f"; done
+          node scripts/validate-class9-unit-maps.mjs
+      - name: Guard copyright and premature lesson claims
+        run: |
+          set -euo pipefail
+          test "$(find data -maxdepth 1 -type f -name 'class9-*' ! -name 'class9-*-unit-map-v1.js' | wc -l)" -eq 0
+          for f in data/class9-*-unit-map-v1.js; do
+            grep -q "textbookProseCopied:false" "$f"
+            grep -q "textbookExercisesCopied:false" "$f"
+            # Chapter-level SOURCE_VERIFIED is allowed only with evidence, as enforced by
+            # the Class 9 validator above. The whole map must stay corroborated.
+            ! grep -Eq "curriculumSession:'2026-27',status:'SOURCE_VERIFIED'" "$f"
+          done
+          echo 'CLASS9_METADATA_ONLY_BOUNDARY_PASS'

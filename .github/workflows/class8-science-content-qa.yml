@@ -1,0 +1,37 @@
+name: Class 8 Science Content QA
+on:
+  pull_request:
+    paths:
+      - 'data/class8-science-*.js'
+      - 'class8-science-runtime-v1.js'
+      - 'lesson-check-v1.js'
+      - 'scripts/verify-class8-science.mjs'
+      - '.github/workflows/class8-science-content-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  class8-science-content:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate syntax and Science contract
+        run: |
+          set -euo pipefail
+          node --check data/class8-science-unit-map-v1.js
+          node --check data/class8-science-lessons.js
+          node --check data/class8-science-assessments.js
+          node --check class8-science-runtime-v1.js
+          node --check lesson-check-v1.js
+          node --check scripts/verify-class8-science.mjs
+          node scripts/verify-class8-science.mjs
+      - name: Guard original-content boundary
+        run: |
+          set -euo pipefail
+          grep -q 'KirthiVerse-original' data/class8-science-lessons.js
+          grep -q 'KirthiVerse-original' data/class8-science-assessments.js
+          grep -q 'KIRTHIVERSE_ORIGINAL_NO_TEXTBOOK_EXERCISE_REPRODUCTION' data/class8-science-lessons.js
+          grep -q 'textbookProseCopied:false' data/class8-science-unit-map-v1.js
+          grep -q 'textbookExercisesCopied:false' data/class8-science-unit-map-v1.js
+          echo 'CLASS8_SCIENCE_ORIGINAL_CONTENT_BOUNDARY_PASS'

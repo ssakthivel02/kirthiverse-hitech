@@ -42,12 +42,35 @@ jobs:
 
           for i in $(seq 1 20); do curl -fsS "$LOCAL_URL/index.html" >/dev/null && break || sleep 1; done
 
-          rm -rf /tmp/kv-reg-chrome
-          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage \
-            --remote-debugging-port=9335 --user-data-dir=/tmp/kv-reg-chrome \
-            "$LOCAL_URL/?reg=$(date +%s)" >/tmp/kv-reg-chrome.log 2>&1 &
-          cpid=$!
-          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:9335/json/list >/tmp/kv-reg-pages.json && break || sleep 1; done
+          # Keep the full regression assertions unchanged. Fail with Chrome's
+          # startup evidence instead of a generic ECONNREFUSED; a single bounded
+          # retry handles transient runner/browser startup failures.
+          ready=0
+          for attempt in 1 2; do
+            rm -rf /tmp/kv-reg-chrome
+            "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage \
+              --no-first-run --no-default-browser-check \
+              --remote-debugging-port=9335 --user-data-dir=/tmp/kv-reg-chrome \
+              "$LOCAL_URL/?reg=$(date +%s)" >/tmp/kv-reg-chrome.log 2>&1 &
+            cpid=$!
+            for i in $(seq 1 25); do
+              if curl -fsS http://127.0.0.1:9335/json/list >/tmp/kv-reg-pages.json 2>/dev/null; then
+                ready=1
+                break
+              fi
+              if ! kill -0 "$cpid" 2>/dev/null; then break; fi
+              sleep 1
+            done
+            if [ "$ready" -eq 1 ]; then break; fi
+            echo "Chrome debugging endpoint unavailable (attempt $attempt/2)" >&2
+            tail -80 /tmp/kv-reg-chrome.log >&2 || true
+            kill "$cpid" 2>/dev/null || true
+            wait "$cpid" 2>/dev/null || true
+          done
+          if [ "$ready" -ne 1 ]; then
+            echo "P1 regression cannot run: Chrome failed to start" >&2
+            exit 1
+          fi
 
           node <<'NODE'
           const pages=await fetch('http://127.0.0.1:9335/json/list').then(r=>r.json());

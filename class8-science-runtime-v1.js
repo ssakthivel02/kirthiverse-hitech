@@ -2,7 +2,7 @@
    Chapters 1–13 are one shared batch. Loaded only on Class 8 Science lesson routes, the Science world and search. */
 (()=>{
   const batches={
-    all:{lesson:'data/class8-science-lessons.js',assessment:'data/class8-science-assessments.js',version:'CBSE8-SCI-1'}
+    all:{lesson:'data/class8-science-bundle-v1.js',assessment:'data/class8-science-bundle-v1.js',version:'CBSE8-SCI-1'}
   };
   const loaded=new Set(),loading=new Map(),assetPromises=new Map();
   const relevantSurface=()=>['/world/science','/search'].includes(location.pathname);

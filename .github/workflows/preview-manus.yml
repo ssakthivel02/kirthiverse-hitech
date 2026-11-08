@@ -4,14 +4,10 @@ on:
     branches: [design/manus-visual-master]
   workflow_dispatch:
 concurrency:
-  group: kirthiverse-manus-preview-worker
+  group: kirthiverse-manus-preview-validation
   cancel-in-progress: true
 permissions:
   contents: read
-env:
-  RAW_CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-  RAW_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-  PREVIEW_URL: https://kirthiverse-hitech.ssakthivel02.workers.dev
 jobs:
   validate-and-preview:
     runs-on: ubuntu-latest
@@ -71,159 +67,22 @@ jobs:
           grep -q '"name": "kirthiverse-hitech"' wrangler.jsonc
           grep -q '"directory": "."' wrangler.jsonc
 
-      - name: Normalize Cloudflare credential formatting
-        if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
+      - name: Verify preview validation has no publishing authority
         shell: bash
         run: |
-          python - <<'PY'
-          import os
-          t=os.environ.get('RAW_CLOUDFLARE_API_TOKEN','').strip().strip('"').strip("'"); a=os.environ.get('RAW_CLOUDFLARE_ACCOUNT_ID','').strip().strip('"').strip("'")
-          if t.lower().startswith('bearer '): t=t[7:].strip()
-          if not t or not a: raise SystemExit('Normalized Cloudflare credential is empty.')
-          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLOUDFLARE_API_TOKEN_CLEAN='+t+'\nCLOUDFLARE_ACCOUNT_ID_CLEAN='+a+'\n')
-          PY
-
-      - name: Deploy controlled preview to existing Worker
-        if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN_CLEAN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID_CLEAN }}
-        run: npx --yes wrangler@4 deploy --assets=.
-
-      - name: Post-deploy route and asset integrity
-        if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          fetch(){ local l="$1" u="$2" o="$3"; c=$(curl -fsSL --retry 4 --retry-delay 2 -o "$o" -w '%{http_code}' "$u"); echo "SMOKE_HTTP: $l=$c"; test "$c" = 200; test -s "$o"; }
-          nonhtml(){ ! grep -Eqi '<!doctype|<html' "$1"; }
-          wait_html(){ local l="$1" u="$2" o="$3" ok=0; for i in $(seq 1 18); do fetch "$l" "$u?smoke=$(date +%s)-$i" "$o"; if grep -Fq 'CORE-RUNTIME-V30' "$o" && ! grep -Fq 'visual-preview-gate.js' "$o"; then ok=1; break; fi; sleep 2; done; test "$ok" = 1; }
-          wait_asset(){ local l="$1" u="$2" m="$3" o="$4" ok=0; for i in $(seq 1 18); do fetch "$l" "$u?smoke=$(date +%s)-$i" "$o"; if nonhtml "$o" && grep -Fq "$m" "$o"; then ok=1; break; fi; sleep 2; done; test "$ok" = 1; }
-          wait_html index "$PREVIEW_URL/index.html" /tmp/index.html
-          for r in '' worlds world/mathematics search progress profile lesson/math.number.place-value.base10.age6-8.l1; do wait_html route "${PREVIEW_URL}/${r}" /tmp/route.html; done
-          wait_asset core "$PREVIEW_URL/core-runtime-v30.js" 'KV_FOCUS_RUNTIME' /tmp/core.js
-          wait_asset sw "$PREVIEW_URL/sw-v30.js" 'kirthiverse-preview-v30' /tmp/sw.js
-          bust=$(date +%s)
-          for css in styles.css learning-foundation-v19.css learning-tools-v20.css visual-master-v15.css visual-master-pages-v15.css visual-master-features-v15.css; do fetch css "$PREVIEW_URL/$css?smoke=$bust" /tmp/css; nonhtml /tmp/css; curl -fsSLI "$PREVIEW_URL/$css?smoke=$bust" | grep -Eqi '^content-type:[[:space:]]*text/css'; done
-
-      - name: Browser-visible desktop and mobile QA
-        if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
-          test -n "$chrome"
-          bust=$(date +%s)
-          run_dom(){
-            local label="$1"
-            local size="$2"
-            local path="$3"
-            local out="/tmp/${label}.html"
-            "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --window-size="$size" --virtual-time-budget=12000 --dump-dom "$PREVIEW_URL$path?browser=$bust" >"$out" 2>"/tmp/${label}.stderr"
-            test -s "$out"
-            grep -Fq '<main' "$out"
-            ! grep -Fq 'visual-preview-gate.js' "$out"
-            echo "BROWSER_PASS: $label $size $path"
-          }
-          run_dom desktop_home 1440,900 /
-          grep -Fq 'data-focus-session="v30"' /tmp/desktop_home.html
-          grep -Fq 'data-personal-home="v26"' /tmp/desktop_home.html
-          grep -Fq 'FOCUS SESSION // LOCAL ONLY' /tmp/desktop_home.html
-          run_dom mobile_home 390,844 /
-          grep -Fq 'data-focus-session="v30"' /tmp/mobile_home.html
-          grep -Fq 'data-personal-home="v26"' /tmp/mobile_home.html
-          run_dom desktop_worlds 1440,900 /worlds
-          run_dom desktop_world 1440,900 /world/mathematics
-          run_dom desktop_search 1440,900 /search
-          run_dom desktop_progress 1440,900 /progress
-          grep -Fq 'data-focus-session="v30"' /tmp/desktop_progress.html
-          run_dom mobile_progress 390,844 /progress
-          grep -Fq 'data-focus-session="v30"' /tmp/mobile_progress.html
-          run_dom desktop_profile 1440,900 /profile
-          grep -Fq 'data-profile-runtime="v26"' /tmp/desktop_profile.html
-          run_dom mobile_profile 390,844 /profile
-          grep -Fq 'data-profile-runtime="v26"' /tmp/mobile_profile.html
-          run_dom desktop_lesson 1440,900 /lesson/math.number.place-value.base10.age6-8.l1
-          run_dom mobile_lesson 390,844 /lesson/math.number.place-value.base10.age6-8.l1
-          python - <<'PY'
+          python - <<'PYGUARD'
           from pathlib import Path
-          corpus=''.join(Path('/tmp/'+n).read_text(errors='ignore') for n in ['desktop_home.html','desktop_worlds.html','desktop_world.html','desktop_search.html','desktop_progress.html','desktop_profile.html','desktop_lesson.html'])
-          assert any('\u0b80' <= c <= '\u0bff' for c in corpus), 'Tamil browser rendering signal missing'
-          assert 'MANUS-VISUAL-MASTER-05' in corpus, 'visual candidate marker missing'
-          print('BROWSER_PASS: Tamil + visual candidate signals')
-          PY
-          echo '### Browser QA matrix PASS' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Desktop: 1440x900' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Mobile: 390x844' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Routes: Home, Worlds, Mathematics world, Search, Progress, Profile, canonical lesson' >> "$GITHUB_STEP_SUMMARY"
+          s=Path('.github/workflows/preview-manus.yml').read_text()
+          forbidden=('wrangler'+'@4 deploy','secrets.'+'CLOUDFLARE_API_TOKEN','secrets.'+'CLOUDFLARE_ACCOUNT_ID','https://'+'kirthiverse-hitech.ssakthivel02.workers.dev')
+          assert not any(x in s for x in forbidden), 'Preview validation must not publish or access production credentials/URL'
+          print('KV_PREVIEW_NO_PUBLISH_PASS')
+          PYGUARD
 
-      - name: Browser functional interaction QA
-        if: ${{ env.RAW_CLOUDFLARE_API_TOKEN != '' && env.RAW_CLOUDFLARE_ACCOUNT_ID != '' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
-          test -n "$chrome"
-          rm -rf /tmp/kv-cdp
-          "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9222 --user-data-dir=/tmp/kv-cdp "$PREVIEW_URL/?interaction=$(date +%s)" >/tmp/kv-cdp.log 2>&1 &
-          cpid=$!
-          trap 'kill "$cpid" 2>/dev/null || true' EXIT
-          ready=0
-          for i in $(seq 1 20); do if curl -fsS http://127.0.0.1:9222/json/list >/tmp/kv-pages.json; then ready=1; break; fi; sleep 1; done
-          test "$ready" = 1
-          node <<'NODE'
-          const base=process.env.PREVIEW_URL, lesson='math.number.place-value.base10.age6-8.l1';
-          const pages=await fetch('http://127.0.0.1:9222/json/list').then(r=>r.json()),page=pages.find(x=>x.type==='page');
-          if(!page)throw Error('No Chromium page target');
-          const ws=new WebSocket(page.webSocketDebuggerUrl);await new Promise((ok,bad)=>{ws.onopen=ok;ws.onerror=bad});
-          let seq=0;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const {ok,bad}=pending.get(m.id);pending.delete(m.id);m.error?bad(Error(m.error.message)):ok(m.result)}};
-          const send=(method,params={})=>new Promise((ok,bad)=>{const id=++seq;pending.set(id,{ok,bad});ws.send(JSON.stringify({id,method,params}))});
-          await send('Runtime.enable');
-          const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text||'Runtime evaluation failed');return r.result?.value};
-          const wait=async(expression,label,timeout=15000)=>{const end=Date.now()+timeout;while(Date.now()<end){try{if(await ev(expression))return true}catch{}await new Promise(r=>setTimeout(r,250))}throw Error('Timeout: '+label)};
-          await ev(`localStorage.clear();location.href=${JSON.stringify(base+'/lesson/'+lesson+'?iq='+Date.now())};true`);
-          await wait(`location.pathname.startsWith('/lesson/')&&!!document.querySelector('[data-confidence="v1"]')`,'lesson confidence render');
-          if(await ev(`document.querySelectorAll('[data-confidence="v1"]').length`)!==1)throw Error('Duplicate confidence panel');
-          await ev(`document.querySelector('[data-c="practice"]').click();true`);
-          await wait(`JSON.parse(localStorage.getItem('kirthiverse.hitech.confidence.v1')||'{}')[${JSON.stringify(lesson)}]?.value==='practice'`,'confidence persistence');
-          if(!(await ev(`document.querySelector('[data-c="practice"]').getAttribute('aria-pressed')==='true'`)))throw Error('Confidence aria state failed');
-          await ev(`window.KV_NAVIGATION.navigate('/');true`);
-          await wait(`location.pathname==='/'&&!!document.querySelector('[data-daily-plan="v26"]')&&window.KV_PERSONALIZATION_CONTEXT?.confidenceAware===true`,'confidence-aware home');
-          if(await ev(`window.KV_PERSONALIZATION_CONTEXT.dailyPlanIds[0]`)!==lesson)throw Error('Need-more-practice lesson was not prioritised');
-          await ev(`document.querySelector('[data-focus-action="start"]').click();true`);
-          await wait(`JSON.parse(localStorage.getItem('kirthiverse.hitech.focus.v1')||'{}').activeUntil> Date.now()`,'focus start');
-          await ev(`document.querySelector('[data-focus-action="pause"]').click();true`);
-          await wait(`JSON.parse(localStorage.getItem('kirthiverse.hitech.focus.v1')||'{}').activeUntil===null`,'focus pause');
-          await ev(`document.querySelector('[data-focus-action="reset"]').click();true`);
-          if(!(await ev(`(()=>{const s=JSON.parse(localStorage.getItem('kirthiverse.hitech.focus.v1')||'{}'),g=Number(JSON.parse(localStorage.getItem('kirthiverse.hitech.profile.local.v2')||'{"sessionGoal":20}').sessionGoal)||20;return s.activeUntil===null&&s.remainingSeconds===g*60})()`)))throw Error('Focus reset failed');
-          await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);
-          await wait(`location.pathname.startsWith('/lesson/')&&!!document.getElementById('complete')`,'lesson revisit');
-          if(await ev(`document.querySelectorAll('[data-confidence="v1"]').length`)!==1)throw Error('Confidence panel duplicated after SPA navigation');
-          await ev(`document.getElementById('complete').click();true`);
-          await wait(`JSON.parse(localStorage.getItem('kirthiverse.hitech.static.progress.v2')||'{"completed":[]}').completed.includes(${JSON.stringify(lesson)})`,'mission completion persistence');
-          await ev(`window.KV_NAVIGATION.navigate('/');true`);
-          await wait(`location.pathname==='/'&&window.KV_PERSONALIZATION_CONTEXT?.dailyPlanIds`,'home after completion');
-          if(await ev(`window.KV_PERSONALIZATION_CONTEXT.dailyPlanIds.includes(${JSON.stringify(lesson)})`))throw Error('Completed lesson remained in daily plan');
-          console.log('INTERACTION_PASS: confidence persistence + adaptive priority');
-          console.log('INTERACTION_PASS: Focus Start/Pause/Reset persistence');
-          console.log('INTERACTION_PASS: lesson completion + daily-plan exclusion');
-          console.log('INTERACTION_PASS: no duplicate confidence panel after SPA navigation');
-          ws.close();
-          NODE
-          echo '### Functional interaction QA PASS' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Confidence: persist + prioritise Need more practice' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Focus: Start / Pause / Reset' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Lesson completion: local persistence + recommendation exclusion' >> "$GITHUB_STEP_SUMMARY"
-          echo '- SPA revisit: no duplicate confidence panel' >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Preview safety summary
+      - name: Preview validation summary
         if: always()
         run: |
-          echo '### KirthiVerse controlled preview' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Source promotion: owner-approved; custom-domain cutover remains manual-gated' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Lean browser runtime: 6 JS requests maximum' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Browser QA: desktop + mobile critical route matrix' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Functional QA: confidence + focus + completion + SPA persistence' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Manus visual PNG package: rights not verified; asset bytes not introduced' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Production custom-domain configuration: unchanged' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Paid Cloudflare services: none enabled' >> "$GITHUB_STEP_SUMMARY"
+          echo '### KirthiVerse preview source validation only' >> "$GITHUB_STEP_SUMMARY"
+          echo '- No Cloudflare credentials accessed or Worker publication attempted' >> "$GITHUB_STEP_SUMMARY"
+          echo '- This workflow does not perform deployed browser or functional QA' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Use the separate Cross-Browser Release QA results for browser coverage' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Legacy design-branch definitions may still publish: keep this workflow disabled until every enabled ref is reviewed' >> "$GITHUB_STEP_SUMMARY"

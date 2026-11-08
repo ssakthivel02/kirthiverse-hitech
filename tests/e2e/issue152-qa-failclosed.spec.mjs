@@ -22,6 +22,9 @@ test('Issue #152: dual QA flags with missing provider withhold Secure and pilot 
   },{lesson:LESSON,key:CHECK});
   await page.goto('/lesson/'+LESSON);
   await page.waitForFunction((id)=>window.KV_MASTERY?.summary?.().rows.some(r=>r.lesson.id===id),LESSON);
+  // Pilot metrics is route-lazy. Load the real module explicitly under both QA flags.
+  await page.addScriptTag({url:'/pilot-metrics-v1.js?v=ISSUE152-QA-NO-EXPORT'});
+  await page.waitForFunction(()=>Boolean(window.KV_PILOT_METRICS));
   const outcome=await page.evaluate(({id,pilotKey})=>{
     const row=window.KV_MASTERY.summary().rows.find(x=>x.lesson.id===id);
     return {

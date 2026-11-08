@@ -39,7 +39,58 @@
     return {progress,confidence,practice,lessonCheck,diagnostic,speedlab};
   }
 
+  /* Issue #152 QA-only projection: two explicit, pre-bootstrap flags.
+     Real learner, legacy history, and pilot-v1 semantics remain unchanged when OFF.
+     Missing or invalid source evidence must NEVER revert to legacy Secure. */
+  const issue152Qa=()=>window.KV_ISSUE152_MASTERY_ENABLED===true && window.KV_ISSUE152_QA_CONTEXT===true;
+  const issue152Signal=(lesson,signal,why)=>({lesson,state:signal,
+    label:signal==='secure'?'Secure signal (provisional heuristic)':
+      signal==='not-explored'?'Not explored':signal.charAt(0).toUpperCase()+signal.slice(1),
+    why});
+  function issue152Fallback(reason){
+    let s;try{s=state()}catch{s={}}
+    const completed=new Set(Array.isArray(s.progress?.completed)?s.progress.completed:[]);
+    const started=new Set(Array.isArray(s.progress?.started)?s.progress.started:[]);
+    const confidence=s.confidence||{},checks=s.lessonCheck||{};
+    return L.map(lesson=>{
+      const id=lesson.id,check=checks[id]||{},conf=confidence[id]?.value||'';
+      const signal=(conf==='practice'||(check.correct===false&&Number(check.attempts)>=2))?'practising':
+        (completed.has(id)||check.correct===true||conf==='confident'||conf==='getting')?'developing':
+        (started.has(id)||Number(check.attempts)>0)?'exploring':'not-explored';
+      return issue152Signal(lesson,signal,'Issue #152 QA evidence unavailable ('+reason+'). No verified reasoning; no Secure claim.');
+    });
+  }
+  function issue152Evidence(){
+    const p=window.KV_ISSUE152_MASTERY_PROJECTION;
+    if(!p||p.schema!=='kirthiverse.issue152.mastery-projection.v2'||typeof p.projectMastery!=='function')
+      return issue152Fallback('provider missing');
+    try{
+      const s=state(),out=p.projectMastery({lessons:L,assessments:A,
+        progress:s.progress,confidence:s.confidence,practice:s.practice,lessonCheck:s.lessonCheck});
+      const policy=out?.restrictions;
+      if(out?.schema!=='kirthiverse.issue152.mastery-projection.v2'||
+        out.metricDefinition!=='issue152-proposed-not-comparable-to-legacy-secure'||
+        out.storageMutated!==false||!Array.isArray(out.rows)||out.rows.length!==L.length||
+        !policy||policy.legacyMasterySnapshotsComparable!==false||
+        policy.mayReplacePilotV1Snapshots!==false||policy.mayBackfillHistoricalEvents!==false)
+        return issue152Fallback('provider contract');
+      const seen=new Map(),allowed=new Set(['not-explored','exploring','practising','developing','secure']);
+      const computed={'not-explored':0,exploring:0,practising:0,developing:0,secure:0};
+      for(const row of out.rows){
+        if(typeof row?.lessonId!=='string'||seen.has(row.lessonId)||!allowed.has(row.signal)||
+          row.evidence?.reasoningMasteryVerified!==false)return issue152Fallback('invalid row');
+        seen.set(row.lessonId,row);computed[row.signal]++;
+      }
+      if(seen.size!==L.length||L.some(l=>!seen.has(l.id))||
+        !out.counts||Object.keys(computed).some(k=>out.counts[k]!==computed[k]))
+        return issue152Fallback('counts or lesson mismatch');
+      return L.map(l=>issue152Signal(l,seen.get(l.id).signal,
+        String(seen.get(l.id).why||'Provisional activity signal. Not educator-verified reasoning.')));
+    }catch{return issue152Fallback('provider exception');}
+  }
+
   function evidence(){
+    if(issue152Qa())return issue152Evidence();
     const {progress,confidence,practice,lessonCheck}=state();
     const started=new Set(progress.started||[]),completed=new Set(progress.completed||[]);
     const retryIds=new Set(practice.retryIds||[]);

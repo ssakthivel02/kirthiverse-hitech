@@ -190,9 +190,14 @@ jobs:
             assert historical_branch not in text, f'{path} still targets historical visual branch'
 
           perf=Path('.github/workflows/performance-security-qa.yml').read_text(encoding='utf-8')
-          assert 'post-merge-preview-proof' in perf
-          assert 'security-candidate.txt' in perf
-          assert 'ACTIVE_MASTER_SHA=' in perf
+          preview=Path('.github/workflows/preview-manus.yml').read_text(encoding='utf-8')
+          assert 'post-merge-preview-proof' in perf, 'legacy status name changed'
+          assert 'wrangler@4 dev' in perf, 'local QA runner missing'
+          assert 'No Cloudflare credentials accessed' in perf, 'QA-only summary missing'
+          for name,source in [('performance-security',perf),('manus-preview',preview)]:
+            forbidden=('wrangler'+'@4 deploy','secrets.'+'CLOUDFLARE_API_TOKEN','secrets.'+'CLOUDFLARE_ACCOUNT_ID')
+            assert not any(t in source for t in forbidden), f'{name} can publish to production'
+          assert 'KV_PREVIEW_NO_PUBLISH_PASS' in preview, 'preview non-publishing guard missing'
 
           closure=Path('.github/workflows/release-closure-qa.yml').read_text(encoding='utf-8')
           stale_tokens=[
@@ -204,7 +209,7 @@ jobs:
           found=[token for token in stale_tokens if token in closure]
           assert not found, f'stale release-closure literal(s) remain: {found}'
 
-          print('RELEASE_GATE_TOPOLOGY_PASS current_main_gates=5 exact_preview_sentinel=true')
+          print('RELEASE_GATE_TOPOLOGY_PASS current_main_gates=5 qa_only_no_worker_publish=true')
           PY
           node --check tests/e2e/release-closure.spec.mjs
 
@@ -247,7 +252,7 @@ jobs:
           echo '- Canonical corpus contract: 135 lessons / 72 assessments / 11 worlds' >> "$GITHUB_STEP_SUMMARY"
           echo '- Cloud identity, school account and teacher authentication remain unimplemented' >> "$GITHUB_STEP_SUMMARY"
           echo '- Current PWA / Accessibility / Cross-Browser / Performance-Security gates are attached to main' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Performance-Security owns exact-main Cloudflare preview sentinel proof after merge' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Performance-Security and Manus preview workflows are QA-only; they do not publish Workers' >> "$GITHUB_STEP_SUMMARY"
           echo "- GitHub main branch protection observed: ${KV_MAIN_PROTECTION_STATE:-UNKNOWN}" >> "$GITHUB_STEP_SUMMARY"
           echo '- Production: HOLD. CI success does not authorise production cutover or DNS changes.' >> "$GITHUB_STEP_SUMMARY"
 

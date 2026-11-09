@@ -61,10 +61,10 @@
     });
   }
   function issue152Evidence(){
-    const p=window.KV_ISSUE152_MASTERY_PROJECTION;
-    if(!p||p.schema!=='kirthiverse.issue152.mastery-projection.v2'||typeof p.projectMastery!=='function')
-      return issue152Fallback('provider missing');
     try{
+      const p=window.KV_ISSUE152_MASTERY_PROJECTION;
+      if(!p||p.schema!=='kirthiverse.issue152.mastery-projection.v2'||typeof p.projectMastery!=='function')
+        return issue152Fallback('provider missing');
       const s=state(),out=p.projectMastery({lessons:L,assessments:A,
         progress:s.progress,confidence:s.confidence,practice:s.practice,lessonCheck:s.lessonCheck});
       const policy=out?.restrictions;

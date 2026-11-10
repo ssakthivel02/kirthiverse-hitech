@@ -84,8 +84,12 @@
       if(seen.size!==L.length||L.some(l=>!seen.has(l.id))||
         !out.counts||Object.keys(computed).some(k=>out.counts[k]!==computed[k]))
         return issue152Fallback('counts or lesson mismatch');
-      return L.map(l=>issue152Signal(l,seen.get(l.id).signal,
-        String(seen.get(l.id).why||'Provisional activity signal. Not educator-verified reasoning.')));
+      return L.map(l=>{
+        const row=seen.get(l.id),unverifiedSecure=row.signal==='secure';
+        return issue152Signal(l,unverifiedSecure?'developing':row.signal,
+          unverifiedSecure?'Unverified Secure input capped at Developing. No verified reasoning.':
+            String(row.why||'Provisional activity signal. Not educator-verified reasoning.'));
+      });
     }catch{return issue152Fallback('provider exception');}
   }
 

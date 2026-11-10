@@ -97,3 +97,26 @@ test('Issue #152: valid synthetic provider is consumed without rewriting history
   expect(result.summary.counts.secure).toBe(0);
   expect(JSON.parse(result.history)).toEqual({[LESSON]:{correct:true,attempts:3}});
 });
+
+test('Issue #152: unverified Secure provider is capped at Developing without rewriting history',async({page})=>{
+  await page.addInitScript(({lesson,key})=>{
+    window.KV_ISSUE152_MASTERY_ENABLED=true;
+    window.KV_ISSUE152_QA_CONTEXT=true;
+    localStorage.setItem(key,JSON.stringify({[lesson]:{correct:true,attempts:3}}));
+    window.KV_ISSUE152_MASTERY_PROJECTION={schema:'kirthiverse.issue152.mastery-projection.v2',projectMastery:({lessons})=>({
+      schema:'kirthiverse.issue152.mastery-projection.v2',
+      metricDefinition:'issue152-proposed-not-comparable-to-legacy-secure',storageMutated:false,
+      restrictions:{legacyMasterySnapshotsComparable:false,mayReplacePilotV1Snapshots:false,mayBackfillHistoricalEvents:false},
+      counts:{'not-explored':0,exploring:0,practising:0,developing:0,secure:lessons.length},
+      rows:lessons.map(l=>({lessonId:l.id,signal:'secure',evidence:{reasoningMasteryVerified:false},why:'Synthetic QA provider; not educational signoff.'}))
+    })};
+  },{lesson:LESSON,key:CHECK});
+  await page.goto('/lesson/'+LESSON);
+  await page.waitForFunction(()=>Boolean(window.KV_MASTERY));
+  const result=await page.evaluate(key=>({summary:window.KV_MASTERY.summary(),history:localStorage.getItem(key)}),CHECK);
+  expect(result.summary.rows.every(r=>r.state==='developing')).toBe(true);
+  expect(result.summary.rows.every(r=>r.why.includes('No verified reasoning'))).toBe(true);
+  expect(result.summary.counts.developing).toBe(result.summary.rows.length);
+  expect(result.summary.counts.secure).toBe(0);
+  expect(JSON.parse(result.history)).toEqual({[LESSON]:{correct:true,attempts:3}});
+});

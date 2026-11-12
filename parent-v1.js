@@ -121,10 +121,12 @@
 
   function dashboardView(){
     const d=collect();
+    const issue152QaMode=window.KV_ISSUE152_MASTERY_ENABLED===true&&window.KV_ISSUE152_QA_CONTEXT===true;
+    const issue152Card='<article class="glass-card"><small class="kicker">EXPERIMENTAL LEARNING INDICATORS</small><h2>Not scored</h2><p>QA-only activity signals; independently verified reasoning is unavailable. No legacy mastery percentage is shown.</p></article>';
     return `<div class="page pv-page"><div class="page-title"><span>PARENT SPACE // ${esc(d.g.childName||d.profile.displayName||'Learner')}</span><h1>Progress dashboard</h1><p>Everything below is computed from evidence stored on this device only. Nothing here is fabricated — a blank section means no evidence exists yet.</p></div>
 
     <section class="pv-grid">
-      <article class="glass-card"><small class="kicker">MASTERY SIGNAL</small><h2>${d.summary.total?Math.round(((d.summary.counts.secure||0)+(d.summary.counts.developing||0))/d.summary.total*100)+'%':'—'}</h2><p>${d.summary.counts.secure||0} secure · ${d.summary.counts.developing||0} developing · ${d.summary.counts.practising||0} practising · ${d.summary.counts['not-explored']||0} not explored</p></article>
+      ${issue152QaMode?issue152Card:`<article class="glass-card"><small class="kicker">MASTERY SIGNAL</small><h2>${d.summary.total?Math.round(((d.summary.counts.secure||0)+(d.summary.counts.developing||0))/d.summary.total*100)+'%':'—'}</h2><p>${d.summary.counts.secure||0} secure · ${d.summary.counts.developing||0} developing · ${d.summary.counts.practising||0} practising · ${d.summary.counts['not-explored']||0} not explored</p></article>`}
       <article class="glass-card"><small class="kicker">DIAGNOSTIC</small>${d.diagnostic?`<h2>${d.diagnostic.overallAccuracy}%</h2><p>${d.diagnostic.correct}/${d.diagnostic.totalQuestions} correct · <a data-link href="/diagnostic">Retake →</a></p>`:`<h2>Not taken yet</h2><p><a data-link href="/diagnostic">Start the maths diagnostic →</a></p>`}</article>
       <article class="glass-card"><small class="kicker">QUICK SKILLS</small>${d.speedlabBests.length?`<ul>${d.speedlabBests.slice(0,4).map(([k,v])=>`<li>${esc(k.replace(':',' · '))}s: ${v.correct} correct (${v.accuracy}%)</li>`).join('')}</ul>`:`<h2>Not played yet</h2><p><a data-link href="/speedlab">Open Speed Lab →</a></p>`}</article>
       <article class="glass-card"><small class="kicker">ACTIVITY LOGGED</small><h2>${d.sessionsLogged}</h2><p>diagnostic + practice + Quick Skills sessions on this device. Session-length timing isn't tracked in this build, so this is a count, not minutes.</p></article>

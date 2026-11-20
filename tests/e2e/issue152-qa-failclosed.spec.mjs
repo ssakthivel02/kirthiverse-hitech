@@ -120,3 +120,52 @@ test('Issue #152: unverified Secure provider is capped at Developing without rew
   expect(result.summary.counts.secure).toBe(0);
   expect(JSON.parse(result.history)).toEqual({[LESSON]:{correct:true,attempts:3}});
 });
+
+for(const attack of ['input-mutation','storage-write']){
+  test(`Issue #152: ${attack} cannot supply trusted provider evidence`,async({page})=>{
+    await page.addInitScript(({attack,lesson,key})=>{
+      window.KV_ISSUE152_MASTERY_ENABLED=true;
+      window.KV_ISSUE152_QA_CONTEXT=true;
+      localStorage.setItem(key,JSON.stringify({[lesson]:{correct:true,attempts:3}}));
+      let invoked=false;
+      window.KV_ISSUE152_MASTERY_PROJECTION={schema:'kirthiverse.issue152.mastery-projection.v2',projectMastery:function(input){
+        'use strict';
+        if(attack==='input-mutation'){
+          const writes=[()=>{input.lessons[0].title='CORRUPTED'},()=>input.lessons.push({id:'fake'}),
+            ()=>{input.assessments[0].correctAnswer='CORRUPTED'},()=>{input.lessonCheck[lesson].correct=false},
+            ()=>input.progress.completed.push(lesson),()=>{input.confidence.fake={value:'confident'}},
+            ()=>input.practice.history.push({lessonId:lesson,result:'got-it'})];
+          window.__issue152BlockedWrites=writes.map(write=>{try{write();return false}catch{return true}});
+        }else if(!invoked){
+          // Deliberately write synthetic history, then lie in the returned metadata.
+          localStorage.setItem(key,JSON.stringify({[lesson]:{correct:false,attempts:99}}));
+          invoked=true;
+        }
+        return {schema:'kirthiverse.issue152.mastery-projection.v2',
+          metricDefinition:'issue152-proposed-not-comparable-to-legacy-secure',storageMutated:false,
+          restrictions:{legacyMasterySnapshotsComparable:false,mayReplacePilotV1Snapshots:false,mayBackfillHistoricalEvents:false},
+          counts:{'not-explored':0,exploring:0,practising:0,developing:input.lessons.length,secure:0},
+          rows:input.lessons.map(l=>({lessonId:l.id,signal:'developing',evidence:{reasoningMasteryVerified:false},why:'ATTACKER OUTPUT'}))};
+      }};
+    },{attack,lesson:LESSON,key:CHECK});
+    await page.goto('/lesson/'+LESSON);
+    await page.waitForFunction(()=>Boolean(window.KV_MASTERY));
+    const result=await page.evaluate(({key})=>({first:window.KV_MASTERY.summary(),second:window.KV_MASTERY.summary(),
+      history:localStorage.getItem(key),blocked:window.__issue152BlockedWrites,
+      corruptLesson:window.KV_LESSONS.some(l=>l.title==='CORRUPTED'||l.id==='fake'),
+      corruptAnswer:window.KV_ASSESSMENTS.some(a=>a.correctAnswer==='CORRUPTED')}),{key:CHECK});
+    expect(result.first.counts.secure).toBe(0);
+    expect(result.second.counts.secure).toBe(0);
+    if(attack==='input-mutation'){
+      expect(result.blocked).toEqual(Array(7).fill(true));
+      expect(result.corruptLesson).toBe(false);
+      expect(result.corruptAnswer).toBe(false);
+      expect(JSON.parse(result.history)).toEqual({[LESSON]:{correct:true,attempts:3}});
+    }else{
+      expect(result.first.rows.every(r=>r.why.includes('persisted history changed'))).toBe(true);
+      expect(result.second.rows.every(r=>r.why.includes('persisted history changed'))).toBe(true);
+      // Detection is not a sandbox or rollback: direct browser writes remain possible.
+      expect(JSON.parse(result.history)).toEqual({[LESSON]:{correct:false,attempts:99}});
+    }
+  });
+}

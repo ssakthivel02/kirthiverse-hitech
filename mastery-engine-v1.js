@@ -60,13 +60,43 @@
       return issue152Signal(lesson,signal,'Issue #152 QA evidence unavailable ('+reason+'). No verified reasoning; no Secure claim.');
     });
   }
+  function issue152FrozenInput(value){
+    const snapshot=JSON.parse(JSON.stringify(value));
+    const freeze=x=>{if(x&&typeof x==='object'){Object.values(x).forEach(freeze);Object.freeze(x)}return x};
+    return freeze(snapshot);
+  }
+  function issue152StorageSnapshot(){
+    const entries=[];
+    for(let i=0;i<localStorage.length;i++){
+      const key=localStorage.key(i);entries.push([key,localStorage.getItem(key)]);
+    }
+    return JSON.stringify(entries.sort((a,b)=>String(a[0]).localeCompare(String(b[0]))));
+  }
+  let issue152StorageViolation=false;
   function issue152Evidence(){
+    // Integrity check only: same-page callbacks are NOT a security sandbox.
+    // Never activate untrusted providers on real learner data. Do not roll back
+    // storage here: another tab may have made a legitimate concurrent change.
+    if(issue152StorageViolation)return issue152Fallback('persisted history changed during provider call');
+    let before;
+    try{before=issue152StorageSnapshot()}catch{return issue152Fallback('storage check unavailable')}
+    const rows=issue152Project();
+    try{
+      if(issue152StorageSnapshot()!==before){
+        issue152StorageViolation=true;
+        return issue152Fallback('persisted history changed during provider call');
+      }
+    }catch{return issue152Fallback('storage check unavailable')}
+    return rows;
+  }
+  function issue152Project(){
     try{
       const p=window.KV_ISSUE152_MASTERY_PROJECTION;
       if(!p||p.schema!=='kirthiverse.issue152.mastery-projection.v2'||typeof p.projectMastery!=='function')
         return issue152Fallback('provider missing');
-      const s=state(),out=p.projectMastery({lessons:L,assessments:A,
+      const s=state(),input=issue152FrozenInput({lessons:L,assessments:A,
         progress:s.progress,confidence:s.confidence,practice:s.practice,lessonCheck:s.lessonCheck});
+      const out=p.projectMastery(input);
       const policy=out?.restrictions;
       if(out?.schema!=='kirthiverse.issue152.mastery-projection.v2'||
         out.metricDefinition!=='issue152-proposed-not-comparable-to-legacy-secure'||

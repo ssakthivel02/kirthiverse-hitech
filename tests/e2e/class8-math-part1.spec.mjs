@@ -60,3 +60,33 @@ test('Class 8 Maths Part I appears on the Mathematics world and links back to it
   await expect(page.locator('main')).toContainText('Laws of Exponents');
   await expect(page.getByRole('link', { name: /Back to Mathematics/ })).toBeVisible();
 });
+
+test('late Part II loading preserves an answer being typed in a Part I lesson', async ({ page }) => {
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  await page.route('**/data/class8-math-part2-assessments.js*', async route => {
+    await gate;
+    await route.continue();
+  });
+  try {
+    await page.goto('/world/mathematics', { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => document.documentElement.dataset.class8MathPart1 === 'ready');
+    await page.locator('a[href="/lesson/math.cbse8.ganita-prakash.ch1.squares-and-square-roots.v1"]').first().click();
+    const answer = page.locator('#lc-answer');
+    await expect(answer).toBeVisible();
+    await answer.fill('14');
+    await page.evaluate(() => {
+      window.__latePart2Ready = false;
+      addEventListener('kv:class8-math-ready', event => {
+        if (event.detail.batch === 'part2') window.__latePart2Ready = true;
+      });
+    });
+    release();
+    await page.waitForFunction(() => window.__latePart2Ready === true);
+    await expect(answer).toHaveValue('14');
+    await page.getByRole('button', { name: 'Check', exact: true }).click();
+    await expect(page.locator('#lc-status')).toContainText('Correct');
+  } finally {
+    release();
+  }
+});

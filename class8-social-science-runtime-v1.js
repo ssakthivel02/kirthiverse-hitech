@@ -3,7 +3,7 @@
    Loads only on Class 8 Social Science lesson routes, the Geography/History worlds and search. */
 (()=>{
   const batches={
-    part1:{lesson:'data/class8-social-science-part1-bundle-v1.js',assessment:'data/class8-social-science-part1-bundle-v1.js',version:'CBSE8-SOC-P1-1',flag:'class8SocialSciencePart1'},
+    part1:{lesson:'data/class8-social-science-part1-bundle-v2.js',assessment:'data/class8-social-science-part1-bundle-v2.js',version:'CBSE8-SOC-P1-1',flag:'class8SocialSciencePart1'},
     part2:{lesson:'data/class8-social-science-part2-bundle-v1.js',assessment:'data/class8-social-science-part2-bundle-v1.js',version:'CBSE8-SOC-P2-1',flag:'class8SocialSciencePart2'}
   };
   const loaded=new Set(),loading=new Map(),assetPromises=new Map();

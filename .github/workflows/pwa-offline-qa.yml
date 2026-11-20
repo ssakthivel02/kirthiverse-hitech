@@ -9,6 +9,10 @@ on:
       - 'index.html'
       - 'manifest.webmanifest'
       - 'sw-v30.js'
+      - 'class8-math-runtime-v1.js'
+      - 'class8-science-runtime-v1.js'
+      - 'class8-social-science-runtime-v1.js'
+      - 'tests/class8-bundle-cache-contract.test.mjs'
       - 'core-runtime-v30.js'
       - 'app.js'
       - 'styles.css'
@@ -46,6 +50,10 @@ on:
       - 'index.html'
       - 'manifest.webmanifest'
       - 'sw-v30.js'
+      - 'class8-math-runtime-v1.js'
+      - 'class8-science-runtime-v1.js'
+      - 'class8-social-science-runtime-v1.js'
+      - 'tests/class8-bundle-cache-contract.test.mjs'
       - 'core-runtime-v30.js'
       - 'app.js'
       - 'styles.css'
@@ -86,7 +94,7 @@ concurrency:
 
 env:
   LOCAL_URL: http://127.0.0.1:8765
-  EXPECTED_CACHE: kirthiverse-preview-v49
+  EXPECTED_CACHE: kirthiverse-preview-v50
 
 jobs:
   pwa-offline-qa:
@@ -123,14 +131,15 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           import json,re
+          from urllib.parse import urlsplit
           from pathlib import Path
           manifest=json.loads(Path('manifest.webmanifest').read_text())
           sw=Path('sw-v30.js').read_text()
           core=Path('core-runtime-v30.js').read_text()
           assert manifest['start_url']=='/' and manifest['scope']=='/' and manifest['display']=='standalone'
           assert manifest['name'].startswith('KirthiVerse') and manifest['icons']
-          assert "CACHE='kirthiverse-preview-v49'" in sw, 'current v49 cache contract missing'
-          assert "VERSION='MANUS-VISUAL-MASTER-05-PWA-49'" in sw, 'current PWA v49 version missing'
+          assert "CACHE='kirthiverse-preview-v50'" in sw, 'current v50 cache contract missing'
+          assert "VERSION='MANUS-VISUAL-MASTER-05-PWA-50'" in sw, 'current PWA v50 version missing'
           block=re.search(r"PRECACHE=\[(.*?)\];self\.addEventListener\('install'",sw,re.S)
           assert block,'PRECACHE block not found'
           paths=re.findall(r"'(/[^']*)'",block.group(1));assert paths,'PRECACHE is empty'
@@ -140,15 +149,19 @@ jobs:
             '/data/class6-science-pilot.js','/data/class6-science-assessments.js','/data/class6-science-ch2.js','/data/class6-science-ch2-assessments.js','/data/class6-science-ch3.js','/data/class6-science-ch3-assessments.js','/data/class6-science-ch4.js','/data/class6-science-ch4-assessments.js','/data/class6-science-ch5.js','/data/class6-science-ch5-assessments.js','/data/class6-science-ch6.js','/data/class6-science-ch6-assessments.js','/data/class6-science-ch7.js','/data/class6-science-ch7-assessments.js','/data/class6-science-ch8.js','/data/class6-science-ch8-assessments.js','/data/class6-science-ch9.js','/data/class6-science-ch9-assessments.js','/data/class6-science-ch10.js','/data/class6-science-ch10-assessments.js','/data/class6-science-ch11.js','/data/class6-science-ch11-assessments.js','/data/class6-science-ch12.js','/data/class6-science-ch12-assessments.js',
             '/data/class6-social-science-pilot.js','/data/class6-social-science-assessments.js','/data/class6-social-science-ch5.js','/data/class6-social-science-ch5-assessments.js','/data/class6-social-science-ch6.js','/data/class6-social-science-ch6-assessments.js','/data/class6-social-science-ch7.js','/data/class6-social-science-ch7-assessments.js','/data/class6-social-science-ch8.js','/data/class6-social-science-ch8-assessments.js','/data/class6-social-science-ch9.js','/data/class6-social-science-ch9-assessments.js'
           ]
+          required += ['/class8-math-runtime-v1.js', '/class8-science-runtime-v1.js', '/class8-social-science-runtime-v1.js', '/data/class8-math-part1-bundle-v1.js', '/data/class8-math-part2-bundle-v1.js', '/data/class8-science-bundle-v2.js', '/data/class8-social-science-part1-bundle-v2.js', '/data/class8-social-science-part2-bundle-v1.js']
           for marker in required: assert marker in paths,f'current precache asset missing: {marker}'
           missing=[]
           for url in paths:
-              target=Path('index.html') if url=='/' else Path(url.lstrip('/'))
+              target=Path('index.html') if url=='/' else Path(urlsplit(url).path.lstrip('/'))
               if not target.is_file():missing.append(url)
           assert not missing,f'PRECACHE references missing repository files: {missing}'
           for marker in ["navigator.serviceWorker.register(SW","updateViaCache:'none'",'offlineCapable']: assert marker in core,marker
-          print(f'PWA_CONTRACT_PASS: manifest + v49 cache + {len(paths)} verified precache paths + Social Science Chapter 9')
+          print(f'PWA_CONTRACT_PASS: manifest + v50 cache + {len(paths)} verified precache paths + Social Science Chapter 9')
           PY
+
+      - name: Reject incomplete or HTML Class 8 cache upgrades
+        run: node tests/class8-bundle-cache-contract.test.mjs
 
       - name: Browser cached-origin fallback and direct navigation
         shell: bash
@@ -185,6 +198,7 @@ jobs:
           await wait(`'serviceWorker' in navigator && !!window.KV_PWA`,'PWA bootstrap');await ev(`navigator.serviceWorker.register('/sw-v30.js',{updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>true)`);
           const cacheOk=await ev(`caches.keys().then(k=>k.includes(${JSON.stringify(cacheName)}))`);if(!cacheOk)throw Error('current cache not installed: '+cacheName);
           const required=['/core-runtime-v30.js','/p0-entry-v1.js','/educator-pilot-v1.js','/pilot-metrics-v1.js','/pilot-readiness-v1.js','/pilot-run-v1.js','/data/lessons-1.js','/data/assessments-1.js','/data/class6-math-pilot.js','/data/class6-math-assessments.js','/data/class6-math-ch2.js','/data/class6-math-ch2-assessments.js','/data/class6-math-ch3-4-runtime.js','/data/class6-math-ch3-assessments.js','/data/class6-math-ch4-assessments.js','/data/class6-math-ch5-assessments.js','/data/class6-math-ch6-assessments.js','/data/class6-math-ch7-assessments.js','/data/class6-science-pilot.js','/data/class6-science-assessments.js','/data/class6-science-ch2.js','/data/class6-science-ch2-assessments.js','/data/class6-science-ch3.js','/data/class6-science-ch3-assessments.js','/data/class6-science-ch4.js','/data/class6-science-ch4-assessments.js','/data/class6-science-ch5.js','/data/class6-science-ch5-assessments.js','/data/class6-science-ch6.js','/data/class6-science-ch6-assessments.js','/data/class6-science-ch7.js','/data/class6-science-ch7-assessments.js','/data/class6-science-ch8.js','/data/class6-science-ch8-assessments.js','/data/class6-science-ch9.js','/data/class6-science-ch9-assessments.js','/data/class6-science-ch10.js','/data/class6-science-ch10-assessments.js','/data/class6-science-ch11.js','/data/class6-science-ch11-assessments.js','/data/class6-science-ch12.js','/data/class6-science-ch12-assessments.js','/data/class6-social-science-pilot.js','/data/class6-social-science-assessments.js','/data/class6-social-science-ch5.js','/data/class6-social-science-ch5-assessments.js','/data/class6-social-science-ch6.js','/data/class6-social-science-ch6-assessments.js','/data/class6-social-science-ch7.js','/data/class6-social-science-ch7-assessments.js','/data/class6-social-science-ch8.js','/data/class6-social-science-ch8-assessments.js','/data/class6-social-science-ch9.js','/data/class6-social-science-ch9-assessments.js'];
+          required.push('/class8-math-runtime-v1.js','/class8-science-runtime-v1.js','/class8-social-science-runtime-v1.js','/data/class8-math-part1-bundle-v1.js','/data/class8-math-part2-bundle-v1.js','/data/class8-science-bundle-v2.js','/data/class8-social-science-part1-bundle-v2.js','/data/class8-social-science-part2-bundle-v1.js');
           const missing=await ev(`caches.open(${JSON.stringify(cacheName)}).then(async c=>{const req=${JSON.stringify(required)};const out=[];for(const u of req){if(!(await c.match(u)))out.push(u)}return out})`);if(missing.length)throw Error('required current assets absent from cache: '+missing.join(', '));
           await send('Page.navigate',{url:base+'/?controlled=1'});await new Promise(r=>setTimeout(r,1600));await wait(`document.readyState!=='loading'&&!!document.querySelector('main')`,'controlled online navigation');await wait(`!!navigator.serviceWorker.controller`,'service worker control',20000);execFileSync('kill',[process.env.SPID]);await new Promise(r=>setTimeout(r,500));
           await ev(`window.KV_NAVIGATION.navigate('/lesson/'+${JSON.stringify(lesson)});true`);await wait(`location.pathname.startsWith('/lesson/')&&!!document.querySelector('main')&&!!document.getElementById('complete')`,'origin-unavailable Social Science Chapter 9 SPA lesson',12000);
@@ -199,7 +213,7 @@ jobs:
           echo '### PWA / offline QA' >> "$GITHUB_STEP_SUMMARY"
           echo '- HI-TECH ACTIVE MASTER identity checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Manifest contract checked' >> "$GITHUB_STEP_SUMMARY"
-          echo '- Current v49 cache and every repository precache path checked' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Current v50 cache and every repository precache path checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Class 6 Mathematics + Science + Social Science through Chapter 9 required curriculum assets checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Service worker install/control and origin-unavailable Social Science Chapter 9 SPA/direct navigation checked' >> "$GITHUB_STEP_SUMMARY"
           echo '- Production DNS/deployment: unchanged' >> "$GITHUB_STEP_SUMMARY"

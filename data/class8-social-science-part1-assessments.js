@@ -65,7 +65,7 @@ A(5,1,'multiple-choice','Who elects the Vice President?','Members of both houses
 A(5,1,'reasoning','Are Lok Sabha members elected directly by voters? Answer Yes or No.','Yes','Voters in each constituency choose their Lok Sabha member directly.'),
 A(5,1,'short-answer','How many elected seats does the Lok Sabha have? Answer with a number.','543','The Lok Sabha has 543 elected seats.'),
 /* Chapter 6 — The Parliamentary System */
-A(6,0,'short-answer','A proposed law before it has been passed is called a what? Answer in one word.','bill','A bill becomes an act only after both houses pass it and the President assents.'),
+A(6,0,'short-answer','A proposed law before it has been passed is called a what? Answer in one word.','bill','An ordinary Bill generally needs passage through both Houses and presidential assent. Money Bills follow special Lok Sabha-led rules.'),
 A(6,0,'multiple-choice','Which house alone can introduce a money bill?','Lok Sabha','Money bills start only in the Lok Sabha; the Rajya Sabha can only suggest changes.',['Lok Sabha','Rajya Sabha','Either house','The Supreme Court']),
 A(6,0,'reasoning','Does a bill become an act without the President’s assent? Answer Yes or No.','No','The President’s assent is the final step that turns a passed bill into an act.'),
 A(6,0,'short-answer','Parliament is made of the President and two houses. How many parts does it have in all? Answer with a number.','3','The President, the Lok Sabha and the Rajya Sabha make three parts.'),

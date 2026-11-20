@@ -27,7 +27,9 @@
       await inject(`class8-math-${name}-lessons`,cfg.lesson,cfg.version);
       await inject(`class8-math-${name}-assessments`,cfg.assessment,cfg.version);
       loaded.add(name);document.documentElement.dataset[cfg.flag]='ready';document.documentElement.dataset.class8Math='ready';
-      dispatchEvent(new PopStateEvent('popstate'));dispatchEvent(new CustomEvent('kv:class8-math-ready',{detail:{classLevel:8,subject:'Mathematics',batch:name,localOnly:true}}));
+      const activeBatch=batchFromRoute();
+      if(!activeBatch||activeBatch===name)dispatchEvent(new PopStateEvent('popstate'));
+      dispatchEvent(new CustomEvent('kv:class8-math-ready',{detail:{classLevel:8,subject:'Mathematics',batch:name,localOnly:true}}));
     }catch(error){document.documentElement.dataset.class8Math='load-error';document.documentElement.dataset[cfg.flag]='load-error';console.error('[KirthiVerse] Class 8 Mathematics load failed',error)}})();
     loading.set(name,work);await work;loading.delete(name)
   }

@@ -8,6 +8,7 @@
   const DIAGNOSTIC_KEY='kirthiverse.hitech.diagnostic.v1';
   const SPEEDLAB_KEY='kirthiverse.hitech.speedlab.v1';
   const LESSONCHECK_KEY='kirthiverse.hitech.lessoncheck.v1';
+  const issue152QaMode=()=>window.KV_ISSUE152_MASTERY_ENABLED===true&&window.KV_ISSUE152_QA_CONTEXT===true;
   const HEARTBEAT_MS=15000, RECENT_ACTIVITY_MS=60000, MAX_EVENTS=1200, MAX_SYNC_KEYS=400;
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const clone=x=>JSON.parse(JSON.stringify(x));
@@ -20,7 +21,7 @@
 
   function blank(){return {schema:'kirthiverse.hitech.pilot-metrics.v1',trackingStartedAt:nowIso(),baselineEstablishedAt:null,events:[],days:{},synced:{diagnosticCompletedAt:null,speedlabKeys:[],lessonCheckKeys:[]},masterySnapshots:{}}}
   function state(){const s=read(KEY,null)||blank();if(!Array.isArray(s.events))s.events=[];if(!s.days||typeof s.days!=='object')s.days={};if(!s.synced||typeof s.synced!=='object')s.synced={diagnosticCompletedAt:null,speedlabKeys:[],lessonCheckKeys:[]};if(!Array.isArray(s.synced.speedlabKeys))s.synced.speedlabKeys=[];if(!Array.isArray(s.synced.lessonCheckKeys))s.synced.lessonCheckKeys=[];if(!s.masterySnapshots||typeof s.masterySnapshots!=='object')s.masterySnapshots={};return s}
-  function save(s){s.events=s.events.slice(-MAX_EVENTS);s.synced.speedlabKeys=s.synced.speedlabKeys.slice(-MAX_SYNC_KEYS);s.synced.lessonCheckKeys=s.synced.lessonCheckKeys.slice(-MAX_SYNC_KEYS);localStorage.setItem(KEY,JSON.stringify(s))}
+  function save(s){if(issue152QaMode())return;s.events=s.events.slice(-MAX_EVENTS);s.synced.speedlabKeys=s.synced.speedlabKeys.slice(-MAX_SYNC_KEYS);s.synced.lessonCheckKeys=s.synced.lessonCheckKeys.slice(-MAX_SYNC_KEYS);localStorage.setItem(KEY,JSON.stringify(s))}
 
   function currentSourceKeys(){
     const diagnostic=read(DIAGNOSTIC_KEY,null),speed=read(SPEEDLAB_KEY,{history:[]}),checks=read(LESSONCHECK_KEY,{});
@@ -28,16 +29,16 @@
     const lessonCheckKeys=Object.entries(checks||{}).filter(([,v])=>v?.at).map(([lessonId,v])=>`${lessonId}|${v.at}|${v.correct?'1':'0'}|${v.attempts||''}`);
     return {diagnosticCompletedAt:diagnostic?.completedAt||null,speedlabKeys,lessonCheckKeys};
   }
-  function establishBaseline(){const s=state();if(s.baselineEstablishedAt)return s;const src=currentSourceKeys();s.baselineEstablishedAt=nowIso();s.synced={...src};save(s);return s}
+  function establishBaseline(){if(issue152QaMode())return state();const s=state();if(s.baselineEstablishedAt)return s;const src=currentSourceKeys();s.baselineEstablishedAt=nowIso();s.synced={...src};save(s);return s}
 
-  function record(type,details={},at=nowIso()){
+  function record(type,details={},at=nowIso()){if(issue152QaMode())return null;
     const s=state();s.events.push({id:uid(),type,at,day:dayKey(at),details:clone(details)});save(s);return s.events[s.events.length-1];
   }
-  function addActiveSeconds(seconds){
+  function addActiveSeconds(seconds){if(issue152QaMode())return;
     if(!Number.isFinite(seconds)||seconds<=0)return;const s=state(),k=dayKey();const d=s.days[k]||{activeSeconds:0,heartbeatCount:0};d.activeSeconds=Math.max(0,Number(d.activeSeconds||0))+seconds;d.heartbeatCount=Math.max(0,Number(d.heartbeatCount||0))+1;s.days[k]=d;save(s);
   }
 
-  function syncExternalEvidence(){
+  function syncExternalEvidence(){if(issue152QaMode())return;
     const s=establishBaseline(),diagnostic=read(DIAGNOSTIC_KEY,null),speed=read(SPEEDLAB_KEY,{history:[]}),checks=read(LESSONCHECK_KEY,{});
     if(diagnostic?.completedAt&&diagnostic.completedAt!==s.synced.diagnosticCompletedAt){
       record('diagnostic_completed',{accuracy:Number(diagnostic.overallAccuracy)||0,totalQuestions:Number(diagnostic.totalQuestions)||0,correct:Number(diagnostic.correct)||0},diagnostic.completedAt);
@@ -51,7 +52,7 @@
     n=state();n.synced.lessonCheckKeys=[...seen];save(n);
   }
 
-  function snapshotMastery(){
+  function snapshotMastery(){if(issue152QaMode())return;
     const summary=window.KV_MASTERY?.summary?.();if(!summary?.counts)return;const k=dayKey(),s=state(),counts={secure:Number(summary.counts.secure)||0,developing:Number(summary.counts.developing)||0,practising:Number(summary.counts.practising)||0,exploring:Number(summary.counts.exploring)||0,notExplored:Number(summary.counts['not-explored'])||0},at=nowIso();
     if(!s.masterySnapshots[k])s.masterySnapshots[k]={first:{at,counts},latest:{at,counts}};else s.masterySnapshots[k].latest={at,counts};save(s);
   }
@@ -65,7 +66,7 @@
     return {schema:'kirthiverse.hitech.weekly-summary.v1',generatedAt:new Date(now).toISOString(),trackingStartedAt:s.trackingStartedAt,observationDays,completeSevenDayWindow:completeWindow,days,activeSeconds,activeMinutes:Number((activeSeconds/60).toFixed(1)),activeDays,lessonStarts:byType('lesson_started').length,uniqueLessonsStarted:uniqueLessonStarts,lessonCompletions:byType('lesson_completed').length,uniqueLessonsCompleted:uniqueLessonCompletions,quickSkillsSessions:byType('quick_skills_session').length,diagnosticCompletions:byType('diagnostic_completed').length,answerChecks:byType('answer_check').length,mastery:{first,last,secureDelta:first&&last?last.secure-first.secure:null,developingDelta:first&&last?last.developing-first.developing:null},daily:days.map(k=>({day:k,activeSeconds:Number(s.days[k]?.activeSeconds||0),activeMinutes:Number((Number(s.days[k]?.activeSeconds||0)/60).toFixed(1)),events:events.filter(e=>e.day===k).length})),evidenceBoundary:{localOnly:true,networkTelemetry:false,tamperEvident:false,backfilledHistory:false,productionResearchEvidence:false}};
   }
 
-  function reportView(){
+  function reportView(){if(issue152QaMode())return '<div class="page pm-page"><div class="page-title"><h1>Experimental QA — pilot metrics disabled</h1><p>Provisional activity does not constitute historical pilot-v1 evidence. Tracking and export are disabled in this mode.</p></div></div>';
     if(!parentUnlocked())return `<div class="page pm-page"><div class="page-title"><span>WEEKLY REPORT // PARENT GATE</span><h1>Unlock Parent Space first</h1><p>The weekly pilot report is local-only and requires the grown-up session to be unlocked.</p></div><a class="primary" data-link href="/parent">Open Parent Space →</a></div>`;
     const w=weeklySummary(),windowNote=w.completeSevenDayWindow?'Full seven-day observation window.':`Early pilot window: ${w.observationDays} day${w.observationDays===1?'':'s'} observed so far; do not interpret this as seven-day retention.`;
     return `<div class="page pm-page"><div class="page-title"><span>PILOT METRICS // LOCAL ONLY</span><h1>Weekly learning report</h1><p>${esc(windowNote)}</p></div>
@@ -75,8 +76,8 @@
     </div>`;
   }
 
-  function exportWeekly(){const payload={...weeklySummary(),exportedAt:nowIso(),claim:'LOCAL_PILOT_EVIDENCE_ONLY'};const text=JSON.stringify(payload,null,2),blob=new Blob([text],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='kirthiverse-weekly-pilot-evidence.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),0)}
-  function injectCards(){
+  function exportWeekly(){if(issue152QaMode())return;const payload={...weeklySummary(),exportedAt:nowIso(),claim:'LOCAL_PILOT_EVIDENCE_ONLY'};const text=JSON.stringify(payload,null,2),blob=new Blob([text],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='kirthiverse-weekly-pilot-evidence.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),0)}
+  function injectCards(){if(issue152QaMode())return;
     const w=weeklySummary();
     if(location.pathname==='/parent'&&parentUnlocked()){const main=document.querySelector('main'),anchor=document.querySelector('.pv-actions');if(main&&anchor&&!main.querySelector('.pm-parent-card')){const c=document.createElement('section');c.className='glass-card pm-parent-card';c.innerHTML=`<small class="kicker">WEEKLY PILOT EVIDENCE</small><h3>${w.activeMinutes} active min · ${w.activeDays} active day${w.activeDays===1?'':'s'}</h3><p>${w.completeSevenDayWindow?'Seven-day window available.':`Only ${w.observationDays} observation day${w.observationDays===1?'':'s'} so far.`}</p><a class="primary" data-link href="/weekly-report">Open weekly report →</a>`;anchor.closest('.glass-card')?.after(c)}}
     if(location.pathname==='/educator'&&parentUnlocked()){const main=document.querySelector('main');if(main&&!main.querySelector('.pm-educator-card')){const c=document.createElement('section');c.className='glass-card pm-educator-card';c.innerHTML=`<small class="kicker">LINKED LEARNER — WEEKLY PILOT</small><h3>${w.activeMinutes} active min · ${w.uniqueLessonsCompleted} lesson${w.uniqueLessonsCompleted===1?'':'s'} completed</h3><p>This summary applies only to the device-linked learner; it is not class-wide analytics.</p><a class="primary" data-link href="/weekly-report">View evidence →</a>`;main.appendChild(c)}}
@@ -94,5 +95,5 @@
   addEventListener('kv:rendered',()=>queueMicrotask(cycle));
   addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')lastInteraction=Date.now()});
   cycle();
-  window.KV_PILOT_METRICS={version:'v1',localOnly:true,tamperEvident:false,backfillsHistory:false,activeRoutePolicy:'lesson+diagnostic+speedlab only',summary:weeklySummary,record,sync:syncExternalEvidence,trackingStartedAt:()=>state().trackingStartedAt};
+  window.KV_PILOT_METRICS={version:'v1',localOnly:true,tamperEvident:false,backfillsHistory:false,activeRoutePolicy:'lesson+diagnostic+speedlab only',summary:()=>issue152QaMode()?null:weeklySummary(),record:(...args)=>issue152QaMode()?null:record(...args),sync:()=>issue152QaMode()?null:syncExternalEvidence(),trackingStartedAt:()=>issue152QaMode()?null:state().trackingStartedAt};
 })();

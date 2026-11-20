@@ -54,13 +54,15 @@
   function dashboardView(){
     const s=state(),stats=assignmentStats(s),mastery=window.KV_MASTERY?.summary?.()||{counts:{},total:0},rec=window.KV_MASTERY?.recommend?.();
     const secure=mastery.counts?.secure||0,developing=mastery.counts?.developing||0,practising=mastery.counts?.practising||0;
+    const issue152QaMode=window.KV_ISSUE152_MASTERY_ENABLED===true&&window.KV_ISSUE152_QA_CONTEXT===true;
+    const issue152Card='<article class="glass-card"><small class="kicker">EXPERIMENTAL LOCAL SIGNALS</small><h2>Not scored</h2><p>QA only; no verified reasoning or cohort learning claim.</p></article>';
     return `<div class="page ep-page"><div class="page-title"><span>EDUCATOR PILOT // ON-DEVICE EVIDENCE</span><h1>${esc(s.className)}</h1><p>Prototype class planning for a controlled pilot. Roster names are aliases. Only the learner linked to this device can show automatic progress evidence; every other learner stays explicitly unlinked until real school identity/consent architecture exists.</p></div>
 
       <section class="ep-grid" aria-label="Pilot summary">
         <article class="glass-card"><small class="kicker">ROSTER ALIASES</small><h2>${s.learners.length}</h2><p>${s.learners.filter(x=>x.linkedLocal).length} linked to real on-device learning evidence.</p></article>
         <article class="glass-card"><small class="kicker">ASSIGNMENTS</small><h2>${s.assignments.length}</h2><p>Created from the canonical KirthiVerse lesson corpus.</p></article>
         <article class="glass-card"><small class="kicker">VERIFIED COMPLETIONS</small><h2>${stats.completedRows}</h2><p>From local completion evidence only; no manual grades are invented.</p></article>
-        <article class="glass-card"><small class="kicker">LOCAL MASTERY SIGNALS</small><h2>${secure}</h2><p>${developing} developing · ${practising} practising.</p></article>
+        ${issue152QaMode?issue152Card:`<article class="glass-card"><small class="kicker">LOCAL MASTERY SIGNALS</small><h2>${secure}</h2><p>${developing} developing · ${practising} practising.</p></article>`}
       </section>
 
       <section class="ep-grid ep-grid-two">

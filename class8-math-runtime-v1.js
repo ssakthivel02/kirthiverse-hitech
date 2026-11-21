@@ -3,8 +3,8 @@
    Loaded only on Class 8 Mathematics lesson routes, the Mathematics world and search, so unrelated surfaces keep their request budget. */
 (()=>{
   const batches={
-    part1:{lesson:'data/class8-math-part1-lessons.js',assessment:'data/class8-math-part1-assessments.js',version:'CBSE8-MATH-P1-1',flag:'class8MathPart1'},
-    part2:{lesson:'data/class8-math-part2-lessons.js',assessment:'data/class8-math-part2-assessments.js',version:'CBSE8-MATH-P2-1',flag:'class8MathPart2'}
+    part1:{lesson:'data/class8-math-part1-bundle-v1.js',assessment:'data/class8-math-part1-bundle-v1.js',version:'CBSE8-MATH-P1-1',flag:'class8MathPart1'},
+    part2:{lesson:'data/class8-math-part2-bundle-v1.js',assessment:'data/class8-math-part2-bundle-v1.js',version:'CBSE8-MATH-P2-1',flag:'class8MathPart2'}
   };
   const loaded=new Set(),loading=new Map(),assetPromises=new Map();
   const relevantSurface=()=>['/world/mathematics','/search'].includes(location.pathname);

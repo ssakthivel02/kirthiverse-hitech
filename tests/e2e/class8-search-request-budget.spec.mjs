@@ -41,12 +41,12 @@ test('Class 8 search loads all five batches within the search route and incremen
   expect(outcome.uniqueLessons).toBe(83);
   expect(outcome.uniqueAssessments).toBe(415);
   // The existing 48-request performance check measures a CORE LESSON, not /search.
-  // The full /search integration was measured at 81 requests in the 5-browser
+  // The full /search integration was measured at 81 requests before bundling in the 5-browser
   // CI failure. Hold this route-specific ceiling, and prevent Class 8 from
-  // exceeding its justified 3 runtimes + 10 lesson/assessment scripts.
-  // This is a measured NON-REGRESSION budget, not a performance endorsement.
-  expect(outcome.class8JsRequests, 'Class 8 incremental script requests').toBeLessThanOrEqual(13);
-  expect(outcome.jsCssRequests, 'Measured Class 8 /search route JS/CSS ceiling').toBeLessThanOrEqual(81);
+  // exceeding its justified 3 runtimes + 5 combined lesson/assessment scripts.
+  // This is a required five-request improvement against the measured 81-request baseline; it must be confirmed by CI.
+  expect(outcome.class8JsRequests, 'Class 8 incremental script requests').toBeLessThanOrEqual(8);
+  expect(outcome.jsCssRequests, 'Measured Class 8 /search route JS/CSS ceiling').toBeLessThanOrEqual(76);
   expect(outcome.unexpectedOrigins).toEqual([]);
   expect(errors).toEqual([]);
 });

@@ -1,0 +1,30 @@
+name: Class 8 Paired Bundle Equivalence QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/class8-*-bundle-v1.js'
+      - 'data/class8-*-lessons.js'
+      - 'data/class8-*-assessments.js'
+      - 'class8-*-runtime-v1.js'
+      - 'scripts/verify-class8-bundles.mjs'
+      - '.github/workflows/class8-bundle-equivalence-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-equivalence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify exact paired source and runtime mappings
+        run: |
+          node --check scripts/verify-class8-bundles.mjs
+          node scripts/verify-class8-bundles.mjs
